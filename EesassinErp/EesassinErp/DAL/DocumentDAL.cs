@@ -1,16 +1,12 @@
-﻿using System;
+﻿using BAL;
+using Ionic.Zip;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
-using BAL;
 using System.Text;
-using System.IO;
-using Ionic.Zip;
-using System.Web.Mvc;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace DAL
 {
@@ -20,7 +16,7 @@ namespace DAL
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter("@Action", obj.Action), 
+                new SqlParameter("@Action", obj.Action),
             };
             return SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("USP_Mapping", CommandType.StoredProcedure, param.ToArray());
 
@@ -79,14 +75,14 @@ namespace DAL
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[USP_Mapping]", CommandType.StoredProcedure, param.ToArray()));
 
         }
-        public  DataTable GetDocumentMaster(DocumentBAL obj)
+        public DataTable GetDocumentMaster(DocumentBAL obj)
         {
             var param = new List<SqlParameter>
             {
                 new SqlParameter("@Action", obj.Action),
             };
             return SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("USP_DocumentMaster", CommandType.StoredProcedure, param.ToArray());
- 
+
         }
         public DataTable GetCommunication(DocumentBAL obj)
         {
@@ -143,7 +139,7 @@ namespace DAL
                         new SqlParameter("@Note", obj.Note),
                 new SqlParameter("@IsDefault", obj.IsDefault),
                 new SqlParameter("@Createdby", obj.Createdby),
-             
+
                 new SqlParameter("@Updatedby", obj.Updatedby),
                 new SqlParameter("@UpdatedON", obj.UpdatedON),
                 new SqlParameter("@Isdelete", obj.Isdelete),
@@ -186,6 +182,7 @@ namespace DAL
             {
                 new SqlParameter("@Action", obj.Action),
                 new SqlParameter("@InvoiceNo", obj.InvoiceNo),
+                  new SqlParameter("@VendorId", obj.VendorId),
                   new SqlParameter("@Id", obj.Id),
 
             };
@@ -205,7 +202,7 @@ namespace DAL
                 ComplianceDetail.Append(obj.ComplianceDetail[i].SrNo);
 
                 ComplianceDetail.Append(seprator);
-                ComplianceDetail.Append(obj.ComplianceDetail[i].DocId); 
+                ComplianceDetail.Append(obj.ComplianceDetail[i].DocId);
 
                 ComplianceDetail.Append(seprator);
                 ComplianceDetail.Append(obj.ComplianceDetail[i].ComplianceScore);
@@ -220,7 +217,7 @@ namespace DAL
                 ComplianceDetail.Append(obj.ComplianceDetail[i].Remark);
 
                 ComplianceDetail.Append(seprator);
-                ComplianceDetail.Append(obj.ComplianceDetail[i].VendorRemark);  
+                ComplianceDetail.Append(obj.ComplianceDetail[i].VendorRemark);
 
                 bigseprator = "|";
             }
@@ -246,7 +243,7 @@ namespace DAL
             {
                 new SqlParameter("@Action", obj.Action),
                 new SqlParameter("@ComplianceId", obj.ComplianceId),
-                new SqlParameter("@InvoiceNo", obj.InvoiceNo), 
+                new SqlParameter("@InvoiceNo", obj.InvoiceNo),
                 new SqlParameter("@Result",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("USP_AuditorCompliance", CommandType.StoredProcedure, param.ToArray()));
@@ -276,7 +273,7 @@ namespace DAL
                 new SqlParameter("@Act", obj.Act),
                 new SqlParameter("@Nature", obj.Nature),
                 new SqlParameter("@Remark", obj.Remark),
-                new SqlParameter("@Score", obj.Score), 
+                new SqlParameter("@Score", obj.Score),
                 new SqlParameter("@Result",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("USP_AuditorCompliance", CommandType.StoredProcedure, param.ToArray()));
@@ -296,29 +293,29 @@ namespace DAL
         {
             string returnmsg = "0";
             //string path = "http://localhost:63292/";
-                using (ZipFile zip = new ZipFile())
-                {
-                    zip.AlternateEncodingUsage = ZipOption.AsNecessary;
-                    zip.AddDirectoryByName("Files");
+            using (ZipFile zip = new ZipFile())
+            {
+                zip.AlternateEncodingUsage = ZipOption.AsNecessary;
+                zip.AddDirectoryByName("Files");
                 //for (int i = 0; i < obj.DocumentList.Count; i++)
                 //{
-                    if (!string.IsNullOrEmpty(obj.DocumentList[0].DocumentFile))
-                    { 
-                        string filePath =  obj.DocumentList[0].DocumentFile;
-                         zip.AddFile(filePath, "Files");
-                    }
-                 //}
-                    HttpContext.Current.Response.Clear();
-                    //HttpContext.Current.Response.BufferOutput = false;
-                    string zipName = String.Format("Zip_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
-                    HttpContext.Current.Response.ContentType = "application/zip";
-                    HttpContext.Current.Response.AddHeader("content-disposition", "attachment; filename=" + zipName);
-                    zip.Save(HttpContext.Current.Response.OutputStream);
-                    HttpContext.Current.Response.End();
-                    returnmsg = "1";
-                }  
-                return returnmsg; 
+                if (!string.IsNullOrEmpty(obj.DocumentList[0].DocumentFile))
+                {
+                    string filePath = obj.DocumentList[0].DocumentFile;
+                    zip.AddFile(filePath, "Files");
+                }
+                //}
+                HttpContext.Current.Response.Clear();
+                //HttpContext.Current.Response.BufferOutput = false;
+                string zipName = String.Format("Zip_{0}.zip", DateTime.Now.ToString("yyyy-MMM-dd-HHmmss"));
+                HttpContext.Current.Response.ContentType = "application/zip";
+                HttpContext.Current.Response.AddHeader("content-disposition", "attachment; filename=" + zipName);
+                zip.Save(HttpContext.Current.Response.OutputStream);
+                HttpContext.Current.Response.End();
+                returnmsg = "1";
+            }
+            return returnmsg;
         }
-                    
-        }
-    } 
+
+    }
+}

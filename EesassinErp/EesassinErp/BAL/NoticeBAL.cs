@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace EesassinErp.BAL
+﻿namespace BAL
 {
     public class NoticeBAL
     {
+        public string Probability { get; set; }
+        public string Interest { get; set; }
+
+
+        public string LateFee { get; set; }
+        public string Fines { get; set; }
+        public string Penalities { get; set; }
+        public string Other { get; set; }
         public string Id { get; set; }
         public string LoginAs { get; set; }
         public string UserId { get; set; }
@@ -26,5 +29,13 @@ namespace EesassinErp.BAL
         public string CreatedOn { get; set; }
         public string Createdby { get; set; }
         public string Result { get; set; }
+        public string NoticeDate { get; set; }
+        public string NoticeMode { get; set; }
+        public string HearingDate { get; set; }
+        public string OfficerName { get; set; }
+        public string Address { get; set; }
+        public string RepresentativeName { get; set; }
+        public string RepresentativeEmail { get; set; }
+        public string Description { get; set; }
     }
 }

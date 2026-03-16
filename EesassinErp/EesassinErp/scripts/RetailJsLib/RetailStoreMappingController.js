@@ -87,7 +87,7 @@
         }
         $scope.AllUserListsLoad = function (PartyId) {
             var collectionobj = {};
-            collectionobj.ActionType = 6;
+            collectionobj.ActionType = 15;
             collectionobj.Id = PartyId;
             var getData = myService.methode('POST', "../RetailSection/GetEmployeeMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
             getData.then(function (response) {

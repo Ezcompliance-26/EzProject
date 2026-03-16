@@ -3,7 +3,7 @@
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
     Layout = "~/Views/Common/_IframeMaster.cshtml";
 }
-<script src="~/scripts/myjslib/ClientDashboardController.js"></script>
+<script src="~/scripts/myjslib/ClientDashboardController.js?Ver=@ViewBag.Version"></script>
 <!-- Load Simple DataTables Stylesheet-->
 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
 <link href="~/Content/css/auditor-dashboard/styles.css" rel="stylesheet" />
@@ -180,7 +180,7 @@ width: 55%;
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="me-4">
                             <h2 class="card-title mb-0" style="color: #fff;font-size: 14px;">Invoice Compliance <div class="card-subtitle" style="color: #fff;margin: 0px 10px;font-size: 12px;float: right;"> (Compared to previous year)</div> </h2>
-                            
+
                         </div>
                         @*<div class="d-flex gap-2">
                                 <select id="selectbox" style="font-size: 12px;">
@@ -294,7 +294,7 @@ width: 55%;
             <div class="page-title-box">
                 <h4>Compliance Report</h4>
             </div>
-            
+
             <div class="d-block" ng-init="BindVendor();">
                 <div class="col-lg-3 col-md-3 col-xs-12 mb-5">
                     <select class="form-control h-100" ng-change="BindClientInvoiceStatus()" ng-model="VendorId">
@@ -310,16 +310,16 @@ width: 55%;
                 </div>
                 <div class="col-lg-3 col-md-3  col-xs-12 mb-5">
                     @*<input id="txtInvoice" class="form-control mb-3 py-0 px-2 validate h-100" placeholder="Enter Invoice No" ng-model="InvoiceNo" />*@
-             
-                    <input id="txtInvoice" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Enter Invoice No" ng-model="InvoiceNo"
-                      ng-keyup="CLSearchInvoice()" ng-click="CLSearchInvoice()" />
-                    <div class="drop-box" >
-					<div class="dropdown" ng-repeat="xx in ListOfInvoice" >
-                        <div class="mb-3 py-0 px-2" ng-click="SetTextbox(xx.VendorInvNum,xx.ClientId)"><i class='fa fa-clock'></i> {{xx.Name}} </div>
 
+                    <input id="txtInvoice" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Enter Invoice No" ng-model="InvoiceNo"
+                           ng-keyup="CLSearchInvoice()" ng-click="CLSearchInvoice()" />
+                    <div class="drop-box">
+                        <div class="dropdown" ng-repeat="xx in ListOfInvoice">
+                            <div class="mb-3 py-0 px-2" ng-click="SetTextbox(xx.VendorInvNum,xx.ClientId,xx.VendorId)"><i class='fa fa-clock'></i> {{xx.Name}} </div>
+
+                        </div>
                     </div>
-					</div>
-                   </div>
+                </div>
                 <div class="col-lg-3 col-md-3  col-xs-12 mb-5">
                     <button type="button" class="btn pro-btton-color Generate-btn form-control p-0" ng-click="checkandgetreport()" style="padding: 0 !important;">
                         Generate Report
@@ -420,30 +420,32 @@ width: 55%;
             <div class="card-header bg-transparent px-4 p-0" style="background-color:#6ea9fd!important;">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="me-4">
-                            <h2 class="card-title mb-0 text-white pt-3 pb-3">Work in Progress  <div class="card-subtitle" style="color: #fff;margin: 1px 10px;font-size: 12px;float: right;">(Details and history)</div> </h2>
-                       
+                        <h2 class="card-title mb-0 text-white pt-3 pb-3">Work in Progress  <div class="card-subtitle" style="color: #fff;margin: 1px 10px;font-size: 12px;float: right;">(Details and history)</div> </h2>
+
                     </div>
-					
+
                     <div class="d-flex gap-2 align-items-center">
-					<div class="dataTable-search">
-                        <select class="form-control h-200" ng-change="BindIndiviualAuditorCompliance()" ng-model="AVendorId">
-                            <option value="" style="font-size: 12px;">All Vendor</option>
-                            <option ng-repeat="x in VendorList" value="{{x.PartyId}}">{{x.PartyName}}</option>
-                        </select>
+                        <div class="dataTable-search">
+                            <select class="form-control h-200" ng-change="BindIndiviualAuditorCompliance()" ng-model="AVendorId">
+                                <option value="" style="font-size: 12px;">All Vendor</option>
+                                <option ng-repeat="x in VendorList" value="{{x.PartyId}}">{{x.PartyName}}</option>
+                            </select>
                         </div>
                         @*<i class="fa fa-download" style="color: #fff;font-size: 15px;margin: 0 15px 0px 0px;"></i>
-                        <i class="fa fa-print" style="color: #fff;font-size: 15px;margin: 0 15px 0px 0px;"></i>*@
+                            <i class="fa fa-print" style="color: #fff;font-size: 15px;margin: 0 15px 0px 0px;"></i>*@
                     </div>
                 </div>
             </div>
             <div class="card-body p-4">
                 <!-- Simple DataTables example-->
                 <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns" ng-init="BindAuditorCompliance()">
-                    <div class="dataTable-top"><div class="dataTable-dropdown"> 
-                        @*<select class="dataTable-selector"><option value="5">5</option><option value="10" selected="">10</option>
-                        <option value="15">15</option><option value="20">20</option><option value="25">25</option>
-                        </select> entries per page</label>*@</div>
-                    
+                    <div class="dataTable-top">
+                        <div class="dataTable-dropdown">
+                            @*<select class="dataTable-selector"><option value="5">5</option><option value="10" selected="">10</option>
+                                <option value="15">15</option><option value="20">20</option><option value="25">25</option>
+                                </select> entries per page</label>*@
+                        </div>
+
                     </div><div class="dataTable-container">
                         <table id="datatablesSimple" class="dataTable-table">
                             <thead>
@@ -484,7 +486,7 @@ width: 55%;
                 </div>
                 <div class="d-flex gap-2">
                     @*<i class="fa fa-download" style="color: #fff;font-size: 15px;margin: 0 15px 0px 0px;"></i>
-                    <i class="fa fa-print" style="color: #fff;font-size: 15px;margin: 0 15px 0px 0px;"></i>*@
+                        <i class="fa fa-print" style="color: #fff;font-size: 15px;margin: 0 15px 0px 0px;"></i>*@
                 </div>
             </div>
         </div>
@@ -499,28 +501,30 @@ width: 55%;
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Party Name</th> 
-                                            <th>Document Name</th>  <th>Expire On</th>  <th>Status</th>
+                                            <th>Party Name</th>
+                                            <th>Document Name</th>
+                                            <th>Expire On</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr ng-repeat="x in ListOnetimeDocument">
                                             <td>{{x.SNO}}</td>
                                             <td>{{x.PartyName}}</td>
-                                            <td>{{x.DocumentName}}</td> 
-                                            <td>{{x.VaildTo}}</td> 
-                                            <td style="background-color:{{x.Color}}">{{x.Status}}</td> 
+                                            <td>{{x.DocumentName}}</td>
+                                            <td>{{x.VaildTo}}</td>
+                                            <td style="background-color:{{x.Color}}">{{x.Status}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                           
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-         
+
     </div>
     <div class="pro_comp_bg row pt-0">
         <div class="card-header bg-transparent px-4 p-0" style="background-color:#6ea9fd!important;">
@@ -547,7 +551,7 @@ width: 55%;
                                             <th>#</th>
                                             <th>Vendor</th>
                                             <th>InvoiceNo</th>
-                                          
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -555,7 +559,69 @@ width: 55%;
                                             <td>{{x.SNO}}</td>
                                             <td>{{x.VendorName}}</td>
                                             <td>{{x.InvoiceNo}}</td>
-                                           
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="pro_comp_bg row pt-0" ng-init="ClientDashboardSite();SetProjectManagement()" >
+        <div class="card-header bg-transparent px-4 p-0" style="background-color:#6ea9fd!important;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="me-4">
+                    <h2 class="card-title mb-0 text-white pt-3 pb-3">Project Management</h2>
+                </div>
+                <div class="d-flex gap-2">
+                    <select   ng-model="SiteId" ng-change="SetProjectManagement()"> 
+                        <option value="">Select</option>
+                        <option ng-repeat="x in AllPartySiteCList" value="{{x.SiteId}}">{{x.SiteName}}</option>
+                    </select>
+                    @*<i class="fa fa-download" style="color: #fff;font-size: 15px;margin: 0 15px 0px 0px;"></i>*@
+                    <a href="../Retail/RetailProjectMaster">View All</a>
+                </div>
+            </div>
+        </div>
+        <div class="product-status mg-b-15">
+            <div class="container-fluid" >
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12
+                                col-xs-12">
+                        <div class="product-status-wrap">
+                            <div class="asset-inner m15 dataTable-table mt-4">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Site Name</th>
+                                            <th>Project Name</th>
+                                            <th>Size Capacity</th>
+                                            <th>Loan Agreements</th>
+                                            <th>Mortgage Amount</th>
+                                            <th>Tech Feasibility Status</th>
+                                            <th>Tech Person Name</th>
+                                            <th>Farmer Name</th>
+                                            <th>Khatedar Name</th>
+                                            <th>Village</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="x in ProjectManagementList">
+                                            <td>{{x.SiteName}}</td>
+                                            <td>{{x.ProjectName}}</td>
+                                            <td>{{x.SizeCapacity}}</td>
+                                            <td>{{x.LoanAgreements}}</td>
+                                            <td>{{x.MortgageAmount}}</td>
+                                            <td>{{x.TechFeasibilityStatus}}</td>
+                                            <td>{{x.TechPersonName}}</td>
+                                            <td>{{x.FarmerName}}</td>
+                                            <td>{{x.KhatedarName}}</td>
+                                            <td>{{x.Village}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -570,34 +636,8 @@ width: 55%;
     </div>
     <!-- ================================= 4 ============================== -->
 </div>
-@*<div class="custom-pagination">
-        <ul class="pagination">
-            <li class="page-item">
-                <a class="page-link" href="#">Previous</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="#">1</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="#">2</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="#">3</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-            </li>
-        </ul>
-    </div>*@
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-<!-- ================================= 4 ============================== -->
-</div>
+ 
+      
 
 
 <!-- jquery
@@ -646,3 +686,4 @@ width: 55%;
 
 <script src="../assets.startbootstrap.com/js/sb-customizer.js"></script>
 <script src="~/Content/client-Js/datatables/datatables-simple-demo.js"></script>
+<script src="~/scripts/myjslib/PartySiteManagerController.js"></script>

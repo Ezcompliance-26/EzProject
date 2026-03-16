@@ -1,12 +1,6 @@
 ﻿using BAL;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.UI;
 
 namespace EesassinErp.Controllers
 {
@@ -24,13 +18,13 @@ namespace EesassinErp.Controllers
             string paymode = parameters["paymentMode"];
             string txnId = parameters["orderId"];
             string TransId = parameters["referenceId"];
-            string orderAmount = parameters["orderAmount"]; 
-         
-             UpdateTransactions(parameters["orderId"], parameters["paymentMode"], parameters["txStatus"], parameters["referenceId"], parameters["orderAmount"]);
-          
+            string orderAmount = parameters["orderAmount"];
+
+            UpdateTransactions(parameters["orderId"], parameters["paymentMode"], parameters["txStatus"], parameters["referenceId"], parameters["orderAmount"]);
+
 
         }
-        public void UpdateTransactions(string OrderId, string PaymentMode, string PaymentStatus, string TransId,string TotalAmount)
+        public void UpdateTransactions(string OrderId, string PaymentMode, string PaymentStatus, string TransId, string TotalAmount)
         {
             PaymentBAL obj = new PaymentBAL()
             {
@@ -38,12 +32,12 @@ namespace EesassinErp.Controllers
                 OrderId = OrderId,
                 PaymentStatus = PaymentStatus,
                 PaymentMode = PaymentMode,
-                TransId= TransId,
-                TotalAmount= TotalAmount
-            };  
+                TransId = TransId,
+                TotalAmount = TotalAmount
+            };
             string result = DAL.DLL.UpdateTransactions(obj).ToString();
-           
-            Response.Redirect("../RetailSection/thankyou?"+ OrderId);
+
+            Response.Redirect("../RetailSection/thankyou?" + OrderId);
         }
 
     }

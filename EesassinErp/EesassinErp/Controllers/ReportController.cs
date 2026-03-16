@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using BAL;
+﻿using BAL;
 using DAL;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
+    [ValidateSession]
     public class ReportController : Controller
     {
         // GET: Report
@@ -22,34 +19,38 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.SearchReport(obj)));
             return result;
         }
+        public async Task<string> SearchReminderReport(TblPartyMaster obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.SearchReminderReport(obj)));
+            return result;
+        }
+
         public ActionResult RegisteredPartyMaster()
         {
             return View();
         }
-        public ActionResult TransportReport()
+
+        public ActionResult ReminderReport()
         {
             return View();
         }
-        public ActionResult BranchReport()
+        public ActionResult LogOnReport()
         {
             return View();
         }
-        public ActionResult EmployeeReport()
+        public ActionResult ReportLicenseMaster()
         {
             return View();
         }
-        public ActionResult CashBook()
+        public ActionResult NoticeInspection()
         {
             return View();
         }
-        public ActionResult SuperVisiorAttendance()
+        public ActionResult ExpectationReport()
         {
             return View();
         }
-        public ActionResult PurchaseReport()
-        {
-            return View();
-        }
+
         
     }
 }

@@ -125,6 +125,8 @@
             $scope.IsSumitted = response.data[0].Status;
             $scope.Location = response.data[0].Location;
             $scope.VendorName = response.data[0].VendorName;
+            $scope.VendorId = response.data[0].VendorId;
+            
             $scope.ClientName = response.data[0].ClientName;
             $scope.ClientId = response.data[0].ClientId;
             $scope.ConversationId = response.data[0].ConversationId;

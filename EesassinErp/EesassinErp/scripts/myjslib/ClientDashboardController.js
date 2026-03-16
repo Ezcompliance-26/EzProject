@@ -2,9 +2,10 @@
 
     $scope.Isopen = false;
 
-    $scope.SetTextbox = function (SINVOICENO, ClientId) {
+    $scope.SetTextbox = function (SINVOICENO, ClientId, VendorCId) {
         $scope.InvoiceNo = SINVOICENO;
         $scope.ClientId = ClientId;
+        $scope.VendorCId = VendorCId;
         $scope.Isopen = false;
     }
 

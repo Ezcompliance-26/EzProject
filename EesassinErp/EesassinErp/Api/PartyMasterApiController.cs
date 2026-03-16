@@ -1,21 +1,19 @@
 ﻿using BAL;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 namespace EesassinErp.Controllers
 {
     public class PartyMasterApiController : ApiController
     {
         [HttpPost]
-        public async Task<string> GetPartyMasterDT(TblPartyMaster obj)
+        [Route("Api/PartyMasterApi/GetPartyMasterDT")]
+        public async Task<IHttpActionResult> GetPartyMasterDT(TblPartyMaster obj)
         {
-            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.PartyMaster(obj)));
-            return result;
+            var result = await Task.Factory.StartNew(() => DAL.DLL.PartyMaster(obj));
+            return Json(result); // This will return plain JSON. 
         }
+
 
         [HttpPost]
         public async Task<string> InsertUpdateDelPartyMaster(TblPartyMaster obj)

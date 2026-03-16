@@ -124,9 +124,11 @@
                                                                 </div>
                                                             </th>
                                                             <th class="srno">S.No.</th>
-                                                            <th>Store Code</th>  
-                                                            <th>Ref. StoreCode</th> 
-                                                            <th>Store Name</th> 
+                                                            <th>Store Code</th>
+                                                            <th>Ref. StoreCode</th>
+                                                            <th>Store Name</th>
+                                                            <th>Created By</th>
+                                                            <th>Client Type</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -145,9 +147,11 @@
                                                                 {{$index+1}}
                                                                 <input type="hidden" id="hfMenuId" value="{{x.StoreId}}" />
                                                             </td>
-                                                            <td>{{x.StoreCode}}</td> 
-                                                            <td>{{x.RefStoreCode}}</td> 
-                                                            <td>{{x.StoreName}}</td> 
+                                                            <td>{{x.StoreCode}}</td>
+                                                            <td>{{x.RefStoreCode}}</td>
+                                                            <td>{{x.StoreName}}</td>
+                                                            <td>{{x.UserName}}</td>
+                                                            <td>{{x.ClientType}}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

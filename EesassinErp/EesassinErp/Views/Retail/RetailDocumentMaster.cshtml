@@ -69,6 +69,39 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15" ng-init="AllState()">
+                                            <label class="control-label">State<span class="vd_red">*</span></label>
+                                            <div class="input-box">
+                                                <select id="ddlstate" autocomplete='address-level2' class="select2 form-control validate"   ng-model="StateId">
+                                                    <option value="">Select State</option>
+                                                    <option ng-repeat="x in AllStateList" value="{{x.SATE_CODE}}">{{x.STATE_NM}}</option>
+                                                </select>
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">Form No.<span class="vd_red">*</span></label>
+                                            <div class="input-box">
+                                                @Html.TextBox("txtForm", "", new { @class = "form-control clear validate", @placeholder = "", @ng_model = "FormNo" })
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">Criticality<span class="vd_red">*</span></label>
+                                            <div class="input-box">
+                                                <select id="ddlCriticality" autocomplete='address-level2' class="select2 form-control validate" ng-model="Criticality">
+                                                    <option value="">Select </option> 
+                                                    <option value="High">High</option>
+                                                    <option value="Medium">Medium</option>
+                                                    <option value="Low">Low</option> 
+                                                </select>
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                         
                                         <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Format Type<span class="vd_red">*</span></label>
                                             <div class="input-box">

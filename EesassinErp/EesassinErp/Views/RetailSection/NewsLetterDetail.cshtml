@@ -1,12 +1,16 @@
 ﻿@{
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
-    ViewBag.Title = "NewsLetter Details";
+    ViewBag.Title = "Notification Details";
     Layout = "~/Views/Common/_RetailLayout.cshtml";
 }
 @*--Done by pradeep*@
 @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
-<script src="~/Content/html2canvas.js"></script>*@
-<script src="~/scripts/RetailJsLib/NewletterDetail.js"></script>
+    <script src="~/Content/html2canvas.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+
+<script src="~/scripts/RetailJsLib/NewletterDetail.js?Ver=@ViewBag.Version"></script>
 <link rel="stylesheet" media="print" href="~/content/css/Library.css" />
 <script>
     $(document).ready(function () {
@@ -572,6 +576,8 @@
                 <div class="col-md-9">
                 </div>
                 <div class="col-sm-12 text-end" ng-show="ShowDetails">
+                    <a id="btndownload" ng-click="downloadsummary()" title="{{newsletter[0].SubjectLine}}" data-toggle="modal" data-target="#editAct" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download <i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>
+
                     <a class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link" ng-click="ShowDetailsFunction()">Back</a>
                 </div>
                 <!--<div class="col-sm-12 text-end" ng-show="!ShowDetails">-->
@@ -584,32 +590,26 @@
             <div class="row" ng-show="!ShowDetails">
                 <div class="col-md-9 mb-2">
                     <div class="card">
+
                         <div class="card-body">
                             <div class="library-box-container" ng-repeat="news in newsletterDetail">
 
                                 <h1 class="text-primary">{{news.StateCentralActtitle}}</h1>
-                                <!-- <tr>
-                                <td> -->
                                 <div class="library-box">
                                     <p>
+                                       
                                         <a ng-click="ShowDetailsFunction(news.Id)" style="cursor: pointer;">{{news.SubjectLine}}</a>
-                                        <span class="pull-right">
-                                            @*<a title="Download uploaded documents" href="{{news..UploadDocPath}}" target="_blank" data-toggle="modal" data-target="#editAct" style="font-size:11px" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download Doc<i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>*@
-                                            @*-- pervious download*@
-                                            <a ng-click="downloadsummary()" title="{{news.SubjectLine}}" data-toggle="modal" data-target="#editAct" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download <i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>
-
-                                            <!--<a class="btn btn-warning btn-xs banner_btn1 download-doc-link" href="" target="_blank">View</a>-->
+                                        <span class="pull-right" style="float: right;">
+                                            <a href="{{newsletter[0].UploadDocPath}}" target="_blank" title="{{news.SubjectLine}}" data-toggle="modal" data-target="#editAct" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download <i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>
                                             <br>
                                         </span>
-                                        <a style="text-decoration:none">updated As on {{news.CreatedDate | date:'longDate'}}</a>
                                     </p>
+                                    <p ng-click="ShowDetailsFunction(news.Id)">   <a style="text-decoration:none">Updated On : {{news.CreatedDate | date:'longDate'}}</a></p>
                                     <div class="clearfix"></div>
                                 </div>
 
 
-                                @*<div align="center">
-                                        <a href="/labour-acts" class="btn btn-warning btn-show-more">More Acts &gt;&gt;</a>
-                                    </div>*@
+
                             </div>
                         </div>
                     </div>
@@ -620,7 +620,7 @@
                             <div class="col-md-12 pageheader pb-2">
                                 <div class="row">
                                     <div style="width:56%">
-                                        <h4 style="font-size:1.2rem" class="mb-0">Newsletter</h4>
+                                        <h4 style="font-size:1.1rem" class="mb-0">Notification </h4>
                                     </div>
                                     <div style="width:43%;font-size:12px">
                                         <a class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link" href="../RetailSection/NewsLetterDetailAll?NewsLetter%20DetailAll">View All</a>
@@ -641,7 +641,7 @@
                             </div>
                             <div id="newsletterdiv">
                                 <div ng-repeat="news in Newletters" class="col-md-12" style="background-color: #fcfcfc;box-shadow: 0px 2px 5px #aaa;padding: 7px 10px;margin:8px 0;line-height:16px">
-                                    <a href="../RetailSection/NewsLetterDetail?NewsLetter%20Detail&id={{news.Id}}" style="padding-left: 10px;color:#787878;text-decoration:none"><b>{{news.SubjectLine}}</b></a>
+                                    <a href="../RetailSection/NewsLetterDetail?Notification%20Detail&id={{news.Id}}" style="padding-left: 10px;color:#787878;text-decoration:none"><b>{{news.SubjectLine}}</b></a>
                                 </div>
                             </div>
                         </div>
@@ -649,6 +649,7 @@
                 </div>
 
             </div>
+
             <div class="row mt-3" id="downloaddiv" ng-show="ShowDetails">
                 <div class="col-md-12">
                     <div class="card">
@@ -656,10 +657,8 @@
                             <div class="col-md-12 pageheader pb-2">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <img style="width: 30%;" src="~/DownloadMat/talent new logo.png" />
-                                        <div class="col-sm-12 text-end">
-                                            <a ng-click="downloadsummary()" title="{{newsletter[0].SubjectLine}}" data-toggle="modal" data-target="#editAct" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download <i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>
-                                        </div>
+                                        <img style="width: 16%;" src="https://retail.ezcompliance.in/Login/image/ezfulllogo%203.png" />
+
                                     </div>
                                 </div>
                             </div>
@@ -694,10 +693,11 @@
                             </div>
                             <div class="row">
                                 @*<div class="col-md-4">
-                                    <span>Client:</span> <label>{{newsletter[0].PartyName}}</label>
-                                </div>*@
+                                        <span>Client:</span> <label>{{newsletter[0].PartyName}}</label>
+                                    </div>*@
+                              
                                 <div class="col-md-4">
-                                    <span>Govt.release:</span><a title="Andhra Pradesh Labour Welfare Fund Act,1987.pdf" href="{{newsletter[0].UploadDocPath}}" target="_blank" data-toggle="modal" data-target="#editAct" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download<i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>
+                                    <span>Govt.release:</span><a title="{{newsletter[0].StateCentralActtitle}}" href="{{newsletter[0].UploadDocPath}}" target="#" data-toggle="modal" data-target="#editAct" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download<i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md" download></i></a>
                                 </div>
                             </div>
                             <div class="col-md-12 pageheader pb-2">
@@ -718,128 +718,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row mt-3" id="downloaddiv2" style="opacity:0">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="col-md-12 pageheader pb-2">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <img style="width: 30%;" src="~/DownloadMat/talent new logo.png" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 pageheader pb-2">
-                                <div class="row">
-                                    <div class="col-md-12" style="background-color: purple; text-align: center; height: 30px; vertical-align: middle;line-height:30px; color: antiquewhite ">
-                                        {{newsletter[0].SubjectLine}}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <span>State/Country Act Title:</span> <label>{{newsletter[0].StateCentralActtitle}}</label>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>Date of Notification:</span> <label>{{newsletter[0].DateOfNotification | date:'dd/MM/yy'}}</label>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>State:</span> <label>{{newsletter[0].STATE_NM}}</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <span>Effective Date of Notification:</span> <label>{{newsletter[0].EffectiveDateOfNotification | date:'dd/MM/yy'}}</label>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>Notification Number:</span> <label>{{newsletter[0].NotificationNumber}}</label>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>Govt. Department:</span> <label>{{newsletter[0].DepartmentName}}</label>
-                                </div>
-                            </div>
-                            @*<div class="row">
-                                <div class="col-md-4">
-                                    <span>Client:</span> <label>{{newsletter[0].PartyName}}</label>
-                                </div>
-                            </div>*@
-                            <div class="col-md-12 pageheader pb-2">
-                                <div class="row">
-                                    <div class="col-md-2" style="background-color: purple; text-align: left; height: 30px; vertical-align: middle;line-height:30px; color: antiquewhite ">
-                                        SUMMARY :-
-                                    </div>
-                                </div>
-                                @*<div id="download">
-                                        <a id="downloadLink"></a>
-                                    </div>*@
-                                <div class="row" ng-bind-html="trustedSummary" id="editorcontent">
 
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
-
-<!--<div class="modal fade" id="reportNotice" tabindex="-1" aria-labelledby="reportNoticeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content notiModal1">
-            <div class="modal-header">
-                <h5 class="modal-title" id="reportNoticeModalLabel">Report Notice</h5>
-                <button  id="closeId" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">✖</button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group mb-3">
-
-                            <label class="mb-3"><b>Store Code</b></label>
-                            <select class="form-control form-select validate" ng-model="NStoreId"  ng-change="BindNoticeDepartment(NStoreId)">
-                                <option value="">Select</option>
-                                <option ng-repeat="x in NoticeStoreList" value="{{x.StoreId}}">{{x.StoreCode}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group mb-3" >
-                            <label class="mb-3"><b>Department</b></label>
-                            <select class="form-control form-select validate" ng-model="DepartmentId" ng-change="BindNoticeStoreStatus(DepartmentId)" >
-                                <option value="">Select</option>
-                                <option ng-repeat="x in NoticeDepartmentList" value="{{x.DepartmentId}}">{{x.DepartmentName}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-12" ng-if="DocStage !='-1'">
-                        <div class="form-group mb-3">
-                            <label class="mb-3"><b>Document Stage</b></label>
-                            <input type="text" class="form-control" readonly ng-model="DocStage" />
-
-                        </div>
-                    </div>
-                    <div class="col-md-12" ng-if="DocStatus=='open'">
-                        <div class="form-group mb-3">
-                            <label class="mb-3"><b>Upload</b></label>
-                            <input type="file" class="form-control validate" id="fNoticeUpload"  onchange="angular.element(this).scope().BindNoticeUpload(this, '#AlbumIcon')" ng-model="NoticeUpload">
-                         </div>
-                    </div>-->
-@*<div class="col-md-12" ng-if="DocStatus=='open'">
-        <div class="form-group mb-3">
-            <label class="mb-3"><b>Date of receipt</b></label>
-            <input id="txtReceiptDate" type="date" class="form-control validate" ng-model="ReceiptDate"   />
-
-        </div>
-    </div>*@
-<!--</div>
-                <div class="row justify-content-center postion-reletive mt-3 mb-1" ng-if="DocStatus=='open'">
-                    <div class="col-md-10 d-grid">
-                        <div class="btn btn-warning"   ng-click="SaveRecord()">Submit</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->

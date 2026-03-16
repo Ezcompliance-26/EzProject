@@ -128,29 +128,7 @@
            // collectionobj.UploadDocPath = $scope.AdminFileDoc;
             collectionobj.SubjectLine = $scope.SubjectLine;
              $scope.Summary = CKEDITOR.instances.txtHeaderTemplate.getData();
-            collectionobj.Summary = $scope.Summary;
-
-
-            //if ($scope.Save == "Save") {
-            //    collectionobj.ActionType = 1;
-            //}
-            //else {
-            //    collectionobj.Id = $scope.hfId;
-            //    collectionobj.ActionType = 2;
-            //}
-
-            //var getData = myService.methode('POST', ("../Newsletter/InsertUpdateNewsletter"), JSON.stringify(collectionobj));
-            //getData.then(function (response) {
-            //    var status = response.data.Result >= "1" ? "1" : response.data.Result;
-            //    status = response.data.Result == "2" ? response.data.Result : status;
-            //    if (showMsgBox(status)) {
-            //        collectionobj.Action = 20;
-            //        collectionobj.ClientId = 1,//$scope.PartyId;
-            //        collectionobj.Id = response.data.Result;
-            //        $scope.FireEmailForNewsletter(collectionobj);
-            //        $scope.ClearControl(1);
-            //    }
-            //});
+            collectionobj.Summary = $scope.Summary; 
 
             var formData = new FormData();
             formData.append('file', $scope.AdminFileDoc ? $scope.AdminFileDoc : null);
@@ -161,8 +139,7 @@
             formData.append('EffectiveDateOfNotification', $filter('date')($scope.EffectiveDate, 'dd/MM/yyyy HH:mm:ss'));
             formData.append('NotificationNumber', $scope.NotificationNumber ? $scope.NotificationNumber:'');
             formData.append('DepartmentId', $scope.DepartmentId);
-            formData.append('SubjectLine', $scope.SubjectLine);
-            //$scope.Summary = CKEDITOR.instances.txtHeaderTemplate.getData();
+            formData.append('SubjectLine', $scope.SubjectLine); 
             formData.append('Summary', '');
             if ($scope.Save == "Save") {
                 formData.append('ActionType',1);
@@ -188,7 +165,7 @@
             getData.then(function (response1) {
                 if (showMsgBox(status)) {
                     collectionobj.Action = 20;
-                    collectionobj.ClientId = 1,//$scope.PartyId;
+                    collectionobj.ClientId =  $scope.selectedOptions[0];
                     collectionobj.Id = response.data.Result;
                     $scope.FireEmailForNewsletter(collectionobj);
                     $scope.ClearControl(1);

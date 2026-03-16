@@ -1,14 +1,9 @@
 ﻿using BAL;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 
 namespace EesassinErp.Controllers
@@ -46,58 +41,58 @@ namespace EesassinErp.Controllers
             for (int i = 0; i < obj.ComplianceDetail.Count; i++)
             {
                 if (!string.IsNullOrEmpty(obj.ComplianceDetail[i].Remark))
-                { 
-                    if (obj.ComplianceDetail[i].Remark.Contains("data:application/"))
                 {
-                    obj.FileDoc = Regex.Replace(obj.ComplianceDetail[i].Remark, @"data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,", string.Empty);
-                    string NewFileName = "";
-                    string strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
-                    NewFileName += strPassword;
-                    NewFileName += DateTime.Now.Year.ToString();
-                    NewFileName += DateTime.Now.Month.ToString();
-                    NewFileName += DateTime.Now.Day.ToString();
-                    NewFileName += DateTime.Now.Hour.ToString();
-                    NewFileName += DateTime.Now.Minute.ToString();
-                    NewFileName += DateTime.Now.Second.ToString();
-                    NewFileName += DateTime.Now.Millisecond.ToString();
-                    byte[] data = Convert.FromBase64String(obj.FileDoc);
-                    var imageStream = new MemoryStream(data, false);
-                    string extention = ".xls";
-                    string uploadpath = "../DownloadMat/compliancedoc/auditor/" + NewFileName + extention;
-                    string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
-                    FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-                    imageStream.WriteTo(file);
-                    file.Close();
-                    imageStream.Close();
-                    obj.ComplianceDetail[i].Remark = uploadpath;
+                    if (obj.ComplianceDetail[i].Remark.Contains("data:application/"))
+                    {
+                        obj.FileDoc = Regex.Replace(obj.ComplianceDetail[i].Remark, @"data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,", string.Empty);
+                        string NewFileName = "";
+                        string strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
+                        NewFileName += strPassword;
+                        NewFileName += DateTime.Now.Year.ToString();
+                        NewFileName += DateTime.Now.Month.ToString();
+                        NewFileName += DateTime.Now.Day.ToString();
+                        NewFileName += DateTime.Now.Hour.ToString();
+                        NewFileName += DateTime.Now.Minute.ToString();
+                        NewFileName += DateTime.Now.Second.ToString();
+                        NewFileName += DateTime.Now.Millisecond.ToString();
+                        byte[] data = Convert.FromBase64String(obj.FileDoc);
+                        var imageStream = new MemoryStream(data, false);
+                        string extention = ".xls";
+                        string uploadpath = "../DownloadMat/compliancedoc/auditor/" + NewFileName + extention;
+                        string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
+                        FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                        imageStream.WriteTo(file);
+                        file.Close();
+                        imageStream.Close();
+                        obj.ComplianceDetail[i].Remark = uploadpath;
 
-                }
+                    }
                 }
                 if (!string.IsNullOrEmpty(obj.ComplianceDetail[i].VendorRemark))
                 {
                     if (obj.ComplianceDetail[i].VendorRemark.Contains("data:application/"))
-                {
-                    obj.FileDoc = Regex.Replace(obj.ComplianceDetail[i].VendorRemark, @"data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,", string.Empty);
-                    string NewFileName = "";
-                    string strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
-                    NewFileName += strPassword;
-                    NewFileName += DateTime.Now.Year.ToString();
-                    NewFileName += DateTime.Now.Month.ToString();
-                    NewFileName += DateTime.Now.Day.ToString();
-                    NewFileName += DateTime.Now.Hour.ToString();
-                    NewFileName += DateTime.Now.Minute.ToString();
-                    NewFileName += DateTime.Now.Second.ToString();
-                    NewFileName += DateTime.Now.Millisecond.ToString();
-                    byte[] data = Convert.FromBase64String(obj.FileDoc);
-                    var imageStream = new MemoryStream(data, false);
-                    string extention = ".xls";
-                    string uploadpath = "../DownloadMat/compliancedoc/vendor/" + NewFileName + extention;
-                    string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
-                    FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-                    imageStream.WriteTo(file);
-                    file.Close();
-                    imageStream.Close();
-                    obj.ComplianceDetail[i].VendorRemark = uploadpath;
+                    {
+                        obj.FileDoc = Regex.Replace(obj.ComplianceDetail[i].VendorRemark, @"data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,", string.Empty);
+                        string NewFileName = "";
+                        string strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
+                        NewFileName += strPassword;
+                        NewFileName += DateTime.Now.Year.ToString();
+                        NewFileName += DateTime.Now.Month.ToString();
+                        NewFileName += DateTime.Now.Day.ToString();
+                        NewFileName += DateTime.Now.Hour.ToString();
+                        NewFileName += DateTime.Now.Minute.ToString();
+                        NewFileName += DateTime.Now.Second.ToString();
+                        NewFileName += DateTime.Now.Millisecond.ToString();
+                        byte[] data = Convert.FromBase64String(obj.FileDoc);
+                        var imageStream = new MemoryStream(data, false);
+                        string extention = ".xls";
+                        string uploadpath = "../DownloadMat/compliancedoc/vendor/" + NewFileName + extention;
+                        string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
+                        FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                        imageStream.WriteTo(file);
+                        file.Close();
+                        imageStream.Close();
+                        obj.ComplianceDetail[i].VendorRemark = uploadpath;
                     }
                 }
             }
@@ -203,6 +198,6 @@ namespace EesassinErp.Controllers
         }
 
 
-        
+
     }
 }

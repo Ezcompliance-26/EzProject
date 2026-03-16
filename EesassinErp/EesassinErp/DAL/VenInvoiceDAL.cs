@@ -1,26 +1,21 @@
-﻿using System;
+﻿using BAL;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
-using BAL;
 using System.Text;
-using System.IO;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace DAL
 {
     public partial class DLL
     {
 
-        public  DataTable GetVenInvoiceListDT(TblVendorInvoiceBAL obj)
+        public DataTable GetVenInvoiceListDT(TblVendorInvoiceBAL obj)
         {
             var param = new List<SqlParameter>
             {
                 new SqlParameter("@Sptype", obj.ActionType),
-                new SqlParameter("@StateID", obj.StateID), 
+                new SqlParameter("@StateID", obj.StateID),
                 new SqlParameter("@PartyID", obj.PartyID),
                   new SqlParameter("@CreatedBy", obj.CreatedBy),
             };
@@ -145,16 +140,16 @@ namespace DAL
 
         {
             var param = new List<SqlParameter>
-            { 
+            {
 
                 new SqlParameter("@Sptype", obj.ActionType),
                 new SqlParameter("@InvoiceId", obj.InvoiceId),
                 new SqlParameter("@SNO", obj.SNO),
                  new SqlParameter("@ConversationId", obj.ConversationId),
-                new SqlParameter("@DocumentName", obj.DocumentName), 
+                new SqlParameter("@DocumentName", obj.DocumentName),
                 new SqlParameter("@DocumentId", obj.DocumentId),
-                new SqlParameter("@DocumentFile", obj.FileDoc), 
-                new SqlParameter("@Updatedby", obj.CreatedBy), 
+                new SqlParameter("@DocumentFile", obj.FileDoc),
+                new SqlParameter("@Updatedby", obj.CreatedBy),
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("EVM.USP_TBL_VENDOR_INVOICE", CommandType.StoredProcedure, param.ToArray()));
@@ -172,8 +167,8 @@ namespace DAL
             for (int i = 0; i < obj.InvoiceDetail.Count; i++)
             {
                 InvoiceDetail.Append(bigseprator);
-                InvoiceDetail.Append(obj.InvoiceDetail[i].Srno); 
-          
+                InvoiceDetail.Append(obj.InvoiceDetail[i].Srno);
+
                 InvoiceDetail.Append(seprator);
                 InvoiceDetail.Append(obj.InvoiceDetail[i].InvDate);
                 InvoiceDetail.Append(seprator);
@@ -209,32 +204,32 @@ namespace DAL
                 InvoiceDetail.Append(obj.InvoiceDetail[i].VendorId);
 
                 InvoiceDetail.Append(seprator);
-                InvoiceDetail.Append(obj.InvoiceDetail[i].VendorSiteId);  
+                InvoiceDetail.Append(obj.InvoiceDetail[i].VendorSiteId);
 
                 InvoiceDetail.Append(seprator);
                 InvoiceDetail.Append(obj.InvoiceDetail[i].fileupload);
 
                 InvoiceDetail.Append(seprator);
-                InvoiceDetail.Append(obj.InvoiceDetail[i].Status); 
+                InvoiceDetail.Append(obj.InvoiceDetail[i].Status);
 
-              bigseprator = "|";
+                bigseprator = "|";
             }
 
             var param = new List<SqlParameter>
             {
                new SqlParameter("@InvoiceDetail", InvoiceDetail.ToString()),
-                
+
                 new SqlParameter("@Action", obj.ActionType),
-                new SqlParameter("@InvoiceId", obj.InvoiceId), 
+                new SqlParameter("@InvoiceId", obj.InvoiceId),
                 new SqlParameter("@ClientId", obj.ClientId),
                 new SqlParameter("@ClientSiteId", obj.ClientSiteId),
                 //new SqlParameter("@VendorSite", obj.VendorSiteId),
                 new SqlParameter("@Vendor", obj.VendorId),
 
-                
+
                 new SqlParameter("@FYID", obj.FYID),
                 new SqlParameter("@Month", obj.Month),
-                new SqlParameter("@CreatedBy", obj.CreatedBy), 
+                new SqlParameter("@CreatedBy", obj.CreatedBy),
                 new SqlParameter("@IsActive", obj.IsActive),
                 new SqlParameter("@IsDeleted", obj.IsDeleted),
                 new SqlParameter("@RESULT",""),
@@ -245,19 +240,19 @@ namespace DAL
         }
 
         public async Task<string> InsertUpdateDelWithoutVenInvoice(TblVendorInvoiceBAL obj)
-        { 
+        {
 
             var param = new List<SqlParameter>
-            { 
-                new SqlParameter("@Action", obj.ActionType), 
+            {
+                new SqlParameter("@Action", obj.ActionType),
                 new SqlParameter("@ClientId", obj.ClientId),
                 new SqlParameter("@StateId", obj.StateID),
                 new SqlParameter("@FYID", obj.FYID),
-                new SqlParameter("@Month", obj.Month), 
+                new SqlParameter("@Month", obj.Month),
                 new SqlParameter("@CreatedBy", obj.CreatedBy),
                 new SqlParameter("@TypeInvoice", obj.TypeInvoice),
                 new SqlParameter("@ClientSiteId", obj.ClientSiteId),
-                 new SqlParameter("@Location", obj.Location), 
+                 new SqlParameter("@Location", obj.Location),
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[USP_InvoiceRegister]", CommandType.StoredProcedure, param.ToArray()));

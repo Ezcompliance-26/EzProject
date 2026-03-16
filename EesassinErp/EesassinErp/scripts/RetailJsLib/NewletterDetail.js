@@ -13,10 +13,10 @@
         }
     }
 
-    $scope.ShowDetails = false;
+    $scope.ShowDetails = true;
 
     $scope.ShowDetailsFunction = function (id) {
-        $scope.newsletter = $filter('filter')($scope.newsletterAll, { 'Id': id });
+       // $scope.newsletter = $filter('filter')($scope.newsletterAll, { 'Id': id });
         //var collectionobj = {};
         //collectionobj.Id = id;
         //var getData = myService.methode('POST', ("../Newsletter/GetNewsletterClientNames"), JSON.stringify(collectionobj));
@@ -24,9 +24,9 @@
         //    $scope.newsletter[0].PartyName = response.data.Result;
         //    $scope.$applyAsync();
         //});
-
-        $scope.trustedSummary = $sce.trustAsHtml($scope.newsletter[0].Summary);
-        $scope.ShowDetails = !$scope.ShowDetails;
+        window.parent.location.href = '../RetailSection/Dashboard?Dashboard';
+       // $scope.trustedSummary = $sce.trustAsHtml($scope.newsletter[0].Summary);
+        //$scope.ShowDetails = !$scope.ShowDetails;
     }
 
     $scope.ViewAllFun = function () {
@@ -95,7 +95,10 @@
             return;
         }
         
-    } 
+    }
+
+   
+    
 
     $scope.GetLicenseRequestData = function () {
         $scope.showLoader();
@@ -1370,35 +1373,126 @@
 
     //-------------------------End Notice
     //-----------------------------Excelation Process
-
     $scope.downloadsummary = function () {
-      //-----------------------------------
-        //var pdf = new jsPDF('l', 'pt', 'a4');
-        //var pdfwidth = pdf.internal.pageSize.width;
-        //var pdfheight = pdf.internal.pageSize.height;
-
-      
         html2canvas(document.querySelector("#downloaddiv2"), {
-           scale: 0,  // Increase the scale for higher resolution,
+            scale: 2, // Increase the scale for higher resolution
+            useCORS: true, // Handle cross-origin images
         }).then(canvas => {
-          
-           var imgData = canvas.toDataURL("image/png");
-            
-        //    // Add the image to the PDF
-        //    pdf.addImage(imgData, 'PNG', 0, 0, pdfwidth, pdfheight);
-        //    pdf.save($scope.newsletter[0].SubjectLine + '.pdf'); // The name of the downloaded PDF
-            //-----------------------------------
-            //---------------------------
-            var downloadLink = document.createElement('a');
-           //var link= document.getElementById('downloadLink');
-            downloadLink.setAttribute('download', $scope.newsletter[0].SubjectLine + '.png');
-            downloadLink.setAttribute('href', imgData);
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            //-----------------------------
-            });
+            var imgData = canvas.toDataURL("image/png");
+
+            // Initialize jsPDF
+            var pdf = new jsPDF("p", "mm", "a4");
+            var pdfWidth = pdf.internal.pageSize.width;
+            var pdfHeight = pdf.internal.pageSize.height;
+
+            // Calculate image dimensions to fit into the PDF
+            var canvasWidth = canvas.width;
+            var canvasHeight = canvas.height;
+            var ratio = Math.min(pdfWidth / canvasWidth, pdfHeight / canvasHeight);
+            var imgWidth = canvasWidth * ratio;
+            var imgHeight = canvasHeight * ratio;
+
+            // Add the image to the PDF with 0 margin at the top
+            pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);  // 0, 0 for top-left corner
+
+            // Save the PDF
+            var fileName = ($scope.newsletter?.[0]?.SubjectLine || "Summary") + ".pdf";
+            pdf.save(fileName);
+        }).catch(err => {
+            console.error("Error generating PDF:", err);
+        });
     };
+
+
+    //$scope.downloadsummary = function () {
+    //    // Initialize jsPDF
+    //    var pdf = new jsPDF('l', 'pt', 'a4'); // Landscape, points, A4 size
+    //    var pdfWidth = pdf.internal.pageSize.getWidth();
+    //    var pdfHeight = pdf.internal.pageSize.getHeight();
+
+    //    // Capture the div content
+    //    html2canvas(document.querySelector("#downloaddiv2"), {
+    //        scale: 2 // Higher scale for better quality
+    //    }).then(canvas => {
+    //        var imgData = canvas.toDataURL("image/png");
+
+    //        // Calculate aspect ratio to fit the content within the PDF dimensions
+    //        var canvasWidth = canvas.width;
+    //        var canvasHeight = canvas.height;
+    //        var ratio = Math.min(pdfWidth / canvasWidth, pdfHeight / canvasHeight);
+
+    //        // Add the image to the PDF
+    //        var imgWidth = canvasWidth * ratio;
+    //        var imgHeight = canvasHeight * ratio;
+    //        var xOffset = (pdfWidth - imgWidth) / 2; // Center horizontally
+    //        var yOffset = (pdfHeight - imgHeight) / 2; // Center vertically
+
+    //        pdf.addImage(imgData, 'PNG', xOffset, yOffset, imgWidth, imgHeight);
+
+    //        // Save the PDF
+    //        pdf.save($scope.newsletter[0].SubjectLine + '.pdf');
+    //    });
+    //};
+    $scope.downloadsummary = function () {
+        $('#btndownload').html('<i class="fa fa-spinner fa-spin"></i>&nbsp; Please wait')
+        $('#btndownload').prop('disabled', true);
+
+        setTimeout(function () {
+            const targetDiv = document.querySelector("#downloaddiv");
+
+            // Temporarily make the div visible
+            const originalOpacity = targetDiv.style.opacity;
+            targetDiv.style.opacity = "1";
+
+            // Use html2canvas to capture the div
+            html2canvas(targetDiv, {
+                scale: 2, // Increase scale for better resolution
+                useCORS: true, // Handle cross-origin images
+            })
+                .then((canvas) => {
+                    const imgData = canvas.toDataURL("image/png");
+
+                    // Initialize jsPDF
+                    const pdf = new jsPDF("p", "mm", "a4");
+                    const pdfWidth = pdf.internal.pageSize.width;
+                    const pdfHeight = pdf.internal.pageSize.height;
+
+                    // Calculate image dimensions to fit into the PDF
+                    const canvasWidth = canvas.width;
+                    const canvasHeight = canvas.height;
+                    const ratio = Math.min(pdfWidth / canvasWidth, pdfHeight / canvasHeight);
+                    const imgWidth = canvasWidth * ratio;
+                    const imgHeight = canvasHeight * ratio;
+
+                    // Add the image to the PDF starting from the top
+                    const xOffset = (pdfWidth - imgWidth) / 2;
+                    const yOffset = 0; // Align from the top of the page
+
+                    pdf.addImage(imgData, "PNG", xOffset, yOffset, imgWidth, imgHeight);
+
+                    // Save the PDF
+                    const fileName = ($scope.newsletter?.[0]?.SubjectLine || "Summary") + ".pdf";
+                    pdf.save(fileName);
+
+                    // Revert div opacity to its original state
+                    targetDiv.style.opacity = originalOpacity;
+                    $('#btndownload').html('<i></i>&nbsp; Download')
+                    $('#btndownload').prop('disabled', false);
+                })
+                .catch((err) => {
+                    console.error("Error generating PDF:", err);
+                    targetDiv.style.opacity = originalOpacity; // Ensure the opacity is restored even on error
+                    $('#btndownload').html('<i></i>&nbsp; Download')
+                    $('#btndownload').prop('disabled', false);
+                });
+
+        }, 100);
+    };
+
+     
+
+
+
     
     $scope.BindEscalation = function () {
 

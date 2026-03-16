@@ -1,11 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace BAL
 {
     public partial class TblPartyMaster : BCommon
     {
         public string Description { get; set; }
+        public string machineName { get; set; }
+        public string systemUserName { get; set; }
+        public string UserLimit { get; set; }
+        
+        public string SetInColumn { get; set; }
+
+        public string State { get; set; }
+        public string LicenseId { get; set; }
+
         public int StoreId { get; set; }
         public int Id { get; set; }
         public string Location { get; set; }
@@ -13,7 +21,7 @@ namespace BAL
         public int ClientSiteId { get; set; }
         public int AuditorId { get; set; }
         public int EmployeeId { get; set; }
-        public int ClientId { get; set; }
+        public string ClientId { get; set; }
         public int GradeId { get; set; }
         public int ActionType { get; set; }
         public int PartyId { get; set; }
@@ -50,6 +58,29 @@ namespace BAL
         public string Minutes { get; set; }
         public string Year { get; set; }
         public string Month { get; set; }
+        public string Activity { get; set; }
+        public string RegionId { get; set; }
+        public string StateId { get; set; }
+
+        public string Status { get; set; }
+        public string Category { get; set; }
+
+        public string StoreLimit { get; set; }
+        public string ValidTo { get; set; }
+
+        public string PartyDate { get; set; }
+        public string Industry { get; set; }
+        public string MonthExpired { get; set; }    ///Added by shipra 
+        public string LCID { get; set; }
+        public string LSID { get; set; }
+        public string DepartmentList { get; set; }
+        public string DepartmentName { get; set; }
+
+
+        public string SelectedColumn { get; set; }
+        public string MatchingText { get; set; }
+
+        
         //public DateTime? StartDate { get; set; }
         //public DateTime? EndDate { get; set; }
     }

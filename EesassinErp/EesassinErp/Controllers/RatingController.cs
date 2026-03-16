@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using BAL;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using BAL;
 using DAL;
-using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using System;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
+    [ValidateSession]
     public class RatingController : Controller
     {
         // GET: Rating
@@ -30,7 +28,7 @@ namespace EesassinErp.Controllers
             return result;
         }
 
-        
+
         public async Task<string> IUDRating(RatingBAL obj)
         {
             if (!string.IsNullOrEmpty(obj.Certificate))
@@ -58,7 +56,7 @@ namespace EesassinErp.Controllers
                     imageStream.WriteTo(file);
                     file.Close();
                     imageStream.Close();
-                    obj.Certificate = uploadpath; 
+                    obj.Certificate = uploadpath;
                 }
 
             }

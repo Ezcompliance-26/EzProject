@@ -1,13 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
-using BAL;
-using System.Text;
-using System.IO;
-using System.Data;
-using Newtonsoft.Json;
+﻿using BAL;
 using DAL;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace EesassinErp.Controllers
 {
@@ -15,7 +10,7 @@ namespace EesassinErp.Controllers
     {
         [HttpPost]
         public async Task<string> NavMenuList(Module obj)
-        { 
+        {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.NavMenuList(obj)));
             return result;
         }
@@ -29,7 +24,7 @@ namespace EesassinErp.Controllers
         public async Task<string> SubMenuList(Module obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.SubMenuList(obj)));
-             return result;
+            return result;
         }
         [HttpPost]
         public async Task<string> InsertMenuPermission(MenuPermission obj)
@@ -38,12 +33,12 @@ namespace EesassinErp.Controllers
             return result;
         }
 
-      
+
 
         public async Task<string> InsertBranchMenuPermission(MenuPermission obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.BranchMenuPermission(obj)));
-             return result;
+            return result;
         }
 
         public async Task<string> SearchBranchMenuPermission(BranchAuthorization obj)
@@ -52,21 +47,21 @@ namespace EesassinErp.Controllers
             return result;
         }
 
-         
+
         public async Task<string> GetCompanyAndBranchMaster(BCommon obj)
-        { 
+        {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.GetCompanyAndBranchMaster(obj)));
             return result;
         }
 
         public async Task<string> InsertUpdateDeleteCompanyBranchUserPermission(BCommon obj)
-        { 
+        {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.InsertUpdateDeleteCompanyBranchUserPermission(obj)));
             return result;
         }
         public async Task<string> SearchMenuPermission(BranchAuthorization obj)
         {
-            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.SearchMenuPermission(obj)));  
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.SearchMenuPermission(obj)));
             return result;
         }
         public async Task<string> UpdateAllMembers(BranchAuthorization obj)
@@ -83,7 +78,7 @@ namespace EesassinErp.Controllers
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.GetLoginMemberDetails(obj)));
             return result;
-        } 
+        }
         public async Task<string> InsertUpdateDeleteReportHeader(BranchAuthorization obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.InsertUpdateDeleteReportHeader(obj)));
@@ -94,7 +89,7 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.GetReportHeader(obj)));
             return result;
         }
-         
+
 
         public async Task<string> GetUserRegistration(BCommon obj)
         {
@@ -107,6 +102,6 @@ namespace EesassinErp.Controllers
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.IUDUserRegistration(obj)));
             return result;
-        } 
+        }
     }
 }

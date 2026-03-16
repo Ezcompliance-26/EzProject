@@ -1,19 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace EesassinErp.BAL
+namespace BAL
 {
     public class RetialEmployeeManager
     {
         public string ActionType { get; set; }
         public string UserId { get; set; }
+
+        public DateTime? LeavingDate { get; set; }
+        public string PFAccount { get; set; }
         public string SuperVisior1 { get; set; }
         public string SuperVisior2 { get; set; }
         public string Id { get; set; }
         public string PartyTypeId { get; set; }
         public string PartyId { get; set; }
+        public string RefEmployeeCode { get; set; }
         public string EmployeeCode { get; set; }
         public string EmployeeName { get; set; }
         public string EmployeeDesignation { get; set; }
@@ -54,15 +55,15 @@ namespace EesassinErp.BAL
         public string Photos_3_FilePath { get; set; }
         public string Photos_4_FilePath { get; set; }
         public int LoginId { get; set; }
-        public int IsDeleted { get; set; } 
+        public int IsDeleted { get; set; }
         public string DisplayDOJ { get; set; }
         public string Remark { get; set; }
         public string ClientId { get; set; }
         public string Escalation1 { get; set; }
-        public string Escalation2 { get; set; }  
+        public string Escalation2 { get; set; }
         public string FieldName { get; set; }
         public string FilePath { get; set; }
         public string LicenceId { get; set; }
-        
+
     }
 }

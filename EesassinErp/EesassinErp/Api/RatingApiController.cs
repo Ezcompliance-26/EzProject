@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-using BAL;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using BAL;
 using DAL;
-using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using System;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace EesassinErp.Controllers
 {
@@ -56,7 +53,7 @@ namespace EesassinErp.Controllers
                     imageStream.WriteTo(file);
                     file.Close();
                     imageStream.Close();
-                    obj.Certificate = uploadpath; 
+                    obj.Certificate = uploadpath;
                 }
 
             }

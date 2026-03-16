@@ -1,11 +1,8 @@
 ﻿using BAL;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace DAL
 {
@@ -55,7 +52,7 @@ namespace DAL
             {
                 new SqlParameter("@Sptype", obj.ActionType),
                 new SqlParameter("@PartyId",obj.PartyId),
-                new SqlParameter("@VendorId",obj.VendorId), 
+                new SqlParameter("@VendorId",obj.VendorId),
                 new SqlParameter("@PartyType",obj.PartyType),
                 new SqlParameter("@PartyName",obj.PartyName),
                 new SqlParameter("@Address",obj.Address),
@@ -78,7 +75,12 @@ namespace DAL
                 new SqlParameter("@ATTRIBUTE6", obj.Attribute6),
                 new SqlParameter("@IsActive", obj.IsActive),
                 new SqlParameter("@IsDeleted", obj.IsDeleted),
-                         //new SqlParameter("@EmployeeId", obj.EmployeeId),
+                new SqlParameter("@StoreLimit", obj.StoreLimit),
+                 new SqlParameter("@UserLimit", obj.UserLimit), 
+                new SqlParameter("@ValidTo", obj.ValidTo),
+                   new SqlParameter("@PartyDate", obj.PartyDate),
+                new SqlParameter("@Industry", obj.Industry),
+                  new SqlParameter("@MonthExpired", obj.MonthExpired), ///Added by shipra 
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("EVM.USP_TBL_PartyMaster", CommandType.StoredProcedure, param.ToArray()));
@@ -132,7 +134,7 @@ namespace DAL
 
                 new SqlParameter("@AdminFileDoc",obj.AdminFileDoc),
                 new SqlParameter("@VendorFileDoc",obj.VendorFileDoc),
-                           
+
 
 
 
@@ -183,4 +185,4 @@ namespace DAL
         }
         //--------------------------------------End
     }
-} 
+}

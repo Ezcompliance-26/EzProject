@@ -2,6 +2,7 @@
     $scope.PartyTypeId = "";
     $scope.PartyId = "";
     $scope.EmployeeCode = '';
+    $scope.RefEmployeeCode = '';
     $scope.EmployeeName = '';
     $scope.EmployeeDesignation = '';
     $scope.EmployeeDepartment = '';
@@ -126,31 +127,35 @@
                     $scope.EmployeeMasterData = { 'EmployeeDesignation': "", 'EmployeeName': "" };
                     var td = $(this).find('td');
                     if (td.length == 0) return;
-                    $scope.EmployeeMasterData['EmployeeName'] = $(td[0]).text();
-                    $scope.EmployeeMasterData['EmployeeDesignation'] = $(td[1]).text();
-                    $scope.EmployeeMasterData['EmployeeDepartment'] = $(td[2]).text();
-                    $scope.EmployeeMasterData['Father_Husband_Name'] = $(td[3]).text();
-                    $scope.EmployeeMasterData['Gendar'] = $(td[4]).text();
-                    $scope.EmployeeMasterData['MaritalStatus'] = $(td[5]).text(); 
-                    $scope.EmployeeMasterData['DateOfBirth'] = $(td[6]).text();
-                    $scope.EmployeeMasterData['PresentAddress'] = $(td[7]).text(); 
-                    $scope.EmployeeMasterData['PermanemtAddress'] = $(td[8]).text(); 
-                    $scope.EmployeeMasterData['AdharCardNumber'] = $(td[9]).text();
-                    $scope.EmployeeMasterData['PANNumber'] = $(td[10]).text();
-                    $scope.EmployeeMasterData['MobileNumber'] = $(td[11]).text();
-                    $scope.EmployeeMasterData['AlternativeMobileNumber'] = $(td[12]).text();
-                    $scope.EmployeeMasterData['EmployeeEmailID'] = $(td[13]).text();
-                    $scope.EmployeeMasterData['BankAccountNumber'] = $(td[14]).text();
-                    $scope.EmployeeMasterData['BankIFSCCode'] = $(td[15]).text();
-                    $scope.EmployeeMasterData['PreviousUAN'] = $(td[16]).text();
-                    $scope.EmployeeMasterData['PreviousESI'] = $(td[17]).text();
-                    $scope.EmployeeMasterData['GrossSalary'] = $(td[18]).text();
-                    $scope.EmployeeMasterData['DOJ'] = $(td[19]).text();
-                    $scope.EmployeeMasterData['NomineeName'] = $(td[20]).text();
-                    $scope.EmployeeMasterData['NomineeAddress'] = $(td[21]).text();
-                    $scope.EmployeeMasterData['NomineeRelation'] = $(td[22]).text();
-                    $scope.EmployeeMasterData['NomineeDOB'] = $(td[23]).text();
-                    $scope.EmployeeMasterData['IsActive'] = $(td[24]).text(); 
+                    $scope.EmployeeMasterData['RefEmployeeCode'] = $(td[0]).text();
+                    $scope.EmployeeMasterData['EmployeeName'] = $(td[1]).text();
+                    $scope.EmployeeMasterData['EmployeeDesignation'] = $(td[2]).text();
+                    $scope.EmployeeMasterData['EmployeeDepartment'] = $(td[3]).text();
+                    $scope.EmployeeMasterData['Father_Husband_Name'] = $(td[4]).text();
+                    $scope.EmployeeMasterData['Gendar'] = $(td[5]).text();
+                    $scope.EmployeeMasterData['MaritalStatus'] = $(td[6]).text(); 
+                    $scope.EmployeeMasterData['DateOfBirth'] = $(td[7]).text();
+                    $scope.EmployeeMasterData['PresentAddress'] = $(td[8]).text(); 
+                    $scope.EmployeeMasterData['PermanemtAddress'] = $(td[9]).text(); 
+                    $scope.EmployeeMasterData['AdharCardNumber'] = $(td[10]).text();
+                    $scope.EmployeeMasterData['PANNumber'] = $(td[11]).text();
+                    $scope.EmployeeMasterData['MobileNumber'] = $(td[12]).text();
+                    $scope.EmployeeMasterData['AlternativeMobileNumber'] = $(td[13]).text();
+                    $scope.EmployeeMasterData['EmployeeEmailID'] = $(td[14]).text();
+                    $scope.EmployeeMasterData['BankAccountNumber'] = $(td[15]).text();
+                    $scope.EmployeeMasterData['BankIFSCCode'] = $(td[16]).text();
+                    $scope.EmployeeMasterData['PreviousUAN'] = $(td[17]).text();
+                    $scope.EmployeeMasterData['PreviousESI'] = $(td[18]).text();
+                    $scope.EmployeeMasterData['GrossSalary'] = $(td[19]).text();
+                    $scope.EmployeeMasterData['DOJ'] = $(td[20]).text();
+                    $scope.EmployeeMasterData['NomineeName'] = $(td[21]).text();
+                    $scope.EmployeeMasterData['NomineeAddress'] = $(td[22]).text();
+                    $scope.EmployeeMasterData['NomineeRelation'] = $(td[23]).text();
+                    $scope.EmployeeMasterData['NomineeDOB'] = $(td[24]).text();
+                    $scope.EmployeeMasterData['StoreCode'] = $(td[25]).text();
+                    $scope.EmployeeMasterData['IsActive'] = $(td[26]).text();
+                    $scope.EmployeeMasterData['LeavingDate'] = $(td[27]).text();
+                    $scope.EmployeeMasterData['PFAccount'] = $(td[28]).text();
                     
                     $scope.EmployeeeMasterList.push($scope.EmployeeMasterData);
                     $scope.btnValiadte = true;
@@ -169,12 +174,16 @@
         var collectionobj = {};
         collectionobj.EmployeeMaster = $scope.EmployeeeMasterList;
         collectionobj.ActionType = 10;
+        collectionobj.PartyTypeId = $scope.PartyTypeId;
+        collectionobj.PartyId = MapId
+        collectionobj.UserId = LoginId
         var getData = myService.methode('POST', "../RetailSection/IUDBulkEmployeee", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             debugger;
-            $scope.GetEmployeeMaster();
-            //showMsgBox(response.data.Result);
+           
             showMsgBox('999', 'Alert', 'Save Successfully', 'warning', 'btn-warning');
+           
+            $scope.GetEmployeeMaster();
           
             $('#tab1-tab').click();
         });
@@ -252,8 +261,7 @@
     $scope.BindAllStoreList = function () {
         var collectionobj = {};
         collectionobj.Id = LoginId;
-        //var getData = myService.nonasyncmethode('GET', "../Retail/GetStore");
-        //getData.then(function (response) {
+        collectionobj.ActionType = 17;
         var getData = myService.methode('POST', "../Retail/GetStore", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) { 
             $scope.AllStoreList = response.data.Result;
@@ -262,96 +270,84 @@
 
 
     $scope.GetEmployeeMaster = function () {
-        $scope.showLoader();
-        $scope.EmployeeList=[];
-        var collectionobj = {};
-        collectionobj.ActionType = 4;
-        collectionobj.PartyId = LoginId;
-        var getData = myService.methode('POST', ("../RetailSection/GetEmployeeMaster"), JSON.stringify(collectionobj));
-        getData.then(function (response) {
-       
-                $scope.EmployeeList = response.data.Result;
-                $scope.$applyAsync();
-            angular.element(document).ready(function () {
-                $('#example').DataTable().destroy();
-                dTable = $('#example') 
-                dTable.DataTable({
-                    dom: 'Bfrtip',
-                    buttons: [
-                         //'colvis',
-                        {
-                            extend: 'csv',
-                            filename: 'Employee Master',
-                            orientation: 'landscape', //portrait
-                            title: function () {
-                                var printTitle = 'Employee Master';
-                                return printTitle
-                            },
-                            exportOptions: {
-                                columns: [0, 1, 2, 4]
-                            },
-                        },
+        
+        var collectionobj = {
+            ActionType: 4,
+            PartyId: LoginId
+        };
 
-                        'excel',
-                        {
-                            extend: 'pdfHtml5',
-                            text: 'Export PDF',
-                            filename: 'Employee Master',
-                            orientation: 'portrait', //portrait
-                            pageSize: 'A4', //A3 , A5 , A6 , legal , letter 
-                            customize: function (doc) {
-                                doc.styles['table'] = { width: '100%' }
-                                doc.pageMargins = [20, 60, 20, 30];
-                                doc.styles.tableHeader.fontSize = 15;
-                                doc['header'] = (function () {
-                                    return {
-                                        columns: [
-                                            {
-                                                alignment: 'center',
-                                                fontSize: 14,
-                                                text: 'Employee Master'
-                                            }
-                                        ],
+        myService.methode('POST', "../RetailSection/GetEmployeeMaster", JSON.stringify(collectionobj))
+            .then(function (response) {
+                $scope.EmployeeList = response.data.Result || [];
+
+                // use $timeout to wait until ng-repeat has rendered rows
+                $timeout(function () {
+                    if ($.fn.DataTable.isDataTable('#example')) {
+                        $('#example').DataTable().clear().destroy();
+                    }
+
+                    $('#example').DataTable({
+                        dom: 'Bfrtip',
+                        buttons: [
+                            {
+                                extend: 'csv',
+                                filename: 'Employee Master',
+                                orientation: 'landscape',
+                                title: 'Employee Master',
+                                exportOptions: { columns: [0, 1, 2, 4] },
+                                action: function (e, dt, button, config) {
+                                    $scope.ManageLog('Employee Master csv Download');
+                                    $.fn.dataTable.ext.buttons.csvHtml5.action.call(this, e, dt, button, config);
+                                }
+                            },
+                            'excel',
+                            {
+                                extend: 'pdfHtml5',
+                                text: 'Export PDF',
+                                filename: 'Employee Master',
+                                orientation: 'portrait',
+                                pageSize: 'A4',
+                                customize: function (doc) {
+                                    doc.pageMargins = [20, 60, 20, 30];
+                                    doc.styles.tableHeader.fontSize = 15;
+                                    doc['header'] = {
+                                        columns: [{ alignment: 'center', fontSize: 14, text: 'Employee Master' }],
                                         margin: 40
-                                    }
-                                });
+                                    };
+                                },
+                                exportOptions: { columns: [0, 1, 2, 4] },
+                                action: function (e, dt, button, config) {
+                                    $scope.ManageLog('Employee Master pdf Download');
+                                    $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, button, config);
+                                }
                             },
-                            exportOptions: {
-                                columns: [0, 1, 2, 4]
-                            },
-
-                        },
-                        , {
-                            extend: 'print',
-                            filename: 'Employee Master',
-                            orientation: 'portrait',
-                            title: function () {
-                                var printTitle = 'Employee Master';
-                                return printTitle
-                            },
-                            customize: function (win) {
-                                $(win.document.body).addClass('white-bg');
-                                $(win.document.body).css('font-size', '14px');
-
-                                $(win.document.body).find('table')
+                            {
+                                extend: 'print',
+                                filename: 'Employee Master',
+                                orientation: 'portrait',
+                                title: 'Employee Master',
+                                customize: function (win) {
+                                    $(win.document.body).addClass('white-bg')
+                                        .css('font-size', '14px');
+                                    $(win.document.body).find('table')
                                         .addClass('compact')
                                         .css('font-size', '14px')
                                         .css('color', 'black');
-
-                            },
-                            exportOptions: {
-                                columns: [0, 1, 2, 4]
-                            },
-                        }
-                    ], 
-                }); 
-
+                                },
+                                exportOptions: { columns: [0, 1, 2, 4] },
+                                action: function (e, dt, button, config) {
+                                    $scope.ManageLog('Employee Master print Download');
+                                    $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, button, config);
+                                }
+                            }
+                        ]
+                    });
+                   
+                }, 500); // wait 0.5s for ng-repeat render
             });
-            $scope.$applyAsync();
-            $scope.hideLoader();
-        });
-         
     };
+
+
    
     $scope.ShowDivEmployeeMasterGrid = function () {
         $scope.SaveEmployee();
@@ -365,10 +361,22 @@
             }
             if (_isFileValid) {
                 var formData = new FormData();
-                formData.append("Id", $scope.EditId);
-                formData.append("PartyTypeId", $scope.PartyTypeId);
-                formData.append("PartyId", $scope.PartyId);
-                formData.append("UserId", $scope.UserId);
+                formData.append("Id", $scope.EditId); 
+                //formData.append("PartyId", $scope.PartyId);
+                //formData.append("UserId", $scope.UserId);
+                formData.append("RefEmployeeCode", $scope.RefEmployeeCode);
+                formData.append("PartyTypeId", 4);
+                formData.append("PartyId", MapId);
+                formData.append("UserId", LoginId);
+                //formData.append("LeavingDate", $scope.LeavingDate.toISOString());
+
+                formData.append(
+                    "LeavingDate",
+                    ($scope.LeavingDate && $scope.LeavingDate !== ""
+                        ? new Date($scope.LeavingDate).toISOString()
+                        : "")
+                );
+                formData.append("PFAccount", $scope.PFAccount);
                 formData.append("SuperVisior1", $scope.SuperVisior1);
                 formData.append("SuperVisior2", $scope.SuperVisior2);
                 formData.append("EmployeeCode", $scope.EmployeeCode);
@@ -440,7 +448,7 @@
         $scope.EmployeeMasterGrid = false;
         $scope.EmployeeMasterForm = true;
         $scope.IsActionType = 1;
-        $scope.GenerateEmployeeCode();
+      /*  $scope.GenerateEmployeeCode();*/
     };
     $scope.getFileIconClass = function (fileModel) {
         return fileModel ? 'fa fa-check-square' : 'fa fa-plus';
@@ -514,10 +522,12 @@
                 IsTransfer: selectedEmployee.IsTransfer,
                 Id: selectedEmployee.Id,
                 PartyTypeId: selectedEmployee.PartyTypeId,
-                PartyId: selectedEmployee.PartyId,
-                UserId: selectedEmployee.UserId,
+                //PartyId: selectedEmployee.PartyId,
+                //UserId: selectedEmployee.UserId,
                 Name: selectedEmployee.EmployeeName,
                 DOJ: selectedEmployee.DisplayDOJ,
+
+                RefEmployeeCode: selectedEmployee.RefEmployeeCode,
                 UnitCode: selectedEmployee.UnitCode,
                 Email: selectedEmployee.EmployeeEmailID,
                 PhoneNumber: selectedEmployee.MobileNumber,
@@ -581,11 +591,14 @@
         }, 400);
        
         $scope.EmployeeCode = selectedEmployee.EmployeeCode;
+        $scope.RefEmployeeCode = selectedEmployee.RefEmployeeCode;
         $scope.EmployeeName = selectedEmployee.EmployeeName;
         $scope.EmployeeDesignation = selectedEmployee.EmployeeDesignation;
         $scope.EmployeeDepartment = selectedEmployee.EmployeeDepartment;
         $scope.FatherHusbandName = selectedEmployee.Father_Husband_Name;
         $scope.Gender = selectedEmployee.Gendar;
+        $scope.PFAccount =  selectedEmployee.PFAccount,
+            $scope.LeavingDate =  selectedEmployee.LeavingDate,
         $scope.MaritalStatus = selectedEmployee.MaritalStatus;
         $scope.DateofBirth = new Date(selectedEmployee.DateOfBirth);
         $scope.PresentAddress = selectedEmployee.PresentAddress;
@@ -606,6 +619,8 @@
         $scope.RelationofNominee = selectedEmployee.NomineeRelation;
         $scope.DOBofNominee = new Date(selectedEmployee.NomineeDOB);
         $scope.StoreCode = selectedEmployee.StoreCode;
+        $scope.PFAccount = selectedEmployee.PFAccount;
+        $scope.LeavingDate = new Date(selectedEmployee.LeavingDate);
         debugger;
         $scope.IsActive = selectedEmployee.IsActive == true ? '1' : '0';
         $scope.PANCardFilePath = selectedEmployee.PANCardFilePath;

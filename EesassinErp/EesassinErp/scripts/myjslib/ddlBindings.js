@@ -80,143 +80,7 @@
 
    // $scope.UrlAccessPermission();
      
-
-
-    $scope.BindSupplierList = function () {
-        var collectionobj = {};
-        collectionobj.Action = 5;
-        collectionobj.BranchCode = BranchCode;
-        collectionobj.VendorType = $scope.VendorType;
-
-        var getData = myService.methode('POST', "../Hathery/SearchVendorMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.SupplierList = response.data.Result;
-        });
-    };
-    $scope.BindBatchNo = function () {
-        var collectionobj = {};
-        collectionobj.Action = 14;
-        collectionobj.BranchCode = BranchCode;
-        collectionobj.FarmCode = $scope.FarmCode;
-        var getData = myService.methode('POST', "../Hathery/SearchFarmMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.BatchNo = response.data.Result[0].BatchNo;
-        });
-    };
-
-    
-
-    $scope.BindAllBatch = function () {
-        var collectionobj = {};
-        collectionobj.Action = 6;
-        collectionobj.BranchCode = BranchCode;
-        collectionobj.FarmCode = $scope.FarmCode;
-        var getData = myService.methode('POST', "../Sale/SearchGC", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.BatchNo = response.data.Result[0].BatchNo;
-        });
-    };
-
-    $scope.BindTransporter = function () {
-        var collectionobj = {};
-        collectionobj.Action = 5;
-        collectionobj.BranchCode = BranchCode;  
-        var getData = myService.methode('POST', "../Hathery/SearchTransportMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.TransporterList = response.data.Result;
-        });
-    };
-    $scope.BindSubCatItem = function (Item) {
-        var collectionobj = {};
-        collectionobj.Action = 8;
-        collectionobj.BranchCode = BranchCode;
-        collectionobj.Id = Item;
-        var getData = myService.methode('POST', "../SaudaEntry/GetDetails", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.ItemList = response.data.Result;
-        });
-    };
-    $scope.BindItembyGroup = function (VendorType,index) {
-        var collectionobj = {};
-        collectionobj.Action = 5;
-        collectionobj.BranchCode = BranchCode;
-        collectionobj.VendorType = VendorType;
-        var getData = myService.methode('POST', "../DashBoard/GetItembyGroup", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.Sauda_Detail[index].SubItemList = response.data.Result;
-        });
-    }; 
-
-    
-    
-    $scope.BindItemgroup = function (FarmerId, index) {
-        var collectionobj = {};
-        collectionobj.Action = 5;
-        collectionobj.BranchCode = BranchCode;
-        collectionobj.FarmerId =  FarmerId;
-        var getData = myService.methode('POST', "../Hathery/SearchFarmMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.Sauda_Detail[index].SubItemList = response.data.Result;
-        });
-    };
-
-
-
-
-    $scope.BindFarmer = function () {
-        var collectionobj = {};
-        collectionobj.Action = 6;
-        collectionobj.BranchCode = BranchCode;
-        var getData = myService.methode('POST', "../Hathery/SearchFarmMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.FarmerList = response.data.Result;
-        });
-    };
-    $scope.BindFarmerWithoutDetail= function () {
-        var collectionobj = {};
-        collectionobj.Action = 11;
-        collectionobj.BranchCode = BranchCode;
-        var getData = myService.methode('POST', "../Hathery/SearchFarmMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.SingleFarmerList = response.data.Result;
-        });
-    };
-
-    $scope.BindItem = function () {
-        var collectionobj = {};
-        collectionobj.Action = 11;
-        collectionobj.BranchCode = BranchCode;
-        var getData = myService.methode('POST', "../Hathery/SearchFarmMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.ItemList = response.data.Result;
-        });
-    };
-
-    
-
-
-    $scope.BindFarm = function () {
-        var collectionobj = {};
-        collectionobj.Action = 4;
-        collectionobj.BranchCode = BranchCode;
-        collectionobj.FarmerId = $scope.FarmerId;
-        var getData = myService.methode('POST', "../Hathery/SearchFarmMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.FarmList = response.data.Result;
-        });
-    };
-
-
-    $scope.BindAge = function () {
-        var collectionobj = {};
-        collectionobj.Action = 13;
-        collectionobj.BranchCode = BranchCode;
-        collectionobj.FarmerId = $scope.FarmerId;
-        var getData = myService.methode('POST', "../Hathery/SearchFarmMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            $scope.AgeList = response.data.Result;
-        });
-    };
+     
     
 
     $scope.ToDate = new Date();
@@ -243,18 +107,20 @@
         chk = false;
         $scope.mySwitch = false;
     }
-
+    chk = false;
+    $scope.mySwitch = true;
     $scope.checkPassCode = function () {
         var collectionobj = {}; 
         collectionobj.BranchCode = BranchCode; 
         collectionobj.OldPassword = $('#txtCurrentPasscode').val();
         collectionobj.LoginId = LoginId;
         collectionobj.Action = 1;
+        collectionobj.UserName = $scope.UserName;
         var getData = myService.methode('POST', "../ChangePassCode/checkPassCode", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             //debugger;
 
-            if (response.data.Result[0].Ex== 1) {
+            if (response.data == 1) {
                 $scope.mySwitch = false;
                 chk = true;
                 $('#txtCurrentPasscode').attr('style', 'box-shadow: 0px 1px #70c126;')

@@ -1,12 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace EesassinErp.BAL
+namespace BAL
 {
     public class RetialStoreManager
     {
+        public string PFAccount { get; set; }
+
+        public string LicenseId { get; set; }
+        public string LicenseName { get; set; }
+        public string UniqueId { get; set; }
+        public DateTime? InsuranceFromDate { get; set; }
+        public DateTime? InsurancePaidReceiptPeriodUpTo { get; set; }
+        public string InsurancePaidReceiptRemark { get; set; }
+
+        public string PartyId { get; set; }
+        public string locationId { get; set; }
+        public string DiligenceFile { get; set; }
+
+        public string Remark { get; set; }
+        public string Action { get; set; }
+        public string validFrom { get; set; }
+        public string validTo { get; set; }
+        public string status { get; set; }
+        public string UserId { get; set; }
+        public string Ids { get; set; }
+        public string Directory { get; set; }
         public string RefStoreCode { get; set; }
         public int ActionType { get; set; }
         public long Id { get; set; }
@@ -14,10 +33,13 @@ namespace EesassinErp.BAL
         public string StoreCode { get; set; }
         public string StoreName { get; set; }
         public string Category { get; set; }
+        public string Operationmodel { get; set; }
+        public string ComplianceCategory { get; set; }
         public string CompleteAddress { get; set; }
-        public DateTime ProposedDate { get; set; }
+        public DateTime? ProposedDate { get; set; }
         public string StoreLocation { get; set; }
-        public float CityId { get; set; }
+        public string CityId { get; set; }
+        public string CountryId { get; set; }
         public float CircleId { get; set; }
         public float RegionId { get; set; }
         public string ZipCode { get; set; }
@@ -54,21 +76,27 @@ namespace EesassinErp.BAL
         public string ExecuterId { get; set; }
         public string CMonth { get; set; }
         public string FY { get; set; }
+        public string PageNumber { get; set; }
+        public string PageSize { get; set; }
+        public string Searchby { get; set; }
+    
 
-        
+
         public int LoginId { get; set; }
         public int DaysOfExpire { get; set; }
+        public int LED { get; set; }
+
         public List<StoreMasterList> StoreMaster { get; set; }
         public List<EmployeeMasterList> EmployeeMaster { get; set; }
         public List<ComplianceMasterList> ComplianceList { get; set; }
-        public DateTime ElectricityBillPeriodUpTo { get; set; }
-        public DateTime LeasePaidReceiptPeriodUpTo { get; set; }
-        public DateTime PropertyTaxPeriodUpTo { get; set; }
-        public DateTime FireNocPeriodUpTo { get; set; }
-        public DateTime PollutionPeriodUpTo { get; set; }
-        public DateTime OwnershipDocPeriodUpTo { get; set; }
-        public DateTime AdditionalDocPeriodUpTo { get; set; }
-        public DateTime LeaseFromDate { get; set; }
+        public DateTime? ElectricityBillPeriodUpTo { get; set; }
+        public DateTime? LeasePaidReceiptPeriodUpTo { get; set; }
+        public DateTime? PropertyTaxPeriodUpTo { get; set; }
+        public DateTime? FireNocPeriodUpTo { get; set; }
+        public DateTime? PollutionPeriodUpTo { get; set; }
+        public DateTime? OwnershipDocPeriodUpTo { get; set; }
+        public DateTime? AdditionalDocPeriodUpTo { get; set; }
+        public DateTime? LeaseFromDate { get; set; }
         public string ElectricityBillRemark { get; set; }
         public string LeasePaidReceiptRemark { get; set; }
         public string PropertyTaxRemark { get; set; }
@@ -76,6 +104,33 @@ namespace EesassinErp.BAL
         public string PollutionRemark { get; set; }
         public string OwnershipDocRemark { get; set; }
         public string AdditionalDocRemark { get; set; }
+
+
+        public string ExecutionLevel1 { get; set; }
+        public string ExecutionLevel2 { get; set; }
+        public string ExecutionLevel3 { get; set; }
+        public string ExecutionLevel4 { get; set; }
+        public string ExecutionLevel5 { get; set; }
+        public string SelectDuedatefor { get; set; }
+
+        public string LicenseD { get; set; }
+        public string LicenseDaysOfExpire { get; set; }
+        public string LicenseED { get; set; }
+        public string Labour { get; set; }
+        public string LabourDaysOfExpire { get; set; }
+        public string LabourED { get; set; }
+        public string FactoryD { get; set; }
+        public string FactoryDaysOfExpire { get; set; }
+        public string FactoryED { get; set; }
+        public string FinanceD { get; set; }
+        public string FinanceDaysOfExpire { get; set; }
+        public string FinanceED { get; set; }
+        public string SecraterialD { get; set; }
+        public string SecraterialDaysOfExpire { get; set; }
+        public string SecraterialED { get; set; }
+
+        public string State { get; set; }
+
 
     }
     public class StoreMasterList
@@ -111,9 +166,23 @@ namespace EesassinErp.BAL
         public string IsActive { get; set; }
 
         public float RegionId { get; set; }
+        public string RegionName { get; set; }
+
+        public string Country { get; set; }
+        public string State { get; set; }
+        public string City { get; set; }
+        public string LicenseExpiryDay { get; set; }
+
+        public string Operationmodel { get; set; }
+        public string ComplianceCategory { get; set; }
+
     }
     public class EmployeeMasterList
     {
+        public string StoreCode { get; set; }
+        public string RefEmployeeCode { get; set; }
+        public string LeavingDate { get; set; }
+        public string PFAccount { get; set; }
         public string EmployeeName { get; set; }
         public string EmployeeDesignation { get; set; }
         public string EmployeeDepartment { get; set; }
@@ -150,6 +219,6 @@ namespace EesassinErp.BAL
         public string Frequency { get; set; }
         public string FilePath { get; set; }
         public string Act { get; set; }
-        
+
     }
 }

@@ -28,7 +28,7 @@
     }
     $scope.AllUserListsLoad = function (PartyId) {
         var collectionobj = {};
-        collectionobj.ActionType = 6;
+        collectionobj.ActionType = 16;
         collectionobj.Id = PartyId;
         var getData = myService.methode('POST', "../RetailSection/GetEmployeeMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
@@ -127,8 +127,8 @@
                 [
                     { "HeaderText": "Sr.No.", "Value": "Id", "HeaderValue": "Id", "Width": "50px", "ShowColumn": "Yes", "ImageColumn": "No", "CssClass": "srno" },
                     { "HeaderText": "Executer", "HeaderValue": "Executer", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
-                    { "HeaderText": "Mapping Client", "HeaderValue": "Party", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" }//,
-                    //{ "HeaderText": " Mapping User", "HeaderValue": "UserName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "Mapping Client", "HeaderValue": "Party", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": " Mapping User", "HeaderValue": "UserName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
 
                 ];
 
@@ -141,7 +141,9 @@
                 var row = $('#example').DataTable().row(this).data();
                 $scope.hfId = $(this).find('input[type="hidden"]').val();
                 $scope.FilerList = [];
-                $scope.FilerList = $filter('filter')($scope.MasterList, { 'Id': $scope.hfId });
+                $scope.FilerList = $filter('filter')($scope.MasterList, function (item) {
+                    return parseInt(item.Id) === parseInt($scope.hfId);
+                });
                 $scope.ExecuterId = $scope.FilerList[0].ExecuterId;
                 $scope.PartyId = $scope.FilerList[0].PartyId;
                 $scope.AllUserListsLoad($scope.PartyId);

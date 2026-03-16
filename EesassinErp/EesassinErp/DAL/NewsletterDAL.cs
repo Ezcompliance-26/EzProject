@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace DAL
 {
@@ -23,7 +21,7 @@ namespace DAL
             {
                 new SqlParameter("@Id",obj.Id),
             };
-            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[dbo].[USP_GetNewsletter]", CommandType.StoredProcedure,param.ToArray()));
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[dbo].[USP_GetNewsletter]", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
 
@@ -42,16 +40,16 @@ namespace DAL
                 new SqlParameter("@Id",Id),
             };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[dbo].[USP_GetClientDetailsForNewsletter]", CommandType.StoredProcedure, param.ToArray()));
-            
-            if(dt != null && dt.Rows != null && dt.Rows.Count > 0)
+
+            if (dt != null && dt.Rows != null && dt.Rows.Count > 0)
             {
-                foreach(DataRow row in dt.Rows)
+                foreach (DataRow row in dt.Rows)
                 {
                     // emails = string.IsNullOrEmpty(emails) ? Convert.ToString(row["EmailId"]) : emails + ";" + Convert.ToString(row["EmailId"]);
                     emails.Add(Convert.ToString(row["EmailId"]));
                 }
             }
-            
+
             return emails;
         }
 
@@ -110,7 +108,7 @@ namespace DAL
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[dbo].[USP_InsertUpdateNewsLetter]", CommandType.StoredProcedure, param.ToArray()));
         }
 
-        public async static Task<string> InsertNewsLetterClientMapping(int newsletterid, int partyId,int count)
+        public async static Task<string> InsertNewsLetterClientMapping(int newsletterid, int partyId, int count)
         {
             var param = new List<SqlParameter>
             {
@@ -126,4 +124,4 @@ namespace DAL
 
         //--------------------------------------End
     }
-} 
+}

@@ -1,10 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -15,7 +12,7 @@ namespace EesassinErp.Controllers
     public class PaymentApiController : ApiController
     {
         [HttpPost]
-        public  async   Task<string>  CreateOrder(Dictionary<string, string> postParameters)
+        public async Task<string> CreateOrder(Dictionary<string, string> postParameters)
         {
             string postData = "";
 
@@ -30,7 +27,7 @@ namespace EesassinErp.Controllers
             myHttpWebRequest.PreAuthenticate = true;
             myHttpWebRequest.Method = "Post";
             byte[] data = Encoding.ASCII.GetBytes(postData);
-            myHttpWebRequest.ContentType="application/json";
+            myHttpWebRequest.ContentType = "application/json";
             myHttpWebRequest.ContentLength = data.Length;
             myHttpWebRequest.Headers.Add("x-api-version", "2022-09-01");
             myHttpWebRequest.Headers.Add("x-client-id", "TEST10038027d8b5531245d9e4a6862672083001");
@@ -38,7 +35,7 @@ namespace EesassinErp.Controllers
             myHttpWebRequest.Accept = "application/json";
             ServicePointManager.Expect100Continue = true;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(myUri);
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3| SecurityProtocolType.Ssl3| SecurityProtocolType.Tls| SecurityProtocolType.Tls11| SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
             Stream requestStream = myHttpWebRequest.GetRequestStream();
             requestStream.Write(data, 0, data.Length);

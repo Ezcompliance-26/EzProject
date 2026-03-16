@@ -35,7 +35,8 @@
         var collectionobj = {};
         collectionobj.EmployeeCode = $scope.ListedUser;
         collectionobj.ModuleId = $scope.ModuleId; 
-        collectionobj.BranchCode = BranchCode;  
+        collectionobj.BranchCode = BranchCode;
+        collectionobj.BranchCode = BranchCode;
        
         var getData = myService.methode('POST', '../Dashboard/SubMenuList', '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function(response) {

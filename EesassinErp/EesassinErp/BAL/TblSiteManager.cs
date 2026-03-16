@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace BAL
 {
-    public partial class TblSiteManager 
+    public partial class TblSiteManager
     {
-        
-               public string ClientId { get; set; }
+
+        public string ClientId { get; set; }
         public string ActionType { get; set; }
         public string FileName { get; set; }
         public string File { get; set; }

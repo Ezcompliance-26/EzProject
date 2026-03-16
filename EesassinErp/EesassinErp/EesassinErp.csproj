@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\LLamaSharp.Backend.Cpu.0.25.0\build\netstandard2.0\LLamaSharp.Backend.Cpu.props" Condition="Exists('..\packages\LLamaSharp.Backend.Cpu.0.25.0\build\netstandard2.0\LLamaSharp.Backend.Cpu.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
-  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -35,6 +36,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,6 +45,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AngleSharp, Version=0.17.1.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
@@ -51,9 +54,27 @@
     <Reference Include="AngleSharp.Css, Version=0.17.0.0, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
       <HintPath>..\packages\AngleSharp.Css.0.17.0\lib\net461\AngleSharp.Css.dll</HintPath>
     </Reference>
+    <Reference Include="BCrypt.Net-Next, Version=4.0.3.0, Culture=neutral, PublicKeyToken=1e11be04b6288443, processorArchitecture=MSIL">
+      <HintPath>..\packages\BCrypt.Net-Next.4.0.3\lib\net35\BCrypt.Net-Next.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
     <Reference Include="ClosedXML, Version=0.95.3.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML.Signed.0.95.3\lib\net46\ClosedXML.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="CommunityToolkit.HighPerformance, Version=8.4.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommunityToolkit.HighPerformance.8.4.0\lib\netstandard2.0\CommunityToolkit.HighPerformance.dll</HintPath>
+    </Reference>
+    <Reference Include="CrossPlatformLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CrossPlatformLibrary.1.0.73\lib\net45\CrossPlatformLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="CrossPlatformLibrary.Geolocation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CrossPlatformLibrary.Geolocation.1.0.25\lib\portable-net45+wp8+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\CrossPlatformLibrary.Geolocation.dll</HintPath>
+    </Reference>
+    <Reference Include="CrossPlatformLibrary.Platform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CrossPlatformLibrary.1.0.73\lib\net45\CrossPlatformLibrary.Platform.dll</HintPath>
     </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
@@ -63,12 +84,33 @@
       <HintPath>..\packages\DocumentFormat.OpenXml.Framework.3.0.2\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Elasticsearch.Net, Version=7.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elasticsearch.Net.7.17.5\lib\net461\Elasticsearch.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=8.0.6.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.8.0.6\lib\net35\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.Interfaces.8.0.0\lib\net35\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="ExcelNumberFormat, Version=1.0.10.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelNumberFormat.1.0.10\lib\net20\ExcelNumberFormat.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ionic.Zip.Reduced">
-      <HintPath>D:\EesassinErp\EesassinErp\bin\Ionic.Zip.Reduced.dll</HintPath>
+    <Reference Include="Guards, Version=1.0.0.0, Culture=neutral, PublicKeyToken=ac6aedb73a72f46e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Guards.1.0.10\lib\portable-net45+dnxcore50+wp80+wpa81+win81+netcore45+monoandroid10+monotouch10+xamarin.ios10\Guards.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.Core, Version=1.8.22.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.8.22\lib\net46\Hangfire.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ionic.Zip.1.9.1.8\lib\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="LLamaSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LLamaSharp.0.25.0\lib\netstandard2.0\LLamaSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="MailKit, Version=4.8.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
+      <HintPath>..\packages\MailKit.4.8.0\lib\netstandard2.0\MailKit.dll</HintPath>
     </Reference>
     <Reference Include="MetroFramework, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <HintPath>..\packages\MetroFramework.RunTime.1.2.0.3\lib\net40-Client\MetroFramework.dll</HintPath>
@@ -156,6 +198,15 @@
     <Reference Include="Microsoft.AspNetCore.WebUtilities, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.WebUtilities.2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.WebUtilities.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.8\lib\netstandard2.0\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.6.0.0\lib\netstandard2.0\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.Numerics, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Numerics.9.0.8\lib\netstandard2.0\Microsoft.Bcl.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -164,14 +215,17 @@
     <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.DotNet.PlatformAbstractions.2.1.0\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.AI.Abstractions, Version=9.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.AI.Abstractions.9.7.1\lib\netstandard2.0\Microsoft.Extensions.AI.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Configuration.Abstractions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Configuration.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.2.2.0\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=9.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.9.0.8\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyModel, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyModel.2.1.0\lib\net451\Microsoft.Extensions.DependencyModel.dll</HintPath>
@@ -188,8 +242,8 @@
     <Reference Include="Microsoft.Extensions.Localization.Abstractions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Localization.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Localization.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=9.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.9.0.8\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.ObjectPool, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.ObjectPool.2.2.0\lib\netstandard2.0\Microsoft.Extensions.ObjectPool.dll</HintPath>
@@ -206,8 +260,17 @@
     <Reference Include="Microsoft.Net.Http.Headers, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.Headers.2.2.0\lib\netstandard2.0\Microsoft.Net.Http.Headers.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.OpenApi, Version=1.6.22.0, Culture=neutral, PublicKeyToken=3f5743946376f042, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.OpenApi.1.6.22\lib\netstandard2.0\Microsoft.OpenApi.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Win32.Registry, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Registry.4.5.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
+    </Reference>
+    <Reference Include="MimeKit, Version=4.8.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeKit.4.8.0\lib\netstandard2.0\MimeKit.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -220,8 +283,31 @@
       <HintPath>..\packages\OfficeOpenXml.Core.ExcelPackage.1.0.0\lib\net46\OfficeOpenXml.Core.ExcelPackage.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="PlatformAdapter, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6631b0d7444ed877, processorArchitecture=MSIL">
+      <HintPath>..\packages\CrossPlatformAdapter.1.0.12\lib\portable-net45+wp8+wpa81+win81+netcore45+monoandroid1+xamarin.ios10\PlatformAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Quartz, Version=3.13.1.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.3.13.1\lib\netstandard2.0\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz.AspNetCore, Version=3.13.1.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.AspNetCore.3.13.1\lib\netstandard2.0\Quartz.AspNetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz.Extensions.DependencyInjection, Version=3.13.1.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.Extensions.DependencyInjection.3.13.1\lib\netstandard2.0\Quartz.Extensions.DependencyInjection.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz.Extensions.Hosting, Version=3.13.1.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.Extensions.Hosting.3.13.1\lib\netstandard2.0\Quartz.Extensions.Hosting.dll</HintPath>
+    </Reference>
     <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=112.1.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.112.1.0\lib\netstandard2.0\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="Spire.Common, Version=1.2.129.55040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML_Excel.1.0.0\lib\Spire.Common.dll</HintPath>
@@ -239,8 +325,11 @@
       <HintPath>..\packages\ClosedXML_Excel.1.0.0\lib\Spire.XLS.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    <Reference Include="Swashbuckle.AspNetCore.Swagger, Version=7.1.0.0, Culture=neutral, PublicKeyToken=62657d7474907593, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.AspNetCore.Swagger.7.1.0\lib\netstandard2.0\Swashbuckle.AspNetCore.Swagger.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.6.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.Collections.Immutable, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Immutable.8.0.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
@@ -250,8 +339,18 @@
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.OracleClient" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.5.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    <Reference Include="System.Device" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.9.0.8\lib\netstandard2.0\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Formats.Asn1, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Formats.Asn1.8.0.1\lib\netstandard2.0\System.Formats.Asn1.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
@@ -261,8 +360,14 @@
       <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    <Reference Include="System.IO.Pipelines, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Pipelines.9.0.8\lib\netstandard2.0\System.IO.Pipelines.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Async, Version=6.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Async.6.0.3\lib\netstandard2.0\System.Linq.Async.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.6.0\lib\netstandard2.0\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
@@ -271,11 +376,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    <Reference Include="System.Numerics.Tensors, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Tensors.9.0.8\lib\netstandard2.0\System.Numerics.Tensors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.6.1\lib\netstandard2.0\System.Numerics.Vectors.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.0.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
@@ -287,6 +396,22 @@
     <Reference Include="System.Security.AccessControl, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.AccessControl.4.5.0\lib\net461\System.Security.AccessControl.dll</HintPath>
     </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Cng, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Cng.5.0.0\lib\net461\System.Security.Cryptography.Cng.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Pkcs, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Pkcs.8.0.0\lib\netstandard2.0\System.Security.Cryptography.Pkcs.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Security.Cryptography.Xml, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Xml.4.5.0\lib\net461\System.Security.Cryptography.Xml.dll</HintPath>
     </Reference>
@@ -297,14 +422,17 @@
       <HintPath>..\packages\System.Security.Principal.Windows.4.5.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Text.Encoding.CodePages, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encoding.CodePages.6.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    <Reference Include="System.Text.Encoding.CodePages, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.8.0.0\lib\netstandard2.0\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Encodings.Web, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encodings.Web.4.5.0\lib\netstandard2.0\System.Text.Encodings.Web.dll</HintPath>
+    <Reference Include="System.Text.Encodings.Web, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.9.0.8\lib\netstandard2.0\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.9.0.8\lib\netstandard2.0\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.6.0\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
@@ -363,31 +491,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
-    <Content Include="bin\EesassinErp.dll" />
-    <Content Include="bin\EesassinErp.pdb" />
-    <Content Include="bin\Ionic.Zip.Reduced.dll" />
-    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
-    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
-    <Content Include="bin\Newtonsoft.Json.dll" />
-    <Content Include="bin\roslyn\csc.exe" />
-    <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.dll" />
-    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
-    <Content Include="bin\roslyn\System.Collections.Immutable.dll" />
-    <Content Include="bin\roslyn\System.Reflection.Metadata.dll" />
-    <Content Include="bin\roslyn\vbc.exe" />
-    <Content Include="bin\roslyn\VBCSCompiler.exe" />
-    <Content Include="bin\style.css" />
-    <Content Include="bin\System.Net.Http.Formatting.dll" />
-    <Content Include="bin\System.Web.Helpers.dll" />
-    <Content Include="bin\System.Web.Http.dll" />
-    <Content Include="bin\System.Web.Http.WebHost.dll" />
-    <Content Include="bin\System.Web.Mvc.dll" />
-    <Content Include="bin\System.Web.Razor.dll" />
-    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
-    <Content Include="bin\System.Web.WebPages.dll" />
-    <Content Include="bin\System.Web.WebPages.Razor.dll" />
+    <Content Include="calenderDahboard\css\style.css" />
+    <Content Include="calenderDahboard\dashboard.html" />
+    <Content Include="calenderDahboard\Script\script.js" />
+    <Content Include="Calnewdes\globals.css" />
+    <Content Include="Calnewdes\style.css" />
+    <Content Include="Calnewdes\styleguide.css" />
     <Content Include="ckeditor\adapters\jquery.js" />
     <Content Include="ckeditor\build-config.js" />
     <Content Include="ckeditor\ckeditor.js" />
@@ -891,6 +1000,360 @@
     <Content Include="ckeditor\skins\moonocolor\images\refresh.png" />
     <Content Include="ckeditor\skins\moonocolor\images\spinner.gif" />
     <Content Include="ckeditor\styles.js" />
+    <Content Include="Client Onboarding\CompTotalDoc.html" />
+    <Content Include="Client Onboarding\img\down.png" />
+    <Content Include="Client Onboarding\img\Group1.png" />
+    <Content Include="Client Onboarding\img\Group2.png" />
+    <Content Include="Client Onboarding\img\Group3.png" />
+    <Content Include="Client Onboarding\index.html" />
+    <Content Include="Client Onboarding\PendingDoc.html" />
+    <Content Include="Client Onboarding\UploadedDoc.html" />
+    <Content Include="CommonDashboard\assets\bg-login.png" />
+    <Content Include="CommonDashboard\assets\icons\DropArrow.svg" />
+    <Content Include="CommonDashboard\assets\icons\logo.svg" />
+    <Content Include="CommonDashboard\assets\icons\Logout.svg" />
+    <Content Include="CommonDashboard\assets\icons\Notify.svg" />
+    <Content Include="CommonDashboard\assets\icons\Search.svg" />
+    <Content Include="CommonDashboard\assets\profile.png" />
+    <Content Include="CommonDashboard\script.js" />
+    <Content Include="CommonDashboard\Style.css" />
+    <Content Include="ComplianceDashboard\css\style.css" />
+    <Content Include="ComplianceDashboard\img\female.png" />
+    <Content Include="ComplianceDashboard\img\male.png" />
+    <Content Include="ComplianceDashboard\index.html" />
+    <Content Include="ComplianceDashboard\script\script.js" />
+    <Content Include="ComplianceDashboard\script\script1.js" />
+    <Content Include="Dashboards\NewLocationDashboard\script.js" />
+    <Content Include="Dashboards\NewLocationDashboard\style.css" />
+    <Content Include="Dashboards\NewVendorDashboard\script.js" />
+    <Content Include="Dashboards\NewVendorDashboard\style.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="Litigation Management\style.css" />
+    <Content Include="login\image\app1.png" />
+    <Content Include="login\image\Content.png" />
+    <Content Include="login\image\EZ Compliance.png" />
+    <Content Include="login\image\ezcomplogo.png" />
+    <Content Include="login\image\ezfulllogo 3.png" />
+    <Content Include="login\image\Frame.png" />
+    <Content Include="login\image\gif1.gif" />
+    <Content Include="login\image\gif2.gif" />
+    <Content Include="login\image\google1.png" />
+    <Content Include="login\image\icon.png" />
+    <Content Include="login\image\logo.png" />
+    <Content Include="login\image\profile.png" />
+    <Content Include="login\landingpage.css" />
+    <Content Include="login\style.css" />
+    <Content Include="MainDashboard\css\style.css" />
+    <Content Include="MainDashboard\img\Group.png" />
+    <Content Include="MainDashboard\img\Group1.png" />
+    <Content Include="MainDashboard\img\Group2.png" />
+    <Content Include="MainDashboard\img\Group3.png" />
+    <Content Include="Calnewdes\script.js" />
+    <Content Include="Calnewdes\search.png" />
+    <Content Include="Calnewdes\style1.css" />
+    <Content Include="chatbot\chatbot.css" />
+    <Content Include="chatbot\chatbot.js" />
+    <Content Include="Masters\LocationMaster\script.js" />
+    <Content Include="Masters\LocationMaster\style.css" />
+    <Content Include="Masters\NewEmployeeMaster\script.js" />
+    <Content Include="Masters\NewEmployeeMaster\style.css" />
+    <Content Include="oops.html" />
+    <Content Include="reminder.html" />
+    <Content Include="ReportsDashboard\LicenseCommonCompliance\script.js" />
+    <Content Include="ReportsDashboard\LicenseCommonCompliance\style.css" />
+    <Content Include="scripts\ai.0.22.9-build00167.js" />
+    <Content Include="scripts\ai.0.22.9-build00167.min.js" />
+    <Content Include="scripts\angular-filter.min.js" />
+    <Content Include="scripts\angular-sanitize.min.js" />
+    <Content Include="scripts\angular-ui.js" />
+    <Content Include="scripts\angular.min.js" />
+    <Content Include="scripts\chart.bundle.js" />
+    <Content Include="scripts\chart.js" />
+    <Content Include="scripts\chartjs-gauge.js" />
+    <Content Include="scripts\dataTables.colReorder.min.js" />
+    <Content Include="scripts\jquery-1.12.4.js" />
+    <Content Include="scripts\jquery-multidownload.js" />
+    <Content Include="scripts\jscolor.js" />
+    <Content Include="scripts\jszip-utils.js" />
+    <Content Include="scripts\managebyuser.js" />
+    <Content Include="scripts\moment.js" />
+    <Content Include="scripts\multiselect.js" />
+    <Content Include="scripts\myjslib\adminDashBoardController.js" />
+    <Content Include="scripts\myjslib\app.js" />
+    <Content Include="scripts\myjslib\AuditorComplianceController.js" />
+    <Content Include="scripts\myjslib\authorization.js" />
+    <Content Include="scripts\myjslib\BranchMenuPermissionController.js" />
+    <Content Include="scripts\myjslib\CDMController.js" />
+    <Content Include="scripts\myjslib\CientSubscriptController.js" />
+    <Content Include="scripts\myjslib\ClientActMapping.js" />
+    <Content Include="scripts\myjslib\ClientCommunicationController.js" />
+    <Content Include="scripts\myjslib\ClientDashboardController.js" />
+    <Content Include="scripts\myjslib\CommunicationController.js" />
+    <Content Include="scripts\myjslib\ComplianceMasterController.js" />
+    <Content Include="scripts\myjslib\controller.js" />
+    <Content Include="scripts\myjslib\customDirectives.js" />
+    <Content Include="scripts\myjslib\ddlBindings.js" />
+    <Content Include="scripts\myjslib\DocumentMasterController.js" />
+    <Content Include="scripts\myjslib\EmployeeReportController.js" />
+    <Content Include="scripts\myjslib\ForgetpasswordController.js" />
+    <Content Include="scripts\myjslib\GeneralSMSController.js" />
+    <Content Include="scripts\myjslib\InvoiceDeleteController.js" />
+    <Content Include="scripts\myjslib\LocationController.js" />
+    <Content Include="scripts\myjslib\loginController.js" />
+    <Content Include="scripts\myjslib\LoginPermissionController.js" />
+    <Content Include="scripts\myjslib\LookupMasterController.js" />
+    <Content Include="scripts\myjslib\MappingController.js" />
+    <Content Include="scripts\myjslib\myJs.js" />
+    <Content Include="scripts\myjslib\navMenuPermissionController.js" />
+    <Content Include="scripts\myjslib\NewsletterController.js" />
+    <Content Include="scripts\myjslib\OneTimeDocumentController.js" />
+    <Content Include="scripts\myjslib\PartyMastController.js" />
+    <Content Include="scripts\myjslib\PartyReportController.js" />
+    <Content Include="scripts\myjslib\PartySiteManagerController.js" />
+    <Content Include="scripts\myjslib\RatingController.js" />
+    <Content Include="scripts\myjslib\ReminderController.js" />
+    <Content Include="scripts\myjslib\reportHeaderMasterController.js" />
+    <Content Include="scripts\myjslib\RetailHeaderTemplateController.js" />
+    <Content Include="scripts\myjslib\RoleMenuPermissionController.js" />
+    <Content Include="scripts\myjslib\service.js" />
+    <Content Include="scripts\myjslib\ServiceMasterController.js" />
+    <Content Include="scripts\myjslib\SubscriptionDtlsController.js" />
+    <Content Include="scripts\myjslib\SubscriptionMasterController.js" />
+    <Content Include="scripts\myjslib\TimePeriodController.js" />
+    <Content Include="scripts\myjslib\UserRegistrationController.js" />
+    <Content Include="scripts\myjslib\VendorCommunicationController.js" />
+    <Content Include="scripts\myjslib\VendorInvoiceController.js" />
+    <Content Include="scripts\myjslib\VendorReportController.js" />
+    <Content Include="scripts\myjslib\VendorSiteManagerController.js" />
+    <Content Include="scripts\RetailJsLib\ActMasterController.js" />
+    <Content Include="scripts\RetailJsLib\ActoverviewController.js" />
+    <Content Include="scripts\RetailJsLib\AddcomplianceFileController.js" />
+    <Content Include="scripts\RetailJsLib\AddContractorComplianceController.js" />
+    <Content Include="scripts\RetailJsLib\AdditionalDocumentController.js" />
+    <Content Include="scripts\RetailJsLib\AdminDashboardcontroller.js" />
+    <Content Include="scripts\RetailJsLib\BoardingMappingController.js" />
+    <Content Include="scripts\RetailJsLib\bulkStoreMaster.js" />
+    <Content Include="scripts\RetailJsLib\ChatbotSupportController.js" />
+    <Content Include="scripts\RetailJsLib\ClientBoardingController.js" />
+    <Content Include="scripts\RetailJsLib\CombinedReportController.js" />
+    <Content Include="scripts\RetailJsLib\Commondashboardcontroller.js" />
+    <Content Include="scripts\RetailJsLib\ComplianceDashboardController.js" />
+    <Content Include="scripts\RetailJsLib\ComplianceDocController.js" />
+    <Content Include="scripts\RetailJsLib\DepartmentMasterController.js" />
+    <Content Include="scripts\RetailJsLib\EnitfyController.js" />
+    <Content Include="scripts\RetailJsLib\ExpectationController.js" />
+    <Content Include="scripts\RetailJsLib\LabourCodeController.js" />
+    <Content Include="scripts\RetailJsLib\FileRetailMatchingController.js" />
+    <Content Include="scripts\RetailJsLib\GradeMasterController.js" />
+    <Content Include="scripts\RetailJsLib\IndustryMappingController.js" />
+    <Content Include="scripts\RetailJsLib\LCDashboard.js" />
+    <Content Include="scripts\RetailJsLib\LicenseApplicableController.js" />
+    <Content Include="scripts\RetailJsLib\LicenseCommonComplianceController.js" />
+    <Content Include="scripts\RetailJsLib\LicenseCommonDashboardController.js" />
+    <Content Include="scripts\RetailJsLib\LicenseMasterController.js" />
+    <Content Include="scripts\RetailJsLib\LicenseRequestMasterController.js" />
+    <Content Include="scripts\RetailJsLib\LitigationManagementcontroller.js" />
+    <Content Include="scripts\RetailJsLib\LitigationMasterController.js" />
+    <Content Include="scripts\RetailJsLib\LocationMastercontroller.js" />
+    <Content Include="scripts\RetailJsLib\LogController.js" />
+    <Content Include="scripts\RetailJsLib\LSDController.js" />
+    <Content Include="scripts\RetailJsLib\Mailingcontroller.js" />
+    <Content Include="scripts\RetailJsLib\MainDashboardController.js" />
+    <Content Include="scripts\RetailJsLib\ManualBulkPaymetController.js" />
+    <Content Include="scripts\RetailJsLib\NewletterDetail.js" />
+    <Content Include="scripts\RetailJsLib\NewletterDetailAll.js" />
+    <Content Include="scripts\RetailJsLib\NoticeInspectionMaster.js" />
+    <Content Include="scripts\RetailJsLib\RController.js" />
+    <Content Include="scripts\RetailJsLib\ReportDashbaord.js" />
+    <Content Include="scripts\RetailJsLib\ReportLicenseMaster.js" />
+    <Content Include="scripts\RetailJsLib\RetailAssignExecuterController.js" />
+    <Content Include="scripts\RetailJsLib\RetailClientDocMapping.js" />
+    <Content Include="scripts\RetailJsLib\RetailIndustryMappingController.js" />
+    <Content Include="scripts\RetailJsLib\RetailController.js" />
+    <Content Include="scripts\RetailJsLib\RetailCourtMasterController.js" />
+    <Content Include="scripts\RetailJsLib\RetailLabourCodeComplianceController.js" />
+    <Content Include="scripts\RetailJsLib\RetailFinacialCreateActCalenderController.js" />
+    <Content Include="scripts\RetailJsLib\RetailFactoryComplianceController.js" />
+    <Content Include="scripts\RetailJsLib\RetailSecretarialComplianceController.js" />
+    <Content Include="scripts\RetailJsLib\RetailCreateActCalenderController.js" />
+    <Content Include="scripts\RetailJsLib\RetailCreateExecuterController.js" />
+    <Content Include="scripts\RetailJsLib\RetailCreateIndustryController.js" />
+    <Content Include="scripts\RetailJsLib\RetailDashboard.js" />
+    <Content Include="scripts\RetailJsLib\RetailDepMasterController.js" />
+    <Content Include="scripts\RetailJsLib\RetailDocumentMasterController.js" />
+    <Content Include="scripts\RetailJsLib\RetailEmployeeMasterController.js" />
+    <Content Include="scripts\RetailJsLib\RetailModuleMappingMasterController.js" />
+    <Content Include="scripts\RetailJsLib\RetailOneTimeDocumentController.js" />
+    <Content Include="scripts\RetailJsLib\RetailOverViewMasterController.js" />
+    <Content Include="scripts\RetailJsLib\RetailClientStoreMappingController.js" />
+    <Content Include="scripts\RetailJsLib\RetailStoreMappingController.js" />
+    <Content Include="scripts\RetailJsLib\RetailStoreMasterController.js" />
+    <Content Include="scripts\RetailJsLib\RetailStorePrefixController.js" />
+    <Content Include="scripts\RetailJsLib\RoleMasterController.js" />
+    <Content Include="scripts\RetailJsLib\FactoryStatutoryController.js" />
+    <Content Include="scripts\RetailJsLib\Sacretrialcompliancecontroller.js" />
+    <Content Include="scripts\RetailJsLib\SecretarialStatutoryController.js" />
+    <Content Include="scripts\RetailJsLib\FinancialStatutorySetupController.js" />
+    <Content Include="scripts\RetailJsLib\SecretarialStatutorySetupController.js" />
+    <Content Include="scripts\RetailJsLib\FinacialStatutoryController.js" />
+    <Content Include="scripts\RetailJsLib\StatutoryController.js" />
+    <Content Include="scripts\RetailJsLib\StatutorySetupController.js" />
+    <Content Include="scripts\RetailJsLib\StoreComplianceStatusMasterController.js" />
+    <Content Include="scripts\RetailJsLib\StoreDashboardController.js" />
+    <Content Include="scripts\RetailJsLib\Storemastersepcontroller.js" />
+    <Content Include="scripts\RetailJsLib\SubsidiaryController.js" />
+    <Content Include="scripts\RetailJsLib\VendorDashboardController.js" />
+    <Content Include="scripts\table2excel.js" />
+    <Content Include="scripts\webcam.min.js" />
+    <Content Include="StoreDashboard\css\all.css" />
+    <Content Include="StoreDashboard\css\bootstrap.css" />
+    <Content Include="StoreDashboard\css\buttons.dataTables.min.css" />
+    <Content Include="StoreDashboard\css\colorTheme\dark.css" />
+    <Content Include="StoreDashboard\css\colorTheme\default.css" />
+    <Content Include="StoreDashboard\css\colorTheme\themeColor1.css" />
+    <Content Include="StoreDashboard\css\colorTheme\themeColor2.css" />
+    <Content Include="StoreDashboard\css\colorTheme\themeColor3.css" />
+    <Content Include="StoreDashboard\css\colorTheme\themeColor4.css" />
+    <Content Include="StoreDashboard\css\colorTheme\themeColor5.css" />
+    <Content Include="StoreDashboard\css\colorTheme\themeColor6.css" />
+    <Content Include="StoreDashboard\css\colorTheme\themeColor7.css" />
+    <Content Include="StoreDashboard\css\colorTheme\themeColor8.css" />
+    <Content Include="StoreDashboard\css\custom_theme.css" />
+    <Content Include="StoreDashboard\css\dataTables.bootstrap5.min.css" />
+    <Content Include="StoreDashboard\css\datepicker.css" />
+    <Content Include="StoreDashboard\css\datepicker.min.css" />
+    <Content Include="StoreDashboard\css\draggle.css" />
+    <Content Include="StoreDashboard\css\jquery.dataTables.min.css" />
+    <Content Include="StoreDashboard\css\nanoscroller.css" />
+    <Content Include="StoreDashboard\css\responsive.css" />
+    <Content Include="StoreDashboard\css\sweetalert2.css" />
+    <Content Include="StoreDashboard\css\_custom_theme.css" />
+    <Content Include="StoreDashboard\dasboard.html" />
+    <Content Include="StoreDashboard\images\AsgaardSofa.png" />
+    <Content Include="StoreDashboard\images\background9.png" />
+    <Content Include="StoreDashboard\images\bbg.png" />
+    <Content Include="StoreDashboard\images\box.gif" />
+    <Content Include="StoreDashboard\images\captcha.jpg" />
+    <Content Include="StoreDashboard\images\corner-1.png" />
+    <Content Include="StoreDashboard\images\dash-logo.jpg" />
+    <Content Include="StoreDashboard\images\dash-logo.png" />
+    <Content Include="StoreDashboard\images\dottedbg.jpg" />
+    <Content Include="StoreDashboard\images\dropf.png" />
+    <Content Include="StoreDashboard\images\en-flag.jpg" />
+    <Content Include="StoreDashboard\images\enlpopup.png" />
+    <Content Include="StoreDashboard\images\enlpopup1.png" />
+    <Content Include="StoreDashboard\images\favicon.png" />
+    <Content Include="StoreDashboard\images\hi-flag.jpg" />
+    <Content Include="StoreDashboard\images\ic_paypal.png" />
+    <Content Include="StoreDashboard\images\instruction.png" />
+    <Content Include="StoreDashboard\images\output-onlinepngtools-3.png" />
+    <Content Include="StoreDashboard\images\preview.jpg" />
+    <Content Include="StoreDashboard\images\profile-pic.jpg" />
+    <Content Include="StoreDashboard\images\profile2.jpg" />
+    <Content Include="StoreDashboard\images\refresh.png" />
+    <Content Include="StoreDashboard\images\sent.png" />
+    <Content Include="StoreDashboard\images\sign.jpg" />
+    <Content Include="StoreDashboard\images\signature.png" />
+    <Content Include="StoreDashboard\images\Software.jpg" />
+    <Content Include="StoreDashboard\images\sort_both.png" />
+    <Content Include="StoreDashboard\images\speedom.svg" />
+    <Content Include="StoreDashboard\images\successIcon.png" />
+    <Content Include="StoreDashboard\images\visa.png" />
+    <Content Include="StoreDashboard\js\beautifyhtml.js" />
+    <Content Include="StoreDashboard\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="StoreDashboard\js\bootstrap.js" />
+    <Content Include="StoreDashboard\js\builder.js" />
+    <Content Include="StoreDashboard\js\buttons.colVis.min.js" />
+    <Content Include="StoreDashboard\js\buttons.html5.min.js" />
+    <Content Include="StoreDashboard\js\buttons.print.min.js" />
+    <Content Include="StoreDashboard\js\canvasjs.min.js" />
+    <Content Include="StoreDashboard\js\chart.js" />
+    <Content Include="StoreDashboard\js\chart.min.js" />
+    <Content Include="StoreDashboard\js\chartjs-gauge.js" />
+    <Content Include="StoreDashboard\js\chartjs-plugin-datalabels.js" />
+    <Content Include="StoreDashboard\js\circularProgressBar.min.js" />
+    <Content Include="StoreDashboard\js\ckeditor.js" />
+    <Content Include="StoreDashboard\js\dataTables.bootstrap5.min.js" />
+    <Content Include="StoreDashboard\js\dataTables.buttons.min.js" />
+    <Content Include="StoreDashboard\js\datepicker.en.js" />
+    <Content Include="StoreDashboard\js\datepicker.js" />
+    <Content Include="StoreDashboard\js\dragble.js" />
+    <Content Include="StoreDashboard\js\echarts.min.js" />
+    <Content Include="StoreDashboard\js\jquery-min.js" />
+    <Content Include="StoreDashboard\js\jquery.dataTables.min.js" />
+    <Content Include="StoreDashboard\js\jquery.nanoscroller.min.js" />
+    <Content Include="StoreDashboard\js\jszip.min.js" />
+    <Content Include="StoreDashboard\js\ProgressScript.js" />
+    <Content Include="StoreDashboard\js\svg-map.js" />
+    <Content Include="StoreDashboard\js\sweetalert2.js" />
+    <Content Include="StoreDashboard\js\theme-script.js" />
+    <Content Include="StoreDashboard\js\translations\af.js" />
+    <Content Include="StoreDashboard\js\translations\ar.js" />
+    <Content Include="StoreDashboard\js\translations\ast.js" />
+    <Content Include="StoreDashboard\js\translations\az.js" />
+    <Content Include="StoreDashboard\js\translations\bg.js" />
+    <Content Include="StoreDashboard\js\translations\ca.js" />
+    <Content Include="StoreDashboard\js\translations\cs.js" />
+    <Content Include="StoreDashboard\js\translations\da.js" />
+    <Content Include="StoreDashboard\js\translations\de-ch.js" />
+    <Content Include="StoreDashboard\js\translations\de.js" />
+    <Content Include="StoreDashboard\js\translations\el.js" />
+    <Content Include="StoreDashboard\js\translations\en-au.js" />
+    <Content Include="StoreDashboard\js\translations\en-gb.js" />
+    <Content Include="StoreDashboard\js\translations\eo.js" />
+    <Content Include="StoreDashboard\js\translations\es.js" />
+    <Content Include="StoreDashboard\js\translations\et.js" />
+    <Content Include="StoreDashboard\js\translations\eu.js" />
+    <Content Include="StoreDashboard\js\translations\fa.js" />
+    <Content Include="StoreDashboard\js\translations\fi.js" />
+    <Content Include="StoreDashboard\js\translations\fr.js" />
+    <Content Include="StoreDashboard\js\translations\gl.js" />
+    <Content Include="StoreDashboard\js\translations\gu.js" />
+    <Content Include="StoreDashboard\js\translations\he.js" />
+    <Content Include="StoreDashboard\js\translations\hi.js" />
+    <Content Include="StoreDashboard\js\translations\hr.js" />
+    <Content Include="StoreDashboard\js\translations\hu.js" />
+    <Content Include="StoreDashboard\js\translations\id.js" />
+    <Content Include="StoreDashboard\js\translations\it.js" />
+    <Content Include="StoreDashboard\js\translations\ja.js" />
+    <Content Include="StoreDashboard\js\translations\km.js" />
+    <Content Include="StoreDashboard\js\translations\kn.js" />
+    <Content Include="StoreDashboard\js\translations\ko.js" />
+    <Content Include="StoreDashboard\js\translations\ku.js" />
+    <Content Include="StoreDashboard\js\translations\lt.js" />
+    <Content Include="StoreDashboard\js\translations\lv.js" />
+    <Content Include="StoreDashboard\js\translations\ms.js" />
+    <Content Include="StoreDashboard\js\translations\nb.js" />
+    <Content Include="StoreDashboard\js\translations\ne.js" />
+    <Content Include="StoreDashboard\js\translations\nl.js" />
+    <Content Include="StoreDashboard\js\translations\no.js" />
+    <Content Include="StoreDashboard\js\translations\oc.js" />
+    <Content Include="StoreDashboard\js\translations\pl.js" />
+    <Content Include="StoreDashboard\js\translations\pt-br.js" />
+    <Content Include="StoreDashboard\js\translations\pt.js" />
+    <Content Include="StoreDashboard\js\translations\ro.js" />
+    <Content Include="StoreDashboard\js\translations\ru.js" />
+    <Content Include="StoreDashboard\js\translations\si.js" />
+    <Content Include="StoreDashboard\js\translations\sk.js" />
+    <Content Include="StoreDashboard\js\translations\sl.js" />
+    <Content Include="StoreDashboard\js\translations\sq.js" />
+    <Content Include="StoreDashboard\js\translations\sr-latn.js" />
+    <Content Include="StoreDashboard\js\translations\sr.js" />
+    <Content Include="StoreDashboard\js\translations\sv.js" />
+    <Content Include="StoreDashboard\js\translations\th.js" />
+    <Content Include="StoreDashboard\js\translations\tk.js" />
+    <Content Include="StoreDashboard\js\translations\tr.js" />
+    <Content Include="StoreDashboard\js\translations\tt.js" />
+    <Content Include="StoreDashboard\js\translations\ug.js" />
+    <Content Include="StoreDashboard\js\translations\uk.js" />
+    <Content Include="StoreDashboard\js\translations\vi.js" />
+    <Content Include="StoreDashboard\js\translations\zh-cn.js" />
+    <Content Include="StoreDashboard\js\translations\zh.js" />
+    <Content Include="StoreDashboard\js\vfs_fonts.js" />
+    <Content Include="StoreDashboard\webfonts\fa-brands-400.svg" />
+    <Content Include="StoreDashboard\webfonts\fa-regular-400.svg" />
+    <Content Include="StoreDashboard\webfonts\fa-solid-900.svg" />
+    <Content Include="StoreDashboard\webfonts\Simple-Line-Icons.svg" />
     <Content Include="compliance\css\all.css" />
     <Content Include="compliance\css\bootstrap.css" />
     <Content Include="compliance\css\buttons.dataTables.min.css" />
@@ -2023,6 +2486,8 @@
     <Content Include="DB\StoredProcedureChanges\RTL.Usp_GetLicenseDetailsById.txt" />
     <Content Include="DB\StoredProcedureChanges\RTL.USP_LicenceRequest.txt" />
     <Content Include="DB\StoredProcedureChanges\RTL.USP_LSDashboard.txt" />
+    <Content Include="DB\StoredProcedureChanges\USP_Location.sql" />
+    <Content Include="DB\StoredProcedureChanges\USP_EmployeeMaster.sql" />
     <Content Include="DB\StoredProcedureChanges\Usp_StoreMaster.sql" />
     <Content Include="Global.asax" />
     <Content Include="licenseStatusDasboard\css\all.css" />
@@ -2235,116 +2700,31 @@
     <Content Include="packages\Newtonsoft.Json.13.0.1\lib\netstandard2.0\Newtonsoft.Json.dll" />
     <Content Include="packages\Newtonsoft.Json.13.0.1\lib\netstandard2.0\Newtonsoft.Json.xml" />
     <Content Include="packages\Newtonsoft.Json.13.0.1\packageIcon.png" />
-    <Content Include="scripts\ai.0.22.9-build00167.js" />
-    <Content Include="scripts\ai.0.22.9-build00167.min.js" />
-    <Content Include="scripts\angular-filter.min.js" />
-    <Content Include="scripts\angular-sanitize.min.js" />
-    <Content Include="scripts\angular-ui.js" />
-    <Content Include="scripts\angular.min.js" />
-    <Content Include="scripts\chart.bundle.js" />
-    <Content Include="scripts\chart.js" />
-    <Content Include="scripts\chartjs-gauge.js" />
-    <Content Include="scripts\dataTables.colReorder.min.js" />
-    <Content Include="scripts\jquery-1.12.4.js" />
-    <Content Include="scripts\jscolor.js" />
-    <Content Include="scripts\managebyuser.js" />
-    <Content Include="scripts\moment.js" />
-    <Content Include="scripts\multiselect.js" />
-    <Content Include="scripts\myjslib\adminDashBoardController.js" />
-    <Content Include="scripts\myjslib\app.js" />
-    <Content Include="scripts\myjslib\authorization.js" />
-    <Content Include="scripts\myjslib\BranchMasterController.js" />
-    <Content Include="scripts\myjslib\BranchMenuPermissionController.js" />
-    <Content Include="scripts\myjslib\CashBookReportController.js" />
-    <Content Include="scripts\myjslib\CDMController.js" />
-    <Content Include="scripts\myjslib\ClientActMapping.js" />
-    <Content Include="scripts\myjslib\ClientCommunicationController.js" />
-    <Content Include="scripts\myjslib\ClientDashboardController.js" />
-    <Content Include="scripts\myjslib\CommunicationController.js" />
-    <Content Include="scripts\myjslib\ComplianceMasterController.js" />
-    <Content Include="scripts\myjslib\controller.js" />
-    <Content Include="scripts\myjslib\controller1.js" />
-    <Content Include="scripts\myjslib\customDirectives.js" />
-    <Content Include="scripts\myjslib\ddlBindings.js" />
-    <Content Include="scripts\myjslib\ForgetpasswordController.js" />
-    <Content Include="scripts\myjslib\InvoiceDeleteController.js" />
-    <Content Include="scripts\myjslib\LocationController.js" />
-    <Content Include="scripts\myjslib\MappingController.js" />
-    <Content Include="scripts\myjslib\NewsletterController.js" />
-    <Content Include="scripts\myjslib\RoleMenuPermissionController.js" />
-    <Content Include="scripts\myjslib\RatingController.js" />
-    <Content Include="scripts\myjslib\TimePeriodController.js" />
-    <Content Include="scripts\myjslib\UserRegistrationController.js" />
-    <Content Include="scripts\myjslib\EmployeeReportController.js" />
-    <Content Include="scripts\myjslib\DocumentMasterController.js" />
-    <Content Include="scripts\myjslib\GeneralSMSController.js" />
-    <Content Include="scripts\myjslib\loginController.js" />
-    <Content Include="scripts\myjslib\LoginPermissionController.js" />
-    <Content Include="scripts\myjslib\OneTimeDocumentController.js" />
-    <Content Include="scripts\myjslib\PartySiteManagerController.js" />
-    <Content Include="scripts\myjslib\SubscriptionDtlsController.js" />
-    <Content Include="scripts\myjslib\CientSubscriptController.js" />
-    <Content Include="scripts\myjslib\SubscriptionMasterController.js" />
-    <Content Include="scripts\myjslib\myJs.js" />
-    <Content Include="scripts\myjslib\navMenuPermissionController.js" />
-    <Content Include="scripts\myjslib\PartyReportController.js" />
-    <Content Include="scripts\myjslib\reportHeaderMasterController.js" />
-    <Content Include="scripts\myjslib\AuditorComplianceController.js" />
-    <Content Include="scripts\myjslib\service.js" />
-    <Content Include="scripts\myjslib\LookupMasterController.js" />
-    <Content Include="scripts\myjslib\ServiceMasterController.js" />
-    <Content Include="scripts\myjslib\VendorCommunicationController.js" />
-    <Content Include="scripts\myjslib\VendorInvoiceController.js" />
-    <Content Include="scripts\myjslib\PartyMastController.js" />
-    <Content Include="scripts\myjslib\VendorReportController.js" />
-    <Content Include="scripts\myjslib\VendorSiteManagerController.js" />
-    <Content Include="scripts\RetailJsLib\AdditionalDocumentController.js" />
-    <Content Include="scripts\RetailJsLib\bulkStoreMaster.js" />
-    <Content Include="scripts\RetailJsLib\ComplianceDocController.js" />
-    <Content Include="scripts\RetailJsLib\DepartmentMasterController.js" />
-    <Content Include="scripts\RetailJsLib\LCDashboard.js" />
-    <Content Include="scripts\RetailJsLib\LicenseMasterController.js" />
-    <Content Include="scripts\RetailJsLib\NewletterDetailAll.js" />
-    <Content Include="scripts\RetailJsLib\NewletterDetail.js" />
-    <Content Include="scripts\RetailJsLib\RetailDashboard.js" />
-    <Content Include="scripts\RetailJsLib\LicenseRequestMasterController.js" />
-    <Content Include="scripts\RetailJsLib\LSDController.js" />
-    <Content Include="scripts\RetailJsLib\ManualBulkPaymetController.js" />
-    <Content Include="scripts\RetailJsLib\RetailClientDocMapping.js" />
-    <Content Include="scripts\RetailJsLib\RetailController.js" />
-    <Content Include="scripts\RetailJsLib\RetailAssignExecuterController.js" />
-    <Content Include="scripts\RetailJsLib\RetailCreateExecuterController.js" />
-    <Content Include="scripts\RetailJsLib\RetailDocumentMasterController.js" />
-    <Content Include="scripts\RetailJsLib\RetailOneTimeDocumentController.js" />
-    <Content Include="scripts\RetailJsLib\RetailStoreMappingController.js" />
-    <Content Include="scripts\RetailJsLib\RetailStoreMasterController.js" />
-    <Content Include="scripts\RetailJsLib\RetailEmployeeMasterController.js" />
-    <Content Include="scripts\RetailJsLib\RetailModuleMappingMasterController.js" />
-    <Content Include="scripts\RetailJsLib\GradeMasterController.js" />
-    <Content Include="scripts\RetailJsLib\RetailStorePrefixController.js" />
-    <Content Include="scripts\RetailJsLib\RoleMasterController.js" />
-    <Content Include="scripts\RetailJsLib\StoreComplianceStatusMasterController.js" />
-    <Content Include="scripts\table2excel.js" />
-    <Content Include="scripts\webcam.min.js" />
+    <Content Include="ReportsDashboard\CommonReport\script.js" />
+    <Content Include="ReportsDashboard\CommonReport\style.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\BackupController.cs" />
     <Compile Include="Api\CashfreeApiController.cs" />
     <Compile Include="Api\CDMApiController.cs" />
     <Compile Include="Api\ChangePassCodeApiController.cs" />
     <Compile Include="Api\CommunicationApiController.cs" />
     <Compile Include="Api\DashboardApiController.cs" />
     <Compile Include="Api\DocumentMasterApiController.cs" />
+    <Compile Include="Api\EZAIAPIController.cs" />
     <Compile Include="Api\LoginApiController.cs" />
     <Compile Include="Api\PartyMasterApiController.cs" />
     <Compile Include="Api\PaymentApiController.cs" />
     <Compile Include="Api\RatingApiController.cs" />
     <Compile Include="Api\ReportApiController.cs" />
+    <Compile Include="Api\RetailSectionApiController.cs" />
     <Compile Include="Api\SendEmailApiController.cs" />
     <Compile Include="Api\SiteManagerApiController.cs" />
     <Compile Include="Api\VenInvoiceApiController.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
@@ -2376,7 +2756,11 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="BAL\BCommon.cs" />
+    <Compile Include="BAL\ChatbotBAL.cs" />
+    <Compile Include="BAL\Attendance.cs" />
+    <Compile Include="BAL\ContractorAttendance.cs" />
     <Compile Include="BAL\DocumentBAL.cs" />
+    <Compile Include="BAL\EnitfyBAL.cs" />
     <Compile Include="BAL\LicenseRequest.cs" />
     <Compile Include="BAL\LoginBAL.cs" />
     <Compile Include="BAL\LSDBAL.cs" />
@@ -2385,6 +2769,7 @@
     <Compile Include="BAL\PaymentBAL.cs" />
     <Compile Include="BAL\RatingBAL.cs" />
     <Compile Include="BAL\RetailLicenseDocuementMaster.cs" />
+    <Compile Include="BAL\RetailUploadModelBAL.cs" />
     <Compile Include="BAL\RetialEmployeeManager.cs" />
     <Compile Include="BAL\RetialStoreManager.cs" />
     <Compile Include="BAL\SMSBAL.cs" />
@@ -2399,16 +2784,21 @@
     <Compile Include="BAL\TblSiteManager.cs" />
     <Compile Include="BAL\TblVendorInvoiceBAL.cs" />
     <Compile Include="BAL\UserSubRegOTPViewModels.cs" />
+    <Compile Include="Controllers\BackupServiceController.cs" />
     <Compile Include="Controllers\CDMController.cs" />
     <Compile Include="Controllers\ChangePassCodeController.cs" />
+    <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\ClientActMappingController.cs" />
+    <Compile Include="Controllers\ComlianceController.cs" />
     <Compile Include="Controllers\CommunicationController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\DocumentMasterController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\CientSubscriptionsController.cs" />
     <Compile Include="Controllers\MappingController.cs" />
     <Compile Include="Controllers\NewsletterController.cs" />
+    <Compile Include="Controllers\NotificationReminderController.cs" />
     <Compile Include="Controllers\PaymentgatewayController.cs" />
     <Compile Include="Controllers\RazorViewToStringRenderer1.cs" />
     <Compile Include="Controllers\RetailController.cs" />
@@ -2416,9 +2806,11 @@
     <Compile Include="Controllers\RatingController.cs" />
     <Compile Include="Controllers\RetailSectionController.cs" />
     <Compile Include="Controllers\ReturngatewayController.cs" />
+    <Compile Include="Controllers\RolePageAuthorizeAttribute.cs" />
     <Compile Include="Controllers\SendEmailController.cs" />
     <Compile Include="Controllers\SiteManagerController.cs" />
     <Compile Include="Controllers\TimePeriodController.cs" />
+    <Compile Include="Controllers\UrlCryptoController.cs" />
     <Compile Include="Controllers\VenInvoiceController.cs" />
     <Compile Include="Controllers\SUBSCRIPTIONMSTController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
@@ -2426,12 +2818,14 @@
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\ViewEngine.cs" />
     <Compile Include="DAL\CDMDAL.cs" />
+    <Compile Include="DAL\CryptoHelper.cs" />
     <Compile Include="DAL\DashBoardDAL.cs" />
     <Compile Include="DAL\DocumentDAL.cs" />
     <Compile Include="DAL\LoginDAL.cs" />
     <Compile Include="DAL\ModuleRegMasterDAL.cs" />
     <Compile Include="DAL\NewsletterDAL.cs" />
     <Compile Include="DAL\PartyMasterDAL.cs" />
+    <Compile Include="DAL\PasswordHelper.cs" />
     <Compile Include="DAL\RatingDAL.cs" />
     <Compile Include="DAL\ReportDAL.cs" />
     <Compile Include="DAL\RetailSectionDAL.cs" />
@@ -2491,7 +2885,6 @@
     <Content Include="Content\plugins\assets\fonts\material-design\materialdesignicons-webfontb675.ttf" />
     <Content Include="Content\plugins\assets\fonts\material-design\materialdesignicons-webfontb675.woff" />
     <Content Include="Content\plugins\assets\fonts\material-design\materialdesignicons-webfontb675.woff2" />
-    <Content Include="Content\plugins\assets\fonts\material-design\materialdesignicons-webfontd41d.eot" />
     <Content Include="Content\plugins\assets\fonts\pe-icon-7\Pe-icon-7-strokebb1d.eot" />
     <Content Include="Content\plugins\assets\fonts\pe-icon-7\Pe-icon-7-strokebb1d.ttf" />
     <Content Include="Content\plugins\assets\fonts\pe-icon-7\Pe-icon-7-strokebb1d.woff" />
@@ -2556,14 +2949,11 @@
     <Content Include="Views\Dashboard\ItemMaster.cshtml" />
     <Content Include="Views\Dashboard\LoginPermission.cshtml" />
     <Content Include="Views\Dashboard\NavMenuPermission.cshtml" />
-    <Content Include="Views\Dashboard\OpeningBalance.cshtml" />
     <Content Include="Views\Dashboard\ReportHeader.cshtml" />
     <Content Include="Views\Dashboard\UserRegistration.cshtml" />
     <Content Include="Views\Dashboard\VendorDashBoard.cshtml" />
     <Content Include="Views\DocumentMaster\ComplianceMaster.cshtml" />
-    <Content Include="Views\DocumentMaster\Mapping.cshtml" />
     <Content Include="Views\DocumentMaster\OneTimeDocument.cshtml" />
-    <Content Include="Views\DocumentMaster\OneTimeDocument1.cshtml" />
     <Content Include="Views\Login\forget.cshtml" />
     <Content Include="DownloadMat\EmployeeMasterSampleSheet.xlsx" />
     <Content Include="DownloadMat\StoreMasterSampleSheet.xlsx" />
@@ -2600,25 +2990,9 @@
     <Content Include="Views\Service\ServiceMaster.cshtml" />
     <Content Include="Views\Shared\ActionSearch.cshtml" />
     <Content Include="Views\Shared\ActionView.cshtml" />
-    <Content Include="Views\Shared\AllInvoiceLayout.cshtml" />
     <Content Include="Views\Shared\ConfirmSendSms.cshtml" />
     <Content Include="Views\Shared\ddlActive.cshtml" />
-    <Content Include="Views\Shared\ddlFarm.cshtml" />
-    <Content Include="Views\Shared\ddlFarmer.cshtml" />
-    <Content Include="Views\Shared\ddlSupplier.cshtml" />
-    <Content Include="Views\Shared\ddlTransporter.cshtml" />
-    <Content Include="Views\Shared\ddlVenderType.cshtml" />
     <Content Include="Views\Shared\GeneralReportGrid.cshtml" />
-    <Content Include="Views\Shared\InvoiceLayout.cshtml" />
-    <Content Include="Views\Shared\MultiInvoiceConvertion.cshtml" />
-    <Content Include="Views\Shared\MultiInvoiceDailyCard.cshtml" />
-    <Content Include="Views\Shared\MultiInvoiceDC.cshtml" />
-    <Content Include="Views\Shared\MultiInvoiceGC.cshtml" />
-    <Content Include="Views\Shared\MultiInvoiceLayout.cshtml" />
-    <Content Include="Views\Shared\MultiInvoiceLayoutAllotment.cshtml" />
-    <Content Include="Views\Shared\MultiInvoiceLayoutBranchAllotment.cshtml" />
-    <Content Include="Views\Shared\SaleBillPrintLayout.cshtml" />
-    <Content Include="Views\Shared\SalePrintLayout.cshtml" />
     <Content Include="Views\Shared\SearchAngularJs.cshtml" />
     <Content Include="Views\Shared\txtFromDate.cshtml" />
     <Content Include="Views\Shared\txtToDate.cshtml" />
@@ -2638,11 +3012,7 @@
     <Content Include="Views\Dashboard\communication.cshtml" />
     <Content Include="Views\Dashboard\documentsMaster.cshtml" />
     <Content Include="Views\Dashboard\employee.cshtml" />
-    <Content Include="Views\Dashboard\unit.cshtml" />
     <Content Include="Views\Shared\_GeneralLayout.cshtml" />
-    <Content Include="Views\Dashboard\unitdocuments.cshtml" />
-    <Content Include="Views\Dashboard\unitdocumentsDetails.cshtml" />
-    <Content Include="Views\Dashboard\viewunitdocuments.cshtml" />
     <Content Include="Views\CDM\CDM.cshtml" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -2699,7 +3069,7 @@
     <Content Include="compliance\webfonts\WS_FTP.LOG" />
     <Content Include="Views\RetailSection\Dashboard.cshtml" />
     <Content Include="Views\RetailSection\ComplianceDoc.cshtml" />
-    <Content Include="Views\RetailSection\LicenseMaster.cshtml" />
+    <Content Include="Views\RetailSection\LicenseMaster1.cshtml" />
     <Content Include="Views\Retail\LicenseMaster.cshtml" />
     <Content Include="Views\Retail\StoreMapping.cshtml" />
     <Content Include="Views\Retail\StorePrefix.cshtml" />
@@ -2717,10 +3087,6 @@
     <Content Include="Views\Retail\RetailAssignExecuter.cshtml" />
     <Content Include="Views\Paymentgateway\Payment.cshtml" />
     <Content Include="Views\Returngateway\ReturnResponse.cshtml" />
-    <Content Include="bin\EesassinErp.dll.config" />
-    <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
-    <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
-    <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
     <Content Include="packages\Microsoft.AspNet.Mvc.5.2.9\.signature.p7s" />
     <Content Include="packages\Microsoft.AspNet.Mvc.5.2.9\Content\Web.config.install.xdt" />
     <Content Include="packages\Microsoft.AspNet.Mvc.5.2.9\Content\Web.config.uninstall.xdt" />
@@ -2805,7 +3171,210 @@
     <Content Include="packages\Newtonsoft.Json.13.0.1\.signature.p7s" />
     <Content Include="packages\Newtonsoft.Json.13.0.1\LICENSE.md" />
     <Content Include="packages\Newtonsoft.Json.13.0.1\Newtonsoft.Json.13.0.1.nupkg" />
-    <None Include="Views\Login\Login.cshtml" />
+    <Content Include="StoreDashboard\css\WS_FTP.LOG" />
+    <Content Include="StoreDashboard\css\_notes\custom_theme.css.mno" />
+    <Content Include="StoreDashboard\css\_notes\WS_FTP.LOG" />
+    <Content Include="StoreDashboard\images\output-onlinepngtools-2.psd" />
+    <Content Include="StoreDashboard\Templates\template.dwt" />
+    <Content Include="StoreDashboard\Templates\WS_FTP.LOG" />
+    <Content Include="StoreDashboard\webfonts\fa-brands-400.eot" />
+    <Content Include="StoreDashboard\webfonts\fa-brands-400.ttf" />
+    <Content Include="StoreDashboard\webfonts\fa-brands-400.woff" />
+    <Content Include="StoreDashboard\webfonts\fa-brands-400.woff2" />
+    <Content Include="StoreDashboard\webfonts\fa-regular-400.eot" />
+    <Content Include="StoreDashboard\webfonts\fa-regular-400.ttf" />
+    <Content Include="StoreDashboard\webfonts\fa-regular-400.woff" />
+    <Content Include="StoreDashboard\webfonts\fa-regular-400.woff2" />
+    <Content Include="StoreDashboard\webfonts\fa-solid-900.eot" />
+    <Content Include="StoreDashboard\webfonts\fa-solid-900.ttf" />
+    <Content Include="StoreDashboard\webfonts\fa-solid-900.woff" />
+    <Content Include="StoreDashboard\webfonts\fa-solid-900.woff2" />
+    <Content Include="StoreDashboard\webfonts\Galaxie-Polaris-Book.otf" />
+    <Content Include="StoreDashboard\webfonts\Simple-Line-Icons.eot" />
+    <Content Include="StoreDashboard\webfonts\Simple-Line-Icons.ttf" />
+    <Content Include="StoreDashboard\webfonts\Simple-Line-Icons.woff" />
+    <Content Include="StoreDashboard\webfonts\Simple-Line-Icons.woff2" />
+    <Content Include="StoreDashboard\webfonts\WS_FTP.LOG" />
+    <Content Include="Views\Common\_RetailReportLayout.cshtml" />
+    <Content Include="Views\Chat\ChatbotSupport.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="DownloadMat\Retail\Employee\ddb4974abe494104b09a6beb93ab3e4b.pdf" />
+    <Content Include="DownloadMat\Retail\Store\002931f3cd1a413f95ea801eee33bc78.pdf" />
+    <Content Include="DownloadMat\Retail\Store\01462d66ea43406087279c6d2398f75a.pdf" />
+    <Content Include="DownloadMat\Retail\Store\0268189d2e95432987913c32ad823ddc.pdf" />
+    <Content Include="DownloadMat\Retail\Store\028177592f5b476bb599069b530abdd9.pdf" />
+    <Content Include="DownloadMat\Retail\Store\03b5f9888ec0469292d1d76baf132018.pdf" />
+    <Content Include="DownloadMat\Retail\Store\06dfd67aefd2450abeef7ee528b28d15.pdf" />
+    <Content Include="DownloadMat\Retail\Store\07b02a5520ba43f09c25fea310c641fc.pdf" />
+    <Content Include="DownloadMat\Retail\Store\090b47ae192443168e5d59f8a280175b.pdf" />
+    <Content Include="DownloadMat\Retail\Store\093e7f4d31b341b1b930085cc22ace14.pdf" />
+    <Content Include="DownloadMat\Retail\Store\09a28eb1f2424c6fbee0caa17e96c0d8.pdf" />
+    <Content Include="DownloadMat\Retail\Store\0da97b2e5d554ce5a2d67fdf72ceef8e.pdf" />
+    <Content Include="DownloadMat\Retail\Store\0efe93f64ace40fe806b87b9bd1eab85.pdf" />
+    <Content Include="DownloadMat\Retail\Store\0f60bc04a97c499299dc8c79c9464453.pdf" />
+    <Content Include="DownloadMat\Retail\Store\10a750cd1ce84576ae672a8b7fefbd41.pdf" />
+    <Content Include="DownloadMat\Retail\Store\122214dccc97480d98c16cd60f8c2b22.pdf" />
+    <Content Include="DownloadMat\Retail\Store\1533651ac20e4ad1b172017ff1f996be.pdf" />
+    <Content Include="DownloadMat\Retail\Store\1800d9a655294dc8ab3817faddd77453.pdf" />
+    <Content Include="DownloadMat\Retail\Store\1ac88f2dbdc044c5a281d9c0e14ca248.pdf" />
+    <Content Include="DownloadMat\Retail\Store\1b097b9afa674cc5b4d9ade51dfd4d0d.pdf" />
+    <Content Include="DownloadMat\Retail\Store\1d314419b8ae45eb9ac36874153e6698.pdf" />
+    <Content Include="DownloadMat\Retail\Store\1ece16da428b470d8a404965e5b93932.pdf" />
+    <Content Include="DownloadMat\Retail\Store\1f6da8ad91654377acfb92ee968942c3.pdf" />
+    <Content Include="DownloadMat\Retail\Store\1f99bed7ce8c4073b068ef09c91bdd33.pdf" />
+    <Content Include="DownloadMat\Retail\Store\20d6bb54f5244dc89cc42965ff03158a.pdf" />
+    <Content Include="DownloadMat\Retail\Store\21e593fe2d294917987dbe859e31ec2b.pdf" />
+    <Content Include="DownloadMat\Retail\Store\21f4ef3c16944794b0b6dfdaf38e6982.pdf" />
+    <Content Include="DownloadMat\Retail\Store\224e78406d8548c6a4e73bd7704ab992.pdf" />
+    <Content Include="DownloadMat\Retail\Store\2328f9a028334687b9dc9e34b4061dd8.pdf" />
+    <Content Include="DownloadMat\Retail\Store\26324ff803a84b46abfe7df18117e329.pdf" />
+    <Content Include="DownloadMat\Retail\Store\27ccf7af0b33443cb3d435fab2e35f7b.pdf" />
+    <Content Include="DownloadMat\Retail\Store\2a08e9d79d874d489ae56fd8f89ab5ac.pdf" />
+    <Content Include="DownloadMat\Retail\Store\2a32646ac3c34ef1939cce46058942cc.pdf" />
+    <Content Include="DownloadMat\Retail\Store\2aa265272e5a48ca9f079e0b7e44ce29.pdf" />
+    <Content Include="DownloadMat\Retail\Store\2e53ca5f535446ad8b42081154343eb6.pdf" />
+    <Content Include="DownloadMat\Retail\Store\2e6348a06b3142fe8893df90fefdd902.pdf" />
+    <Content Include="DownloadMat\Retail\Store\310f226bfcff466d8043c4cf15161277.pdf" />
+    <Content Include="DownloadMat\Retail\Store\3256162deec948d19fcd911e5f1000b1.pdf" />
+    <Content Include="DownloadMat\Retail\Store\34e2618c89f148e0b2a74bf0cae62c2b.pdf" />
+    <Content Include="DownloadMat\Retail\Store\3b74f2c438d94317b2164ae366eebca1.pdf" />
+    <Content Include="DownloadMat\Retail\Store\3f0dd502c08d444990df7c5874cd7c66.pdf" />
+    <Content Include="DownloadMat\Retail\Store\40e301ebc3bf44c0aa135020edc49b81.pdf" />
+    <Content Include="DownloadMat\Retail\Store\4289dad36c8b406daf9f66d6b811c8b6.pdf" />
+    <Content Include="DownloadMat\Retail\Store\43840b0db9f7451583e8cd7b7f8c4134.pdf" />
+    <Content Include="DownloadMat\Retail\Store\4413955d51f747958989f8ff30b922af.pdf" />
+    <Content Include="DownloadMat\Retail\Store\44bacafdaaa546269221174fb577a34f.pdf" />
+    <Content Include="DownloadMat\Retail\Store\44ed2fac0328457faafb5204793d7f59.pdf" />
+    <Content Include="DownloadMat\Retail\Store\4559b61df01d4bba9576fe02fd64b613.pdf" />
+    <Content Include="DownloadMat\Retail\Store\46aeeb1ec7c54f8cb5e0c9650a9ede4d.pdf" />
+    <Content Include="DownloadMat\Retail\Store\46cf38f48a8949acb56f550643426049.pdf" />
+    <Content Include="DownloadMat\Retail\Store\49d1396ebe9a4024998ebca796847847.pdf" />
+    <Content Include="DownloadMat\Retail\Store\4d6d5f59d58d44b4851775646e359d2e.pdf" />
+    <Content Include="DownloadMat\Retail\Store\4dc48fefea3d4d7e92607c15a9ed7338.pdf" />
+    <Content Include="DownloadMat\Retail\Store\4e3469971bf64144b9504ab9dbdd47bc.pdf" />
+    <Content Include="DownloadMat\Retail\Store\4ea8a19ef6074081995f341470ddbbff.pdf" />
+    <Content Include="DownloadMat\Retail\Store\52a1b159a06e4fb2807edf24a17b1893.pdf" />
+    <Content Include="DownloadMat\Retail\Store\52ebbd54f11844da9cfa15e6cd9a0cf8.pdf" />
+    <Content Include="DownloadMat\Retail\Store\5432db4c37ef4bf1a1c23867e01fdf0f.pdf" />
+    <Content Include="DownloadMat\Retail\Store\562cd859450440f483a4c302ee0fb693.pdf" />
+    <Content Include="DownloadMat\Retail\Store\5719d7c4a058461cb6aed00fa95f0568.pdf" />
+    <Content Include="DownloadMat\Retail\Store\599b5b5c7a004a8ab7c7f59c4ef940a1.pdf" />
+    <Content Include="DownloadMat\Retail\Store\5da1dd83704845aa94bf735d3039d85a.pdf" />
+    <Content Include="DownloadMat\Retail\Store\623431d2e45a478abb3fe4dab8fc619b.pdf" />
+    <Content Include="DownloadMat\Retail\Store\62cbf1cb05fc41beba9900916d006e71" />
+    <Content Include="DownloadMat\Retail\Store\637979a5ffe24abcb3994dda3b775f23.pdf" />
+    <Content Include="DownloadMat\Retail\Store\6782b725477e422e9adea960ff0ad78f.pdf" />
+    <Content Include="DownloadMat\Retail\Store\68a4fb6e5e4f44dfadec1688b5f0300d.pdf" />
+    <Content Include="DownloadMat\Retail\Store\6b74e6f975cc47389000185a4720bd23.pdf" />
+    <Content Include="DownloadMat\Retail\Store\6c730f54ec0e4495a1515b4ecc7278f8.pdf" />
+    <Content Include="DownloadMat\Retail\Store\6eeee8e600d242bdb9ef198883d1e634.pdf" />
+    <Content Include="DownloadMat\Retail\Store\70975cae707e48678b190a3b3f90e9df.pdf" />
+    <Content Include="DownloadMat\Retail\Store\70cbf44e5d4848a4be586ad42dfd5c6c.pdf" />
+    <Content Include="DownloadMat\Retail\Store\76042685c8c24291959ebc839a5fc004.pdf" />
+    <Content Include="DownloadMat\Retail\Store\76cdb3f2cb3d4318a1b19ecec5d83ff7.pdf" />
+    <Content Include="DownloadMat\Retail\Store\7862ca1b02af4ec18ce45e7a5a732a12.pdf" />
+    <Content Include="DownloadMat\Retail\Store\7927a7618ca443898d9ac35b1110b4cb.pdf" />
+    <Content Include="DownloadMat\Retail\Store\7b17965bdecd4c0a86aac9607762f616.pdf" />
+    <Content Include="DownloadMat\Retail\Store\7e2045c19c1a46e39db5a2a59f486cb0.pdf" />
+    <Content Include="DownloadMat\Retail\Store\8160ec1c5414448f91046acbffac9cab.pdf" />
+    <Content Include="DownloadMat\Retail\Store\81fdeb364ff34338bcd17ca43fdd345d.pdf" />
+    <Content Include="DownloadMat\Retail\Store\836848cf4e4e419694708b978238be68.pdf" />
+    <Content Include="DownloadMat\Retail\Store\86c44c6b10cc46c89a53db0563975600.pdf" />
+    <Content Include="DownloadMat\Retail\Store\88fb25a39ba346dea0165cb80c2fe4a9.pdf" />
+    <Content Include="DownloadMat\Retail\Store\897da1b722be4db78fee9c1beb34a4f5.pdf" />
+    <Content Include="DownloadMat\Retail\Store\8ca0336b610d4fc5bbc66f18ef3211d0.pdf" />
+    <Content Include="DownloadMat\Retail\Store\8f08c6ace27b4779b38dc9a065fe15df.pdf" />
+    <Content Include="DownloadMat\Retail\Store\9161eeece5234208abd3195f4cf67109.pdf" />
+    <Content Include="DownloadMat\Retail\Store\9328d0d7d46e4b139b04be96139a8ed7.pdf" />
+    <Content Include="DownloadMat\Retail\Store\93fb732e1fd74cecb2068493a964cee5.pdf" />
+    <Content Include="DownloadMat\Retail\Store\944e904884054f869b290e81ed95a1b2.pdf" />
+    <Content Include="DownloadMat\Retail\Store\9479f4e3d64b4335be5a8a79d06b5a0f.pdf" />
+    <Content Include="DownloadMat\Retail\Store\986729cb44704f1591a3bdfe4fd6dfeb.pdf" />
+    <Content Include="DownloadMat\Retail\Store\9c13ed88764f486485ff12419da05a5b.pdf" />
+    <Content Include="DownloadMat\Retail\Store\9fe575ad94ff41b8af55534ada6ad9c5.pdf" />
+    <Content Include="DownloadMat\Retail\Store\a0e1051238aa489aa8ea63b4c647ac52.pdf" />
+    <Content Include="DownloadMat\Retail\Store\a1af3e17cd2547448dafcc59bb2f283d.pdf" />
+    <Content Include="DownloadMat\Retail\Store\a3eedac88f4745eba794e82ac447bd4c.pdf" />
+    <Content Include="DownloadMat\Retail\Store\a4c13193eee2440da63b888b1fc94458.pdf" />
+    <Content Include="DownloadMat\Retail\Store\a6ef0959c888473f88118905dd4bac59.pdf" />
+    <Content Include="DownloadMat\Retail\Store\a731a231afc14b6bbdbd34e3986aa87e" />
+    <Content Include="DownloadMat\Retail\Store\ace879815dcd475596c5beecb4f7bd15.pdf" />
+    <Content Include="DownloadMat\Retail\Store\ad564fff452f47a897d2585ccde69ae5.pdf" />
+    <Content Include="DownloadMat\Retail\Store\af2ce90b98be4d8fbe47eef076eb6697.pdf" />
+    <Content Include="DownloadMat\Retail\Store\af451137de634b57943d93b23e6da734.pdf" />
+    <Content Include="DownloadMat\Retail\Store\afeb11123e504ab4b1cc31e0ae59175a.pdf" />
+    <Content Include="DownloadMat\Retail\Store\b5730baded164132a5882e71194f1e80.pdf" />
+    <Content Include="DownloadMat\Retail\Store\b59c895a536241af9eeda30a6f8f646e.pdf" />
+    <Content Include="DownloadMat\Retail\Store\b7a34ff377204851b9cf369898ad9ddc.pdf" />
+    <Content Include="DownloadMat\Retail\Store\bad5547402a74f98805eff76bd303484.pdf" />
+    <Content Include="DownloadMat\Retail\Store\be04350fc7e54e23a8bb6f94988e9d7c.pdf" />
+    <Content Include="DownloadMat\Retail\Store\be748416a83044c1b881480d04369782.pdf" />
+    <Content Include="DownloadMat\Retail\Store\c103e39db2d5431cad1ada4988ec0782.pdf" />
+    <Content Include="DownloadMat\Retail\Store\c31d754d93df4d2983fff480c453ddc7.pdf" />
+    <Content Include="DownloadMat\Retail\Store\c4e26992c4a54844a5276f1534802b27.pdf" />
+    <Content Include="DownloadMat\Retail\Store\c709dbab7cb7419ebb7f7575aa3ee413.pdf" />
+    <Content Include="DownloadMat\Retail\Store\c890924f348d4eb889fec082a727ab6c.pdf" />
+    <Content Include="DownloadMat\Retail\Store\cca6330bd37945069d995fa800605455.pdf" />
+    <Content Include="DownloadMat\Retail\Store\cd743211e6f345e69f3f5dc02511e0a2.pdf" />
+    <Content Include="DownloadMat\Retail\Store\cdec88a4892d443e800438347638f14a.pdf" />
+    <Content Include="DownloadMat\Retail\Store\ce17e67059d94a43800896b0a1b277bd.pdf" />
+    <Content Include="DownloadMat\Retail\Store\cf8bc497e8064c62817148efcfb0720e.pdf" />
+    <Content Include="DownloadMat\Retail\Store\d05744d93db54c12a32173f850e3d689.pdf" />
+    <Content Include="DownloadMat\Retail\Store\d0d5e90e9d074b708b2658e62e400b52.pdf" />
+    <Content Include="DownloadMat\Retail\Store\d189ce0831464873ac9d4d0a3cddac05.pdf" />
+    <Content Include="DownloadMat\Retail\Store\d383f052ae0c4102bcf6292cdac8d311.pdf" />
+    <Content Include="DownloadMat\Retail\Store\da207ea825974e488f430d1c9fed7c19.pdf" />
+    <Content Include="DownloadMat\Retail\Store\da870f77751044709a4e6dd032eeee81.pdf" />
+    <Content Include="DownloadMat\Retail\Store\dbd2b2a226ef40dc81983689c39cf5d6.pdf" />
+    <Content Include="DownloadMat\Retail\Store\de24b1ae22c544bfb40d14afb159baac.pdf" />
+    <Content Include="DownloadMat\Retail\Store\dea2b3d5f1e74c6783b3edd202579275.pdf" />
+    <Content Include="DownloadMat\Retail\Store\dfe1b2be133348b1a67daec93720ca27.pdf" />
+    <Content Include="DownloadMat\Retail\Store\dffb7505e5984622a27b5f688f281549.pdf" />
+    <Content Include="DownloadMat\Retail\Store\e1477e8bb343440bbaae89c29ba1c5bb.pdf" />
+    <Content Include="DownloadMat\Retail\Store\e2b55c74c09c4a97b5e9f996235d3bae.pdf" />
+    <Content Include="DownloadMat\Retail\Store\e34e51b233e640428b7094d76b4619e4.pdf" />
+    <Content Include="DownloadMat\Retail\Store\e75922ad750b42e0b38a9de50d9c968b.pdf" />
+    <Content Include="DownloadMat\Retail\Store\e9668b10f94f44c1b1768d6f91654273.pdf" />
+    <Content Include="DownloadMat\Retail\Store\eabb4700d79a4dcda226fb6b7a592ae8.pdf" />
+    <Content Include="DownloadMat\Retail\Store\eb5169f82d5949f9a3e1a27c159dbe40.pdf" />
+    <Content Include="DownloadMat\Retail\Store\eedbf7429ac540128af7cc7ceb9d5925.pdf" />
+    <Content Include="DownloadMat\Retail\Store\eefcee6a30dd4d259b754c41e5b8bf6e.pdf" />
+    <Content Include="DownloadMat\Retail\Store\efb9bbcf48ca4d718ed63112883ea273.pdf" />
+    <Content Include="DownloadMat\Retail\Store\f0535ecd7afd4c7492c69a1bb4f02bc6.pdf" />
+    <Content Include="DownloadMat\Retail\Store\f55e25778ccf4ed8a56ad2d3e2a0e516.pdf" />
+    <Content Include="DownloadMat\Retail\Store\f598721f27cb4cf6a289d99bd2a07d95.pdf" />
+    <Content Include="DownloadMat\Retail\Store\f6df38298cfb4b388db9757dce58f4ce.pdf" />
+    <Content Include="DownloadMat\Retail\Store\f7d8b23a458043f4bc656940284a2498.pdf" />
+    <Content Include="DownloadMat\Retail\Store\f824ad5c59c94dd2aaa04c38d3a6de92.pdf" />
+    <Content Include="DownloadMat\Retail\Store\f82fc53e165c42df969549104b3c1b7c.pdf" />
+    <Content Include="DownloadMat\Retail\Store\f8edab12acf8484c8eac3893edfe75bb.pdf" />
+    <Content Include="DownloadMat\Retail\Store\f9bb96e85b36427cac2a2d07247e3cdc.pdf" />
+    <Content Include="DownloadMat\Retail\Store\fba3548a89354e61b03b8e5f57e8d77b.pdf" />
+    <Content Include="DownloadMat\Retail\Store\fcbe544b400a494483b149d9fafd6c53.pdf" />
+    <Content Include="DownloadMat\MasterSheet.xlsx" />
+    <Content Include="DownloadMat\ActivePayrollTemplate.xlsx" />
+    <Content Include="DownloadMat\SalaryPayRollTemplate.xlsx" />
+    <Content Include="Views\Dashboard\CommonDashboard.cshtml" />
+    <Content Include="Views\Dashboard\ReportDashboard.cshtml" />
+    <Content Include="Views\Dashboard\ReportLicenseApplicable.cshtml" />
+    <Content Include="Views\Common\_NewRetaillayout.cshtml" />
+    <Content Include="Views\Dashboard\CommonDashboardCompliance.cshtml" />
+    <Content Include="Views\Dashboard\LabourCommonCompliance.cshtml" />
+    <Content Include="Views\Dashboard\factoryCommonCompliance.cshtml" />
+    <Content Include="Views\Dashboard\payrollCommonCompliance.cshtml" />
+    <Content Include="Views\Dashboard\EstablishmentCommonCompliance.cshtml" />
+    <Content Include="Views\Dashboard\licenseCommonCompliance.cshtml" />
+    <Content Include="Views\Dashboard\locationCommonCompliance.cshtml" />
+    <Content Include="Views\Dashboard\SecretarialCommonCompliance.cshtml" />
+    <Content Include="Views\Dashboard\FinanceCommonCompliance.cshtml" />
+    <Content Include="Views\Dashboard\NoticeCommonCompliance.cshtml" />
+    <Content Include="Views\Dashboard\LitigationCommonCompliance.cshtml" />
+    <Content Include="Views\Dashboard\Dash.cshtml" />
+    <Content Include="Views\Dashboard\Board.cshtml" />
+    <Content Include="Views\Error\Error.cshtml" />
+    <Content Include="Views\Dashboard\VBoard.cshtml" />
+    <Content Include="Views\Dashboard\ComplianceReport.cshtml" />
+    <None Include="Views\Login\Login1.cshtml" />
     <Content Include="Views\RetailSection\ManualPayment.cshtml" />
     <Content Include="Views\RetailSection\AdditionalDocument.cshtml" />
     <Content Include="Views\RetailSection\testing.cshtml" />
@@ -2819,7 +3388,69 @@
     <Content Include="Views\RetailSection\NewsLetterDetail.cshtml" />
     <Content Include="Views\SendEmail\EmailTemplate.cshtml" />
     <Content Include="Views\RetailSection\NewsLetterDetailAll.cshtml" />
-    <Content Include="Views\RetailSection\LicenceStatusDashboard - Copy.cshtml" />
+    <Content Include="Views\RetailSection\LicenceStatusDashboard1.cshtml" />
+    <Content Include="Views\RetailSection\Package.cshtml" />
+    <Content Include="Views\Report\ReminderReport.cshtml" />
+    <Content Include="Views\RetailSection\MaintainLogReport.cshtml" />
+    <Content Include="Views\Report\LogOnReport.cshtml" />
+    <Content Include="Views\RetailSection\StoreDashboard.cshtml" />
+    <Content Include="Views\Retail\RetailLicenceMaster.cshtml" />
+    <Content Include="Views\Retail\RetailCreateActCalenderMaster.cshtml" />
+    <Content Include="Views\Retail\RetailCreateIndustry.cshtml" />
+    <Content Include="Views\Retail\MainRetailDashboard.cshtml" />
+    <Content Include="Views\RetailSection\MainDashboard.cshtml" />
+    <Content Include="Views\Retail\RetailCreateOverview.cshtml" />
+    <Content Include="Views\Retail\IndustryMapping.cshtml" />
+    <Content Include="Views\Retail\ClientOnboarding.cshtml" />
+    <Content Include="Views\Retail\BoardingMapping.cshtml" />
+    <Content Include="Views\Retail\ClientDashboard.cshtml" />
+    <Content Include="Views\Retail\ComplianceDashboard.cshtml" />
+    <Content Include="Views\Retail\StatutoryInternal.cshtml" />
+    <Content Include="Views\Retail\CalenderDashboard.cshtml" />
+    <Content Include="Views\RetailSection\LicenseMaster.cshtml" />
+    <Content Include="Views\Report\ReportLicenseMaster.cshtml" />
+    <Content Include="Views\RetailSection\LRDashboard.cshtml" />
+    <Content Include="Views\Report\NoticeInspection.cshtml" />
+    <Content Include="Views\RetailSection\ReportLayout.cshtml" />
+    <Content Include="Views\RetailSection\ActMaster.cshtml" />
+    <Content Include="Views\RetailSection\OverViewMaster.cshtml" />
+    <Content Include="Views\Retail\Registration.cshtml" />
+    <Content Include="Views\Retail\NCalenderDashboard.cshtml" />
+    <Content Include="Views\Retail\RetailDepartmentMaster.cshtml" />
+    <Content Include="Views\RetailSection\LitigationMaster.cshtml" />
+    <Content Include="Views\RetailSection\LitigationManagement.cshtml" />
+    <Content Include="Views\Retail\RetailCourtMaster.cshtml" />
+    <Content Include="Views\Retail\RetailProjectMaster.cshtml" />
+    <Content Include="Views\Retail\RetailFileMatching.cshtml" />
+    <Content Include="Views\Retail\StatutorySetup.cshtml" />
+    <Content Include="Views\Report\ExpectationReport.cshtml" />
+    <Content Include="Views\Retail\AddComplianceFile.cshtml" />
+    <Content Include="Views\Retail\ReportCompliance.cshtml" />
+    <Content Include="Views\Retail\RetailSecretarialCompliance.cshtml" />
+    <Content Include="Views\Retail\SecretarialStatutoryInternal.cshtml" />
+    <Content Include="Views\Retail\SecretarialStatutorySetup.cshtml" />
+    <Content Include="Views\Retail\RetailFinacialCalenderMaster.cshtml" />
+    <Content Include="Views\Retail\FinacialStatutoryInternal.cshtml" />
+    <Content Include="Views\Retail\FinancialStatutorySetup.cshtml" />
+    <Content Include="Views\Retail\HeaderTemplate.cshtml" />
+    <Content Include="Views\Retail\Enitfy.cshtml" />
+    <Content Include="Views\Retail\FactoryCompliance.cshtml" />
+    <Content Include="Views\Retail\RetailFactoryCompliance.cshtml" />
+    <Content Include="Views\RetailSection\Payrollcompliance.cshtml" />
+    <Content Include="Views\Retail\RetailLabourCodeCompliance.cshtml" />
+    <Content Include="Views\Retail\LabourCodeCompliance.cshtml" />
+    <Content Include="Views\RetailSection\LocationMaster1.cshtml" />
+    <Content Include="Views\RetailSection\MailMapping.cshtml" />
+    <Content Include="Views\Retail\ClientStoreMapping.cshtml" />
+    <Content Include="Views\Retail\IndustryLicenseMapping.cshtml" />
+    <Content Include="Views\RetailSection\LicenseCommonCompliance.cshtml" />
+    <Content Include="Views\RetailSection\NewLocationDashboard.cshtml" />
+    <Content Include="Views\RetailSection\LocationMaster2.cshtml" />
+    <Content Include="Views\RetailSection\userProfile.cshtml" />
+    <Content Include="Views\Retail\SecretarialCompliance.cshtml" />
+    <Content Include="Views\RetailSection\Index.cshtml" />
+    <Content Include="Views\Retail\NSecretarialCompliance.cshtml" />
+    <Content Include="Views\RetailSection\NewEmployeeMaster.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2831,7 +3462,9 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\Calendar\demos\php\" />
     <Folder Include="Content\general\" />
+    <Folder Include="DownloadMat\ActFile\" />
     <Folder Include="DownloadMat\AVQuery\" />
+    <Folder Include="DownloadMat\Boarding\" />
     <Folder Include="DownloadMat\CDoc\" />
     <Folder Include="DownloadMat\Certificate\" />
     <Folder Include="DownloadMat\ComplianceBulk\BaseFileExcel\" />
@@ -2842,11 +3475,16 @@
     <Folder Include="DownloadMat\NoticeDoc\" />
     <Folder Include="DownloadMat\ProfileDoc\" />
     <Folder Include="DownloadMat\ProfilePhoto\" />
+    <Folder Include="DownloadMat\StatutoryDoc\" />
     <Folder Include="DownloadMat\StoreLicDocument\" />
     <Folder Include="licenseStatusDasboard\fonts\" />
     <Folder Include="Models\" />
-    <Folder Include="Views\Location\" />
-    <Folder Include="Views\ModuleRegMaster\" />
+    <Folder Include="Views\BackupService\" />
+    <Folder Include="Views\CaseStatusMaster\" />
+    <Folder Include="Views\EZAIAPI\" />
+    <Folder Include="Views\NotificationReminder\" />
+    <Folder Include="Views\Reminder\" />
+    <Folder Include="Views\UrlCrypto\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -2866,7 +3504,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63292</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:63292/</IISUrl>
+          <IISUrl>http://localhost:8880/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -2880,8 +3518,9 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.4.2.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\LLamaSharp.Backend.Cpu.0.25.0\build\netstandard2.0\LLamaSharp.Backend.Cpu.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\LLamaSharp.Backend.Cpu.0.25.0\build\netstandard2.0\LLamaSharp.Backend.Cpu.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

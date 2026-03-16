@@ -136,7 +136,7 @@ $(document).ready(function() {
             url: "dt-json-data/scripts/server-processing.php",
             data: function(d) {
                 d.myKey = "myValue";
-                // d.custom = $('#myInput').val();
+                  d.custom = $('#myInput').val();
                 // etc
             }
         },

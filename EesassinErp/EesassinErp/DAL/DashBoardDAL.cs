@@ -1,13 +1,9 @@
-﻿using System;
+﻿using BAL;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using BAL;
-using System.Data.SqlClient;
 using System.Data;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
 using System.Text;
-using DAL;
+using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -261,6 +257,18 @@ namespace DAL
 
             return dt;
         }
+        public async Task<DataTable> GetDetails(BranchAuthorization obj)
+        {
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter("@Action", obj.Action),
+                new SqlParameter("@IsActive",obj.IsActive),
+                new SqlParameter("@BranchCode",obj.BranchCode),
+            };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[USP_LoginAuthentication]", CommandType.StoredProcedure, param.ToArray()));
+
+            return dt;
+        }
         public async Task<int> UpdateAllMembers(BCommon obj)
         {
             var param = new List<SqlParameter>
@@ -300,6 +308,30 @@ namespace DAL
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[USP_ReportHeader]", CommandType.StoredProcedure, param.ToArray()));
         }
 
+        public async Task<string> IUDManageReportHeader(BCommon obj)
+        {
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter("@Action",obj.Action),
+                new SqlParameter("@Id",obj.Id), 
+                new SqlParameter("@StateId", obj.StateId),
+                new SqlParameter("@DocumentId", obj.DocumentId),
+                new SqlParameter("@HeaderHtml", obj.HeaderHtml),
+                new SqlParameter("@Result",""),
+            };
+            return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[usp_ManageReportHeader]", CommandType.StoredProcedure, param.ToArray()));
+        }
+        
+       public async Task<DataTable> GetManageReportHeader(BCommon obj)
+        {
+            DataTable dt; 
+                var param = new List<SqlParameter>
+                {  
+                new SqlParameter("@Action", obj.Action),
+                };
+                dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("usp_ManageReportHeader", CommandType.StoredProcedure, param.ToArray()));
+                return dt; 
+        }
         public async Task<DataTable> GetReportHeader(BCommon obj)
         {
             DataTable dt;
@@ -322,6 +354,10 @@ namespace DAL
         }
         public async Task<string> IUDUserRegistration(BCommon obj)
         {
+            //obj.UserName = CryptoHelper.Encrypt(obj.UserName);
+            //obj.Password = CryptoHelper.Encrypt(obj.Password);
+
+           
             var param = new List<SqlParameter>
             {
                     new SqlParameter("@Action",obj.Action),
@@ -331,13 +367,22 @@ namespace DAL
                     new SqlParameter("@Password",obj.Password),
                     new SqlParameter("@MapId",obj.MapId),
                     new SqlParameter("@LoginType",obj.LoginType),
-                       new SqlParameter("@ContactNo",obj.ContactNo),
-                          new SqlParameter("@EmailId",obj.EmailId),
-
+                    new SqlParameter("@ContactNo",obj.ContactNo),
+                    new SqlParameter("@EmailId",obj.EmailId),
                     new SqlParameter("@IsActive",obj.IsActive),
                     new SqlParameter("@result",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("USP_LoginTable", CommandType.StoredProcedure, param.ToArray()));
+        }
+        public DataTable GetUserByUserName(string userName)
+        {
+            var param = new List<SqlParameter>
+           {
+            new SqlParameter("@UserName", userName)
+          };
+            
+            
+            return SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("USP_GetUserByUserName", CommandType.StoredProcedure, param.ToArray());
         }
         public async Task<DataTable> GetUserRegistration(BCommon obj)
         {
@@ -406,7 +451,8 @@ namespace DAL
                 new SqlParameter("@PartyId",obj.PartyId),
                 new SqlParameter("@PartyType", obj.PartyType),
                 new SqlParameter("@UserId", obj.UserId),
-                new SqlParameter("@RoleId", obj.RoleId)
+                new SqlParameter("@RoleId", obj.RoleId),
+                  new SqlParameter("@LoginId", obj.LoginId)
             };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("USP_GetPagesSectionList", CommandType.StoredProcedure, param.ToArray()));
             return dt;
@@ -485,6 +531,7 @@ namespace DAL
             {
                 new SqlParameter("@Action", 4),
                 new SqlParameter("@BranchCode",obj.BranchCode),
+                    new SqlParameter("@LoginId",obj.LoginId),
             };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("USP_SetSectionPermissionForRole", CommandType.StoredProcedure, param.ToArray()));
 

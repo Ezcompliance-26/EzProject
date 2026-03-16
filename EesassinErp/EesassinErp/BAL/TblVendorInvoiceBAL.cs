@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace BAL
 {
     public class TblVendorInvoiceBAL
-    { 
+    {
         public string ConversationId { get; set; }
-        public string StateID { get; set; } 
+        public string StateID { get; set; }
         public string PartyID { get; set; }
         public string EndDate { get; set; }
-        public string StartDate { get; set; } 
+        public string StartDate { get; set; }
         public string InvoiceId { get; set; }
         public string SNO { get; set; }
         public string DocumentName { get; set; }
@@ -37,7 +35,7 @@ namespace BAL
         public int? Status { get; set; }
         public DateTime? AuditApproveDate { get; set; }
         public int? DocumentId { get; set; }
-       
+
         public int? LastLoginId { get; set; }
         public int? CreatedBy { get; set; }
         public string LastUpdateBy { get; set; }
@@ -62,7 +60,7 @@ namespace BAL
         public string ClientSiteId { get; set; }
 
 
-         
+
         public string TypeInvoice { get; set; }
         public string Location { get; set; }
 
@@ -79,26 +77,26 @@ namespace BAL
     }
 
     public class InvoiceDetailList
-    { 
-            public string Srno { get; set; }
-          
-            public string InvDate { get; set; }
-            public string VendorInvNum { get; set; }
-            public string StateId { get; set; }
-            public string Location { get; set; }
+    {
+        public string Srno { get; set; }
+
+        public string InvDate { get; set; }
+        public string VendorInvNum { get; set; }
+        public string StateId { get; set; }
+        public string Location { get; set; }
         public string ManpowerType { get; set; }
-            public string ManpowerCount { get; set; }
-            public string InvoiceType { get; set; }  
-            public string TaxableValue { get; set; } 
-        
-            public string CGST { get; set; }
-            public string SGST { get; set; }
-            public string IGST { get; set; }
-            public string GrossAmount { get; set; }
-            public string VendorId { get; set; }
-            public string VendorSiteId { get; set; }
-            public string fileupload { get; set; }
-            public string Status { get; set; }
+        public string ManpowerCount { get; set; }
+        public string InvoiceType { get; set; }
+        public string TaxableValue { get; set; }
+
+        public string CGST { get; set; }
+        public string SGST { get; set; }
+        public string IGST { get; set; }
+        public string GrossAmount { get; set; }
+        public string VendorId { get; set; }
+        public string VendorSiteId { get; set; }
+        public string fileupload { get; set; }
+        public string Status { get; set; }
 
     }
 }

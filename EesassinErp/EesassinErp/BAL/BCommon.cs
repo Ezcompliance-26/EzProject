@@ -1,13 +1,8 @@
-﻿using BAL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BAL
 {
@@ -15,6 +10,12 @@ namespace BAL
     public class BCommon
     {
         public string StartDate { get; set; }
+        public string PageNumber { get; set; }
+        public string PageSize { get; set; }
+        public string Search { get; set; }
+        public string Id { get; set; }
+        public string StateId { get; set; }
+        public string DocumentId { get; set; }
         public string EndDate { get; set; }
         public string ModuleId { get; set; }
         public string MenuId { get; set; }
@@ -51,7 +52,7 @@ namespace BAL
 
 
 
-        public int LoginId { get; set; }
+        public string LoginId { get; set; }
         public string LoginType { get; set; }
 
 
@@ -291,7 +292,7 @@ namespace BAL
         public string PartyId { get; set; }
         public string RoleId { get; set; }
         public string UserId { get; set; }
-        
+
         public List<SectionList> SectionList { get; set; }
 
     }
