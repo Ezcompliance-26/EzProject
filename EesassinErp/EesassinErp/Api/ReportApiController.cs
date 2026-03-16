@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-using BAL;
+﻿using BAL;
 using DAL;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json; 
+using System.Web.Http;
 
 namespace EesassinErp.Controllers
 {
@@ -17,6 +13,6 @@ namespace EesassinErp.Controllers
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.SearchReport(obj)));
             return result;
-        } 
+        }
     }
 }

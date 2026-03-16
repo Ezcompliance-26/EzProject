@@ -1,7 +1,9 @@
 ﻿app.LocationController = function ($scope, $element, $filter, myService) {
     $scope.SetFocus('#txtSiteName');
-   
-
+ 
+    //$scope.StoreList = $scope.StoreList.filter(
+    //    (v, i, a) => a.findIndex(t => t.StoreId === v.StoreId) === i
+    //);
 
     $scope.AllParty = function () {
         var collectionobj = {};

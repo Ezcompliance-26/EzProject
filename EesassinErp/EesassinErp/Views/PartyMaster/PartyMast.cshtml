@@ -46,20 +46,20 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding ">
                                 <div class="collapse in" id="collapseinputbox">
                                     <form id="user-form">
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Party Type<span class="vd_red">*</span></label>
                                             <div class="input-box">
                                                 <select id="ddlVT" autocomplete='address-level2' class="select2 form-control validate" ng-model="PartyType" ng-change="ChkIsClient(PartyType)">
                                                     <option value="">Select </option>
                                                     <option value="Vendor">Vendor</option>
                                                     <option value="Auditor">Auditor</option>
-                                                    <option value="Client">Client</option> 
+                                                    <option value="Client">Client</option>
                                                 </select>
                                                 <div class="text-box-msg-r">
                                                 </div>
                                             </div>
-                                        </div> 
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15" style="display:none">
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15" style="display:none">
                                             <label class="control-label">Vendor Mapping with client</label>
                                             <div class="input-box" ng-init="AllParty()">
                                                 <select id="ddlVendorId" autocomplete='address-level2' class="select2 form-control " ng-model="VendorId" ng-change="AllPartySiteV()">
@@ -70,7 +70,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Party Name<span class="vd_red">*</span></label>
                                             <div class="input-box">
                                                 @Html.TextBox("txtPartyName", "", new { @class = "form-control clear validate", @placeholder = "", @ng_model = "PartyName" })
@@ -79,7 +79,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Address </label>
                                             <div class="input-box">
                                                 @Html.TextBox("txtAddress", "", new { @class = "form-control clear ", @placeholder = "", @ng_model = "Address" })
@@ -87,34 +87,34 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15" style="display:none">
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15" style="display:none">
                                             <label class="control-label">Pincode</label>
                                             <div class="input-box">
-                                                <input class="form-control clear" id="txtPincode" ng-model="Pincode" type="text" maxlength="6" onblur="validateNumberAndDecimalOnly('#txtPincode')" /> 
+                                                <input class="form-control clear" id="txtPincode" ng-model="Pincode" type="text" maxlength="6" onblur="validateNumberAndDecimalOnly('#txtPincode')" />
                                                 <div class="text-box-msg-r">
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Email Id <span class="vd_red">*</span></label>
                                             <div class="input-box">
-                                                <input id="txtEmail" class="form-control clear validate"   ng-model="EmailId" type="email" onblur = "validateEmail('#txtEmail')" />
+                                                <input id="txtEmail" class="form-control clear validate" ng-model="EmailId" type="email" onblur="validateEmail('#txtEmail')" />
                                                 <div class="text-box-msg-r">
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Contact No<span class="vd_red">*</span> </label>
                                             <div class="input-box">
 
-                                                <input id="txtContactNo" class = "form-control clear validate" onblur= "validatePhoneNo('#txtContactNo')" maxlength = "10" placeholder = "" ng-model = "MobileNo" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))"  />
+                                                <input id="txtContactNo" class="form-control clear validate" onblur="validatePhoneNo('#txtContactNo')" maxlength="10" placeholder="" ng-model="MobileNo" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
                                                 <div class="text-box-msg-r">
                                                 </div>
                                             </div>
                                         </div>
-                                     
 
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Contact Person Name<span class="vd_red">*</span></label>
                                             <div class="input-box">
                                                 @Html.TextBox("txtContactPerson", "", new { @class = "form-control clear validate", @placeholder = "", @ng_model = "ContactPerson" })
@@ -122,7 +122,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Contact Person Mobile No.</label>
                                             <div class="input-box">
                                                 <input id="txtContactMobile" class="form-control clear" onblur="validatePhoneNo('#txtContactMobile')" maxlength="10" placeholder="" ng-model="ContactMobile" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
@@ -131,7 +131,55 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">Store Limit<span class="vd_red">*</span></label>
+                                            <div class="input-box">
+                                                <input id="txtStoreLimit" type="text" ng-model="StoreLimit" onblur="validateNumberAndDecimalOnly('#txtStoreLimit')"
+                                                       class="form-control text-right clear validate" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
+
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">User Limit<span class="vd_red">*</span></label>
+                                            <div class="input-box">
+                                                <input id="txtUserLimit" type="text" ng-model="UserLimit" onblur="validateNumberAndDecimalOnly('#txtUserLimit')"
+                                                       class="form-control text-right clear validate" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
+
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">Party Creation Date</label>
+                                            <div class="input-box">
+                                                @Html.TextBox("txtPartyDate", "", new { @class = "form-control clear", @type = "date", @placeholder = "", @ng_model = "PartyDate" })
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">Valid Date</label>
+                                            <div class="input-box">
+                                                @Html.TextBox("txtValidTo", "", new { @class = "form-control clear", @type = "date", @placeholder = "", @ng_model = "ValidTo" })
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-4 col-xs-12 mgbt-xs-15" ng-init="AllIndustry()">
+                                            <label class="control-label">Industry<span class="vd_red">*</span></label>
+                                            <div class="input-box">
+                                                <select id="ddlIndustry" autocomplete='address-level2' class="select2 form-control validate" ng-model="Industry">
+                                                    <option value="">Select Industry</option>
+                                                    <option ng-repeat="x in IndustryList" value="{{x.Id}}">{{x.Industry}}</option>
+                                                </select>
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Descritpion</label>
                                             <div class="input-box">
                                                 @Html.TextBox("txtDescritpion", "", new { @class = "form-control clear", @placeholder = "", @ng_model = "Descritpion" })
@@ -139,13 +187,36 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Is Active</label>
                                             <div class="input-box">
-                                             
+
                                                 @Html.Partial("ddlActive")
-                                                
-                                                   <div class="text-box-msg-r">
+
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">Month Expired</label>
+                                            <div class="input-box">
+                                                <select id="ddlMonthExpired" class="select2 form-control" ng-model="MonthExpired">
+                                                    <option value="">Select</option>
+                                                    <option value="1">1 Month</option>
+                                                    <option value="2">2 Month</option>
+                                                    <option value="3">3 Month</option>
+                                                    <option value="4">4 Month</option>
+                                                    <option value="5">5 Month</option>
+                                                    <option value="6">6 Month</option>
+                                                    <option value="7">7 Month</option>
+                                                    <option value="8">8 Month</option>
+                                                    <option value="9">9 Month</option>
+                                                    <option value="10">10 Month</option>
+                                                    <option value="11">11Month</option>
+                                                    <option value="12">12 Month</option>
+
+                                                </select>
+                                                <div class="text-box-msg-r">
                                                 </div>
                                             </div>
                                         </div>

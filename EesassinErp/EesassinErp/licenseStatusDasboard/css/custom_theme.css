@@ -1139,6 +1139,7 @@ footer {
     margin-right: 15px;
     border-radius: 14px;
     background-color: #fff;
+    background-color: #f0f0f0;
     padding: 15px;
 }
 
@@ -1872,7 +1873,7 @@ input:checked + .slider .off {
 }
 
 .seprat {
-    border-top: 1px solid #fff;
+   /* border-top: 1px solid #fff;*/
     margin-top: 15px;
     padding-top: 15px;
 }
@@ -3388,7 +3389,7 @@ progress.hundredper {
 }
 
 .dbox {
-    border: 1px solid #ccc;
+   /* border: 1px solid #ccc;*/
     padding: 5px;
     border-radius: 1px;
 }
@@ -3402,13 +3403,13 @@ progress.hundredper {
 }
 
 .rbox {
-    border: 1px solid #f00;
-    padding: 5px;
+    /*  border: 1px solid #f00;*/
+   /* border: 1px solid #c1bebe;*/
     border-radius: 1px;
 }
 
     .rbox .bhed {
-        border-bottom: 1px solid #f00;
+        border-bottom: 1px solid #c1bebe;
     }
 
 .gbox {
@@ -3422,7 +3423,7 @@ progress.hundredper {
     }
 
 .grbox {
-    border: 1px solid #ccc;
+   /* border: 1px solid #ccc;*/
     padding: 5px;
     border-radius: 1px;
 }
@@ -3441,13 +3442,26 @@ progress.hundredper {
         border-bottom: 1px solid #ff6d01;
     }
 
-    .orngbox .bg-warning {
+  /*  .orngbox .bg-warning {
         background-color: #ff6d01 !important;
+    }*/
+    .orngbox .bg-warning {
+        background-color: #C1D6FA !important;
+    }
+    .orngbox .bg-warningg {
+        background-color: #F3B992 !important;
     }
 
+
 .bg-lsuccess {
-    background-color: #a6e3b7 !important;
-    color: #000;
+    /* background-color: #a6e3b7 !important;*/
+    background-color: #FDEB92 !important;
+    color: white !important;
+}
+.bg-lsuccess1 {
+    /* background-color: #a6e3b7 !important;*/
+    background-color: #80D8BA !important;
+    color: white !important;
 }
 
 .bg-ldanger {
@@ -3462,6 +3476,7 @@ progress.hundredper {
 }
 
     .lgbox .bhed {
+        /*  border-bottom: 1px solid #a6e3b7;*/
         border-bottom: 1px solid #a6e3b7;
     }
 
@@ -3506,8 +3521,16 @@ progress.hundredper {
 
     .lrngbox .bg-warning {
         background-color: #fde49b !important;
-        color: #000;
+        color: #000 !important;
     }
+.bg-organf {
+    background-color: #F3B992 !important;
+    color: white !important
+}
+.bg-peachorgange {
+    background-color: #F39891 !important;
+    color: white !important
+} 
 
 .bscroll {
     overflow-y: auto;

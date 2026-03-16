@@ -6,8 +6,7 @@
     $scope.PagesSectionMasterList = [];
     $scope.chkAllow = [];
     $scope.BindModuleTypeList = function () {
-        var moduleTypeLst = [
-            { "Module_Type": "Auditor", "Id": "3" },
+        var moduleTypeLst = [ 
             { "Module_Type": "Client", "Id": "4" },
         ];
         $scope.AllModuleTypeList = moduleTypeLst;
@@ -18,20 +17,25 @@
         collectionobj.Id = PartyId;
         var getData = myService.methode('POST', "../RetailSection/GetEmployeeMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
-            $scope.AllUserList = response.data.Result;
+            var userList = response.data.Result || []; 
+            // ❌ Remove current LoginId user
+            $scope.AllUserList = userList.filter(function (item) {
+                return item.LoginId != LoginId;   // LoginId = current logged-in user
+            });
         });
     }
     $scope.AllPartySiteLoad = function () {
         var collectionobj = {};
         collectionobj.ActionType = 5;
-        var type = "";
-        if ($scope.PartyType == 3) {
-            type = "Auditor";
-        } else if ($scope.PartyType == 4) {
-            type = "Client";
-        }
-        else { type = ""; }
-        collectionobj.PartyType = type;
+        //var type = "";
+        //if ($scope.PartyType == 3) {
+        //    type = "Auditor";
+        //} else if ($scope.PartyType == 4) {
+        //    type = "Client";
+        //}
+        //else { type = ""; }
+        collectionobj.PartyType = "Client";
+        collectionobj.PartyId = LoginId; 
         var getData = myService.methode('POST', "../PartyMaster/GetPartyMasterDT", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             debugger;
@@ -43,9 +47,10 @@
         $scope.showLoader();
         var collectionobj = {};
         collectionobj.PartyId = $scope.PartyId;
-        collectionobj.PartyType = $scope.PartyType;
+        collectionobj.PartyType = "4";
         collectionobj.UserId = $scope.UserId
         collectionobj.RoleId = $scope.Id;
+        collectionobj.LoginId = $scope.LoginId;
 
         var getData = myService.methode('POST', '../Dashboard/PagesSectionMasterList', '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
@@ -118,7 +123,7 @@
             });
 
             var collectionobj = {};
-            collectionobj.ModuleType = $scope.PartyType;
+            collectionobj.ModuleType = "4";
             collectionobj.LoginId = $scope.PartyId;
             collectionobj.UserId = $scope.UserId;
             collectionobj.EmployeeCode = "";
@@ -194,6 +199,7 @@
         var collectionobj = {};
         collectionobj.Action = 4;
         collectionobj.BranchCode = BranchCode;
+        collectionobj.LoginId = $scope.LoginId;
         var getData = myService.methode('POST', "../Dashboard/SearchSectionandRoleMenuPermission", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             var tblheader = [{

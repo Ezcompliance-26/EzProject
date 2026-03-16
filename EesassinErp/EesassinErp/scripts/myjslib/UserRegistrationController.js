@@ -1,18 +1,24 @@
 ﻿app.UserRegistrationController = function ($scope, $element, $filter, myService) {
     $scope.SetFocus('#ddlVT');
     $scope.UserNames = '';
+   
+   
+     
     $scope.Password = '';
     $scope.ResetControl();
-    $scope.AllParty = function () {
+    $scope.AllParty = function (PartyType) {
+        $scope.PartyType = PartyType;
         $scope.UserNames = '';
         $scope.Password = '';
         $scope.AllPartyList = "";
-        var getData = myService.methode('POST', ("../PartyMaster/GetPartyMasterDT"), { "ActionType": 5, "PartyType": $scope.PartyType });
+        var getData = myService.methode('POST', ("../PartyMaster/GetPartyMasterDT"), { "ActionType": 5, "PartyType": $scope.PartyType, "PartyId": LoginId, });
         getData.then(function (response) {
             debugger;
             $scope.AllPartyList = response.data.Result;
         });
     }
+
+    $scope.AllParty();
     $scope.SetUserNamePassword = function () {
 
         //if ($scope.UserNames.length <= 3) {
@@ -70,7 +76,10 @@
             getData.then(function (response) {
                 debugger;
                 if (showMsgBox(response.data.Result)) {
-                    $scope.FireEmail(1, $scope.EmailId,0);
+                    if ($scope.Save == "Save") {
+                        $scope.FireEmail(1, $scope.EmailId, 0);
+                    }
+                 
                     $scope.ClearControl(1);
                 }
             });
@@ -169,9 +178,11 @@
     };
 
     $scope.started = function () {
+        
         var collectionobj = {};
         collectionobj.Action = 4; 
-        collectionobj.BranchCode = BranchCode; 
+        collectionobj.BranchCode = BranchCode;
+        collectionobj.LoginId = LoginId;
         debugger;
         var getData = myService.methode('POST', "../DashBoard/GetUserRegistration", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
@@ -184,7 +195,7 @@
                     { "HeaderText": "Party Name",   "HeaderValue": "PartyName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Name",   "HeaderValue": "Name", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "UserName", "HeaderValue": "UserName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" }, 
-                    { "HeaderText": "Password", "HeaderValue": "Password", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+             /*       { "HeaderText": "Password", "HeaderValue": "Password", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },*/
                     { "HeaderText": "Contact No", "HeaderValue": "ContactNo", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                        { "HeaderText": "EmailId", "HeaderValue": "EmailId", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Created On", "HeaderValue": "LoginCreatedOn", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" }
@@ -196,47 +207,91 @@
             $scope.EmployeeMasterList = response.data.Result;
             loadDataUsingPreDefinedColumn(tblheader, response.data.Result);
             $('#example tbody').on('dblclick', 'tr', function () {
+
                 $scope.showLoader();
 
                 var row = $('#example').DataTable().row(this).data();
+                var loginId = row[1];
                 $scope.hfId = row[1];
-                $scope.UserList = [];
-                $scope.UserList = $filter('filter')($scope.EmployeeMasterList, { 'LoginId': $scope.hfId }); 
-                $scope.$applyAsync();
+                $scope.$applyAsync(function () {
+
+                    $scope.UserList = $filter('filter')(
+                        $scope.EmployeeMasterList,
+                        { LoginId: loginId }
+                    );
+
+                    if (!$scope.UserList.length) return;
+
+                    var user = $scope.UserList[0];
+
+                    // -------- DIRECT SET (NO TIMEOUT NEEDED) --------
+                    $scope.PartyType = user.PartyType;
+                   
+                    $scope.PartyId = user.PartyIds;
+              
+                    $scope.EmpName = user.Name;
+                    $scope.UserNames = user.UserName;
+                    $scope.Password = user.Password;
+                    $scope.ContactNumber = user.ContactNo;
+                    $scope.EmailId = user.EmailId;
+                    $scope.Save = "Edit";
+                    $scope.disableAdd = false;
+                    $scope.disableDelete = false;
+
+                    // Party dropdown load
+                   
+
+                    // UI
+                    $('.br-pageheader').fadeIn();
+                    $('#collapseinputbox').fadeIn();
+                    $('#CollapseSearchTableList').fadeOut();
+
+                    $scope.hideLoader();
+                });
+
+            });
+
+            //$('#example tbody').on('dblclick', 'tr', function () {
+            //    $scope.showLoader();
+
+            //    var row = $('#example').DataTable().row(this).data();
+            //    $scope.hfId = row[1];
+            //    $scope.UserList = [];
+            //    $scope.UserList = $filter('filter')($scope.EmployeeMasterList, { 'LoginId': $scope.hfId }); 
+            //    $scope.$applyAsync();
               
 
                
-                $scope.PartyType = $scope.UserList[0].PartyType;
-                setTimeout(function () {
-                    $scope.AllParty();
-                    $scope.PartyId = $scope.UserList[0].PartyIds;
-                    //$scope.SetName();
-                }, 500);
+            //    $scope.PartyType = $scope.UserList[0].PartyType;
+            //    setTimeout(function () {
+            //        $scope.AllParty();
+            //        $scope.PartyId = $scope.UserList[0].PartyIds;
+            //        //$scope.SetName();
+            //    }, 100);
                  
-                setTimeout(function () {
-                    $scope.EmpName = $scope.UserList[0].Name;
-                    $scope.UserNames = $scope.UserList[0].UserName;
+            //    setTimeout(function () {
+            //        $scope.EmpName = $scope.UserList[0].Name;
+            //        $scope.UserNames = $scope.UserList[0].UserName;
 
-                    $scope.Password = $scope.UserList[0].Password;
+            //        $scope.Password = $scope.UserList[0].Password;
 
-                    $scope.ContactNumber = $scope.UserList[0].ContactNo;
-                    $scope.EmailId = $scope.UserList[0].EmailId;
-                }, 1000);
+            //        $scope.ContactNumber = $scope.UserList[0].ContactNo;
+            //        $scope.EmailId = $scope.UserList[0].EmailId;
+            //    }, 200);
                 
-                $scope.Save = "Edit";
-                $scope.disableAdd = false;
-                $scope.disableDelete = false; 
-                $scope.$apply();
-                //collapse box
-                $('.br-pageheader').fadeIn();
-                $('#collapseinputbox').fadeIn();
-                $('#CollapseSearchTableList').fadeOut();
+            //    $scope.Save = "Edit";
+            //    $scope.disableAdd = false;
+            //    $scope.disableDelete = false; 
+            //    $scope.$apply();
+            //    //collapse box
+            //    $('.br-pageheader').fadeIn();
+            //    $('#collapseinputbox').fadeIn();
+            //    $('#CollapseSearchTableList').fadeOut();
+                 
+            //    $scope.hideLoader();
 
-                $scope.SetFocus('#ddlState', true);
-                $scope.hideLoader();
 
-
-            });
+            //});
         });
     };
 

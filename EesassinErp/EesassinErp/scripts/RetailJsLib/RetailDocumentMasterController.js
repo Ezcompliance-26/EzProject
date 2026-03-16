@@ -16,7 +16,9 @@
             collectionobj.IsDefault =  $scope.IsDefault  == 'Yes' ? 'True' : 'False';
             collectionobj.Createdby = LoginId;
             collectionobj.Isdelete =    $scope.Isdelete == 'Yes' ? 'True' : 'False';
-         
+            collectionobj.StateId = $scope.StateId;
+            collectionobj.Criticality = $scope.Criticality;
+            collectionobj.FormNo = $scope.FormNo;
             if ($scope.Save == "Save")
             {
                 collectionobj.Action = 1;
@@ -51,7 +53,9 @@
         debugger;
         $scope.Save = "Save";
         $scope.disableAdd = false;
-
+        $scope.StateId = "";
+        $scope.Criticality = "";
+        $scope.FormNo = "";
         $scope.disableDelete = true;
         $scope.disablePrint = true;
         $scope.DocumentName = "";
@@ -98,7 +102,12 @@
                     { "HeaderText": "Frequency", "HeaderValue": "Frequency", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "FormatType", "HeaderValue": "FormatType", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Note", "HeaderValue": "Note", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
-                     { "HeaderText": "Act", "HeaderValue": "Act", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+
+                   { "HeaderText": "Act", "HeaderValue": "Act", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "Form No", "HeaderValue": "FormNo", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "Criticality", "HeaderValue": "Criticality", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+
+                    { "HeaderText": "State Name", "HeaderValue": "StateName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Last Updated by", "HeaderValue": "Name", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                     { "HeaderText": "Last Updated On", "HeaderValue": "LastUpdate", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
              
@@ -112,8 +121,10 @@
                 $scope.showLoader();
 
                 var row = $('#example').DataTable().row(this).data();
-                $scope.hfId = $(this).find('input[type="hidden"]').val();
+                $scope.hfId = $(this).find('input[type="hidden"]').val(); 
+                $scope.MasterList = $filter('filter')($scope.DocumentList, {'Id': $scope.hfId });
              
+
                 $scope.DocumentName = row[1];
                 $scope.IsDefault = row[2];
                 $scope.DocumentType = row[3];
@@ -121,8 +132,11 @@
                 $scope.FormatType = row[5];
                 $scope.Note = row[6];
                 $scope.Act = row[7];
-
-                $scope.Isdelete = $scope.DocumentList[0].Isdelete;
+                $scope.FormNo = $scope.MasterList[0].FormNo;
+                $scope.Criticality = $scope.MasterList[0].Criticality;
+                $scope.StateId = $scope.MasterList[0].StateId;
+                    
+                $scope.Isdelete = $scope.MasterList[0].StateId;
 
                 $scope.disableAdd = false;
 
@@ -145,7 +159,13 @@
     $scope.DeleteRecord = function () {
         deleteConfirmbox("Do you want to delete this record?", $scope.deleteRecord);
     };
-
+    $scope.AllState = function () {
+        var getData = myService.methode('POST', ("../PartyMaster/GetPartyMasterDT"), { "ActionType": 28, "PartyId": "1" });
+        getData.then(function (response) {
+            debugger;
+            $scope.AllStateList = response.data.Result;
+        });
+    }
     $scope.deleteRecord = function () {
 
         debugger;

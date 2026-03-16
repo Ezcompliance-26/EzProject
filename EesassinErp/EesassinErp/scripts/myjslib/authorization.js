@@ -3,11 +3,7 @@
     $scope.visibleSearch = true;
     $scope.visibleDelete = true;
     $scope.visiblePrint = true;
-    $scope.visibleClear = true;
-    //$scope.IsAdd = false;
-    //$scope.IsEdit = false;
-    //$scope.IsDelete = false;
-    //$scope.IsPrint = false;
+    $scope.visibleClear = true; 
    
 
 
@@ -527,3 +523,4 @@
         //}, 100);
     };
 }
+ 

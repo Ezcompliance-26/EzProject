@@ -2,18 +2,13 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using System.Text.RegularExpressions;
 using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
+    [ValidateSession]
     public class NewsletterController : Controller
     {
         public ActionResult Newsletter()
@@ -98,13 +93,13 @@ namespace EesassinErp.Controllers
             }
 
             obj.StateCentralActtitle = Request.Form["StateCentralActtitle"]; // Get additional form data
-           // obj.DateOfNotification = Convert.ToDateTime(Request.Form["DateOfNotification"]);
+                                                                             // obj.DateOfNotification = Convert.ToDateTime(Request.Form["DateOfNotification"]);
             obj.SATE_CODE = Convert.ToDouble(Request.Form["SATE_CODE"]);
             obj.SelectedClients = new List<string>(Request.Form["SelectedClients"]?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)); ;
-           // obj.EffectiveDateOfNotification = Convert.ToDateTime(Request.Form["EffectiveDateOfNotification"]);
+            // obj.EffectiveDateOfNotification = Convert.ToDateTime(Request.Form["EffectiveDateOfNotification"]);
             obj.NotificationNumber = Request.Form["NotificationNumber"];
             obj.DepartmentId = Convert.ToInt32(Request.Form["DepartmentId"]);
-            
+
 
             // string summ = Request.Form["Summary"];
 

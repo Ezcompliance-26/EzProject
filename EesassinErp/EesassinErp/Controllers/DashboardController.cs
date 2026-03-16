@@ -1,16 +1,12 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using BAL;
-using System.Text;
-using System.IO;
-using System.Data;
-using Newtonsoft.Json;
+﻿    using BAL;
 using DAL;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
+    [ValidateSession]
     public class DashboardController : Controller
     {
         #region Akhand
@@ -78,6 +74,61 @@ namespace EesassinErp.Controllers
 
             return View();
         }
+        public ActionResult CommonDashboardCompliance()
+        {
+
+            return View();
+        }
+        public ActionResult LabourCommonCompliance()
+        {
+
+            return View();
+        }
+        public ActionResult factoryCommonCompliance()
+        {
+
+            return View();
+        }
+        public ActionResult payrollCommonCompliance()
+        {
+
+            return View();
+        }
+        public ActionResult EstablishmentCommonCompliance()
+        {
+
+            return View();
+        }
+        public ActionResult licenseCommonCompliance()
+        {
+
+            return View();
+        }
+        public ActionResult locationCommonCompliance()
+        {
+
+            return View();
+        }
+        public ActionResult SecretarialCommonCompliance()
+        {
+
+            return View();
+        }
+        public ActionResult FinanceCommonCompliance()
+        {
+
+            return View();
+        }
+        public ActionResult NoticeCommonCompliance()
+        {
+
+            return View();
+        }
+        public ActionResult LitigationCommonCompliance()
+        {
+
+            return View();
+        }
         public async Task<string> NavMenuList(Module obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.NavMenuList(obj)));
@@ -94,7 +145,7 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.ModuleList(obj)));
             return result;
         }
- 
+
         public async Task<string> SubMenuList(Module obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.SubMenuList(obj)));
@@ -121,7 +172,7 @@ namespace EesassinErp.Controllers
             return result;
         }
 
-         
+
 
         public async Task<string> InsertSectionPermissionForRole(RolePermission obj)
         {
@@ -130,7 +181,7 @@ namespace EesassinErp.Controllers
         }
 
 
- 
+
 
 
         public ActionResult CompanyBranchUserAssignment()
@@ -177,6 +228,12 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.GetLoginMemberDetails(obj)));
             return result;
         }
+        public async Task<string> GetDetails(BranchAuthorization obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.GetDetails(obj)));
+            return result;
+        }
+        
         public ActionResult ReportHeader()
         {
             return View();
@@ -239,8 +296,81 @@ namespace EesassinErp.Controllers
             return result;
         }
         #endregion
-        
 
+
+        public async Task<string> IUDManageReportHeader(BranchAuthorization obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.IUDManageReportHeader(obj)));
+            return result;
+        }
+        public async Task<string> GetManageReportHeader(BCommon obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.GetManageReportHeader(obj)));
+            return result;
+        }
+		
+		
+		
+        ///Commondashbaord////
+        ///
+
+        public ActionResult CommonDashboard()
+        {
+            return View();
+        }
+
+        public ActionResult ReportDashboard()
+        {
+            return View();
+        }
+
+        public ActionResult ReportLicenseApplicable()
+        {
+            return View();
+        }
+        public ActionResult Dash()
+        {
+            return View();
+        }
+
+        public ActionResult Board()
+        {
+            return View();
+        }
+        //----------------------------
         
+        public ActionResult VBoard()
+        {
+            return View();
+        }
+        public ActionResult NewVendorDashboard()
+        {
+            return View();
+        }
+        public ActionResult CommunicationVendor()
+        {
+            return View();
+        }
+        public ActionResult CommunicationClient()
+        {
+            return View();
+        }
+        public ActionResult OneTimeDocVendor()
+        {
+            return View();
+        }
+        public ActionResult oneTimeDocClient()
+        {
+            return View();
+        }
+        public ActionResult ComplianceAuditReport()
+        {
+            return View();
+        }
+        public ActionResult ComplianceReport()
+        {
+            return View();
+        }
+
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -13,18 +12,15 @@ namespace DAL
         public static readonly SqlDBHelper SqlHelper = new SqlDBHelper();
 
         public string msg;
-        // public static string CONNECTION_STRING = "Server=49.50.70.178;Initial Catalog=EZCMP_T;MultipleActiveResultSets=true;User ID=eesassinuat_uat1;Password=*Santosh@123;Pooling=True;";
-       // public string CONNECTION_STRING = "Server=13.202.27.216;Initial Catalog=eesassinuat_uat1;MultipleActiveResultSets=true;User ID=retail;Password=ezretail@123;Pooling=True;";
-        //public string CONNECTION_STRING = "Server=13.202.27.216;Initial Catalog=EZCMP_R_UAT;MultipleActiveResultSets=true;User ID=retail;Password=ezretail@123;Pooling=True;";
-        // public static string CONNECTION_STRING = "Server=49.50.70.178;Initial Catalog=eesassinuat_evm;MultipleActiveResultSets=true;User ID=eesassinuat_evm;Password=308vpTf^  ;Pooling=True;";
-        // public static string CONNECTION_STRING = "Server=65.2.0.229;Initial Catalog=EZCMP_R;MultipleActiveResultSets=true;User ID=retail;Password=ezretail@123;Pooling=True;";
-        public static string CONNECTION_STRING = "Server=localhost;Initial Catalog=EZCMP_R;Integrated Security=True;";
+        // public string CONNECTION_STRING = "Server=13.202.27.216;Initial Catalog=eesassinuat_uat1;MultipleActiveResultSets=true;User ID=retail;Password=ezretail@123;Pooling=True;";
+          public string CONNECTION_STRING = "Server=13.202.27.216;Initial Catalog=EZCMP_R;MultipleActiveResultSets=true;User ID=retail;Password=ezretail@123;Pooling=True;";
+      
+        //  public static string CONNECTION_STRING = "Server=localhost;Initial Catalog=EZCMP_R;Integrated Security=True;";
 
 
         internal DataTable ExecuteSelectCommand(string CommandName, CommandType cmdType)
         {
-            //if(CONNECTION_STRING==)
-
+            //if(CONNECTION_STRING==) 
             DataTable table = null;
             using (SqlConnection con = new SqlConnection(CONNECTION_STRING))
             {
@@ -66,7 +62,7 @@ namespace DAL
                     cmd.CommandType = cmdType;
                     cmd.CommandText = CommandName;
                     cmd.Parameters.AddRange(param);
-                    cmd.CommandTimeout = 30000;
+                    cmd.CommandTimeout = 600;
 
                     try
                     {
@@ -82,7 +78,7 @@ namespace DAL
                     }
                     catch (Exception ex)
                     {
-                        msg = ex.Message;
+                         msg = ex.Message;
                     }
                 }
             }
@@ -97,10 +93,11 @@ namespace DAL
             {
                 using (SqlCommand cmd = con.CreateCommand())
                 {
-                    cmd.CommandType = cmdType;
-                    cmd.CommandText = CommandName;
+                    cmd.CommandType = cmdType; 
+                    cmd.CommandTimeout = 600;
+                    cmd.CommandText = CommandName; 
+                    param[param.Length - 1].Size = 0x100;
                     cmd.Parameters.AddRange(param);
-                    cmd.CommandTimeout = 120;
 
                     try
                     {
@@ -291,6 +288,17 @@ namespace DAL
 
             return result;
         }
+        public void UpdateUserPasswordHash(int loginId, string newHash)
+        {
+            using (var conn = new SqlConnection(CONNECTION_STRING))
+            {
+                conn.Open();
+                var cmd = new SqlCommand("UPDATE LoginTable SET Password = @hash WHERE LoginId = @id", conn);
+                cmd.Parameters.AddWithValue("@hash", newHash);
+                cmd.Parameters.AddWithValue("@id", loginId);
+                cmd.ExecuteNonQuery();
+            }
+        }
         internal int ExecuteNonQueryReturnInt_UsingTimeOut(string CommandName, CommandType cmdType, SqlParameter[] param)
         {
             int result = 0;
@@ -307,7 +315,7 @@ namespace DAL
                 {
                     cmd.Transaction = trans;
                     cmd.CommandType = cmdType;
-                    cmd.CommandTimeout = 60;
+                    cmd.CommandTimeout = 600;
                     cmd.CommandText = CommandName;
                     param[param.Length - 1].Direction = ParameterDirection.Output;
                     param[param.Length - 1].Size = 0x100;
@@ -417,6 +425,47 @@ namespace DAL
 
             return result;//(Convert.ToInt32(result) > 0);
         }
+        //internal string ExecuteNonQueryReturnScalar(string CommandName, CommandType cmdType, SqlParameter[] param)
+        //{
+        //    string result = "";
+        //    SqlTransaction trans;
+        //    using (SqlConnection con = new SqlConnection(CONNECTION_STRING))
+        //    {
+        //        if (con.State != ConnectionState.Open)
+        //        {
+        //            con.Open();
+
+        //        }
+        //        trans = con.BeginTransaction();
+        //        using (SqlCommand cmd = con.CreateCommand())
+        //        {
+        //            cmd.Transaction = trans;
+        //            cmd.CommandType = cmdType;
+        //            cmd.CommandText = CommandName;
+        //            param[param.Length - 1].Direction = ParameterDirection.Output;
+        //            param[param.Length - 1].Size = 0x5000000;
+        //            cmd.Parameters.AddRange(param);
+        //            try
+        //            {
+        //                cmd.ExecuteNonQuery();
+        //                result = cmd.Parameters["@result"].Value.ToString();
+        //                trans.Commit();
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                trans.Rollback();
+        //                msg = ex.Message;
+        //            }
+        //            finally
+        //            {
+        //                trans.Dispose();
+        //                con.Close();
+        //            }
+        //        }
+        //    }
+        //    return result;
+        //}
+
         internal string ExecuteNonQueryReturnScalar(string CommandName, CommandType cmdType, SqlParameter[] param)
         {
             string result = "";
@@ -426,7 +475,6 @@ namespace DAL
                 if (con.State != ConnectionState.Open)
                 {
                     con.Open();
-
                 }
                 trans = con.BeginTransaction();
                 using (SqlCommand cmd = con.CreateCommand())
@@ -434,9 +482,14 @@ namespace DAL
                     cmd.Transaction = trans;
                     cmd.CommandType = cmdType;
                     cmd.CommandText = CommandName;
+
+                    // ✅ Timeout set karo (e.g. 300 sec)
+                    cmd.CommandTimeout = 600;
+
                     param[param.Length - 1].Direction = ParameterDirection.Output;
                     param[param.Length - 1].Size = 0x5000000;
                     cmd.Parameters.AddRange(param);
+
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -457,5 +510,6 @@ namespace DAL
             }
             return result;
         }
+
     }
 }

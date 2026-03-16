@@ -1,5 +1,4 @@
-﻿
-/****** Object:  StoredProcedure [RTL].[Usp_StoreMaster]    Script Date: 29-10-2024 13:44:38 ******/
+﻿/****** Object:  StoredProcedure [RTL].[Usp_StoreMaster]    Script Date: 12-11-2024 23:29:17 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -305,7 +304,7 @@ BEGIN
 		--SELECT ST.*,isnull(UserId,1)UserId,CI.CITY_CODE,CI.CITY_NAME,STA.SATE_CODE,STA.STATE_NM
 			SELECT DISTINCT 
 			ROW_NUMBER() OVER (ORDER BY ST.CreatedOn DESC) SrNo, 
-			ST.Id,ST.Id StoreId,0 as UserId,	ST.PartyTypeId,	SequenceNumber,	StoreCode,RefStoreCode	,StoreName,	CompleteAddress,	ProposedDate,	StoreLocation	,ST.CityId,CM.Name
+			ST.Id,ST.Id StoreId,UserId,	ST.PartyTypeId,	SequenceNumber,	StoreCode,RefStoreCode	,StoreName,	CompleteAddress,	ProposedDate,	StoreLocation	,ST.CityId,CM.Name
             CircleId,RegionId,RM.Name RegionName,	ZipCode,	StoreManagerName,	StoreManagerMobileNo,	StoreManagerEmail,	AreaManagerName,	AreaManagerMobileNo,	AreaManagerEmail,
 			ZonalManagerName,	ZonalManagerMobileNo,	ZonalManagerEmail	,CircleHeadName,	CircleHeadMobileNo,	CircleHeadEmail,	RegionalHeadName,	RegionalHeadMobileNo,	RegionalHeadEmail,	CorporateHeadName	,CorporateHeadMobileNo,	CorporateHeadEmail,	SQFTStoreArea	,IsActive,
 			CASE WHEN   ElectricityBill='' OR  ElectricityBill IS NULL THEN 'none' ELSE ElectricityBill END AS  ElectricityBill	,
@@ -333,7 +332,7 @@ BEGIN
 					
 		FROM RTL.StoreMaster ST WITH(NOLOCK)
 		 left JOIN [RTL].[CircleMaster]   CM WITH(NOLOCK) ON CM.ID = ST.CircleId
-	   left JOIN [RTL].[StoreMapping]  SMM WITH(NOLOCK) ON SMM.StoreId = ST.Id
+	   left JOIN [RTL].[StoreMapping]  SMM WITH(NOLOCK) ON SMM.StoreId = cast(ST.StoreCode as int)
 		left JOIN EVM.TBL_CITY CI WITH(NOLOCK)  ON ST.CityId=CI.CITY_CODE
 		left JOIN EVM.TBL_STATE STA WITH(NOLOCK)  ON ci.STATE_ID = STA.SATE_CODE  --ST.CircleId= STA.SATE_CODE 
 		 left Join RTL.RegionMaster RM ON RM.ID = ST.RegionId
@@ -344,7 +343,7 @@ BEGIN
 			 if exists(select 1 from rtl.AssignExecuter where executerId=@Id)
 			 Begin
 			 SELECT DISTINCT ROW_NUMBER() OVER (ORDER BY CreatedOn DESC) SrNo,  * FROM (
-			 SELECT DISTINCT  ST.Id,0 as UserId,ST.Id StoreId,	ST.PartyTypeId,	SequenceNumber,	StoreCode,RefStoreCode	,StoreName,	CompleteAddress,	ProposedDate,	StoreLocation	,ST.CityId,CM.Name	CircleId,RegionId,RM.Name RegionName,	ZipCode,	StoreManagerName,	StoreManagerMobileNo,	StoreManagerEmail,	AreaManagerName,	AreaManagerMobileNo,	AreaManagerEmail,	ZonalManagerName,	ZonalManagerMobileNo,	ZonalManagerEmail	,CircleHeadName,	CircleHeadMobileNo,	CircleHeadEmail,	RegionalHeadName,	RegionalHeadMobileNo,	RegionalHeadEmail,	CorporateHeadName	,CorporateHeadMobileNo,	CorporateHeadEmail,	SQFTStoreArea	,IsActive,
+			 SELECT DISTINCT  ST.Id,UserId,ST.Id StoreId,	ST.PartyTypeId,	SequenceNumber,	StoreCode,RefStoreCode	,StoreName,	CompleteAddress,	ProposedDate,	StoreLocation	,ST.CityId,CM.Name	CircleId,RegionId,RM.Name RegionName,	ZipCode,	StoreManagerName,	StoreManagerMobileNo,	StoreManagerEmail,	AreaManagerName,	AreaManagerMobileNo,	AreaManagerEmail,	ZonalManagerName,	ZonalManagerMobileNo,	ZonalManagerEmail	,CircleHeadName,	CircleHeadMobileNo,	CircleHeadEmail,	RegionalHeadName,	RegionalHeadMobileNo,	RegionalHeadEmail,	CorporateHeadName	,CorporateHeadMobileNo,	CorporateHeadEmail,	SQFTStoreArea	,IsActive,
                       CASE WHEN   ElectricityBill='' OR  ElectricityBill IS NULL THEN 'none' ELSE ElectricityBill END AS  ElectricityBill	,
 					  CASE WHEN   RentAgreement='' OR  RentAgreement IS NULL THEN 'none' ELSE RentAgreement END AS  RentAgreement,
 					   CASE WHEN   PropertyTaxPaidReceipt='' OR  PropertyTaxPaidReceipt IS NULL THEN 'none' ELSE PropertyTaxPaidReceipt END AS PropertyTaxPaidReceipt	,
@@ -369,7 +368,7 @@ BEGIN
            ,AdditionalDocRemark
 					FROM RTL.StoreMaster ST WITH(NOLOCK)
 					 left JOIN [RTL].[CircleMaster]   CM WITH(NOLOCK) ON CM.ID = ST.CircleId
-					left JOIN [RTL].[StoreMapping]  SMM WITH(NOLOCK) ON SMM.StoreId = ST.Id
+					left JOIN [RTL].[StoreMapping]  SMM WITH(NOLOCK) ON SMM.StoreId = cast(ST.StoreCode as int)
 					left JOIN EVM.TBL_CITY CI WITH(NOLOCK)  ON ST.CityId=CI.CITY_CODE
 					left JOIN EVM.TBL_STATE STA WITH(NOLOCK)  ON ci.STATE_ID = STA.SATE_CODE  --ST.CircleId= STA.SATE_CODE 
 					 left Join RTL.RegionMaster RM ON RM.ID = ST.RegionId
@@ -380,7 +379,7 @@ BEGIN
 			 Else
 			 Begin
 			 SELECT DISTINCT ROW_NUMBER() OVER (ORDER BY CreatedOn DESC) SrNo,  * FROM (
-			 SELECT DISTINCT  ST.Id,0 as UserId,ST.Id StoreId,	ST.PartyTypeId,	SequenceNumber,	StoreCode,RefStoreCode	,StoreName,	CompleteAddress,	ProposedDate,	StoreLocation	,ST.CityId,CM.Name	CircleId,RegionId,RM.Name RegionName,	ZipCode,	StoreManagerName,	StoreManagerMobileNo,	StoreManagerEmail,	AreaManagerName,	AreaManagerMobileNo,	AreaManagerEmail,	ZonalManagerName,	ZonalManagerMobileNo,	ZonalManagerEmail	,CircleHeadName,	CircleHeadMobileNo,	CircleHeadEmail,	RegionalHeadName,	RegionalHeadMobileNo,	RegionalHeadEmail,	CorporateHeadName	,CorporateHeadMobileNo,	CorporateHeadEmail,	SQFTStoreArea	,IsActive,
+			 SELECT DISTINCT  ST.Id,UserId,ST.Id StoreId,	ST.PartyTypeId,	SequenceNumber,	StoreCode,RefStoreCode	,StoreName,	CompleteAddress,	ProposedDate,	StoreLocation	,ST.CityId,CM.Name	CircleId,RegionId,RM.Name RegionName,	ZipCode,	StoreManagerName,	StoreManagerMobileNo,	StoreManagerEmail,	AreaManagerName,	AreaManagerMobileNo,	AreaManagerEmail,	ZonalManagerName,	ZonalManagerMobileNo,	ZonalManagerEmail	,CircleHeadName,	CircleHeadMobileNo,	CircleHeadEmail,	RegionalHeadName,	RegionalHeadMobileNo,	RegionalHeadEmail,	CorporateHeadName	,CorporateHeadMobileNo,	CorporateHeadEmail,	SQFTStoreArea	,IsActive,
                       CASE WHEN   ElectricityBill='' OR  ElectricityBill IS NULL THEN 'none' ELSE ElectricityBill END AS  ElectricityBill	,
 					  CASE WHEN   RentAgreement='' OR  RentAgreement IS NULL THEN 'none' ELSE RentAgreement END AS  RentAgreement,
 					   CASE WHEN   PropertyTaxPaidReceipt='' OR  PropertyTaxPaidReceipt IS NULL THEN 'none' ELSE PropertyTaxPaidReceipt END AS PropertyTaxPaidReceipt	,
@@ -405,7 +404,7 @@ BEGIN
            ,AdditionalDocRemark
 					FROM RTL.StoreMaster ST WITH(NOLOCK)
 					 left JOIN [RTL].[CircleMaster]   CM WITH(NOLOCK) ON CM.ID = ST.CircleId
-					left JOIN [RTL].[StoreMapping]  SMM WITH(NOLOCK) ON SMM.StoreId = ST.Id
+					left JOIN [RTL].[StoreMapping]  SMM WITH(NOLOCK) ON SMM.StoreId = cast(ST.StoreCode as int)
 					left JOIN EVM.TBL_CITY CI WITH(NOLOCK)  ON ST.CityId=CI.CITY_CODE
 					left JOIN EVM.TBL_STATE STA WITH(NOLOCK)  ON ci.STATE_ID = STA.SATE_CODE --ST.CircleId= STA.SATE_CODE 
 					 left Join RTL.RegionMaster RM ON RM.ID = ST.RegionId
@@ -425,9 +424,9 @@ BEGIN
 
      IF(@Action=5)  ---Store binds for Admin Panel
   Begin  
-		SELECT s.Id as StoreId ,UserId,  StoreCode+' ['+ RefStoreCode +']' StoreCode,StoreName,RefStoreCode, case WHEN ISNULL(UserId,'-1')='-1' THEN Convert(Bit,0) else Convert(Bit,1) end IsAllow
+		SELECT s.StoreCode as StoreId ,UserId,  StoreCode+' ['+ RefStoreCode +']' StoreCode,StoreName,RefStoreCode, case WHEN ISNULL(UserId,'-1')='-1' THEN Convert(Bit,0) else Convert(Bit,1) end IsAllow
 		FROM RTL.StoreMaster  s
-		Left Join RTL.StoreMapping sm on sm.StoreId= s.id
+		Left Join RTL.StoreMapping sm on sm.StoreId= cast(s.StoreCode as int)
 		where 
 		@Id= case when @Id=1 then @Id else  UserId end 
 		or UserId is null
@@ -454,7 +453,7 @@ BEGIN
 		  SELECT   
 				SM.Id StoreId,StoreCode+' ['+ RefStoreCode+']' StoreCode
 				FROM RTL.StoreMaster SM
-				inner JOIN [RTL].[StoreMapping]  SMM WITH(NOLOCK) ON SMM.StoreId = SM.Id
+				inner JOIN [RTL].[StoreMapping]  SMM WITH(NOLOCK) ON SMM.StoreId = cast(SM.StoreCode as int)
 				where StoreCode like '%'+ @StoreCode +'%' AND 	
 				SMM.PartyId in (select distinct MAPID FROM LOGINTABLE WHERE loginId=@Id )    ORDER BY  SM.CreatedOn DESC
 				 
@@ -464,7 +463,7 @@ BEGIN
 		  SELECT   
 				SM.Id StoreId,StoreCode+' ['+ RefStoreCode +']' StoreCode
 				FROM RTL.StoreMaster SM
-				inner JOIN [RTL].[StoreMapping]  SMM WITH(NOLOCK) ON SMM.StoreId = SM.Id
+				inner JOIN [RTL].[StoreMapping]  SMM WITH(NOLOCK) ON SMM.StoreId = cast(SM.StoreCode as int)
 				where StoreCode like '%'+ @StoreCode +'%' AND 	
 				SMM.UserId=@Id     ORDER BY  SM.CreatedOn DESC
 
@@ -545,17 +544,17 @@ BEGIN
 			( [StoreCode] ,SequenceNumber,RefStoreCode,[StoreName] ,CompleteAddress,ProposedDate,StoreLocation ,ZipCode,SQFTStoreArea,
 			DaysOfExpire,StoreManagerName,	StoreManagerMobileNo ,StoreManagerEmail,	AreaManagerMobileNo,AreaManagerName,AreaManagerEmail,
 			ZonalManagerName,	ZonalManagerMobileNo, 	ZonalManagerEmail,	CircleHeadName,	CircleHeadMobileNo,CircleHeadEmail,	RegionalHeadName, 
-			RegionalHeadMobileNo ,	RegionalHeadEmail,	CorporateHeadName,	CorporateHeadMobileNo,	CorporateHeadEmail ,IsActive,Cityid,Category,RegionId  )
+			RegionalHeadMobileNo ,	RegionalHeadEmail,	CorporateHeadName,	CorporateHeadMobileNo,	CorporateHeadEmail ,IsActive,Cityid,Category,RegionId,CreatedBy  )
 			VALUES
 			(@Store_Code,@seqNumber, @RefStoreCode,@StoreName ,@CompleteAddress,@ProposedDate,@StoreLocation,@ZipCode,@SQFTStoreArea,@DaysOfExpire,
 			@StoreManagerName,@StoreManagerMobileNo ,@StoreManagerEmail,@AreaManagerMobileNo,@AreaManagerName,@AreaManagerEmail,@ZonalManagerName,@ZonalManagerMobileNo, 
 			@ZonalManagerEmail,@CircleHeadName,@CircleHeadMobileNo,@CircleHeadEmail,@RegionalHeadName, @RegionalHeadMobileNo ,@RegionalHeadEmail,@CorporateHeadName,
-			@CorporateHeadMobileNo,@CorporateHeadEmail ,@IsActive,@Cityid,@Category,@RegionId  ) 
-			if not exists(select 1 from RTL.CreateExecuter where ExecuterId=@UserId)
-			Begin
+			@CorporateHeadMobileNo,@CorporateHeadEmail ,@IsActive,@Cityid,@Category,@RegionId,@UserId  ) 
+			--if not exists(select 1 from RTL.CreateExecuter where ExecuterId=@UserId)
+		--	Begin
 			Declare @StoreId int;
 			Declare @PartyId int;
-			Set @StoreId =(select top(1)Id  from rtl.storemaster where StoreCode=@Store_Code)
+			Set @StoreId =(select top(1)StoreCode  from rtl.storemaster where StoreCode=@Store_Code)
 			Set @PartyId =(SELECT tOP(1)MapId  FROM LoginTable WHERE LoginId=@UserId)
 			if exists(select 1 from LoginTable where LoginId=@UserId and logintype=4)
 			Begin
@@ -563,7 +562,7 @@ BEGIN
 	         values(@StoreId,@PartyId, @UserId, 4, getdate(), getdate(), getdate(), 1) 
 			 End
 			End
-		   END
+		--   END
 			FETCH NEXT FROM CursorI INTO  @RefStoreCode,@StoreName ,@CompleteAddress,@ProposedDate,@StoreLocation ,@ZipCode,	@StoreManagerName,@StoreManagerMobileNo ,@StoreManagerEmail,@AreaManagerMobileNo,@AreaManagerName,@AreaManagerEmail,@ZonalManagerName,@ZonalManagerMobileNo, 
 			@ZonalManagerEmail,@CircleHeadName,@CircleHeadMobileNo,@CircleHeadEmail,@RegionalHeadName, @RegionalHeadMobileNo ,@RegionalHeadEmail,@CorporateHeadName,
 			@CorporateHeadMobileNo,@CorporateHeadEmail ,@SQFTStoreArea,@DaysOfExpire,@IsActive,@Category,@RegionIdS
@@ -587,7 +586,7 @@ BEGIN
 		   INSERT INTO rtl.AdditionalStoreDoc(StoreCode,AdditionalDocName,	AdditionalDoc,	Createdby,	CreatedOn)VALUES
 	   (@StoreCode,@DocumentName,	@UFile,	@Createdby,	GETDATE()) 
 	   sET @Result='1' 
-		eND
+		END
 		ELSE
 		bEGIN
 		UPDATE  rtl.AdditionalStoreDoc SET AdditionalDoc=@UFile ,AdditionalDocName=@DocumentName
@@ -598,13 +597,21 @@ BEGIN
 	End
 	IF(@Action = 11)  ---Store binds for Admin Panel
 BEGIN  
-   SELECT distinct s.Id as StoreId ,  StoreCode+' ['+ RefStoreCode +']' StoreCode,StoreName,RefStoreCode, case WHEN ISNULL(UserId,'-1')='-1' THEN Convert(Bit,0) else Convert(Bit,1) end IsAllow
+  SELECT distinct s.StoreCode as StoreId ,
+   StoreCode+' ['+ RefStoreCode +']' StoreCode,
+   StoreName,RefStoreCode,
+   case WHEN ISNULL(UserId,'-1')='-1' THEN Convert(Bit,0) else Convert(Bit,1) end IsAllow,
+   LT.[UserName],
+   Case 
+    WHEN ISNULL(LT.LoginId,'-1')='-1' THEN NULL
+   When (select 1 from rtl.AssignExecuter where executerId=LT.LoginId) = 1 Then 'Executor'
+    
+	else 'client' end ClientType
 		FROM RTL.StoreMaster  s
-		Left Join RTL.StoreMapping sm on sm.StoreId= s.id
+		Left Join RTL.StoreMapping sm on sm.StoreId= cast(s.StoreCode as int)
+		Left Join LoginTable LT on LT.LoginId=s.CreatedBy
 		where 
-		userId in (select LoginId from LoginTable where mapId=@Id) 
-		or UserId is null
+		userId in (select LoginId from LoginTable where mapId=@Id)  
+		--or UserId is null
 END
 End
- 
-   

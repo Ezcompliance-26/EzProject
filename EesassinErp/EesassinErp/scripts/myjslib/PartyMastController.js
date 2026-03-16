@@ -1,7 +1,7 @@
 ﻿app.PartMasterController = function ($scope, $element, $filter, myService) {
     $scope.SetFocus('#ddlVT');
 
-
+    $scope.PartyDate = new Date();
     $scope.BindAllEmployeeList = function () {
         $scope.showLoader();
         var collectionobj = {};
@@ -22,6 +22,17 @@
             $scope.AllPartyList = response.data.Result;;
         });
     }
+
+    $scope.AllIndustry = function () {
+        var getData = myService.methode('POST', ("../Retail/SearchRetailCreateIndustry"), { "Action": 8 });
+        getData.then(function (response) {
+            debugger;
+            $scope.IndustryList = response.data.Result;;
+        });
+    }
+
+
+    
 
     $scope.ChkIsClient = function (id) {
         $scope.PartyType = id;
@@ -45,7 +56,7 @@
         if (isValidate()) {
             $scope.showLoader();
             var collectionobj = {};
-            collectionobj.PartyType = $scope.PartyType;
+           
             collectionobj.EmployeeId = $scope.EmployeeId;
             collectionobj.VendorId = $scope.VendorId;
             collectionobj.PartyId = $scope.hfId;
@@ -62,8 +73,17 @@
             collectionobj.Descritpion = $scope.Descritpion;
             collectionobj.ContactMobile = $scope.ContactMobile;
             collectionobj.ContactPerson = $scope.ContactPerson
+            collectionobj.StoreLimit = $scope.StoreLimit;
+            collectionobj.UserLimit = $scope.UserLimit; 
+            collectionobj.ValidTo = $('#txtValidTo').val();
+            collectionobj.PartyDate = $('#txtPartyDate').val();
+
+            
+            collectionobj.Industry = $scope.Industry;
+            collectionobj.MonthExpired = $scope.MonthExpired; ///Added by shipra 
             collectionobj.IsActive = $scope.IsActive;
             if ($scope.Save == "Save") {
+                collectionobj.PartyType = $scope.PartyType;
                 collectionobj.ActionType = 1;
             }
             else {
@@ -71,7 +91,11 @@
             }
             var getData = myService.methode('POST', ("../PartyMaster/InsertUpdateDelPartyMaster"), JSON.stringify(collectionobj));
             getData.then(function (response) {
-                if (showMsgBox(response.data.Result)) {
+                if (showMsgBox(response.data.Result))
+                {
+                    if ($scope.PartyType === 'Client' && $scope.Save === 'Save') {
+                        $scope.FireEmail(25, $scope.EmailId, 0);
+                    } 
                     $scope.ClearControl(1);
                 }
             });
@@ -121,7 +145,7 @@
         $scope.EmailId = "";
         $scope.MobileNo = "";
         $scope.IsActive = "";
-
+      $scope.PartyDate = new Date();
         $scope.BankDetails = "";
         $scope.Panitno = "";
         $scope.Gstinuin = "";
@@ -155,24 +179,33 @@
         getData.then(function (response) {
             var tblheader =
                 [
-                    { "HeaderText": "Sr.No.", "Value": "SNO", "HeaderValue": "SNO", "Width": "50px", "ShowColumn": "Yes", "ImageColumn": "No", "CssClass": "srno" },
+                    { "HeaderText": "Sr.No.", "Value": "PartyId", "HeaderValue": "SNO", "Width": "50px", "ShowColumn": "Yes", "ImageColumn": "No", "CssClass": "srno" },
                     { "HeaderText": "Party Type", "HeaderValue": "PartyType", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Party Name", "HeaderValue": "PartyName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Address", "HeaderValue": "Address", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Email Id", "HeaderValue": "EmailId", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Contact No", "HeaderValue": "ContactNo", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
-                    { "HeaderText": "BankDetails", "HeaderValue": "BankDetails", "Width": "100%", "ShowColumn": "NO", "ImageColumn": "No" },
-                    { "HeaderText": "PANIT NO", "HeaderValue": "PANITNO", "Width": "100%", "ShowColumn": "NO", "ImageColumn": "No" },
-                    { "HeaderText": "GSTINUIN", "HeaderValue": "GSTINUIN", "Width": "100%", "ShowColumn": "NO", "ImageColumn": "No" },
-                    { "HeaderText": "Pincode", "HeaderValue": "Pincode", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
+                    { "HeaderText": "BankDetails", "HeaderValue": "BankDetails", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "PANIT NO", "HeaderValue": "PANITNO", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "GSTINUIN", "HeaderValue": "GSTINUIN", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "Pincode", "HeaderValue": "Pincode", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "VendorId", "HeaderValue": "VendorId", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
-                    { "HeaderText": "Contact Person Name", "HeaderValue": "ContactPerson", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
-                    { "HeaderText": "Contact Mobile No ", "HeaderValue": "ContactMobile", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
-                    { "HeaderText": "Descritpion", "HeaderValue": "Descritpion", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
-                    { "HeaderText": "IsActive", "HeaderValue": "IsActived", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
+                    { "HeaderText": "Contact Person Name", "HeaderValue": "ContactPerson", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "Contact Mobile No ", "HeaderValue": "ContactMobile", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "Descritpion", "HeaderValue": "Descritpion", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "IsActive", "HeaderValue": "IsActived", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Employee Code", "HeaderValue": "EmployeeCode", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Employee Name", "HeaderValue": "EmployeeName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "EmpId", "HeaderValue": "EmpId", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
+                    { "HeaderText": "StoreLimit", "HeaderValue": "StoreLimit", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "UserLimit", "HeaderValue": "UserLimit", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "ValidDate", "HeaderValue": "Valid", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "Industry", "HeaderValue": "Industry", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
+                    { "HeaderText": "Industry", "HeaderValue": "IndustryName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "MonthExpired", "HeaderValue": "MonthExpired", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },//Added by shipra
+ 
+                    { "HeaderText": "Party Creation Date", "HeaderValue": "PartyDate", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },//Added by shipra
+ 
                 ];
 
             $scope.PartyMasterList = response.data.Result;
@@ -204,7 +237,14 @@
                 $scope.ContactPerson = row[11];
                 $scope.ContactMobile = row[12];
                 $scope.Descritpion = row[13];
-
+                $scope.StoreLimit = row[18];
+                $scope.UserLimit = row[19];
+                $scope.ValidTo = new Date(row[20]);
+                $scope.PartyDate = new Date(row[24]);
+                
+                $scope.Industry = row[21];
+                $scope.MonthExpired = row[23]; //Added by shipra
+            
                 $scope.Save = "Edit";
                 $scope.$applyAsync();
                 $scope.disableDelete = false;
@@ -258,6 +298,7 @@
                 { "HeaderText": "Descritpion", "HeaderValue": "Descritpion", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                 { "HeaderText": "IsActive", "HeaderValue": "IsActive", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                 { "HeaderText": "PartyId", "HeaderValue": "PartyId", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
+           
             ];
         $scope.PrintMaster(tblheader, $scope.PartyMasterList, window.document.title);
     };

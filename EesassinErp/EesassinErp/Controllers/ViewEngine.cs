@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Web;
 using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
@@ -25,7 +24,7 @@ namespace EesassinErp.Controllers
         public string ClientId { get; set; }
         public string Action { get; set; } // Corresponds to   NULL
 
-      //  public HtmlString sum { get; set; }
+        //  public HtmlString sum { get; set; }
     }
 
     public class RazorViewToStringRenderer

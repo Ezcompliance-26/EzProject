@@ -29,7 +29,7 @@ namespace BAL
         public string UploadDocPath { get; set; } // Corresponds to [UploadDocs] [bit] NULL
         public string SubjectLine { get; set; } // Corresponds to   NULL
         public string PartyId { get; set; } // Corresponds to [PartyId] [int] NULL
-       
+
         [AllowHtml]
         public string Summary { get; set; }
 

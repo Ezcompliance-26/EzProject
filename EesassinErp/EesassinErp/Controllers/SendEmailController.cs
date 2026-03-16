@@ -1,22 +1,24 @@
 ﻿using BAL;
 using DAL;
+using Hangfire;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
+
+
 
 namespace EesassinErp.Controllers
 {
+
     public class SendEmailController : Controller
     {
-        // GET: SendEmail
+        
         public ActionResult Index()
         {
             return View();
@@ -24,8 +26,8 @@ namespace EesassinErp.Controllers
         [System.Web.Services.WebMethod]
         public async Task<string> SendEmail(DocumentBAL obj)
         {
-           
-         try
+
+            try
             {
                 string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.FireEmail(obj)));
 
@@ -33,18 +35,18 @@ namespace EesassinErp.Controllers
                 var jsonDe = JsonConvert.DeserializeObject<List<EmailDetails>>(result);
                 string SMTPUser = jsonDe[0].EmailId;
                 string SMTPPassword = jsonDe[0].Password;
-                int SmtpPort = jsonDe[0].Port ;
-            string SmtpServer = jsonDe[0].SmtpServer;
+                int SmtpPort = jsonDe[0].Port;
+                string SmtpServer = jsonDe[0].SmtpServer;
                 string EmailName = jsonDe[0].EmailName;
                 string ToEmail = jsonDe[0].ToEmail;
-            
+
                 string Subject = jsonDe[0].Subject;
                 string Msg = jsonDe[0].Msg;
-              
-              
+
+
                 MailMessage EmailMsg = new MailMessage();
-            EmailMsg.From = new MailAddress(SMTPUser, EmailName);
-            EmailMsg.To.Add(new MailAddress(ToEmail));
+                EmailMsg.From = new MailAddress(SMTPUser, EmailName);
+                EmailMsg.To.Add(new MailAddress(ToEmail));
 
                 if (jsonDe[0].ReplyToList != "-1")
                 {
@@ -52,26 +54,26 @@ namespace EesassinErp.Controllers
                     EmailMsg.CC.Add(ReplyToList);
                 }
 
-               
-
-            EmailMsg.Subject = Subject;
-
-            EmailMsg.Body = Msg;
-
-            EmailMsg.IsBodyHtml = true;
-            EmailMsg.Priority = MailPriority.Normal;
-
-            System.Net.Mail.SmtpClient SMTP = new System.Net.Mail.SmtpClient();
-            SMTP.Host = SmtpServer;
-            SMTP.Port = SmtpPort;
-            SMTP.EnableSsl = true; 
 
 
-            SMTP.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
-            SMTP.UseDefaultCredentials = true;
-            SMTP.Credentials = new System.Net.NetworkCredential(SMTPUser, SMTPPassword);
+                EmailMsg.Subject = Subject;
 
-            SMTP.Send(EmailMsg);
+                EmailMsg.Body = Msg;
+
+                EmailMsg.IsBodyHtml = true;
+                EmailMsg.Priority = MailPriority.Normal;
+
+                System.Net.Mail.SmtpClient SMTP = new System.Net.Mail.SmtpClient();
+                SMTP.Host = SmtpServer;
+                SMTP.Port = SmtpPort;
+                SMTP.EnableSsl = true;
+
+
+                SMTP.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+                SMTP.UseDefaultCredentials = false;
+                SMTP.Credentials = new System.Net.NetworkCredential(SMTPUser, SMTPPassword);
+
+                SMTP.Send(EmailMsg);
 
                 return result;
 
@@ -94,15 +96,26 @@ namespace EesassinErp.Controllers
                     ClientId = obj.ClientId
                 };
 
-                DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteSelectCommand("[dbo].[USP_GetNewsletterForSearch]", CommandType.StoredProcedure));
+                SqlParameter[] param =
+                {  new SqlParameter("@Action", emailDAL.Action),
+                   new SqlParameter("@ClientId", emailDAL.ClientId)
+};
 
+                DataTable dt = await Task.Run(() =>
+                    SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand(
+                        "[dbo].[USP_GetNewsletterForSearch]",
+                        CommandType.StoredProcedure,
+                        param
+                    )
+                );
+                // DataTable dt =  DLL.dll.GetNewsletterForSearch(emailDAL) ;
                 var results = (from myRow in dt.AsEnumerable()
-                              where myRow.Field<int>("Id") == Convert.ToInt32(obj.Id)
-                              select myRow).FirstOrDefault();
+                               where myRow.Field<int>("Id") == Convert.ToInt32(obj.Id)
+                               select myRow).FirstOrDefault();
 
-                if(results != null)
+                if (results != null)
                 {
-                   // obj = new EmailNewsLetter();
+                    // obj = new EmailNewsLetter();
                     obj.DepartmentName = results["DepartmentName"].ToString();
                     obj.PartyName = results["PartyName"].ToString();
                     obj.STATE_NM = results["STATE_NM"].ToString();
@@ -111,11 +124,11 @@ namespace EesassinErp.Controllers
 
                 }
                 //var baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority;
-               
-               
+
+
                 //obj.sum = new HtmlString(obj.Summary);
                 var emailBody = new RazorViewToStringRenderer().RenderViewToString(ControllerContext, "EmailTemplate", obj);
-                
+
                 string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.FireEmail(emailDAL)));
                 //dynamic jsonDe = JsonConvert.DeserializeObject(result);
                 //string SMTPUser = jsonDe[0].EmailId;
@@ -131,8 +144,8 @@ namespace EesassinErp.Controllers
                 string EmailName = jsonDe[0].EmailName;
                 List<string> recipients = await DAL.DLL.GetClientEmails(Convert.ToInt32(obj.Id)); //jsonDe[0].ToEmail; //"pradeep78541236@gmail.com"; 
                 //obj.PartyName = await DAL.DLL.GetClientNames(Convert.ToInt32(obj.Id));
-                string Subject = "Newsletter, " + obj.SubjectLine.ToUpper();
-                
+                string Subject = "Notification, " + obj.SubjectLine.ToUpper();
+
                 string Msg = emailBody;// jsonDe[0].Msg;
 
 
@@ -141,9 +154,15 @@ namespace EesassinErp.Controllers
                 //  EmailMsg.To.Add(new MailAddress(ToEmail));
 
                 // Add each recipient individually
+                //foreach (var recipient in recipients)
+                //{
+                //    EmailMsg.To.Add(recipient);
+                //    //message.To.Add(new MailAddress(recipient));
+                //}
+                EmailMsg.To.Add(SMTPUser);
                 foreach (var recipient in recipients)
                 {
-                    EmailMsg.To.Add(recipient);
+                    EmailMsg.Bcc.Add(recipient);
                     //message.To.Add(new MailAddress(recipient));
                 }
 

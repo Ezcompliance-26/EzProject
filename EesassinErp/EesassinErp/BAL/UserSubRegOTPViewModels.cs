@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks; 
 
 namespace WebApplication_API.ViewModels
 {
-    public class UserSubRegOTPViewModels  
+    public class UserSubRegOTPViewModels
     {
-       
+
 
         public int RowId { get; set; }
         public string MobileNo { get; set; }
@@ -30,7 +27,7 @@ namespace WebApplication_API.ViewModels
         public string Attribute4 { get; set; }
         public string Attribute5 { get; set; }
         public string Attribute6 { get; set; }
-         
+
         public int UserId { get; set; }
         public int Employeeid { get; set; }
         public string Name { get; set; }
@@ -54,9 +51,9 @@ namespace WebApplication_API.ViewModels
         public int UserSubscriptionId { get; set; }
         public int SubscriptionId { get; set; }
         public string Description { get; set; }
-        public int? OrgId { get; set; } 
+        public int? OrgId { get; set; }
         public int? PinCode { get; set; }
-         
+
 
 
     }

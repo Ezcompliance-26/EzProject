@@ -1,18 +1,15 @@
 ﻿using BAL;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace DAL
 {
     public partial class DLL
     {
-         
+
         public async Task<string> IUDCDM(MenuPermission obj)
         {
             StringBuilder menulist = new StringBuilder();
@@ -22,26 +19,26 @@ namespace DAL
             if (obj.MenuList != null)
             {
                 if (obj.MenuList.Count > 0) if (obj.MenuList != null)
-                {
-                    for (int i = 0; i < obj.MenuList.Count; i++)
                     {
-                        menulist.Append(bigseprator);
-                        menulist.Append(obj.MenuList[i].MenuId);
+                        for (int i = 0; i < obj.MenuList.Count; i++)
+                        {
+                            menulist.Append(bigseprator);
+                            menulist.Append(obj.MenuList[i].MenuId);
 
-                        menulist.Append(seprator); 
+                            menulist.Append(seprator);
 
-                        bigseprator = "|";
+                            bigseprator = "|";
+                        }
+                        bigseprator = "";
                     }
-                    bigseprator = "";
-                }
             }
             var param = new List<SqlParameter>
             {
-                
+
                 new SqlParameter("@DocumentList", menulist.ToString()),
                 new SqlParameter("@Createdby", obj.CreatedBy),
                 new SqlParameter("@ClientId", obj.ClientId),
-              
+
                 new SqlParameter("@Action",obj.Action),
                 new SqlParameter("@Result","")
             };

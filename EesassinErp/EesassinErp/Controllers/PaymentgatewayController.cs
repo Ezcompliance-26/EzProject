@@ -1,14 +1,9 @@
-﻿using System;
+﻿using BAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Text;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
-using BAL;
+using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
@@ -35,14 +30,14 @@ namespace EesassinErp.Controllers
         }
         private string Filter(string s)
         {
-            var chars = new[] {'/'};
+            var chars = new[] { '/' };
             var filteredChars = s.ToArray();
             return new string(filteredChars
                      .Where(ch => !chars.Contains(ch))
                      .Select(ch => ch == ' ' ? '-' : ch).ToArray());
         }
         [System.Web.Services.WebMethod]
-        public string btnCheckout(PaymentBAL obj) 
+        public string btnCheckout(PaymentBAL obj)
         {
             string secret = "TESTc8d11ff24050469ac6581dc7615635c942e5a4eb";
             string data = "";
@@ -71,7 +66,7 @@ namespace EesassinErp.Controllers
             outputHTML += "<form id='redirectForm' method='post' action='https://test.cashfree.com/billpay/checkout/post/submit'>";
             outputHTML += "<input type='hidden' name='appId' value='" + Merchantkey + "'/>";
             outputHTML += "<input type='hidden' name='orderId' value='" + orderId + "'/>";
-            outputHTML += "<input type='hidden' name='orderAmount' value='"+ obj.TotalAmount + "'/>";
+            outputHTML += "<input type='hidden' name='orderAmount' value='" + obj.TotalAmount + "'/>";
             outputHTML += "<input type='hidden' name='customerName' value='" + obj.Name + "'/>";
             outputHTML += "<input type='hidden' name='customerEmail' value='" + obj.ContactNo + "'/>";
             outputHTML += "<input type='hidden' name='customerPhone' value='" + obj.ContactNo + "'/>";
@@ -91,7 +86,7 @@ namespace EesassinErp.Controllers
             outputHTML += "</form>";
             outputHTML += "</body>";
             outputHTML += "</html>";
-            return outputHTML; 
+            return outputHTML;
         }
     }
 }

@@ -158,6 +158,19 @@
 
     };
 
+
+    $scope.getIconClass = function (fileModel) {
+        if (fileModel == undefined || fileModel == '-1') {
+            return fileModel = 'bi bi-plus-lg';;
+
+        }
+        else {
+            return fileModel = 'fa fa-check-square';;
+        }
+
+
+    };
+
     $scope.SaveRecord = function ()
     {
         debugger;

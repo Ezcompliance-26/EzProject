@@ -1,23 +1,19 @@
 ﻿using BAL;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
+    [ValidateSession]
     public class DocumentMasterController : Controller
     {
         // GET: Get Auditor Compliance 
-        
-              public async Task<string> GetMapping(MappingBAL obj)
+
+        public async Task<string> GetMapping(MappingBAL obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.GetMapping(obj)));
             return result;
@@ -32,7 +28,7 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.VerifyMap(obj)));
             return result;
         }
-        
+
         public async Task<string> GetAuditorCompliance(DocumentBAL obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.GetAuditorCompliance(obj)));
@@ -40,7 +36,7 @@ namespace EesassinErp.Controllers
         }
         public async Task<string> IUDAuditorComplianceQUERY(DocumentBAL obj)
         {
-             
+
             if (!string.IsNullOrEmpty(obj.AuditorQuery))
             {
                 if (obj.extention == "pdf")
@@ -74,35 +70,35 @@ namespace EesassinErp.Controllers
                 if (obj.extention == "xls")
                 {
                     if (obj.AuditorQuery.Contains("data:application/"))
-                     {
-                         obj.AuditorQuery = Regex.Replace(obj.AuditorQuery, @"data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,", string.Empty);
-                         string NewFileName = "";
-                         string strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
-                         NewFileName += strPassword;
-                         NewFileName += DateTime.Now.Year.ToString();
-                         NewFileName += DateTime.Now.Month.ToString();
-                         NewFileName += DateTime.Now.Day.ToString();
-                         NewFileName += DateTime.Now.Hour.ToString();
-                         NewFileName += DateTime.Now.Minute.ToString();
-                         NewFileName += DateTime.Now.Second.ToString();
-                         NewFileName += DateTime.Now.Millisecond.ToString();
-                         byte[] data = Convert.FromBase64String(obj.AuditorQuery);
-                         var imageStream = new MemoryStream(data, false);
-                         string extention = ".xls";
+                    {
+                        obj.AuditorQuery = Regex.Replace(obj.AuditorQuery, @"data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,", string.Empty);
+                        string NewFileName = "";
+                        string strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
+                        NewFileName += strPassword;
+                        NewFileName += DateTime.Now.Year.ToString();
+                        NewFileName += DateTime.Now.Month.ToString();
+                        NewFileName += DateTime.Now.Day.ToString();
+                        NewFileName += DateTime.Now.Hour.ToString();
+                        NewFileName += DateTime.Now.Minute.ToString();
+                        NewFileName += DateTime.Now.Second.ToString();
+                        NewFileName += DateTime.Now.Millisecond.ToString();
+                        byte[] data = Convert.FromBase64String(obj.AuditorQuery);
+                        var imageStream = new MemoryStream(data, false);
+                        string extention = ".xls";
                         string uploadpath = "../DownloadMat/AVQuery/" + NewFileName + extention;
                         string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
-                         FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-                         imageStream.WriteTo(file);
-                         file.Close();
-                         imageStream.Close();
-                         obj.AuditorQuery = uploadpath;
-                        }
+                        FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                        imageStream.WriteTo(file);
+                        file.Close();
+                        imageStream.Close();
+                        obj.AuditorQuery = uploadpath;
+                    }
                 }
             }
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.IUDAuditorComplianceQUERY(obj)));
             return result;
         }
-        
+
         public async Task<string> InsertUpdateDelAuditorCompliance(DocumentBAL obj)
         {
             //for (int i = 0; i < obj.ComplianceDetail.Count; i++)
@@ -167,7 +163,7 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.InsertUpdateDelAuditorCompliance(obj)));
             return result;
         }
-        
+
         public async Task<string> GetDocumentMaster(DocumentBAL obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.GetDocumentMaster(obj)));
@@ -273,6 +269,6 @@ namespace EesassinErp.Controllers
         }
 
 
-        
+
     }
 }

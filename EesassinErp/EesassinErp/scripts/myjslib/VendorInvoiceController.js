@@ -14,11 +14,12 @@ app.VendorInvoiceController = function ($scope, $element, $filter, myService) {
     $scope.IsLocation = true;
     $scope.hideIsLocation = false;
     $scope.IWITHStatus = false;
-    $scope.SetTextbox = function (SINVOICENO, ClientId)
+    $scope.SetTextbox = function (SINVOICENO, ClientId, VendorCId)
     {
 
         $scope.InvoiceNo = SINVOICENO;
         $scope.ClientId = ClientId;
+        $scope.VendorCId = VendorCId;
         $scope.Isopen = false;
     }
 
@@ -744,11 +745,13 @@ app.VendorInvoiceController = function ($scope, $element, $filter, myService) {
            
             getData.then(function (response)
             {
-                
+					  if (response.data.Result=='') {
+                    showMsgBox('999', 'Alert', 'Something Went Wrong , please check Invoice no. , Client,Invoice Date', 'warning', 'btn-warning');
+                }  else {
                 showMsgBox('999', 'Alert','Save Successfully Batch No :'+ response.data.Result, 'warning', 'btn-warning')
                 $scope.FireEmail(16, response.data.Result, $scope.ClientId);
                     $scope.ClearControl(1);
-                
+					}
                
             });
         }

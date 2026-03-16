@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace BAL
 {
@@ -16,6 +14,7 @@ namespace BAL
         public string Nature { get; set; }
         public string Remark { get; set; }
 
+        public string UserId { get; set; }
         public string Score { get; set; }
         public string DocumentId { get; set; }
         public string FileDoc { get; set; }
@@ -35,7 +34,7 @@ namespace BAL
         public string Updatedby { get; set; }
         public string UpdatedON { get; set; }
         public string Isdelete { get; set; }
-        public string  Id { get; set; }
+        public string Id { get; set; }
 
         public string Action { get; set; }
 
@@ -57,7 +56,42 @@ namespace BAL
         public string VendorQuery { get; set; }
         public string extention { get; set; }
 
+        public string ToEmail { get; set; }
+        public string ReplyToList { get; set; }
+        public string EmailName { get; set; }
+        public string EmailId { get; set; }
+        public string Password { get; set; }
+        public int Port { get; set; }
+        public string SmtpServer { get; set; }
+        public string Subject { get; set; }
+        public string Msg { get; set; }
 
+        public string LicenseRequestId { get; set; }
+        public string StoreCode { get; set; }
+        public string LicenseNumber { get; set; }
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
+        public string ReminderDate { get; set; }
+        public string LED { get; set; }
+        public string DaysOfExpire { get; set; }
+
+        public string UserName { get; set; }
+        public string Status { get; set; }
+        public string LicenseName { get; set; }
+
+        public string FormNo { get; set; }
+        public string StateId { get; set; }
+        public string Criticality { get; set; }
+
+
+        public string Boardingtype { get; set; }
+        public string Month { get; set; }
+        public string Year { get; set; }
+        public string State { get; set; }
+        public string DueDate { get; set; }
+        public string UploadFile { get; set; }
+
+        public string excelFile { get; set; }
         public string ComplianceDetailStr { get; set; }
         public List<ComplianceDetailList> ComplianceDetail { get; set; }
     }
@@ -74,5 +108,5 @@ namespace BAL
         public string Remark { get; set; }
         public string VendorRemark { get; set; }
     }
-  
+
 }

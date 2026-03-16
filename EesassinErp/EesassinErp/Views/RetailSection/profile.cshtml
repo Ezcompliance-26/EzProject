@@ -3,7 +3,7 @@
     ViewBag.Title = "profile";
     Layout = "~/Views/Common/_RetailLayout.cshtml";
 }
-<script src="~/scripts/RetailJsLib/RetailOneTimeDocumentController.js"></script>
+<script src="~/scripts/RetailJsLib/RetailOneTimeDocumentController.js?Ver=@ViewBag.Version"></script>
 <div class="pagecontentbody" ng-init="CountPercetageDoc()">
     <div class="pagebody">
         <div class="col-md-12 pageheader pb-2">
@@ -103,7 +103,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4" ng-if="loginType==4"  >
+                <div class="col-md-4"   >
                     <div class="card">
                         <div class="card-body">
                             <div class="col-md-12 text-center">
@@ -125,10 +125,30 @@
                                 <div class="pb-5">
                                     <h4 class="mb-2 text-warning">Profile Completion</h4>
                                 </div>
-                                <div class="mb-5 pb-5">
-                                    <a  class="btn btn-warning btn-lg" ng-href="../RetailSection/Documents">One Time Document</a>
+                                <div class="btn-group mb-5 pb-5" role="group">
+                                    <a class="btn btn-warning btn-lg" ng-href="../RetailSection/Documents">
+                                        One Time Document
+                                    </a>
+                                    <a ng-show="SSETUP_Flag==1" class="btn btn-warning btn-lg" ng-href="../Retail/StatutorySetup?Statutory Setup">
+                                        Statutory Setup
+                                    </a>
+                                </div>
+                                <div class="btn-group mb-5 " role="group">
+                                    <a ng-show="SECRETUP_Flag==1" class="btn btn-warning btn-lg" ng-href="../Retail/SecretarialStatutorySetup?Secretarial Setup">
+                                        Secretarial Setup
+                                    </a>
+                                    <a ng-show="FINAETUP_Flag==1" class="btn btn-warning btn-lg" ng-href="../Retail/FinancialStatutorySetup?Finance Setup">
+                                        Finance Setup
+                                    </a>
+                                </div>
+                                <div class="btn-group mb-5 " role="group">
+                                    <a ng-show="Entity_Flag==1" class="btn btn-warning btn-lg" ng-href="../Retail/Enitfy?Entity Detail">
+                                        Entity Details
+                                    </a>
+                                  
                                 </div>
                             </div>
+                             
                         </div>
                     </div>
                 </div>

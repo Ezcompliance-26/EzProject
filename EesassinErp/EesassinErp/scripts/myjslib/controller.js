@@ -1,9 +1,10 @@
- 
+﻿ 
 var LoginId = sessionStorage.getItem("LoginId");
+debugger;
 var MapId = sessionStorage.getItem("MapId");
 var MapUser = sessionStorage.getItem("MapUser");
 var BranchCode = sessionStorage.getItem("BranchCode");
-var loginType = sessionStorage.getItem("loginType");
+var loginType = sessionStorage.getItem("loginType") || sessionStorage.getItem("LoginType");
 var LastLogin = sessionStorage.getItem("LastLogin");
 var Desig = sessionStorage.getItem("Desig");
 var Name = sessionStorage.getItem("Name");
@@ -12,39 +13,59 @@ var ContactNo = sessionStorage.getItem("ContactNo");
 var CreatedOn = sessionStorage.getItem("CreatedOn");
 var Photo = sessionStorage.getItem("Photo");
 var UserName = sessionStorage.getItem("UserName");
-var BranchAddress = sessionStorage.getItem("BranchAddress");
+var BranchAddress = sessionStorage.getItem("BranchAddress"); 
 var SessionId = sessionStorage.getItem("SessionId");
 var REmailId = sessionStorage.getItem("EmailId");
+var Loadonce = sessionStorage.getItem("Loadonce"); 
+var PartyEMail = sessionStorage.getItem("PartyEMail");
+var DashboardSwitch = sessionStorage.getItem("DashboardSwitch");
+
+
 var AuditorId = '';
 var VendorId = '';
-var Totalupoad = 0;
-//var APIURLPath = "https://api.testeesassin.online/api/";//ezcompliance
-var APIURLPath = "https://testeesassin.co.in/api/"; //testessain
+var Totalupoad = 0; 
+
+ 
 
 if (LoginId == "-1" || LoginId == null || LoginId == "" || LoginId == "null") {
-    alert('Login');
+  
     window.top.location.href = '../Login/Login';
 }
 if (BranchCode == "-1" || BranchCode == null || BranchCode == "" || BranchCode == "null") {
-    alert('BranchCode');
+   
     window.top.location.href = '../Login/Login';
 }
 if (loginType == "-1" || loginType == null || loginType == "" || loginType == "null") {
-    alert('loginType');
+
     window.top.location.href = '../Login/Login';
 }
 
 app.directive('fileModel', ['$parse', function ($parse) {
-      return {
-          restrict: 'A',
-          link: function (scope, element, attrs) {
-              element.bind('change', function () {
-                  $parse(attrs.fileModel).assign(scope, element[0].files[0]);
-                  scope.$apply();
-              });
-          }
-      };
-  }])
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.bind('change', function () {
+                $parse(attrs.fileModel).assign(scope, element[0].files[0]);
+                scope.$apply();
+            });
+        }
+    };
+}]);
+
+app.directive('fileModel', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.on('change', function () {
+                scope.$apply(function () {
+                    $parse(attrs.fileModel)
+                        .assign(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+});
+
 
 app.directive('endDateAfterStart', function () {
     return {
@@ -121,6 +142,28 @@ app.directive('tableItemResponsive', function ($timeout) {
         }
     };
 });
+
+
+
+
+app.directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            var model = $parse(attrs.fileModel);
+
+            element.bind('change', function () {
+                scope.$apply(function () {
+                    model.assign(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
+}]);
+
+
+
+
 
 app.directive('validateNumberAndDecimalOnly', function () {
     return {
@@ -473,6 +516,45 @@ app.directive('menurepeatDone', function ($timeout) {
         }
     };
 });
+
+app.directive("fileChange", function () {
+    return {
+        restrict: "A",
+        scope: {
+            fileChange: "&"
+        },
+        link: function (scope, element, attrs) {
+            element.on("change", function (event) {
+                let files = event.target.files;
+                let index = attrs.index;   // row index
+
+                scope.$apply(function () {
+                    scope.fileChange({ files: files, $index: index });
+                });
+            });
+        }
+    };
+});
+app.directive('ckDragPlaceholder', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+
+            element.attr('draggable', true);
+
+            element.on('dragstart', function (e) {
+
+                // 🔥 IMPORTANT FIX
+                var dt = e.originalEvent.dataTransfer;
+
+                var field = (attrs.field || element.attr('data-field') || '').trim();
+                dt.setData('text/plain', field);
+            });
+        }
+    };
+});
+
+
 app.directive('chkGroupList', function () {
     return {
         scope: {
@@ -495,12 +577,7 @@ app.directive('chkGroupList', function () {
         }
     };
 });
-
-// *endregion
-
-
-
-
+   
 app.controller('myController', function ($scope, $element, $sce, $timeout, $interval, $filter, $http, $compile, myService, $window) {
     $scope.LoginId = LoginId;
     $scope.MapUser = MapUser;
@@ -512,17 +589,60 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     $scope.ContactNo = ContactNo;
     $scope.Desig = Desig;
     $scope.CreatedOn = CreatedOn;
-    $scope.Photo = Photo;
+    $scope.Photo = Photo;  
+    $scope.DashboardSwitch = DashboardSwitch;
+    $scope.countdown = 5;  
+    $scope.showCountdownPopup = function () { 
+        $('#countdownModal').modal('show'); 
+        var timer = $scope.countdown;
+        var countdownInterval = setInterval(function () {
+            $scope.$apply(function () {
+                timer--;
+                $scope.countdown = timer; 
+                if (timer === 0) {
+                    clearInterval(countdownInterval);
+                    $('#countdownModal').modal('hide'); // Hide the modal
+                    $scope.Redirectotdashboardwait(); 
+                }
+            });
+        }, 1000);
+    };
+
+    //if (DashboardSwitch != 'Supplier' && DashboardSwitch != null) {
+    //if (loginType != '1') { 
+
+    //    var collectionobj = {}; 
+    //    collectionobj.UFile = window.location.pathname;
+    //    collectionobj.ActionType = 6
+    //    collectionobj.Id = LoginId
+    //    var getData = myService.methode('POST', ("../RetailSection/CrossCheck"), JSON.stringify(collectionobj));
+    //    getData.then(function (response) {
+    //        if (response.data.Result[0].RM == 0) {
+    //            window.top.location.href = '../Login/Login';
+    //        }
+    //    });
+    //    }
+    //}
+
+
+   
+    $scope.loadPage = function (url) {  
+        window.top.location.href = url; 
+    }
+    
+     
+    $scope.cancelRedirect = function () {
+        $('#countdownModal').modal('hide'); // Hide the modal
+    }; 
     if ($scope.Photo=="null")
     {
         $scope.Photo = '../content/profile.png';
     }
     $scope.BranchAddress = BranchAddress;
+    $scope.PartyEMail = PartyEMail ;
     $scope.UserName = UserName;
     $scope.SessionId = SessionId;
-    $scope.REmailId = REmailId;
-    
-
+    $scope.REmailId = REmailId; 
     if (loginType == "1") {
         $scope.url = '../DashBoard/AdminDashboard'
     }
@@ -532,33 +652,32 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     else if (loginType == '4') {
         $scope.url = '../DashBoard/ClientDashboard'
     }
+    else if (loginType == '5') {
+        $scope.url = '../DashBoard/Dash'
+    }
     else {
         $scope.url = '../DashBoard/AuditorDashboard'
     }
+ 
 
     if (loginType != '1') {
         var collectionobj = {};
         collectionobj.Action = 12;
-        collectionobj.UserId = MapId;
-
+        collectionobj.UserId = MapId; //----------is user active
         var getData = myService.methode('POST', ("../rating/searchrating"), JSON.stringify(collectionobj));
-        getData.then(function (response) {
-
+        getData.then(function (response) { 
             if (response.data.length > 0) {
-                window.top.location.href = '../Login/Login';
-
+                window.top.location.href = '../Login/Login'; 
             }
         });
-    }
-
-
-
+    } 
     var collectionobj = {};
     collectionobj.ActionType = 10;
     collectionobj.Id = LoginId;
     var getData = myService.methode('POST', ("../RetailSection/SearchCompliance"), JSON.stringify(collectionobj));
     getData.then(function (response) { 
         $scope.LoginAs = response.data.Result[0].LoginAs;
+        $scope.IsExecuter = response.data.Result[0].LoginAs;
         if (loginType == '1') {
             $scope.LoginAs = 'Admin';
         }
@@ -575,29 +694,23 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     var getData = myService.methode('POST', ("../Login/GetModulePermission"), JSON.stringify(collectionobj));
     getData.then(function (response)
     {
-        if ($scope.SessionId != response.data.Result[0].SessionId)
+        if (response.data.Result.length > 0)
         {
-            window.top.location.href = '../Login/Login';
+            if ($scope.SessionId != response.data.Result[0].SessionId) {
+                showMsgBox('999', 'Alert', 'Multiple logins detected, Closing all sessions automatically', 'warning', 'btn-warning');
+                sessionStorage.clear(); 
+                setTimeout(function () {
+                    window.top.location.href = '../Login/Login';
+                }, 3000); 
+            } 
         }
-        
-    });
- 
-    $scope.alert = function (msg) {
-        console.log(msg);
-    }
-
+        else { window.top.location.href = '../Login/Login';}
+    }); 
+    
     $scope.BindNotification = function () {
         var collectionobj = {};
-        collectionobj.Action = 17;
-
-        //if (loginType == '2')
-        //{
-        collectionobj.Updatedby = LoginId;
-        //}
-        //else {
-        //    collectionobj.Updatedby = MapId;
-        //}
-
+        collectionobj.Action = 17; 
+        collectionobj.Updatedby = LoginId; 
         var getData = myService.methode('POST', "../Communication/GetCommunication", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             if (response.data.length > 0) {
@@ -647,7 +760,9 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     };
 
     $scope.GoToRetail = function () {
-        window.location.href = '../RetailSection/Dashboard'
+        $scope.ManageLog('Redirect To Retail Section');
+       /* window.location.href = '../RetailSection/Dashboard'*/
+        window.location.href = '../RetailSection/StoreDashboard?Location%20Dashboard'
     }
     $scope.GoToSupplier = function () {
         window.location.href = '../DashBoard/Dashboard'
@@ -666,14 +781,11 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     });
     $scope.$on('TableItemResponsiveSet', function () {
 
-        setTimeout(function () {
-
-            // init Isotope
+        setTimeout(function () { 
             var $grid = $('#ExpenseBox').isotope({
                 itemSelector: '.table-item',
                 percentPosition: true,
-                transitionDuration: '0.2s',
-                //layoutMode: 'fitRows',
+                transitionDuration: '0.2s', 
                 masonry: {
                     columnWidth: '.table-item',
                 }
@@ -694,6 +806,15 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         $('#cover-spin').hide();
     };
 
+   
+    $scope.showValidationLoader = function ()  {
+        $('#file-validation-loader').fadeIn();
+    }
+
+    $scope.hideValidationLoader = function () {
+        $('#file-validation-loader').fadeOut();
+    }
+
     $scope.trustAsHtml = function (html) {
         return $sce.trustAsHtml(html);
     };
@@ -708,9 +829,8 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     }
     $scope.GetReportHeaderUsingCategory = function (reportcategoryname) {
         var collectionobj = {};
-        collectionobj.Action = 5;
-
-        collectionobj.BranchCode = BranchCode;
+        collectionobj.Action = 5; 
+        collectionobj.BranchCode = MapId;
         collectionobj.ReportCategoryName = reportcategoryname;
         var getData = myService.methode('POST', "../../DashBoard/GetReportHeader", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
@@ -751,10 +871,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     $scope.ConvertToDecimalPoint = function (amount, point) {
         if (amount >= 0 || amount <= 0)
             return $scope.checkNaN(amount).toLocaleString("en", { useGrouping: false, minimumFractionDigits: 0, maximumFractionDigits: point });
-        else { return ""; }
-        //if (amount >= 0 || amount <= 0)
-        //    return $scope.checkNaN(amount).toLocaleString("en", { useGrouping: false, minimumFractionDigits: $scope.Per, maximumFractionDigits: point });
-        //else { return ""; }
+        else { return ""; } 
     }
 
     $scope.checkNaN = function (amount) {
@@ -773,38 +890,72 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         $scope.number = value.replace(/[^\d\.*]+/g, '');
         return $scope.number;
     }
+    $scope.FoundActiveSession = function () {
+
+        var collectionobj = {
+            Username: Username,
+            Password: LoginId,
+            Action: "20"
+        };
+
+        myService.methode(
+            'POST',
+            '../RetailSection/getredirect',
+            '{obj:' + JSON.stringify(collectionobj) + '}'
+        ).then(function (response) {
+
+            if (response && response.data && response.data.length > 0) {
+
+                var userData = response.data[0];
+
+                // Active session found
+                if (userData.LoginId === "-11") {
+                    showMsgBox(
+                        '999',
+                        'Found Active Session, Closing all sessions automatically',
+                        'warning',
+                        'btn-warning'
+                    );
+
+                    // slight delay so user can read message
+                    setTimeout(function () {
+                        $scope.Logout();
+                    }, 1500);
+                }
+            }
+
+        }, function (error) {
+            console.error("FoundActiveSession error:", error);
+        });
+    };
 
     $scope.Logout = function () {
-        sessionStorage.removeItem("LoginId");
-        sessionStorage.removeItem("BranchCode");
-        sessionStorage.removeItem("loginType");
-        sessionStorage.removeItem("LastLogin");
-        sessionStorage.removeItem("Desig");
-        sessionStorage.removeItem("Name");
-        sessionStorage.removeItem("BranchName");
-        sessionStorage.removeItem("ContactNo");
-        sessionStorage.removeItem("CreatedOn");
-        sessionStorage.removeItem("Photo");
-        var collectionobj = {};
-        collectionobj.Action = 17;
-        collectionobj.LoginId = LoginId;
-        var getData = myService.methode('POST', ("../Login/GetModulePermission"), JSON.stringify(collectionobj));
-        getData.then(function (response)
-        {
-            window.top.location.href = '../Login/Login';
+     
+        sessionStorage.clear();
+        $scope.logoutWithProcess();  
+        var collectionobj = {
+            Action: 17,
+            LoginId: $scope.LoginId
+        }; 
+        myService.methode(
+            'POST',
+            "../Login/GetModulePermission",
+            JSON.stringify(collectionobj)
+        ).finally(function () { 
+          /*  window.top.location.href = '../Login/Login';*/
         });
-        
+    };
 
-
-    };   
 
     $scope.PrintForm = function (print, title) {
-
+         
         var popupWin = window.open('', '_blank');
         popupWin.document.open();
-        var head = '<html><head><title>' + title + '</title><meta charset="utf-8" /><link href="../Content/plugins/assets/css/print/print-bootstrap.min.css" media="all" rel="stylesheet" /><link href="../Content/plugins/assets/css/print/print-main.css" media="all" rel="stylesheet" /><link href="../Content/plugins/assets/css/font-icons/icofont.css" media="all" rel="stylesheet" /><link href="../Content/plugins/assets/css/font-icons/font-awesome.min.css" media="all" rel="stylesheet" /><link href="../Content/plugins/assets/css/font-icons/materialdesignicons.min.css" media="all" rel="stylesheet" /></head><body onload="window.print()" class="dt-print-view">' + print + '</body></html>';
+        var head = '<html><head><title>' + title + '</title><meta charset="utf-8" /><link href="../Content/plugins/assets/css/print/print-bootstrap.min.css" media="all" rel="stylesheet" /><link href="../Content/plugins/assets/css/print/print-main.css" media="all" rel="stylesheet" /></head><body onload="window.print()" style="background:#fff;">' + print + '</body></html>';
         popupWin.document.write(head);
-        popupWin.document.close();
+        setTimeout(function () { popupWin.document.close(); }, 1000);
+
+
     }
     $scope.tablewidth = '100%';
     $scope.ExportToExcel = function (printHeader) {
@@ -875,6 +1026,87 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     }
 
 
+    $scope.backtodashboard = function () {
+        $timeout(function () {
+            $scope.Redirectotdashboardwait();
+        }, 100);
+    };
+
+    $scope.Redirectotdashboardwait = function () {
+        var collectionobj = {
+            Username: LoginId,
+            Action: "22"
+        };
+
+        var getDetails = myService.methode('POST', '../RetailSection/getredirect', '{obj:' + JSON.stringify(collectionobj) + '}');
+        getDetails.then(function (response) {
+            if (response.data && response.data.length > 0) {
+                var groupData = response.data[0];
+
+                if (groupData.LoginId == "-1" || !groupData.LoginId) {
+                    showMsgBox('999', 'Invalid Credentials!', 'warning', 'btn-warning');
+                    return;
+                } else if (groupData.LoginId == "-11") {
+                    proceedConfirmbox("Found Active Session, Please Logout All Session !", function () {
+                        $scope.SessionClose(LoginId);
+                    });
+                    return;
+                }
+
+                // Update session storage
+                Object.keys(groupData).forEach(key => sessionStorage.setItem(key, groupData[key]));
+
+                $scope.ManageLog(groupData.LoginId, 'Login Retail Section through Dashboard');
+                window.location.href = '../RetailSection/MainDashboard?Main Dashboard';
+            } else {
+                showMsgBox('999', 'Unexpected error. Please try again.', 'error', 'btn-error');
+            }
+        }).catch(function (error) {
+            console.error("Error in backtodashboard:", error);
+            showMsgBox('999', 'Something went wrong!', 'error', 'btn-error');
+        });
+    };
+
+    $scope.redirect = function (Username) {
+        sessionStorage.setItem('Loadonce', 1);
+        $('#btnclick').prop('disabled', false);
+        var collectionobj = {
+            Username: Username,
+            Password: LoginId,
+            Action: "20"
+        };
+
+        var getDetails = myService.methode('POST', '../RetailSection/getredirect', '{obj:' + JSON.stringify(collectionobj) + '}');
+        getDetails.then(function (response) {
+            if (response.data && response.data.length > 0) {
+                var userData = response.data[0];
+
+                if (userData.LoginId == "-1" || !userData.LoginId) {
+                    showMsgBox('999', 'Invalid Credentials!', 'warning', 'btn-warning');
+                    return;
+                } else if (userData.LoginId == "-11") {
+                    proceedConfirmbox("Found Active Session, Please Logout All Session !", function () {
+                        $scope.SessionClose(Username, password);
+                    });
+                    return;
+                }
+
+                // Update session storage
+                Object.keys(userData).forEach(key => sessionStorage.setItem(key, userData[key]));
+
+                $('#btnclick').prop('disabled', true);
+
+                $scope.ManageLog(userData.LoginId, 'Login Retail Section through Dashboard');
+                window.location.href = '../RetailSection/StoreDashboard?Location%20Dashboard';
+            } else {
+                showMsgBox('999', 'Unexpected error. Please try again.', 'error', 'btn-error');
+            }
+        }).catch(function (error) {
+            console.error("Error in redirect:", error);
+            showMsgBox('999', 'Something went wrong!', 'error', 'btn-error');
+        });
+    };
+     
     $scope.Export = function (mode, printHeader) {
         var message = "";
         var seprator = "";
@@ -1147,83 +1379,10 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         var head = '<html><head><title>' + title + '</title><meta charset="utf-8" /><link href="../Content/plugins/assets/css/print/print-bootstrap.min.css" media="all" rel="stylesheet" /><link href="../Content/plugins/assets/css/print/print-main.css" media="all" rel="stylesheet" /></head><body onload="window.print()" style="background:#fff;">' + print + '</body></html>';
         popupWin.document.write(head);
         setTimeout(function () { popupWin.document.close(); }, 1000);
-    }
-
-
-    $scope.PrintVoucher = function (transid, vouchertype, adjustmentvoucher) {
-        var collectionobj = {};
-        if (adjustmentvoucher == 1) { collectionobj.Action = 16 }
-        else { collectionobj.Action = 6; }
-
-        collectionobj.FYId = fyId;
-        collectionobj.SchoolCode = schoolCode;
-        collectionobj.BranchCode = branchCode;
-        collectionobj.CompCode = compCode;
-        collectionobj.SiteCode = siteCode;
-        collectionobj.VoucherType = vouchertype;
-        collectionobj.TransId = transid;
-
-        var getData = myService.methode('POST', "../Voucher/GetLedgerVoucher", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
-            if (response.data.length > 0) {
-                $scope.VoucherType = response.data[0].VoucherType;
-                $scope.VoucherNo = response.data[0].VoucherNo;
-                $scope.VDate = response.data[0].VDate;
-                $scope.VNarr = response.data[0].VoucherNarr;
-                $scope.VoucherType = response.data[0].VoucherType;
-                $scope.CNCD = response.data[0].CNCD;
-                $scope.ChqDate = response.data[0].ChqDate;
-                $scope.ChqNo = response.data[0].ChqNo;
-                $scope.VoucherDetailData = response.data
-                $scope.totalDrAmt = (Number($scope.VoucherDetailData.sum('DrAmt'))).toLocaleString("en", { useGrouping: false, minimumFractionDigits: 2 });
-                $scope.totalCrAmt = (Number($scope.VoucherDetailData.sum('CrAmt'))).toLocaleString("en", { useGrouping: false, minimumFractionDigits: 2 });
-
-                $scope.MergerdCode = $scope.totalDrAmt.split('.');
-                $scope.InWords = convertNumberToWords($scope.MergerdCode[0]) + " Rupees";
-
-                if (Number($scope.MergerdCode[1]) != Number(0)) { $scope.InWords += " and " + convertNumberToWords($scope.MergerdCode[1]) + " Paisa"; }
-
-                $scope.InWords += " Only.";
-
-
-                setTimeout(function () { $scope.Print("Ledger Voucher"); }, 2000);
-            }
-
-        })
-    };
-
-    $scope.PrintItemlist = function (transid, showratelist, call) {
-        if (call == 1) {
-            var collectionobj = {};
-            collectionobj.Action = 26;
-
-            if (transid !== undefined) { collectionobj.Code = transid; }
-
-            collectionobj.FYId = fyId;
-            collectionobj.SchoolCode = schoolCode;
-            collectionobj.BranchCode = branchCode;
-            collectionobj.CompCode = compCode;
-            collectionobj.SiteCode = siteCode;
-
-            var getData = myService.methode('POST', "../Inventory/GetItemMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-            getData.then(function (response) {
-                if (response.data.length == 0) return;
-
-                if (response.data.Table.length > 0) {
-                    $scope.ItemData = response.data.Table;
-                    if (showratelist == true) { $scope.ItemRateData = response.data.Table1; }
-                    else { $scope.ItemRateData = ""; }
-
-
-                    setTimeout(function () { $scope.Print("Item List"); }, 2000);
-                }
-
-            })
-        }
-    };
+    } 
 
     $scope.NavMenu = function () {
-        debugger;
+        //debugger;
 
         $scope.collectionobj = {};
         $scope.collectionobj["LoginId"] = JSON.parse(LoginId);
@@ -1249,9 +1408,10 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
     $scope.Isopen = false;
 
-    $scope.SetTextbox = function (SINVOICENO, ClientId) {
+    $scope.SetTextbox = function (SINVOICENO, ClientId, VendorCId) {
         $scope.InvoiceNo = SINVOICENO;
         $scope.ClientId = ClientId;
+        $scope.VendorCId = VendorCId;
         $scope.Isopen = false;
     }
 
@@ -1319,47 +1479,147 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
             //-----------------------------
         });
     };
+     
+    var collectionobj = {};
+    collectionobj.ActionType = 15;
+    collectionobj.Id = MapId
+    var getData = myService.methode('POST', "../RetailSection/GetStoreMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
+    getData.then(function (response) {
+        if (response.data.Result.length > 0) { $scope.Industry = response.data.Result[0].Industry;}
+       
+    });
 
-    //$scope.BindDashBoardInvoice = function () {
-    //    var collectionobj = {};
-    //    collectionobj.ActionType = 7;
-    //    var getData = myService.methode('POST', "../VenInvoice/GetVenInvoiceListDT", '{obj:' + JSON.stringify(collectionobj) + '}');
-    //    getData.then(function (response) {
-    //       
-    //        $scope.NewInvoice = response.data[0].NewInvoice;
-    //        $scope.PendingInvoice = response.data[0].PendingInvoice;
-    //    });
-    //}
 
-    $scope.FireEmail = function (Action, ClientId, Id) {
-        var collectionobj = {};
-        collectionobj.Action = Action;
-        collectionobj.ClientId = ClientId;
-        collectionobj.Id = Id;
-        var getData = myService.methode('POST', "../SendEmail/SendEmail", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
+    $scope.FireEmail = function (Action, ClientId, Id) { 
+        $('#emailSendingModal').modal('show');
 
-        });
-    }
+        var collectionobj = {
+            Action: Action,
+            ClientId: ClientId,
+            Id: Id
+        }; 
+        myService.methode(
+            'POST',
+            "../SendEmail/SendEmail",
+            '{obj:' + JSON.stringify(collectionobj) + '}'
+        )
+            .then(function (response) {
+                $('#emailSendingModal').modal('hide');
+            })
+            .catch(function (error) {
+                // error case (optional message)
+                $('#emailSendingModal').modal('hide');
+            })
+            .finally(function () {
+                // ✅ har haal me modal hide
+                $('#emailSendingModal').modal('hide');
+            });
+    };
+
+
 
     $scope.FireEmailForNewsletter = function (collectionobj) {
+        $('#emailSendingModal').modal('show');
         var getData = myService.methode('POST', "../SendEmail/SendEmailForNewsletter", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
-
+            $('#emailSendingModal').modal('hide');
+        /*    toastr.success("Email sent successfully");*/
+        }, function () {
+            $('#emailSendingModal').modal('hide');
+     /*       toastr.error("Failed to send email");*/
         });
     }
 
 
-
-    $scope.BindDashBoardInvoice = function () {
+    $scope.ManageLog = function (Activity) {
         var collectionobj = {};
-        collectionobj.ActionType = 5;
-        collectionobj.CreatedBy = MapId;
-        var getData = myService.methode('POST', "../VenInvoice/GetVenInvoiceListDT", '{obj:' + JSON.stringify(collectionobj) + '}');
+        collectionobj.Action = 3;
+        collectionobj.ClientId = $scope.LoginId;
+        collectionobj.Activity = Activity;
+        var getData = myService.methode('POST', "../RetailSection/MaintainLog", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
-            $scope.ComplianceDashBoardInvoice = response.data;
+
         });
     }
+
+
+
+    $scope.ExceptionFile = function (PageName, FileName, UserName) {
+        var collectionobj = {};
+        collectionobj.Action = 5;
+        collectionobj.machineName = PageName;
+        collectionobj.systemUserName = UserName;
+        collectionobj.Activity = FileName
+        var getData = myService.methode('POST', "../RetailSection/Exception", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+
+        });
+    }
+
+    $scope.DownloadFileWithName = function (documentPath, fileName) {
+        var link = document.createElement("a");
+        link.href = documentPath;
+        link.download = fileName || documentPath.split('/').pop(); // Use provided name or extract from path
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    $scope.Limit = function () {
+        var collectionobj = {};
+        collectionobj.ActionType = 14;
+        collectionobj.Id = MapId
+        var getData = myService.methode('POST', "../RetailSection/GetStoreMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            if (response.data.Result.length > 0) {
+                debugger;
+                $scope.total = response.data.Result[0].total;
+                $scope.StoreLimit = response.data.Result[0].StoreLimit;
+                $scope.LeftStore = response.data.Result[0].LeftStore;
+                $scope.LicenseCount = response.data.Result[0].LicenseCount;
+                $scope.Upcoming = response.data.Result[0].Upcoming;
+                $scope.UserLimit = response.data.Result[0].UserLimit;
+                $scope.Useroccupied = response.data.Result[0].Useroccupied;
+
+            }
+            else { $scope.LeftStore = 0 }
+        });
+    } 
+
+    $scope.GetLog = function () {
+        var collectionobj = {};
+        collectionobj.Action = Action;
+        collectionobj.CreatedOn =  $('#txtcreatedon').val(); 
+        var getData = myService.methode('POST', "../RetailSection/GetMaintainLog", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            messagevalues =
+                [
+                    { "LogOn Date": $("#txtStartDate").text() },
+                ];
+
+            var tblheader =
+                [
+                    { "HeaderText": "Sr.No.", "Value": "RowId", "HeaderValue": "RowId", "Width": "50px", "ShowColumn": "Yes", "ImageColumn": "No", "CssClass": "srno" },
+                    { "HeaderText": "UserName", "HeaderValue": "UserName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "Activity", "HeaderValue": "Activity", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                   
+                ];
+            loadDataUsingPreDefinedColumn(tblheader, response.data.Result);
+
+        });
+    }
+
+
+    $scope.activeModuleId = null;
+
+    $scope.toggleModule = function (moduleId) {
+        if ($scope.activeModuleId === moduleId) {
+            $scope.activeModuleId = null; // close if already open
+        } else {
+            $scope.activeModuleId = moduleId; // open selected
+        }
+    };
+
     $scope.HighAuditorlightsExpire = function () {
         var collectionobj = {};
         collectionobj.Action = 10;
@@ -1597,17 +1857,8 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
     $scope.count = "0";
 
-    $scope.SelectIframForNID = function (datapath, TransId, UserId, text) {
-
-
-
-
-        var addurl = datapath + '?NID=' + TransId
-
-
-
-        /*Bind Page Tab with Iframe*/
-
+    $scope.SelectIframForNID = function (datapath, TransId, UserId, text) { 
+        var addurl = datapath + '?NID=' + TransId 
         var date = new Date().getTime();
         var TabTitle = text;
         var src = datapath;
@@ -1936,12 +2187,28 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
     $scope.UploadPhoto = function () {
         var collectionobj = {};
+        debugger;
         collectionobj.LoginId = LoginId;
         collectionobj.Photo = $scope.Photo;
         collectionobj.Action = 12;
         var getData = myService.methode('POST', "../ChangePassCode/UploadPhoto", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             if (showMsgBox(response.data.Result)) {
+                $scope.GetDetails();
+            }
+        });
+    }
+    $scope.DeletePhoto = function () {
+        var collectionobj = {};
+        collectionobj.LoginId = LoginId;
+        collectionobj.Photo = '';
+        collectionobj.Action = 27;
+        var getData = myService.methode('POST', "../ChangePassCode/UploadPhoto", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            if (showMsgBox(response.data.Result)) {
+                $scope.Photo = '';
+                $('#profilePreview').attr('src', '~/PayrollDashboard/assets/profile.png');
+                $('#profilepic').attr('src', '~/PayrollDashboard/assets/profile.png');
                 $scope.GetDetails();
             }
         });
@@ -1958,9 +2225,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
             sessionStorage.setItem('Photo', response.data.Result[0].Photo);
             var Photo = sessionStorage.getItem("Photo");
-            $scope.$applyAsync();
-            // showMsgBox('999', 'Alert', 'System Required Reload', 'warning', 'btn-warning');
-           // window.top.location.href = '../Dashboard/Dashboard';
+            $scope.$applyAsync(); 
         });
     }
 
@@ -1997,11 +2262,22 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         else if ($('#txtReTypePasscode').val() == '') {
             $('#txtNewPasscode').attr('style', 'box-shadow: 0px 1px #70c126;')
             $('#txtReTypePasscode').attr('style', 'box-shadow: 0px 1px #ea1313;')
-            showMsgBox('999', 'Alert', 'Confirm Current Password Not Valid', 'warning', 'btn-warning')
+            showMsgBox('999', 'Alert', 'Confirm Password Not Valid', 'warning', 'btn-warning')
             valid = false;
             return;
         }
-
+        else if ($('#txtNewPasscode').val() != $('#txtReTypePasscode').val()) {
+            $('#txtReTypePasscode').attr('style', 'box-shadow: 0px 1px #70c126;')
+            showMsgBox('999', 'Alert', 'New Password and Confirm Password must match.', 'warning', 'btn-warning')
+            valid = false;
+            return;
+        }
+        else if ($('#txtCurrentPasscode').val() == $('#txtReTypePasscode').val()) {
+            $('#txtReTypePasscode').attr('style', 'box-shadow: 0px 1px #70c126;')
+            showMsgBox('999', 'Alert', 'Current Password and New Password Sholud not match.', 'warning', 'btn-warning')
+            valid = false;
+            return;
+        }
         else if (valid == true) {
             $('#txtCurrentPasscode').attr('style', 'box-shadow: 0px 1px #70c126;')
             $('#txtNewPasscode').attr('style', 'box-shadow: 0px 1px #70c126;')
@@ -2010,7 +2286,8 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         }
 
     }
-    $scope.VCount = function (str) {
+    $scope.VCount = function (str) 
+	{
         var upper = 0,
             lower = 0,
             number = 0,
@@ -2029,6 +2306,191 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
             showMsgBox('999', 'Alert', Msg, 'warning', 'btn-warning')
         }
 
+    }
+
+    $scope.showLogoutProcess = false;
+    $scope.logoutStep = 0;
+
+    $scope.logoutWithProcess = function () {
+
+        // Show overlay
+        $scope.showLogoutProcess = true;
+        $scope.logoutStep = 0;
+
+        // Step 1 - Save Data
+        setTimeout(function () {
+            $scope.$apply(function () {
+                $scope.logoutStep = 1;
+            });
+        }, 800);
+
+        // Step 2 - Maintain Settings
+        setTimeout(function () {
+            $scope.$apply(function () {
+                $scope.logoutStep = 2;
+            });
+        }, 1600);
+
+        // Step 3 - Maintain Logs
+        setTimeout(function () {
+            $scope.$apply(function () {
+                $scope.logoutStep = 3;
+            });
+        }, 2400);
+
+        // Final Logout
+        setTimeout(function () {
+            $scope.$apply(function () {
+                $scope.logoutStep = 4;
+            });
+
+            // 🔴 ACTUAL LOGOUT CALL HERE
+            // Example:
+            // myService.methode('POST', '../Account/Logout')
+
+            setTimeout(function () {
+                if (window.top !== window.self) {
+                    window.top.location.href = '../Login/Login';
+                } else {
+                    window.location.href = '../Login/Login';
+                }
+            }, 1000);
+
+        }, 3200);
+    };
+  $scope.BindDashboard = function () {
+
+        var collectionobj = {}; 
+        collectionobj.PartyID = MapId;
+        collectionobj.UserId = LoginId;
+        if ($scope.DashboardSwitch == 'AdminSupplier' || $scope.DashboardSwitch=='Supplier') {
+            collectionobj.Action = 7;
+        } else { collectionobj.Action = 1;} 
+        $scope.isDashboardLoading = true;
+
+        var getData = myService.methode(
+            'POST',
+            "../Retail/bindingDashboard",
+            '{obj:' + JSON.stringify(collectionobj) + '}'
+        );
+
+        getData.then(function (response) {
+            debugger;
+
+            if (response.data && response.data.Result) {
+
+                $scope.UserDetail = response.data.Result.Table || [];
+                $scope.DahboardList = response.data.Result.Table1 || [];
+
+                if ($scope.UserDetail.length > 0) {
+                    $scope.UserName = $scope.UserDetail[0].UserName;
+                    $scope.Status = $scope.UserDetail[0].Status;
+                    $scope.LastLogin = $scope.UserDetail[0].LastLogin;
+                    $scope.LoginType = $scope.UserDetail[0].Desig;
+                    $scope.Photo = ($scope.UserDetail[0].Photo &&
+                        $scope.UserDetail[0].Photo.trim() !== '')
+                        ? $scope.UserDetail[0].Photo
+                        : '../content/profile.png';
+                }
+            }
+
+        }).catch(function (error) {
+            console.error("Dashboard load error", error);
+        }).finally(function () {
+          
+            $scope.isDashboardLoading = false;
+        });
+    };
+    $scope.BindMenus = function () {
+        var collectionobj = {};
+        debugger;
+        collectionobj.Id = LoginId;
+        collectionobj.Action = 5
+       
+        var getDetails = myService.methode('POST', ("../RetailSection/RetailRolePermisssion"), JSON.stringify(collectionobj));
+        getDetails.then(function (response)
+        {
+            angular.forEach(response.data.Result, function (menu)
+            {
+
+                // original URL ko token me convert kar do
+                menu.OriginalUrl = menu.MenuUrl;
+
+                menu.MenuUrl = "/p/" + btoa(menu.MenuUrl);
+            });
+            $scope.MenuAddDynamic = response.data.Result;
+            let row = $scope.MenuAddDynamic.find(x => x.SectionName === 'Store Compliance Status');
+            let row1 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Location Master');
+            let row2 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Finance Common Compliance');
+            let row3 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Secretarial Common Compliance');
+            let row4 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Compliance Doc');
+            let row5 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Manage Project');
+            let row6 = $scope.MenuAddDynamic.find(x => x.SectionName === 'License Master');
+            let row7 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Labour Compliance');
+
+
+            if (row) {
+                console.log("ViewFlag =", row.ViewFlag);
+                $scope.SCS_ViewFlag = row.ViewFlag
+                $scope.SCS_AllowEditFlag = row.ViewFlag
+                $scope.SCS_EditFlag = row.ViewFlag
+                $scope.SCS_DeleteFlag = row.ViewFlag
+                $scope.SCS_UploadFlag = row.ViewFlag
+                $scope.SCS_DownloadFlag = row.ViewFlag
+
+            }
+
+            if (row1) {
+                $scope.SMF_EditFlag = row1.EditFlag;
+                $scope.SMF_ViewFlag = row1.ViewFlag;
+                $scope.SM_DeleteFlag = row1.DeleteFlag;
+                $scope.SM_UploadFlag = row1.UploadFlag;
+                $scope.SM_DownloadFlag = row1.DownloadFlag;
+                $scope.SM_VerifyFlag = row1.VerifyFlag;
+                $scope.SM_NewStoreFlag = row1.NewStoreFlag;
+
+            }
+            if (row2) {
+                $scope.FINAETUP_Flag = row2.ViewFlag;
+            }
+            if (row3) {
+                $scope.SECRETUP_Flag = row3.ViewFlag;
+                $scope.Entity_Flag = row3.ViewFlag;
+
+            }
+            if (row4) {
+                $scope.CD_ViewFlag = row4.ViewFlag;
+                $scope.CD_EditFlag = row4.EditFlag;
+                $scope.CD_DeleteFlag = row4.DeleteFlag;
+                $scope.CD_UploadFlag = row4.UploadFlag;
+                $scope.CD_DownloadFlag = row4.DownloadFlag;
+                $scope.CD_VerifyFlag = row4.VerifyFlag;
+
+            }
+            if (row5) {
+                $scope.MP_ViewFlag = row5.ViewFlag;
+            }
+            if (row6) {
+                $scope.Licenseurl = row6.url;
+                $scope.LR_ViewFlag = row6.ViewFlag;
+                $scope.LM_ViewFlag = row6.ViewFlag;
+                $scope.LM_EditFlag = row6.EditFlag;
+                $scope.LM_DeleteFlag = row6.DeleteFlag;
+                $scope.LM_UploadFlag = row6.UploadFlag;
+                $scope.LM_DownloadFlag = row6.DownloadFlag;
+                $scope.LM_VerifyFlag = row6.VerifyFlag;
+            }
+            if (row7) {
+                $scope.PFUpload = row7.UploadFlag;
+                $scope.PFVerify = row7.VerifyFlag;
+                
+            }
+            else {
+                console.log("Row not found");
+            }
+
+
+        })
     }
     $scope.VerifyPassword = function () {
         var collectionobj = {};
@@ -2050,6 +2512,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
             var collectionobj = {};
             collectionobj.Action = 10;
             collectionobj.InvoiceNo = $scope.InvoiceNo;
+            collectionobj.VendorId = $scope.VendorCId;
             collectionobj.Id = $scope.ClientId;
             var getData = myService.methode('POST', "../DocumentMaster/GetAuditorCompliance", '{obj:' + JSON.stringify(collectionobj) + '}');
             getData.then(function (response) {
@@ -2058,15 +2521,27 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
                     showMsgBox('999', 'warning', response.data[0].MSG, 'warning', 'btn-warning')
                 }
                 else {
-                    $scope.SelectIframoutiframe('PrintComplianceReport', 'ComplianceReport', $scope.InvoiceNo + '|' + $scope.ClientId, 'ComplianceReport');
+                    $scope.SelectIframoutiframe('PrintComplianceReport', 'ComplianceReport', $scope.InvoiceNo + '|' + $scope.ClientId + '|' + $scope.VendorCId, 'ComplianceReport');
                 }
 
 
             });
         }
     };
-    $scope.ClearControl = function (flag) {
-        //
+
+
+
+    $scope.switchtoadmin = function () {
+        if ($scope.DashboardSwitch == 'AdminRetail')
+        {
+            window.top.location.href = '../Dashboard/Board';
+        }
+        else
+        {
+            window.top.location.href = '../Dashboard/VBoard';
+        }
+    }
+    $scope.ClearControl = function (flag) { 
         if (flag == 1) {
             $scope.ResetControl(flag);
             $scope.Logout();
@@ -2076,6 +2551,10 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         }
     };
 
+
+
+
+ 
     $scope.ResetControl = function () {
         $('#txtNewPasscode').val('')
         $('#txtReTypePasscode').val('')
@@ -2083,7 +2562,8 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         $('#txtReTypePasscode').attr('style', 'box-shadow: 0px 1px #ffffff;')
         $('#txtCurrentPasscode').attr('style', 'box-shadow: 0px 1px #ffffff;')
         $('#txtNewPasscode').attr('style', 'box-shadow: 0px 1px #ffffff;')
-
+        $scope.currentPassStatus = '';
+        $scope.ReTypePasscodeStatus = '';
         chk = false;
         $scope.mySwitch = false;
     }
@@ -2095,6 +2575,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         collectionobj.SessionId = sessionId;
         collectionobj.PassWord = $('#txtCurrentPasscode').val();
         collectionobj.userId = LoginId;
+        
         var getData = myService.methode('POST', "../ChangePassCode/checkPassCode", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             //
@@ -2112,6 +2593,56 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         });
     };
 
+
+
+    $scope.ChkCurrectPassword = function () {
+
+        $scope.isVerifying = true;          // 🔄 SHOW LOADER
+        $scope.currentPassStatus = null;   // reset icons
+
+        var collectionobj = {};
+        collectionobj.OldPassword = $('#txtCurrentPasscode').val();
+        collectionobj.userId = LoginId;
+        collectionobj.UserName = $scope.UserName;
+
+        var getData = myService.methode(
+            'POST',
+            "../ChangePassCode/checkPassCode",
+            '{obj:' + JSON.stringify(collectionobj) + '}'
+        );
+
+        getData.then(function (response) {
+
+            if (response.data == "1") {
+                $scope.currentPassStatus = 1;   // ✔️
+                $scope.mySwitch = false;
+                $('#txtCurrentPasscode')
+                    .css('box-shadow', '0 0 5px #70c126');
+            }
+            else {
+                $scope.currentPassStatus = 0;   // ❌
+                $scope.mySwitch = true;
+                $('#txtCurrentPasscode')
+                    .css('box-shadow', '0 0 5px #ea1313');
+            }
+
+        }).finally(function () {
+            $scope.isVerifying = false;     // ✅ HIDE LOADER
+        });
+    };
+
+
+    $scope.ChkConfirmpass = function () {
+        //
+        if ($('#txtNewPasscode').val() == $('#txtReTypePasscode').val()) {
+            $('#txtReTypePasscode').attr('style', 'box-shadow: 0px 1px #70c126;')
+            $scope.ReTypePasscodeStatus = 1;
+        }
+        else {
+            $('#txtReTypePasscode').attr('style', 'box-shadow: 0px 1px #ea1313;')
+            $scope.ReTypePasscodeStatus = 0;
+        }
+    }
     $scope.SetPhotoUrl = function (photoPath, photoId, inputfileid) {
         try {
             if (photoPath != null) {
@@ -2145,7 +2676,24 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
             $scope.RetailNotificationList = response.data.Result
         });
     };
+    
+    $scope.Schecdular = function () {
+        var elements = $('.period');
+        function update_status() {
+            elements.each(function () {
+                var current = new Date();
+                var sH = parseInt($(this).find('.start_time_hour').val());
+                var sM = parseInt($(this).find('.start_time_min').val());
+                var eH = parseInt($(this).find('.end_time_hour').val());
+                var eM = parseInt($(this).find('.end_time_min').val());
 
+                if (current.getHours() >= sH && current.getHours() <= eH && current.getMinutes() >= sM && current.getMinutes() <= eM) {
+                    $(this).setAttr('id', 'active');
+                }
+            });
+        }
+        setInterval(update_status, 1000);
+    }
     $scope.SetRetaildetail = function (Title, Date, Remark, button, css, Id, Escalation1Remark, Escalation2Remark, Status, Closedby)
     {
         $scope.Title=Title;
@@ -2524,10 +3072,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     $scope.showDropdown = false;
     $scope.searchResults = [];
 
-    
-
-
-    //Search logic
+     
     $scope.onSearch = function () {
         $('#cover-spin').show(150);
         var collectionobj = {};
@@ -2573,9 +3118,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
             $scope.Onstarted();
         }, 100);
     };
-    //End
 
-    // Select All Logic
     $scope.selectAll = false;
 
     $scope.toggleSelectAll = function () {
@@ -2593,9 +3136,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         });
         $scope.selectAll = allChecked;
     }, true);
-
-    //End
-
+     
     $scope.Onstarted = function () {
         var collectionobj = {};
         $scope.showLoader();
@@ -2608,129 +3149,105 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         });
         $scope.hideLoader();
     };
+      
+    $scope.tabList = [];
+    $scope.activeTabId = null;
 
-    $scope.SetRolePermission = function () {
-        var collectionobj = {};
-        $scope.showLoader();
-        collectionobj.Id = LoginId;
-        collectionobj.Action = 1;
-        var getData = myService.methode('POST', ("../RetailSection/RetailRolePermisssion"), JSON.stringify(collectionobj));
-        getData.then(function (response)
-        {
-            
-                $scope.RetaiRolePermission = response.data.Result;
-                if (loginType == 1 && LoginId == 1)
-                {
-                    //----------Store Compliance Status---------
-                    $scope.SCS_ViewFlag = 1;
-                    $scope.SCS_AllowEditFlag = 1;
-                    $scope.SCS_EditFlag = 1;
-                    $scope.SCS_DeleteFlag = 1;
-                    $scope.SCS_UploadFlag = 1;
-                    $scope.SCS_DownloadFlag = 1;
-                    $scope.SCS_VerifyFlag = 1;
-                    //----------Store Master---------
-                    $scope.LR_ViewFlag = 1;
-                    $scope.SM_ViewFlag = 1;
-                    //----------Compliance Doc.---------
-                    $scope.CD_ViewFlag = 1;
-                    //----------License Master---------
-                    $scope.LM_ViewFlag = 1;
-                    //----------Employees Master---------
-                    $scope.EM_ViewFlag = 1;
-                    //----------Store Master---------
-                    $scope.SM_NewStoreFlag = 1;
-                    $scope.SM_EditFlag = 1;
-                    $scope.SMF_ViewFlag = 1;
-                    $scope.SMF_EditFlag = 1;
-                    $scope.NI_ViewFlag = 1;
-                    $scope.NI_AllowEditFlag = 1;
-                    $scope.LD_ViewFlag = 1;
-                    $scope.NL_ViewFlag = 1;
-                    $scope.LSD_Flag = 1;
-                }
-                else {
-                    if (response.data.Result.length > 0) {
-                        if ($scope.RetaiRolePermission[0].SectionId == 1)
-                        {
-                            $scope.SCS_ViewFlag = $scope.RetaiRolePermission[0].ViewFlag; 
-                            $scope.SCS_EditFlag = $scope.RetaiRolePermission[0].EditFlag;
-                            $scope.SCS_DeleteFlag = $scope.RetaiRolePermission[0].DeleteFlag;
-                            $scope.SCS_UploadFlag = $scope.RetaiRolePermission[0].UploadFlag;
-                            $scope.SCS_DownloadFlag = $scope.RetaiRolePermission[0].DownloadFlag;
-                            $scope.SCS_VerifyFlag = $scope.RetaiRolePermission[0].VerifyFlag;
-                        }
-                        if ($scope.RetaiRolePermission[1].SectionId == 2)
-                        {
-                            $scope.LR_ViewFlag = $scope.RetaiRolePermission[1].ViewFlag; 
-                           // $scope.LR_EditFlag = $scope.RetaiRolePermission[1].EditFlag;
-                            //$scope.LR_DeleteFlag = $scope.RetaiRolePermission[1].DeleteFlag;
-                            //$scope.LR_UploadFlag = $scope.RetaiRolePermission[1].UploadFlag;
-                            //$scope.LR_DownloadFlag = $scope.RetaiRolePermission[1].DownloadFlag;
-                            //$scope.LR_VerifyFlag = $scope.RetaiRolePermission[1].VerifyFlag;
-                        }
-                        if ($scope.RetaiRolePermission[2].SectionId == 3) {
-                            $scope.SM_ViewFlag = $scope.RetaiRolePermission[2].ViewFlag; 
-                            $scope.SM_EditFlag = $scope.RetaiRolePermission[2].EditFlag;
-                            $scope.SM_DeleteFlag = $scope.RetaiRolePermission[2].DeleteFlag;
-                            $scope.SM_UploadFlag = $scope.RetaiRolePermission[2].UploadFlag;
-                            $scope.SM_DownloadFlag = $scope.RetaiRolePermission[2].DownloadFlag;
-                            $scope.SM_VerifyFlag = $scope.RetaiRolePermission[2].VerifyFlag;
-                            $scope.SM_NewStoreFlag = $scope.RetaiRolePermission[2].NewStoreFlag; 
-                        }
-                        if ($scope.RetaiRolePermission[3].SectionId == 4)
-                        {
-                            $scope.CD_ViewFlag = $scope.RetaiRolePermission[3].ViewFlag; 
-                            $scope.CD_EditFlag = $scope.RetaiRolePermission[3].EditFlag;
-                            $scope.CD_DeleteFlag = $scope.RetaiRolePermission[3].DeleteFlag;
-                            $scope.CD_UploadFlag = $scope.RetaiRolePermission[3].UploadFlag;
-                            $scope.CD_DownloadFlag = $scope.RetaiRolePermission[3].DownloadFlag;
-                            $scope.CD_VerifyFlag = $scope.RetaiRolePermission[3].VerifyFlag;
-                        }
-                        if ($scope.RetaiRolePermission[4].SectionId == 5)
-                        {
-                            $scope.LM_ViewFlag = $scope.RetaiRolePermission[4].ViewFlag; 
-                            $scope.LM_EditFlag = $scope.RetaiRolePermission[4].EditFlag;
-                            $scope.LM_DeleteFlag = $scope.RetaiRolePermission[4].DeleteFlag;
-                            $scope.LM_UploadFlag = $scope.RetaiRolePermission[4].UploadFlag;
-                            $scope.LM_DownloadFlag = $scope.RetaiRolePermission[4].DownloadFlag;
-                            $scope.LM_VerifyFlag = $scope.RetaiRolePermission[4].VerifyFlag;
-                        }
-                        if ($scope.RetaiRolePermission[5].SectionId == 6)
-                        {
-                            $scope.EM_ViewFlag = $scope.RetaiRolePermission[5].ViewFlag;
-                            $scope.EM_EditFlag = $scope.RetaiRolePermission[5].EditFlag;
-                            $scope.EM_DeleteFlag = $scope.RetaiRolePermission[5].DeleteFlag;
-                            $scope.EM_UploadFlag = $scope.RetaiRolePermission[5].UploadFlag;
-                            $scope.EM_DownloadFlag = $scope.RetaiRolePermission[5].DownloadFlag;
-                            $scope.EM_VerifyFlag = $scope.RetaiRolePermission[5].VerifyFlag;
-                         
-                        }
-                        if ($scope.RetaiRolePermission[6].SectionId == 7) {
-                            $scope.NI_ViewFlag = $scope.RetaiRolePermission[6].ViewFlag; 
-                        }
-                        if ($scope.RetaiRolePermission[7].SectionId == 8) {
-                            $scope.SMF_ViewFlag = $scope.RetaiRolePermission[7].ViewFlag;
-                            $scope.SMF_EditFlag = $scope.RetaiRolePermission[7].EditFlag;
-                        }
-                        if ($scope.RetaiRolePermission[8].SectionId == 9) {
-                            $scope.LD_ViewFlag = $scope.RetaiRolePermission[8].ViewFlag;
-                         
-                        }
+    $scope.openTab = function (tabId, tabTitle, tabUrl) {
+        $scope.activeTabId = tabId;
 
-                        if ($scope.RetaiRolePermission[9].SectionId == 10) {
-                            $scope.NL_ViewFlag = $scope.RetaiRolePermission[9].ViewFlag;
-                        }
-                        $scope.LSD_Flag = 0;
-                }
-              
-            } 
-           
-            $scope.hideLoader();
+        // Check if tab already exists
+        let existing = $scope.tabList.find(t => t.id === tabId);
+        if (!existing) {
+            $scope.tabList.push({ id: tabId, title: tabTitle, url: tabUrl });
+        }
+
+        // Clear headers and re-render
+        angular.element('#tabs').empty();
+        angular.element('#tabContents .tab-pane').removeClass('active show');
+
+        let visibleTabs = $scope.tabList.slice(0, 4);
+        let overflowTabs = $scope.tabList.slice(4);
+
+        // --- Render first 6 tabs ---
+        angular.forEach(visibleTabs, function (tab) {
+            var tabHeader = `
+        <li class="nav-item" id="tabHead-${tab.id}">
+            <a class="nav-link ${tab.id === tabId ? 'active' : ''}" data-toggle="tab" href="#${tab.id}" role="tab">
+                ${tab.title}
+                <span class="ml-2 text-primary" style="cursor:pointer;" ng-click="reloadActiveTab('${tab.id}')">&#x21bb;</span>
+                <span class="ml-2 text-danger" style="cursor:pointer;" ng-click="closeTab('${tab.id}')">&times;</span>
+            </a>
+        </li>`;
+            var compiledHeader = $compile(tabHeader)($scope);
+            angular.element('#tabs').append(compiledHeader);
         });
-        $scope.hideLoader();
+
+        // --- Render overflow tabs inside dropdown ---
+        if (overflowTabs.length > 0) {
+            let moreDropdown = `
+        <li class="nav-item dropdown" id="moreTabs" style="position: absolute;margin-left: 88%;">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                More
+            </a>
+            <div class="dropdown-menu">`;
+
+            angular.forEach(overflowTabs, function (tab) {
+                moreDropdown += `
+            <a class="dropdown-item" href="javascript:void(0);" ng-click="switchToTab('${tab.id}')">
+                ${tab.title}
+                <span class="ml-2 text-primary" style="cursor:pointer;" ng-click="reloadActiveTab('${tab.id}'); $event.stopPropagation();">&#x21bb;</span>
+                <span class="ml-2 text-danger" style="cursor:pointer;" ng-click="closeTab('${tab.id}'); $event.stopPropagation();">&times;</span>
+            </a>`;
+            });
+
+            moreDropdown += `</div></li>`;
+            var compiledDropdown = $compile(moreDropdown)($scope);
+            angular.element('#tabs').append(compiledDropdown);
+        }
+
+        // Render tab content
+        if (!document.getElementById(tabId)) {
+            var tabContent = `
+        <div class="tab-pane fade show active" id="${tabId}" role="tabpanel">
+            <iframe id="iframe-${tabId}" src="${tabUrl}" style="width:100%; height:600px; border:none;"></iframe>
+        </div>`;
+            var compiledContent = $compile(tabContent)($scope);
+            angular.element('#tabContents').append(compiledContent);
+        } else {
+            $('#' + tabId).addClass('show active');
+        }
     };
 
+
+    $scope.reloadActiveTab = function (tabId) {
+        var iframe = document.getElementById("iframe-" + tabId);
+        if (iframe) iframe.src = iframe.src;
+    };
+
+    $scope.closeTab = function (tabId) {
+        // Remove from list
+        $scope.tabList = $scope.tabList.filter(t => t.id !== tabId);
+
+        // Remove DOM elements
+        $('#tabHead-' + tabId).remove();
+        $('#' + tabId).remove();
+
+        // Re-render remaining
+        if ($scope.tabList.length > 0) {
+            const lastTab = $scope.tabList[$scope.tabList.length - 1];
+            $scope.openTab(lastTab.id, lastTab.title, lastTab.url);
+        }
+    };
+
+    $scope.switchToTab = function (tabId) {
+        const tab = $scope.tabList.find(t => t.id === tabId);
+        if (tab) {
+            $scope.openTab(tab.id, tab.title, tab.url);
+        }
+    };
+
+    
     if (IsFunctionDefined('app.ddlBindings')) {
         app.ddlBindings($scope, $element, $filter, myService);
     }
@@ -2857,7 +3374,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         app.RetailEmployeeMasterController($scope, $element, $filter, myService);
     }
     if (IsFunctionDefined('app.RetailStoreMasterController')) {
-        app.RetailStoreMasterController($scope, $element, $filter, myService);
+        app.RetailStoreMasterController($scope, $element, $filter, myService, $http);
     }
     if (IsFunctionDefined('app.LicenseMasterController')) {
         app.LicenseMasterController($scope, $element, $filter, myService);
@@ -2867,7 +3384,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         app.GradeMasterController($scope, $element, $filter, myService);
     }
     if (IsFunctionDefined('app.LicenseRequestMasterController')) {
-        app.LicenseRequestMasterController($scope, $element, $filter, myService);
+        app.LicenseRequestMasterController($scope, $element, $filter, myService, $timeout);
     }
     if (IsFunctionDefined('app.NewsletterDetailsController')) {
         app.NewsletterDetailsController($scope, $element, $filter, myService, $sce, $window);
@@ -2917,12 +3434,191 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     if (IsFunctionDefined('app.ClientActMapping')) {
         app.ClientActMapping($scope, $element, $filter, $sce, myService);
     }
+    if (IsFunctionDefined('app.ReminderController')) {
+        app.ReminderController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.LogController')) {
+        app.LogController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.StoreDashboardController')) {
+        app.StoreDashboardController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.RetailCreateActCalenderController')) {
+        app.RetailCreateActCalenderController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.RetailCreateIndustryController')) {
+        app.RetailCreateIndustryController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.SubsidiaryController')) {
+        app.SubsidiaryController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.MainDashboardController')) {
+        app.MainDashboardController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.ActoverviewController')) {
+        app.ActoverviewController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.IndustryMappingController')) {
+        app.IndustryMappingController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.ClientBoardingController')) {
+        app.ClientBoardingController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.BoardingMappingController')) {
+        app.BoardingMappingController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.ComplianceDashboardControlelr')) {
+        app.ComplianceDashboardControlelr($scope, $element, $filter, myService);
+    }
+   
+    if (IsFunctionDefined('app.StatutoryController')) {
+        app.StatutoryController($scope, $element, $filter, myService, $http, $sce);
+    }
+    if (IsFunctionDefined('app.ComplianceDashboardController')) {
+        app.ComplianceDashboardController($scope, $element, $filter, myService, $http);
+    }
+    if (IsFunctionDefined('app.ReportLicenseMaster')) {
+        app.ReportLicenseMaster($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.NoticeInspectionMaster')) {
+        app.NoticeInspectionMaster($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.ActMasterController')) {
+        app.ActMasterController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.RetailOverViewMasterController')) {
+        app.RetailOverViewMasterController($scope, $element, $filter, $sce, myService);
+    }
+    if (IsFunctionDefined('app.ChatbotSupportController')) {
+        app.ChatbotSupportController($scope, $element, $filter, $sce, myService);
+    }
+    if (IsFunctionDefined('app.RetailDepMasterController')) {
+        app.RetailDepMasterController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.LitigationMasterController')) {
+        app.LitigationMasterController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.RetailCourtMasterController')) {
+        app.RetailCourtMasterController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.LitigationManagementcontroller')) {
+        app.LitigationManagementcontroller($scope, $element, $filter, myService, $timeout);
+    }
+    if (IsFunctionDefined('app.FileRetailMatchingController')) {
+        app.FileRetailMatchingController($scope, $element, $filter, myService);
+    }
+
+    if (IsFunctionDefined('app.StatutorySetupController')) {
+        app.StatutorySetupController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.ExpectationController')) {
+        app.ExpectationController($scope, $element, $filter, myService);
+    }
+    var injector = angular.element(document).injector();
+    var $q = injector.get('$q');
+    var $compile = injector.get('$compile');
+    var $timeout = injector.get('$timeout');
+    var $http = injector.get('$http');
+
+    if (IsFunctionDefined('app.AddcomplianceFileController')) {
+        app.AddcomplianceFileController($scope, $element, $filter, myService, $http, $compile, $timeout, $q);
+    }  
+    if (IsFunctionDefined('app.RetailSecretarialComplianceController')) {
+        app.RetailSecretarialComplianceController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.SecretarialStatutoryController')) {
+        app.SecretarialStatutoryController($scope, $element, $filter, myService, $http, $sce);
+    }
+    if (IsFunctionDefined('app.SecretarialStatutorySetupController')) {
+        app.SecretarialStatutorySetupController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.RetailFinacialCreateActCalenderController')) {
+        app.RetailFinacialCreateActCalenderController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.FinacialStatutoryController')) {
+        app.FinacialStatutoryController($scope, $element, $filter, myService, $http, $sce);
+    }
+    if (IsFunctionDefined('app.FinancialStatutorySetupController')) {
+        app.FinancialStatutorySetupController($scope, $element, $filter, myService);
+    }
+
+    if (IsFunctionDefined('app.RetailHeaderTemplateController')) {
+        app.RetailHeaderTemplateController($scope, $element, $filter, $sce, myService);
+    }
+    if (IsFunctionDefined('app.EnitfyController')) {
+        app.EnitfyController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.RetailFactoryComplianceController')) {
+        app.RetailFactoryComplianceController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.FactoryStatutoryController')) {
+        app.FactoryStatutoryController($scope, $element, $filter, myService, $http, $sce);
+    }
+    if (IsFunctionDefined('app.CombinedReportController')) {
+        app.CombinedReportController($scope, $element, $filter, myService, $http, $sce);
+    }
+    if (IsFunctionDefined('app.LicenseApplicableController')) {
+        app.LicenseApplicableController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.RController')) {
+        app.RController($scope, $element, $filter, myService);
+    }
+
+    if (IsFunctionDefined('app.AddContractorComplianceController')) {
+        app.AddContractorComplianceController($scope, $element, $filter, myService, $http, $compile, $timeout);
+    }
+    if (IsFunctionDefined('app.ReportDashbaord')) {
+        app.ReportDashbaord($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.Commondashboardcontroller')) {
+        app.Commondashboardcontroller($scope, $element, $filter, myService, $timeout);
+    }
+    if (IsFunctionDefined('app.RetailLabourCodeComplianceController')) {
+        app.RetailLabourCodeComplianceController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.LabourCodeController')) {
+        app.LabourCodeController($scope, $element, $filter, myService, $http, $sce);
+    }
+    if (IsFunctionDefined('app.LocationMasterController')) {
+        app.LocationMasterController($scope, $element, $filter, myService, $http);
+    }
+    if (IsFunctionDefined('app.MailingController')) {
+        app.MailingController($scope, $element, $filter, $sce, myService, $timeout);
+    }
+
+    if (IsFunctionDefined('app.AdminDashboardcontroller')) {
+        app.AdminDashboardcontroller($scope, $element, $filter, myService, $http);
+    }
+    if (IsFunctionDefined('app.NewLicenseRequestMasterController')) {
+        app.NewLicenseRequestMasterController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.RetailClientStoreMappingController')) {
+        app.RetailClientStoreMappingController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.RetailIndustryMappingController')) {
+        app.RetailIndustryMappingController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.LCDashboard')) {
+        app.LCDashboard($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.LicenseCommonComplianceController')) {
+        app.LicenseCommonComplianceController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.VendorDashboardcontroller')) {
+        app.VendorDashboardcontroller($scope, $element, $filter, myService, $http);
+    }
+    if (IsFunctionDefined('app.Sacretrialcompliancecontroller')) {
+        app.Sacretrialcompliancecontroller($scope, $element, $filter, myService, $http, $sce);
+    }
+    
+     
 })
 
 function IsFunctionDefined(functionName) {
     if (eval("typeof(" + functionName + ") == typeof(Function)")) {
         return true;
     }
+
 }
 
 

@@ -1,31 +1,125 @@
-﻿using EesassinErp.App_Start;
-using HactheryErp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Data;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using BAL;
+using DAL;
+using EesassinErp.App_Start;
 
 namespace EesassinErp
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
         {
-            //AreaRegistration.RegisterAllAreas();
-            //RouteConfig.RegisterRoutes(RouteTable.Routes);
             AreaRegistration.RegisterAllAreas();
-
-            // Manually installed WebAPI 2.2 after making an MVC project.
-            GlobalConfiguration.Configure(WebApiConfig.Register); // NEW way
-                                                                  //WebApiConfig.Register(GlobalConfiguration.Configuration); // DEPRECATED
-
-            // Default stuff
-          
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-         
+
+        }
+        protected void Application_Error()
+        {
+            Exception ex = Server.GetLastError();
+            Server.ClearError();
+            Response.Redirect("~/Error/Error");
+        }
+        protected void Application_PreSendRequestHeaders()
+        {
+            Response.Headers.Remove("X-AspNetMvc-Version");
+            Response.Headers.Remove("X-AspNet-Version");
         }
     }
+    public class ValidateSessionAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            string controller = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
+            string action = filterContext.ActionDescriptor.ActionName;
+
+            // Login aur Error controller skip kare
+            if (controller.Equals("Login", StringComparison.OrdinalIgnoreCase) ||
+                controller.Equals("Error", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var loginId = filterContext.HttpContext.Session["LoginId"]?.ToString();
+            var sessionId = filterContext.HttpContext.Session["SessionId"]?.ToString();
+
+            if (loginId == null || sessionId == null)
+            {
+                filterContext.Result = new ContentResult
+                {
+                    Content = "<script>alert('Your session expired or multiple login detected.'); window.location='/Login/Login';</script>",
+                    ContentType = "text/html"
+                };
+                return;
+            }
+
+            var obj = new BCommon
+            {
+                Action = 19,
+                LoginId = loginId
+            };
+
+            DataTable dt = DLL.dll.GetPermission(obj);
+            string dbSession = "";
+
+            if (dt.Rows.Count > 0)
+                dbSession = dt.Rows[0]["SessionId"].ToString();
+
+            if (dbSession != sessionId)
+            {
+                //filterContext.HttpContext.Session.Clear();
+                //filterContext.Result = new RedirectResult("~/Login/Login");
+             
+                filterContext.Result = new ContentResult
+                {
+                    Content = "<script>alert('Your session expired or multiple login detected.'); window.location='/Login/Login';</script>",
+                    ContentType = "text/html"
+                };
+                return;
+            }
+
+            base.OnActionExecuting(filterContext);
+        }
+    }
+    //public class ValidateSessionAttribute : ActionFilterAttribute
+    //{
+    //    public override void OnActionExecuting(ActionExecutingContext filterContext)
+    //    {
+    //        var loginId = filterContext.HttpContext.Session["LoginId"]?.ToString();
+    //        var sessionId = filterContext.HttpContext.Session["SessionId"]?.ToString();
+
+    //        if (loginId == null || sessionId == null)
+    //        {
+    //            filterContext.Result = new RedirectResult("~/Login/Login");
+    //            return;
+    //        }
+
+    //        var obj = new BCommon
+    //        {
+    //            Action = 19,
+    //            LoginId = loginId
+    //        };
+    //        DataTable dt = DLL.dll.GetPermission(obj); 
+
+    //        string dbSession = "";
+
+    //        if (dt.Rows.Count > 0)
+    //            dbSession = dt.Rows[0]["SessionId"].ToString();
+
+    //        if (dbSession != sessionId)
+    //        {
+    //            filterContext.HttpContext.Session.Clear();
+    //            filterContext.Result = new RedirectResult("~/Login/Login");
+    //            return;
+    //        }
+
+    //        base.OnActionExecuting(filterContext);
+    //    }
+    //}
 }

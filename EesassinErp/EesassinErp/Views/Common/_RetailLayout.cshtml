@@ -1,7 +1,7 @@
 ﻿
 @{
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
-    ViewBag.Title = "Retail";
+  
     Layout = null;
 }
 
@@ -10,12 +10,16 @@
 <!-- InstanceBegin template="/Templates/template.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
     <!-- InstanceBeginEditable name="doctitle" -->
-    <title>Retail</title>
+    
     <!-- InstanceEndEditable -->
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="~/chatbot/chatbot.css" rel="stylesheet" />
+    <script src="~/chatbot/chatbot.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
     <link rel="shortcut icon" href="favicon.png" />
     <link href="~/compliance/css/bootstrap.css" rel="stylesheet" />
 
@@ -49,15 +53,21 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/myjslib/Authorization.js?Ver="+ViewBag.Version+"")"></script>
 
 
-    <script type="text/javascript" src="@Url.Content("~/scripts/jquery-1.12.4.js")"></script>
+   
     <link type="text/css" href="@Url.Content("~/Content/css/loader.css")" rel="stylesheet" />
     <script src="~/scripts/managebyuser.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    @*<link href="css/jquery.dropdown.css" rel="stylesheet" />
-        <link href="css/jquery-ui.css" rel="stylesheet" />*@
-    <!-- InstanceBeginEditable name="head" -->
-    <!-- InstanceEndEditable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
     <style>
+        .themed-element.addcss {
+            color: #000;
+            text-decoration: none;
+            padding: 5px 0px !important;
+            transition: all 0.3s ease-in-out;
+        }
+      
         .red-validation {
             border: 1px solid red;
             background-color: #ffe6e6;
@@ -65,6 +75,25 @@
 
         i.fa.fa-check-square {
             color: #52df4a !important;
+        }
+
+        .modal-content {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-body p {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+        .menusidebar ul li a {
+            display: block;
+            padding: 8px 10px;
+            text-decoration: none;
+            color: #403131 !important;
+            font-weight: 600
         }
     </style>
     <style>
@@ -93,36 +122,366 @@
         i.fa.fa-check-square {
             color: #52df4a !important;
         }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            max-height: 64%;
+            overflow-y: auto;
+            border-radius: 5px;
+        }
+
+            ul::-webkit-scrollbar {
+                width: 10px;
+            }
     </style>
+
     <script>
         $(document).ready(function () {
-            $("#myInput").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
-                $("#myTable tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
+            $('#cover-spin').show();
+        });
+
+        $(window).on('load', function () {
+            $('#cover-spin').hide();
+        });
+    </script>
+    <style>
+        .themed-element.addcss {
+            color: #000; /* Default text color */
+            text-decoration: none; /* Remove underline */
+            padding: 5px 10px; /* Add some padding */
+
+            transition: all 0.3s ease-in-out; /* Smooth transition */
+        }
+
+            .themed-element.addcss:hover {
+                color: #fff !important; /* White text on hover */
+
+                border-radius: 5px; /* Optional: Add rounded corners */
+                cursor: pointer
+            }
+
+        .toggle-container {
+            position: fixed;
+            top: 7.5%;
+            left: 13.9%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+
+            .toggle-container input {
+                display: none;
+            }
+
+        .slider {
+            position: relative;
+            width: 53px;
+            height: 22px;
+            background-color: #ccc;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.4s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 23px;
+                width: 23px;
+                left: 0px;
+                bottom: 0px;
+                background-color: white;
+                border-radius: 75%;
+                transition: transform 0.4s;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+        input:checked + .slider {
+            background-color: #e8482c;
+        }
+
+            input:checked + .slider:before {
+                transform: translateX(30px);
+            }
+
+
+
+        .light-mode {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            /*   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;*/
+        }
+
+        .dark-mode {
+            background-color: #333333 !important;
+            color: #ffffff !important;
+            /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;*/
+        }
+
+        html {
+            -webkit-user-select: none; /* Prevent text selection */
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            opacity: 0.9999; /* Some screen capture tools fail with fractional opacity */
+        }
+    </style>
+
+    <style>
+        .submenu {
+            display: none;
+            margin-left: 20px;
+            overflow: hidden;
+        }
+
+        .toggle-icon {
+            float: right;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+            .toggle-icon.rotated {
+                transform: rotate(180deg);
+            }
+
+        .nav-item {
+            transition: background-color 0.3s ease;
+        }
+
+            .nav-item:hover {
+                background-color: #f0f0f0; /* Slight hover effect for better interactivity */
+            }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $(".submenu").each(function () {
+                var submenu = $(this);
+                if (submenu.is(':visible')) {
+                    submenu.prev().find('.toggle-icon').html('<i class="fas fa-minus"></i>');
+                } else {
+                    submenu.prev().find('.toggle-icon').html('<i class="fas fa-plus"></i>');
+                }
+            });
+            $('#toggle-master, #master-menu-link').click(function () {
+                var submenu = $('#master-submenu');
+                var icon = $('#toggle-master');
+
+                submenu.stop(true, true).slideToggle(300);
+                if (icon.html().includes('fa-minus')) {
+                    icon.html('<i class="fas fa-plus"></i>');
+                } else {
+                    icon.html('<i class="fas fa-minus"></i>');
+                }
+            });
+
+            $('#toggle-report, #report-menu-link').click(function () {
+                var submenu = $('#report-submenu');
+                var icon = $('#toggle-report');
+
+                submenu.stop(true, true).slideToggle(300);
+
+                if (icon.html().includes('fa-minus')) {
+                    // If the HTML contains the 'minus' icon
+                    icon.html('<i class="fas fa-plus"></i>');
+                } else {
+                    // If the HTML does not contain the 'minus' icon
+                    icon.html('<i class="fas fa-minus"></i>');
+                }
+            });
+
+            // Toggle Dashboard Menu Submenu with slide (Icon and Link click)
+            $('#toggle-Dashboard, #Dashboard-menu-link').click(function () {
+                var submenu = $('#dashboard-submenu');  // Corrected to #dashboard-submenu
+                var icon = $('#toggle-Dashboard');
+
+                submenu.stop(true, true).slideToggle(300);  // Smooth slide toggle
+
+                // Update the icon based on submenu visibility
+                if (icon.html().includes('fa-minus')) {
+                    // If the HTML contains the 'minus' icon
+                    icon.html('<i class="fas fa-plus"></i>');
+                } else {
+                    // If the HTML does not contain the 'minus' icon
+                    icon.html('<i class="fas fa-minus"></i>');
+                }
             });
         });
     </script>
+
+    <script>
+        //document.addEventListener("keydown", function (e) {
+        //    if (e.key === "PrintScreen") {
+        //        alert("Screenshots are not allowed!");
+        //        e.preventDefault();
+        //        navigator.clipboard.writeText("");
+        //    }
+        //});
+
+        //setInterval(function () {
+        //    navigator.clipboard.writeText("Screenshots are not allowed!");
+        //}, 1000);
+        document.addEventListener("keydown", function (e) {
+            //if (e.key === "F12" ||
+            //    (e.ctrlKey && e.shiftKey && e.key === "I") ||
+            //    (e.ctrlKey && e.shiftKey && e.key === "J") ||
+            //    (e.ctrlKey && e.key === "U") ||
+            //    (e.ctrlKey && e.key === "S") ||
+            //    (e.ctrlKey && e.key === "P")) {
+            //    alert("Developer tools are disabled!");
+            //    e.preventDefault();
+            //}
+        });
+
+        // Disable Right-Click
+        document.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+            alert("Right-click is disabled!");
+        });
+        (function () {
+            //setInterval(function () {
+            //    var before = new Date();
+
+            //    var after = new Date();
+            //    if (after - before > 100) {
+            //        alert("Developer tools detected! Blocking access.");
+            //        Clear();
+            //    }
+            //}, 500);
+        })();
+
+        function Clear() {
+            sessionStorage.removeItem("LoginId");
+            sessionStorage.removeItem("BranchCode");
+            sessionStorage.removeItem("loginType");
+            sessionStorage.removeItem("LastLogin");
+            sessionStorage.removeItem("Desig");
+            sessionStorage.removeItem("Name");
+            sessionStorage.removeItem("BranchName");
+            sessionStorage.removeItem("ContactNo");
+            sessionStorage.removeItem("CreatedOn");
+            sessionStorage.removeItem("Photo");
+            sessionStorage.removeItem("SCS_ViewFlag");
+            sessionStorage.removeItem("SCS_AllowEditFlag");
+            sessionStorage.removeItem("SCS_EditFlag");
+            sessionStorage.removeItem("SCS_DeleteFlag");
+            sessionStorage.removeItem("SCS_UploadFlag");
+            sessionStorage.removeItem("SCS_DownloadFlag");
+            sessionStorage.removeItem("LR_ViewFlag");
+            sessionStorage.removeItem("SM_ViewFlag");
+            sessionStorage.removeItem("SM_EditFlag");
+            sessionStorage.removeItem("SM_DeleteFlag");
+            sessionStorage.removeItem("SM_UploadFlag");
+            sessionStorage.removeItem("SM_VerifyFlag");
+            sessionStorage.removeItem("SM_NewStoreFlag");
+            sessionStorage.removeItem("CD_ViewFlag");
+            sessionStorage.removeItem("CD_EditFlag");
+            sessionStorage.removeItem("CD_DeleteFlag");
+            sessionStorage.removeItem("CD_UploadFlag");
+            sessionStorage.removeItem("CD_DownloadFlag");
+            sessionStorage.removeItem("CD_VerifyFlag");
+            sessionStorage.removeItem("LM_ViewFlag");
+            sessionStorage.removeItem("LM_EditFlag");
+            sessionStorage.removeItem("LM_DeleteFlag");
+            sessionStorage.removeItem("LM_UploadFlag");
+            sessionStorage.removeItem("LM_DownloadFlag");
+            sessionStorage.removeItem("LM_VerifyFlag");
+            sessionStorage.removeItem("EM_ViewFlag");
+            sessionStorage.removeItem("EM_EditFlag");
+            sessionStorage.removeItem("EM_UploadFlag");
+            sessionStorage.removeItem("EM_DeleteFlag");
+            sessionStorage.removeItem("LM_DownloadFlag");
+            sessionStorage.removeItem("EM_DownloadFlag");
+            sessionStorage.removeItem("EM_VerifyFlag");
+            sessionStorage.removeItem("NI_ViewFlag");
+            sessionStorage.removeItem("SMF_ViewFlag");
+            sessionStorage.removeItem("SMF_EditFlag");
+            sessionStorage.removeItem("LD_ViewFlag");
+            sessionStorage.removeItem("NL_ViewFlag");
+            sessionStorage.removeItem("LSD_Flag");
+            sessionStorage.removeItem('COBD_Flag');
+            sessionStorage.removeItem('COMD_Flag');
+            sessionStorage.removeItem('STAT_Flag');
+            sessionStorage.removeItem('SSETUP_Flag');
+			    sessionStorage.removeItem('ESCOMPLI_FLAG');
+			 
+            
+            window.top.location.href = '../Login/Login';
+
+        }
+       
+    </script>
+    <style>
+        .loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-message {
+  background: #fff;
+  padding: 20px 40px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.loader-message .spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 10px;
+  animation: spin 1s linear infinite;
+}
+
+ 
+
+    </style>
 </head>
 <body class="dashbg" oncontextmenu="return false;">
+    <div id="file-validation-loader" style="display: none;">
+        <div class="loader-overlay">
+            <div class="loader-message">
+                <div class="spinner"></div>
+                <p>Validating the uploaded file. Please wait a moment.</p>
+            </div>
+        </div>
+    </div>
+
     <div id="cover-spin">
-        <script>$('#cover-spin').show();</script>
+
     </div>
     <script>
         $(document).ready(function () {
-        $('#cover-spin').hide()
-    });
+            $('#cover-spin').hide()
+        });
     </script>
-    <div class="contentwraper menumarginleft">
-        <header class="header menuheader-width">
+    <div class="contentwraper menumarginleft" ng-init="SetRolePermission();LoadPageName();">
+
+        <header class="header menuheader-width themed-element">
+
             <div class="container-fluid">
                 <div class="row cmmenu">
                     <div class="col col-md-12">
                         <div class="row">
                             <div class="col">
                                 <div class="moudlename">
-                                    <div class="list-control" ng-init="SetRolePermission();LoadPageName()">
+                                    <div class="list-control">
                                         <a class="sidemenutoggle">
                                             <span class="fa fa-ellipsis-v"></span>
                                         </a>
@@ -130,52 +489,348 @@
                                         <div class="menusidebar menusidebar-width">
                                             <div class="profiletitle">
                                                 <img src="~/compliance/images/dash-logo.png" alt="" class="dash-logo" />
+
                                             </div>
-                                            <div class="menuscrollwrap">
+
+
+                                            <div class="menuscrollwrap  themed-element">
                                                 <div class="nano-content">
-                                                    <label class="profiletxt">
+                                                    <label class="profiletxt themed-element">
                                                         <b style="font-size: 1rem;">{{Name}}</b> <br />
                                                         <b>{{UserName}}</b> <br />
                                                         Last Login Time : <span class="last-login-time" ng-model="LastLogin" ng-bind="LastLogin"></span>
-                                                        <span>{{LoginAs}}</span>
+                                                        <br /> Login As: <span ng-if="loginType==4">{{IsExecuter}}</span>  <span ng-if="loginType==5">Admin</span>
+                                                        <br /> Industry: <span>{{Industry}}</span>
                                                     </label>
+
                                                     <ul class="navsidebar">
-                                                        <li ng-if="LD_ViewFlag==1"  class="nav-item" ng-class="{ 'active': SectionMenuName === 'Licence Status Dashboard' }">
-                                                            <a href="../RetailSection/LicenceStatusDashboard?Licence Status Dashboard" ng-click="updateMenu('Licence Status Dashboard')">
-                                                                <span class="icons icon-grid"></span>Licence Dashboard
+                                                    
+                                                        <li class="nav-item" id="Dashboard-menu" ng-init="BindMenus()">
+                                                            <a href="javascript:void(0);" class="themed-element addcss" id="Dashboard-menu-link">
+                                                                <span class="icons icon-globe"></span>Dashboard
+                                                                <span class="toggle-icon" id="toggle-Dashboard"><i class="fas fa-plus"></i></span>
                                                             </a>
+                                                            <ul class="submenu" id="dashboard-submenu">
+                                                                <li class="nav-item"
+                                                                    ng-repeat="x in MenuAddDynamic | filter:{ PageName: 'Dashboard' }"
+                                                                    ng-class="{ 'active': SectionMenuName === x.SectionName }">
+                                                                    <a href="{{x.url}}"
+                                                                       class="themed-element addcss"
+                                                                       ng-click="updateMenu(x.SectionName); ManageLog(x.SectionName)">
+                                                                        <span class="icons icon-docs"></span>
+                                                                        {{x.SectionName}}
+                                                                    </a>
+                                                                </li>
+                                                                @*<li class="nav-item" ng-class="{ 'active': SectionMenuName === 'Main Dashboard' }">
+                    <a href="#" class="themed-element addcss" ng-click="backtodashboard();ManageLog('Open Licence Status Dashboard')">
+                        <span class="icons icon-docs"></span>Main Dashboard
+                    </a>
+                </li>*@
+                                                                @*<li class="nav-item" ng-class="{ 'active': SectionMenuName === {{x.SectionName}}">
+                    <a href="{{x.url}}" class="themed-element addcss" ng-click="updateMenu({{x.SectionName}});ManageLog({{x.SectionName}})">
+                        <span class="icons icon-grid"></span>{{x.SectionName}}
+                    </a>
+                </li>
+                <li ng-show="CommonDashboard==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Common Dashboard' }">
+                    <a href="../Dashboard/CommonDashboard" class="themed-element addcss" ng-click="updateMenu('Common Dashboard');ManageLog('Open Common Dashboard')">
+                        <span class="icons icon-grid"></span>Common Dash.
+                    </a>
+                </li>
+
+                <li ng-show="COMD_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Compliance Dashboard' }">
+                    <a href="../Retail/ComplianceDashboard?Compliance Dashboard" class="themed-element addcss" ng-click="updateMenu('Compliance Dashboard');ManageLog('Open Compliance Dashboard')">
+                        <span class="icons icon-docs"></span>Comp. Dashboard
+                    </a>
+                </li>
+                <li ng-show="COMD_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Compliance Calendar' }">
+                    <a href="../Retail/Ncalenderdashboard?Statutory" class="themed-element addcss" ng-click="updateMenu('Compliance Calendar');ManageLog('Open Compliance Calendar')">
+                        <span class="icons icon-docs"></span>Comp. Calendar
+                    </a>
+                </li>
+                <li ng-show="SMD_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Store Dashboard' }">
+                    <a href="../RetailSection/StoreDashboard?Location Dashboard" class="themed-element addcss" ng-click="updateMenu('Store Dashboard');ManageLog('Open Store Dashboard')">
+                        <span class="icons icon-docs"></span>Location Dashboard
+                    </a>
+                </li>
+                <li class="nav-item" ng-class="{ 'active': SectionMenuName === 'Dashboard' }">
+                    <a href="../RetailSection/Dashboard?Dashboard" class="themed-element addcss" ng-click="updateMenu('Dashboard')">
+                        <span class="icons icon-docs"></span>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item" ng-show="LITM_Flag==1" ng-class="{ 'active': SectionMenuName === 'Litigation Management' }">
+                    <a href="../RetailSection/LitigationManagement?Litigation Management" class="themed-element addcss" ng-click="updateMenu('Litigation Management')">
+                        <span class="icons icon-docs"></span>Litigation Dash.
+                    </a>
+                </li>*@
+
+                                                            </ul>
                                                         </li>
-                                                        <li class="nav-item" ng-class="{ 'active': SectionMenuName === 'Dashboard' }">
-                                                            <a href="../RetailSection/Dashboard?Dashboard" ng-click="updateMenu('Dashboard')">
-                                                                <span class="icons icon-grid"></span>Dashboard
+
+                                                        <li class="nav-item" id="master-menu">
+                                                            <a href="javascript:void(0);" class="themed-element addcss" id="master-menu-link">
+                                                                <span class="icons icon-grid"></span>Master
+                                                                <span class="toggle-icon" id="toggle-master"><i class="fas fa-plus"></i></span>
                                                             </a>
+                                                            <ul class="submenu" id="master-submenu">
+                                                                <li class="nav-item"
+                                                                    ng-repeat="x in MenuAddDynamic | filter:{ PageName: 'Master' }"
+                                                                    ng-class="{ 'active': SectionMenuName === x.SectionName }">
+                                                                    <a href="{{x.url}}"
+                                                                       class="themed-element addcss"
+                                                                       ng-click="updateMenu(x.SectionName); ManageLog(x.SectionName)">
+                                                                        <span class="icons icon-docs"></span>
+                                                                        {{x.SectionName}}
+                                                                    </a>
+                                                                </li>
+
+
+
+
+
+
+                                                                @*<li id="listoremater" ng-show="SM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Location Master' }">
+                                                                    <a href="../RetailSection/StoreMaster?Location Master" class="themed-element addcss" ng-click="updateMenu('Location Master');ManageLog('Open Location Master')">
+                                                                        <span class="icons icon-docs"></span>Location Master
+                                                                    </a>
+                                                                </li>
+
+                                                                <li ng-show="CD_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'ComplianceDoc' }">
+                                                                    <a href="../RetailSection/ComplianceDoc?ComplianceDoc" class="themed-element addcss" ng-click="updateMenu('ComplianceDoc');ManageLog('Open Compliance Doc Master')">
+                                                                        <span class="icons icon-docs"></span>Compliance Doc.
+                                                                    </a>
+                                                                </li>
+
+                                                                <li ng-show="ESCOMPLI_FLAG==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Establishment Compliance' }">
+                                                                    <a href="../Retail/Addcompliancefile?Establishment Compliance" class="themed-element addcss" ng-click="updateMenu('Establishment Compliance');ManageLog('Open Establishment Compliance')">
+                                                                        <span class="icons icon-docs"></span>Establishment Comp.
+                                                                    </a>
+                                                                </li>
+
+                                                                <li ng-show="ESCOMPLI_FLAG==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Establishment Compliance Report' }">
+                                                                    <a href="../Retail/ReportCompliance?Establishment Compliance Report" class="themed-element addcss" ng-click="updateMenu('Establishment Compliance Report');ManageLog('Open Establishment Compliance Report')">
+                                                                        <span class="icons icon-docs"></span>Establishment Comp. Report
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="Payroll==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Payroll Compliance' }">
+                                                                    <a href="../RetailSection/Payrollcompliance?Payroll Compliance" class="themed-element addcss" ng-click="updateMenu('Payroll Compliance');ManageLog('Open Payroll Compliance')">
+                                                                        <span class="icons icon-docs"></span>Payroll Compliance
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="LM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'License Master' }">
+                                                                    <a href="../RetailSection/LicenseMaster?License Master" class="themed-element addcss" ng-click="updateMenu('License Master');ManageLog('Open License Master')">
+                                                                        <span class="icons icon-docs"></span>License Master
+                                                                    </a>
+                                                                </li>
+
+                                                                <li ng-show="EM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Employees Master' }">
+                                                                    <a href="../RetailSection/EmployeeMaster?Employees Master" class="themed-element addcss" ng-click="updateMenu('Employees Master');ManageLog('Open Employees Master')">
+                                                                        <span class="icons icon-docs"></span>Employees Master
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="COBD_Flag==1" class="nav-item addcss" ng-class="{ 'active': SectionMenuName === 'Client Onboarding' }">
+                                                                    <a href="../Retail/ClientDashboard?Client Onboarding" class="themed-element addcss" ng-click="updateMenu('Client Onboarding Dashboard');ManageLog('Open Client Onboarding Dashboard')">
+                                                                        <span class="icons icon-docs"></span>Client Onboarding
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="STAT_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Labour Compliance' }">
+                                                                    <a href="../Retail/StatutoryInternal?Labour compliance " class="themed-element addcss" ng-click="updateMenu('Labour Compliance');ManageLog('Open Labour Compliance')">
+                                                                        <span class="icons icon-docs"></span>Labour compliance
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="SSETUP_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Statutory Setup' }">
+                                                                    <a href="../Retail/StatutorySetup?Labour Setup" class="themed-element addcss" ng-click="updateMenu('Statutory Setup');ManageLog('Open Statutory Setup')">
+                                                                        <span class="icons icon-docs"></span>Labour Setup
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="SECC_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Secretarial Compliance' }">
+                                                                    <a href="../Retail/SecretarialStatutoryInternal?Secretarial Compliance " class="themed-element addcss" ng-click="updateMenu('Secretarial Compliance');ManageLog('Open Secretarial Compliance')">
+                                                                        <span class="icons icon-docs"></span>Secretarial Comp.
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="SECSETTUP_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Secretarial Statutory Setup' }">
+                                                                    <a href="../Retail/SecretarialStatutorySetup?Secretarial Setup" class="themed-element addcss" ng-click="updateMenu('Secretarial Statutory Setup');ManageLog('Open Secretarial Statutory Setup')">
+                                                                        <span class="icons icon-docs"></span>Secretarial  Setup
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="FINC_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Financial Compliance' }">
+                                                                    <a href="../Retail/FinacialStatutoryInternal?Finance Compliance " class="themed-element addcss" ng-click="updateMenu('Financial Compliance');ManageLog('Open Financial Compliance')">
+                                                                        <span class="icons icon-docs"></span>Finance Compliance
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="FINSETTUP_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Financial Statutory Setup' }">
+                                                                    <a href="../Retail/FinancialStatutorySetup?Finance Setup" class="themed-element addcss" ng-click="updateMenu('Financial Statutory Setup');ManageLog('Open Financial Statutory Setup')">
+                                                                        <span class="icons icon-docs"></span>Finance  Setup
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="LITM_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Litigation Master' }">
+                                                                    <a href="../RetailSection/LitigationMaster?Litigation Master" class="themed-element addcss" ng-click="updateMenu('Litigation Master');ManageLog('Open Litigation Master')">
+                                                                        <span class="icons icon-docs"></span>Litigation Master
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="Factory_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Factory Compliance' }">
+                                                                    <a href="../Retail/retailfactorycompliance" class="themed-element addcss" ng-click="updateMenu('Factory Compliance');ManageLog('Open Factory Compliance')">
+                                                                        <span class="icons icon-docs"></span>Factory Compliance
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="contractror==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'contractror Master' }">
+                                                                    <a href="../Retail/addcontractorcompliance?Contractor Compliance" class="themed-element addcss" ng-click="updateMenu('Litigation Master');ManageLog('Open Litigation Master')">
+                                                                        <span class="icons icon-docs"></span>Contractor Compliance
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="labourcode==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'labour code' }">
+                                                                    <a href="../Retail/RetailLabourCode?Labour Code" class="themed-element addcss" ng-click="updateMenu('labour code');ManageLog('Open labour code')">
+                                                                        <span class="icons icon-docs"></span>Labour Code
+                                                                    </a>
+                                                                </li>*@
+
+
+
+                                                            </ul>
                                                         </li>
-                                                        <li ng-if="SM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Store Master' }">
-                                                            <a href="../RetailSection/StoreMaster?Store Master" ng-click="updateMenu('Store Master')">
-                                                                <span class="icons icon-home"></span>Store Master
+
+                                                        <li class="nav-item" id="report-menu">
+                                                            <a href="javascript:void(0);" class="themed-element addcss" id="report-menu-link">
+                                                                <span class="icons icon-chart"></span>Report
+                                                                <span class="toggle-icon" id="toggle-report"><i class="fas fa-plus"></i></span>
                                                             </a>
+                                                            <ul class="submenu" id="report-submenu">
+
+                                                                <li class="nav-item"
+                                                                    ng-repeat="x in MenuAddDynamic | filter:{ PageName: 'Report' }"
+                                                                    ng-class="{ 'active': SectionMenuName === x.SectionName }">
+                                                                    <a href="{{x.url}}"
+                                                                       class="themed-element addcss"
+                                                                       ng-click="updateMenu(x.SectionName); ManageLog(x.SectionName)">
+                                                                        <span class="icons icon-docs"></span>
+                                                                        {{x.SectionName}}
+                                                                    </a>
+                                                                </li>
+
+                                                                <!--<li ng-show="LM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'License Report' }">
+                                                                    <a href="../Report/ReportLicenseMaster?License Master Report" class="themed-element addcss" ng-click="updateMenu('License Master Report');ManageLog('Open License Master Report')">
+                                                                        <span class="icons icon-docs"></span>License Report
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="LM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Expiry License' }">
+                                                                    <a href="../RetailSection/LRDashboard?Expiry License Report" class="themed-element addcss" ng-click="updateMenu('Notice & Inspection Report');ManageLog('Open Notice & Inspection Report')">
+                                                                        <span class="icons icon-docs"></span>Expiry License
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="NI_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Notice & Inspection' }">
+                                                                    <a href="../Report/NoticeInspection?Notice & Inspection Report" class="themed-element addcss" ng-click="updateMenu('Notice & Inspection Report');ManageLog('Open Notice & Inspection Report')">
+                                                                        <span class="icons icon-docs"></span>Notice Report
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="ExceptionFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Exception Report' }">
+                                                                    <a href="../report/ExpectationReport?Exception Report" class="themed-element addcss" ng-click="updateMenu('Expectation Report');ManageLog('Open Expectation Report')">
+                                                                        <span class="icons icon-docs"></span>Exception Report
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="contractror==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Contractor Master' }">
+                                                                    <a href="../Retail/contractorReportCompliance?Contractor Compliance Report" class="themed-element addcss" ng-click="updateMenu('Litigation Master');ManageLog('Open Litigation Master')">
+                                                                        <span class="icons icon-docs"></span>Contractor Compliance Report
+                                                                    </a>
+                                                                </li>-->
+                                                                @*<li ng-show="CD_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Compliance Report' }">
+            <a href="../Retail/reportcompliance?Compliance Report" class="themed-element addcss" ng-click="updateMenu('Excel Compliance Report');ManageLog('Open Excel Compliance Report Master')">
+                <span class="icons icon-docs"></span>Compliance Report
+            </a>
+        </li>*@
+                                                                <!-------- Start Common Report --------->
+                                                                <!-------- Common Dashboard Compliance Report --------->
+                                                                <!--<li ng-show="CommonDashboard==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Common Dashboard Compliance' }">
+                                                                    <a href="../Dashboard/CommonDashboardCompliance?Common Dashboard Compliance " class="themed-element addcss" ng-click="updateMenu('Common Dashboard Compliance');ManageLog('Open Common Dashboard Compliance')">
+                                                                        <span class="icons icon-docs"></span>Common Dashboard Compliance
+                                                                    </a>
+                                                                </li>-->
+
+
+
+                                                                <!-------- Labour Common Compliance Report --------->
+                                                                <!--<li ng-show="STAT_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Labour Common Compliance' }">
+                                                                    <a href="../Dashboard/LabourCommonCompliance?Labour Common Compliance " class="themed-element addcss" ng-click="updateMenu('Labour Common Compliance');ManageLog('Open Labour Common Compliance')">
+                                                                        <span class="icons icon-docs"></span>Labour Common Compliance
+                                                                    </a>
+                                                                </li>-->
+
+                                                                <!-------- Factory Common Compliance Report --------->
+                                                                <!--<li ng-show="Factory_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'factory Common Compliance' }">
+                                                                    <a href="../Dashboard/factoryCommonCompliance?factoryCommonCompliance " class="themed-element addcss" ng-click="updateMenu('factory Common Compliance');ManageLog('Open factory Common Compliance')">
+                                                                        <span class="icons icon-docs"></span>Factory Common Compliance
+                                                                    </a>
+                                                                </li>-->
+
+                                                                <!-------- Payroll Common Compliance Report --------->
+                                                                @*<li ng-show="Payroll==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Payroll Common Compliance  ' }">
+            <a href="../Dashboard/payrollCommonCompliance?Payroll Common Compliance " class="themed-element addcss" ng-click="updateMenu('Payroll Common Compliance  ');ManageLog('Open Payroll Common Compliance  ')">
+                <span class="icons icon-docs"></span>Payroll Common Compliance
+            </a>
+        </li>*@
+
+                                                                <!-------- Establishment Common Compliance Report --------->
+                                                                <!--<li ng-show="ESCOMPLI_FLAG==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Establishment Common Compliance  ' }">
+                                                                    <a href="../Dashboard/EstablishmentCommonCompliance?Establishment Common Compliance " class="themed-element addcss" ng-click="updateMenu('Establishment Common Compliance  ');ManageLog('Open Establishment Common Compliance  ')">
+                                                                        <span class="icons icon-docs"></span>Establishment Common Compliance
+                                                                    </a>
+                                                                </li>-->
+
+
+                                                                <!-------- license Common Compliance Report --------->
+                                                                <!--<li ng-show="LM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'license Common Compliance  ' }">
+                                                                    <a href="../Dashboard/licenseCommonCompliance?license Common Compliance " class="themed-element addcss" ng-click="updateMenu('license Common Compliance  ');ManageLog('Open license Common Compliance  ')">
+                                                                        <span class="icons icon-docs"></span>license Common Compliance
+                                                                    </a>
+                                                                </li>-->
+
+                                                                <!-------- location Common Compliance Report --------->
+                                                                <!--<li ng-show="SM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'location Common Compliance  ' }">
+                                                                    <a href="../Dashboard/locationCommonCompliance?location Common Compliance " class="themed-element addcss" ng-click="updateMenu('location Common Compliance  ');ManageLog('Open location Common Compliance  ')">
+                                                                        <span class="icons icon-docs"></span>location Common Compliance
+                                                                    </a>
+                                                                </li>-->
+
+
+                                                                <!-------- Secretarial Common Compliance Report --------->
+                                                                <!--<li ng-show="SECC_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Secretarial Common Compliance  ' }">
+                                                                    <a href="../Dashboard/SecretarialCommonCompliance?Secretarial Common Compliance " class="themed-element addcss" ng-click="updateMenu('Secretarial Common Compliance  ');ManageLog('Open Secretarial Common Compliance  ')">
+                                                                        <span class="icons icon-docs"></span>Secretarial Common Compliance
+                                                                    </a>
+                                                                </li>-->
+
+
+                                                                <!-------- Finance Common Compliance Report --------->
+                                                                <!--<li ng-show="FINC_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Finance Common Compliance  ' }">
+                                                                    <a href="../Dashboard/FinanceCommonCompliance?Finance Common Compliance " class="themed-element addcss" ng-click="updateMenu('Finance Common Compliance  ');ManageLog('Open Finance Common Compliance  ')">
+                                                                        <span class="icons icon-docs"></span>Finance Common Compliance
+                                                                    </a>
+                                                                </li>-->
+
+                                                                <!-------- Notice Common Compliance Report --------->
+                                                                <!--<li ng-show="NI_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Notice Common Compliance  ' }">
+                                                                    <a href="../Dashboard/NoticeCommonCompliance?Notice Common Compliance " class="themed-element addcss" ng-click="updateMenu('Notice Common Compliance  ');ManageLog('Open Notice Common Compliance  ')">
+                                                                        <span class="icons icon-docs"></span>Notice Common Compliance
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="LITM_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Litigation Common Compliance  ' }">
+                                                                    <a href="../Dashboard/LitigationCommonCompliance?Litigation Common Compliance" class="themed-element addcss" ng-click="updateMenu('Litigation Common Compliance  ');ManageLog('Open Litigation Common Compliance  ')">
+                                                                        <span class="icons icon-docs"></span>Litigation Common Compliance
+                                                                    </a>
+                                                                </li>-->
+
+
+
+
+                                                                <!-------- End  Common Repor --------->
+                                                            </ul>
                                                         </li>
-                                                        <li ng-if="CD_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'ComplianceDoc' }">
-                                                            <a href="../RetailSection/ComplianceDoc?ComplianceDoc" ng-click="updateMenu('ComplianceDoc')">
-                                                                <span class="icons icon-globe"></span>Compliance Doc.
-                                                            </a>
-                                                        </li>
-                                                        <li ng-if="LM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'License Master' }">
-                                                            <a href="../RetailSection/LicenseMaster?License Master" ng-click="updateMenu('License Master')">
-                                                                <span class="icons icon-docs"></span>License Master
-                                                            </a>
-                                                        </li>
-                                                        <li ng-if="EM_ViewFlag==1" class="nav-item " ng-class="{ 'active': SectionMenuName === 'Employees Master' }">
-                                                            <a href="../RetailSection/EmployeeMaster?Employees Master" ng-click="updateMenu('Employees Master')">
-                                                                <span class="icons icon-user"></span>Employees Master
-                                                            </a>
-                                                        </li>
+
                                                         <li class="nav-item seprat">
-                                                            <a href="" title="Logout" ng-click="Logout();">
+                                                            <a href="" title="Logout" class="themed-element addcss" ng-click="Logout();ManageLog('Logout from Retail Section')">
                                                                 <span class="icons icon-login"></span>Logout
                                                             </a>
                                                         </li>
                                                     </ul>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -184,7 +839,8 @@
                             </div>
                             <div class="col col-md-auto">
                                 <div class="upload-btn-wrapper me-5">
-                                    <button ng-if="LoginId==1" class="btn btn-success" ng-click="GoToSupplier()">Go To Supplier</button>                                    
+                              
+                                    <button ng-if="loginType==1 || loginType==5" class="btn btn-success" ng-click="GoToSupplier();ManageLog('Go To Supplier')">Go To Supplier</button>
                                 </div>
                                 <div class="nav-item dropdown d-inline me-3" ng-init="getRetailNotification()">
                                     <a href="#" class="micon dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-target="#notificationModal">
@@ -192,8 +848,8 @@
                                         <span class="notifi"></span>
                                     </a>
                                     <ul class="dropdown-menu" id="notification_event" aria-labelledby="navbarDropdown">
-                                        <li ng-repeat="x in RetailNotificationList">  
-                                            <a class="dropdown-item preview-item" href="#" data-bs-toggle="modal" data-bs-target="#notificationModal"   ng-click="SetRetaildetail(x.Title,x.Date,x.Remark,x.button,x.css,x.Id,x.Escalation1Remark,x.Escalation2Remark,x.Status,x.Closedby)">
+                                        <li ng-repeat="x in RetailNotificationList">
+                                            <a class="dropdown-item preview-item" href="#" data-bs-toggle="modal" data-bs-target="#notificationModal" ng-click="ManageLog(x.Title);SetRetaildetail(x.Title,x.Date,x.Remark,x.button,x.css,x.Id,x.Escalation1Remark,x.Escalation2Remark,x.Status,x.Closedby)">
                                                 <div class="preview-thumbnail">
                                                     <img src="~/compliance/images/profile2.jpg" class="img-circle" alt="User Image">
                                                 </div>
@@ -202,21 +858,19 @@
                                                     <p class="preview-subject mb-0 text-warning"><strong>{{x.Date}}</strong></p>
                                                 </div>
                                             </a>
-                                        </li> 
+                                        </li>
                                     </ul>
                                 </div>
-                                
-                                @*<a href="#" class="micon me-3"><span class="fas fa-cog"></span></a>*@
+
                                 <a href="@Url.Action("profile","RetailSection")" class="micon">
                                     <img id="CandidatePhoto" src="~/content/profile.png" ng-src="{{Photo}}" style="width: 30px;height:30px; " />
-                          </a>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </header>
-        <!-- InstanceBeginEditable name="Content Area" -->
         <div id="cover-spin">
             <script>$('#cover-spin').show();</script>
         </div>
@@ -225,6 +879,7 @@
                 $('#cover-spin').hide()
             });
         </script>
+
         @RenderBody()
     </div>
     <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
@@ -239,20 +894,40 @@
                     <p class="mb-5">Remark: {{Remark}}</p>
                     <p class="mb-5">{{Escalation1Remark}}</p>
                     <p class="mb-5">{{Escalation2Remark}}</p>
-              
-                  
+
+
                     <div ng-hide="Status==2">
-                        <p style="display:{{css}}"><textarea id="remark" ng-model="Aremark" style="width:100%"></textarea></p>
-                        <button style="margin-left: 80%;" data-bs-dismiss="modal" class="btn btn-outline-light" ng-click="ApproveClose(css,Id)">{{button}}</button> 
+                        <p ng-style="{'display': css}">
+                            <textarea id="remark" ng-model="Aremark" style="width:100%"></textarea>
+                        </p>
+                        <button style="margin-left: 80%;" data-bs-dismiss="modal" class="btn btn-outline-light" ng-click="ApproveClose(css,Id);">{{button}}</button>
                     </div>
-                      <p>{{Date}}</p>
+                    <p>{{Date}}</p>
                     <p>{{Closedby}}</p>
                 </div>
             </div>
         </div>
     </div>
-    @*<script type="text/javascript" src="~/compliance/js/mock.js"></script>*@
-    @*<script type="text/javascript" src="~/compliance/js/jquery-min.js"></script>*@
+    <!-- Timer Popup Modal -->
+    <div class="modal fade" id="countdownModal" tabindex="-1" role="dialog" aria-labelledby="countdownModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="countdownModalLabel">Redirecting...</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancelRedirect()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>You will be redirected to the dashboard in <strong>{{countdown}}</strong> seconds.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>*@
     <script type="text/javascript" src="~/compliance/js/bootstrap.js"></script>
     <script type="text/javascript" src="~/compliance/js/jquery.nanoscroller.min.js"></script>
     <script type="text/javascript" src="~/compliance/js/jquery.dataTables.min.js"></script>
@@ -268,7 +943,7 @@
     <script type="text/javascript" src="~/compliance/js/datepicker.js"></script>
     <script type="text/javascript" src="~/compliance/js/chart.bundle.js"></script>
     <script type="text/javascript" src="~/compliance/js/chartjs-gauge.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="~/Content/plugins/vendors/bower_components/sweetalert/dist/sweetalert.js"></script>
 
     <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
@@ -284,19 +959,19 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.22.5/select.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.22.5/select.css">
-    <!-- InstanceBeginEditable name="for-javascript" -->
-    <!-- InstanceEndEditable -->
+
+
+
+
 
     <script>
         function LogoutRetail() {
-            @*sessionStorage.setItem('userid', "-1");
-            window.location.href = '@Url.Action("Login", "Login")';*@
             Bindgra();
         }
 
     </script>
     <script>
-        function Bindgra(Totalupoad,PerCentage) {
+        function Bindgra(Totalupoad, PerCentage) {
 
             var randomScalingFactor = function () {
                 return Totalupoad;
@@ -304,7 +979,7 @@
 
             var randomData = function () {
                 return [
-                  Totalupoad, 100
+                    Totalupoad, 100
                 ];
             };
 
@@ -362,6 +1037,57 @@
 
 
     </script>
+
+    <div>
+        <div id="chatIcon" onclick="toggleChat()">
+            <i id="chatIconSymbol" class="fa-solid fa-headset fa-2xl" style="color: #ffffff;"></i>
+        </div>
+
+        <div id="chatContainer">
+            <div class="chat-message" id="robotMessage">
+            </div>
+            <div class="chat-message" id="robotMessage1">
+            </div>
+
+            <div id="inputSection" style="display: none;">
+                <textarea id="userMessage" placeholder="Type your query here" required></textarea>
+                <span id="messageError" style="color:red; display:none; font-size:12px;">Detail should not be empty.</span>
+
+                <div id="dropArea">
+                    <p>📎 Drag & Drop file here or click to upload</p>
+                    <input type="file" id="userFile" hidden />
+                </div>
+                <span id="fileError" style="color:red; display:none; font-size:12px;">File upload should not be empty.</span>
+
+                <button class="btn1" onclick="sendMessage()">Send</button>
+            </div>
+            <div id="responseSection" class="chat-message">
+            </div>
+            <div id="responseSection1" class="chat-message">
+            </div>
+            <div id="responseSection2" class="chat-message">
+            </div>
+            <div id="responseSection3" class="chat-message">
+                <button class="btn1" onclick="connectToExpert()">Connect Expert</button><button class="btn1" onclick="showFeedback()">End Chat</button>
+            </div>
+
+            <div id="feedbackSection">
+                <p>Please rate your experience:</p>
+                <div class="stars">
+                    <span class="star" onclick="rate(this)">&#9733;</span>
+                    <span class="star" onclick="rate(this)">&#9733;</span>
+                    <span class="star" onclick="rate(this)">&#9733;</span>
+                    <span class="star" onclick="rate(this)">&#9733;</span>
+                    <span class="star" onclick="rate(this)">&#9733;</span>
+                </div>
+                <textarea id="feedbackSuggestion" placeholder="Any suggestions?"></textarea>
+                <span id="feedbackError" style="color:red; display:none; font-size:12px;">Please enter suggestion.</span>
+                <button class="btn1" onclick="closeChat()">Submit Feedback</button>
+            </div>
+        </div>
+
+
+    </div>
 </body>
 <!-- InstanceEnd -->
 </html>

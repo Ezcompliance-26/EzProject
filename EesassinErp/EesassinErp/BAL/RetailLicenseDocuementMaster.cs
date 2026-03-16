@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace BAL
 {
@@ -18,7 +16,10 @@ namespace BAL
         public string LicenseName { get; set; }
         public string selectedDocumentsList { get; set; }
         public string selectedStoresList { get; set; }
+        public string employeecode { get; set; }
 
+        public string ComplianceCategory { get; set; }
+        
         public DateTime CreatedOn { get; set; }
         public DateTime UpdateOn { get; set; }
         public int? LastLoginId { get; set; }
@@ -33,9 +34,21 @@ namespace BAL
         public string DocumentPath { get; set; }
         public string UserId { get; set; }
         public string DocumentName { get; set; }
-        
+        public string StateId { get; set; }
+        public string ApplicationLink { get; set; }
+        public string FolderLocation { get; set; }
+        public string Detail { get; set; }
+        public string Category { get; set; }
+        public string Industry { get; set; }
+        public string StateList { get; set; }
+        public string CategoryList { get; set; }
+        public string LCID { get; set; }
+        public string LSID { get; set; }
 
-            public string FolderLocation { get; set; } 
+
+        public List<string> NewActList { get; set; }
+
+
         public List<ListStoreSet> DocumentList { get; set; }
         public List<MulipleAct> ActList { get; set; }
     }
@@ -47,11 +60,13 @@ namespace BAL
         public string UserId { get; set; }
         public string PartyId { get; set; }
         public string PartyTypeId { get; set; }
+
+        public string CategoryId { get; set; }
     }
     public class MulipleAct
     {
         public string Act { get; set; }
-    
+
     }
 
 }

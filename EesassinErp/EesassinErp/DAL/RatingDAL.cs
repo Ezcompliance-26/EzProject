@@ -1,12 +1,8 @@
 ﻿using BAL;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace DAL
 {
@@ -19,7 +15,7 @@ namespace DAL
             {
                 new SqlParameter("@Action", obj.Action),
                  new SqlParameter("@UserId", obj.UserId),
-                
+
             };
             return SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("USP_Rating", CommandType.StoredProcedure, param.ToArray());
 
@@ -32,7 +28,7 @@ namespace DAL
                     new SqlParameter("@UserId", obj.UserId),
                       new SqlParameter("@Rating", obj.Rating),
                     new SqlParameter("@Certificate", obj.Certificate),
-                
+
                     new SqlParameter("@Result",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("USP_Rating", CommandType.StoredProcedure, param.ToArray()));

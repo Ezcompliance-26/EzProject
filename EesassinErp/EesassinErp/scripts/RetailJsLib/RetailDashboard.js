@@ -1,5 +1,11 @@
 ﻿app.LicenseRequestMasterController = function ($scope, $element, $filter, myService) {
-    
+    $scope.exactLicenseFilter = function (item) {
+        // If no license is selected (empty), show all data
+        if (!$scope.selectedLicenseName) return true;
+
+        // Else, only show exact match
+        return item.LicenseName === $scope.selectedLicenseName;
+    };
 
     $scope.SetDate = function (Id)
     {
@@ -78,97 +84,105 @@
     } 
 
     $scope.GetLicenseRequestData = function () {
-        $scope.showLoader();
-        var collectionobj = {};
-        collectionobj.Action = 4;
-        collectionobj.UserId = LoginId;
+        $scope.showLoader(); 
+        var collectionobj = {
+            Action: 4,
+            UserId: LoginId,
+            PageNo:  1,
+            PageSize: 9999 
+           
+        };
         var getData = myService.methode('POST', ("../RetailSection/LicenseRequestData"), JSON.stringify(collectionobj));
         getData.then(function (response) {
             $scope.LicenseRequestList = response.data.Result;
-            angular.element(document).ready(function () {
-                $('#example').DataTable().destroy();
-                dTable = $('#example')
-                dTable.DataTable({
-                    dom: 'Bfrtip',
-                    buttons: [
-                         //'colvis',
-                        {
-                            extend: 'csv',
-                            filename: 'License Master',
-                            orientation: 'landscape', //portrait
-                            title: function () {
-                                var printTitle = 'License Master';
-                                return printTitle
-                            },
-                            exportOptions: {
-                                columns: [0, 1, 2,3, 4, 5, 6, 7, 15,24,25,26,27,31]
-                            },
-                        },
-
-                        'excel',
-                        {
-                            extend: 'pdfHtml5',
-                            text: 'Export PDF',
-                            filename: 'License Master',
-                            orientation: 'landscape', //portrait
-                            pageSize: 'A4', //A3 , A5 , A6 , legal , letter 
-                            customize: function (doc) {
-                                doc.styles['table'] = { width: '100%' }
-                                doc.pageMargins = [20, 60, 20, 30];
-                                doc.styles.tableHeader.fontSize = 15;
-                                doc['header'] = (function () {
-                                    return {
-                                        columns: [
-                                            {
-                                                alignment: 'center',
-                                                fontSize: 14,
-                                                text: 'License Master'
-                                            }
-                                        ],
-                                        margin: 40
-                                    }
-                                });
-                            },
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 15, 24, 25, 26, 27, 31]
+            setTimeout(function () {
+                angular.element(document).ready(function () {
+                    $('#example').DataTable().destroy();
+                    dTable = $('#example')
+                    dTable.DataTable({
+                        dom: 'Bfrtip',
+                        serverside: false,
+                        buttons: [
+                            //'colvis',
+                            {
+                                extend: 'csv',
+                                filename: 'License Master',
+                                orientation: 'landscape', //portrait
+                                title: function () {
+                                    var printTitle = 'License Master';
+                                    return printTitle
+                                },
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 15, 24, 25, 26, 27, 31]
+                                },
                             },
 
-                        },
-                        , {
-                            extend: 'print',
-                            filename: 'License Master',
-                            orientation: 'landscape', //portrait
-                            title: function () {
-                                var printTitle = 'License Master';
-                                return printTitle
-                            },
-                            customize: function (win) {
-                                $(win.document.body).addClass('white-bg');
-                                $(win.document.body).css('font-size', '14px');
+                            'excel',
+                            {
+                                extend: 'pdfHtml5',
+                                text: 'Export PDF',
+                                filename: 'License Master',
+                                orientation: 'landscape', //portrait
+                                pageSize: 'A4', //A3 , A5 , A6 , legal , letter 
+                                customize: function (doc) {
+                                    doc.styles['table'] = { width: '100%' }
+                                    doc.pageMargins = [20, 60, 20, 30];
+                                    doc.styles.tableHeader.fontSize = 15;
+                                    doc['header'] = (function () {
+                                        return {
+                                            columns: [
+                                                {
+                                                    alignment: 'center',
+                                                    fontSize: 14,
+                                                    text: 'License Master'
+                                                }
+                                            ],
+                                            margin: 40
+                                        }
+                                    });
+                                },
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 15, 24, 25, 26, 27, 31]
+                                },
 
-                                $(win.document.body).find('table')
+                            },
+                            , {
+                                extend: 'print',
+                                filename: 'License Master',
+                                orientation: 'landscape', //portrait
+                                title: function () {
+                                    var printTitle = 'License Master';
+                                    return printTitle
+                                },
+                                customize: function (win) {
+                                    $(win.document.body).addClass('white-bg');
+                                    $(win.document.body).css('font-size', '14px');
+
+                                    $(win.document.body).find('table')
                                         .addClass('compact')
                                         .css('font-size', '14px')
                                         .css('color', 'black');
 
-                            },
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 15, 24, 25, 26, 27, 31]
-                            },
-                        }
-                    ],
-                    //columnDefs: [{
-                    //    targets: -1,
-                    //    visible: false
-                    //}]
+                                },
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 15, 24, 25, 26, 27, 31]
+                                },
+                            }
+                        ],
+                        //columnDefs: [{
+                        //    targets: -1,
+                        //    visible: false
+                        //}]
+                    });
+                    //buttons: ['copy', 'excelHtml5', 'print']
+
+                    // Added by pradeep for License and Registeration and inspection
+
+
+
                 });
-                //buttons: ['copy', 'excelHtml5', 'print']
-
-                // Added by pradeep for License and Registeration and inspection
-                
-                
-
-            });
+            }, 200);
+         
             $scope.Funcationlitycheck();
             $scope.hideLoader();
         });
@@ -753,8 +767,7 @@
     };
     
     $scope.loadData = function () {
-        $scope.showLoader();
-       
+        $scope.showLoader(); 
         var collectionobj = {};
         collectionobj.ActionType = 4;
         collectionobj.Id = LoginId;
@@ -765,8 +778,7 @@
             $scope.TotalupoadDoc = response.data.Result[0].Totalupoad;
             $scope.TotalVerify = response.data.Result[0].TotalVerify;
             var Totalupoad = response.data.Result[0].Totalupoad;
-            var TotPer = response.data.Result[0].TotPer;
-           // Bindgra(Totalupoad, TotPer);
+            var TotPer = response.data.Result[0].TotPer; 
             $scope.hideLoader();
         });
 
@@ -786,6 +798,7 @@
     };
 
     $scope.LoadLicenseReg = function () {
+        
         var collectionobj = {};
         collectionobj.ActionType = 4;
         collectionobj.Id = LoginId;
@@ -794,84 +807,149 @@
         collectionobj.PartyId = LoginId;
         var getData = myService.methode('POST', ("../RetailSection/GetLicenseAndRegistrationBy"), JSON.stringify(collectionobj));
         getData.then(function (response) {
-            //     alert('p');
-            $scope.LoadMasterList = response.data.Result;
             $('#licenseregistration').DataTable().destroy();
-            dTable1 = $('#licenseregistration');
+            $scope.LoadMasterList = response.data.Result; 
+            debugger;;
+            // Use a Set to store unique combinations of storeCode and licenseName
+            let uniqueLicenses = new Set($scope.LoadMasterList.map(item => `${item.licenseName}-${item.storeCode}`));
+            $scope.TotalLicense = response.data.Result.length;
 
-            dTable1.DataTable({
-                searching: false,
-                dom: 'Bfrtip',
-                buttons: [
-                    //'colvis',
-                    {
-                        extend: 'csv',
-                        filename: 'License & Registration',
-                        orientation: 'landscape', //portrait
-                        title: function () {
-                            var printTitle = 'License & Registration';
-                            return printTitle
-                        },
-                        exportOptions: {
-                            columns: [1, 2, 3, 4, 5, 6,7]
-                        },
-                    },
+            // Unique Expired Licenses
+            $scope.ExpiredList = $scope.LoadMasterList.filter(item => item.ExpiryStatus === 'Expired');
+            $scope.ExpiredLicense = $scope.ExpiredList.length;
 
-                    'excel',
-                    {
-                        extend: 'pdfHtml5',
-                        text: 'Export PDF',
-                        filename: 'License & Registration',
-                        orientation: 'landscape', //portrait
-                        pageSize: 'A4', //A3 , A5 , A6 , legal , letter 
-                        customize: function (doc) {
-                            doc.styles['table'] = { width: '100%' }
-                            doc.pageMargins = [20, 60, 20, 30];
-                            doc.styles.tableHeader.fontSize = 15;
-                            doc['header'] = (function () {
-                                return {
-                                    columns: [
-                                        {
-                                            alignment: 'center',
-                                            fontSize: 14,
-                                            text: 'License & Registration'
-                                        }
-                                    ],
-                                    margin: 40
-                                }
-                            });
-                        },
-                        exportOptions: {
-                            columns: [1, 2, 3, 4, 5, 6, 7]
+            
+
+            // Unique Expiring Soon Licenses
+            $scope.ExpiredSoonList = $scope.LoadMasterList.filter(item => item.ExpiryStatus === 'Expiring Soon');
+            $scope.ExpiredSoon = $scope.ExpiredSoonList.length;
+     
+            // Unique Expiring Soon Licenses
+            $scope.LicenseNameList = $scope.LoadMasterList.filter(item => item.LicenseName);
+
+            angular.element(document).ready(function () {
+           
+                dTable1 = $('#licenseregistration');
+               
+                dTable1.DataTable({
+                    searching: true,
+                    paging: true,  // 🔹 Disables pagination
+                    dom: 'Bfrtip',
+                    buttons: [
+                        //'colvis',
+                        {
+                            extend: 'csv',
+                            filename: 'License & Registration',
+                            orientation: 'landscape', //portrait
+                            title: function () {
+                                var printTitle = 'License & Registration';
+                                return printTitle
+                            },
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6,7]
+                            },
+                            action: function (e, dt, button, config) {
+                                $scope.ManageLog('License & Registration csv Download');
+                                $.fn.dataTable.ext.buttons.csvHtml5.action.call(this, e, dt, button, config);
+                            }
                         },
 
-                    },
-                    , {
-                        extend: 'print',
-                        filename: 'License & Registration',
-                        orientation: 'landscape', //portrait
-                        title: function () {
-                            var printTitle = 'License & Registration';
-                            return printTitle
-                        },
-                        customize: function (win) {
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '14px');
+                        'excel',
+                        {
+                            extend: 'pdfHtml5',
+                            text: 'Export PDF',
+                            filename: 'License & Registration',
+                            orientation: 'landscape', //portrait
+                            pageSize: 'A4', //A3 , A5 , A6 , legal , letter 
+                            customize: function (doc) {
+                                doc.styles['table'] = { width: '100%' }
+                                doc.pageMargins = [20, 60, 20, 30];
+                                doc.styles.tableHeader.fontSize = 15;
+                                doc['header'] = (function () {
+                                    return {
+                                        columns: [
+                                            {
+                                                alignment: 'center',
+                                                fontSize: 14,
+                                                text: 'License & Registration'
+                                            }
+                                        ],
+                                        margin: 40
+                                    }
+                                });
+                            },
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6,7]
+                            },
+                            action: function (e, dt, button, config) {
+                                $scope.ManageLog('License & Registration pdf Download');
+                                $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, button, config);
+                            }
 
-                            $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', '14px')
-                                .css('color', 'black');
-
                         },
-                        exportOptions: {
-                            columns: [1, 2, 3, 4, 5, 6, 7]
-                        },
-                    }
-                ],
+                        , {
+                            extend: 'print',
+                            filename: 'License & Registration',
+                            orientation:   'portrait',
+                            title: function () {
+                                var printTitle = 'License & Registration';
+                                return printTitle
+                            },
+                            customize: function (win) {
+                                $(win.document.body).addClass('white-bg');
+                                $(win.document.body).css('font-size', '13px');
 
-            });
-            $scope.hideLoader();
+                                // Center the title in print
+                                $(win.document.body).find('h1').css({
+                                    'text-align': 'center',
+                                    'font-size': '22px',
+                                    'font-weight': 'bold',
+                                    'color': '#333',  // Dark Gray color
+                                    'margin-bottom': '20px'
+                                });
+
+                                // Style the Table
+                                $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css({
+                                        'font-size': '12px',
+                                        'color': 'black',
+                                        'border-collapse': 'collapse',
+                                        'width': '100%'
+                                    });
+
+                                // Style the Table Header
+                                $(win.document.body).find('thead th').css({
+                                    'background-color': 'grey', // Blue color header
+                                    'color': 'white',
+                                    'text-align': 'center',
+                                    'padding': '10px',
+                                   /* 'border': '1px solid black'*/
+                                });
+
+                                // Style the Table Body Rows
+                                $(win.document.body).find('tbody td').css({
+                               /*     'border': '1px solid black',*/
+                                    'padding': '8px',
+                                    'text-align': 'center'
+                                });
+                            },
+                            exportOptions: {
+                                stripHtml: false,
+                                columns: [1, 2, 3, 4, 5, 6,7]
+                            },
+                            action: function (e, dt, button, config) {
+
+                                $scope.ManageLog('License & Registration print Download');
+                                $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, button, config);
+                            }
+                        }
+                    ],
+
+                });
+            }); 
+                $scope.hideLoader();
+            
         });
 
         //-------------------------
@@ -879,15 +957,17 @@
        
     $scope.ApprovalRecord = function (Id) {
         debugger;
+        $scope.showLoader();
         var collectionobj = {};
         collectionobj.Action = 5;
         collectionobj.LicenceRequestId =Id;  
         var getData = myService.methode('POST', ("../RetailSection/ApprovalUpdate"), JSON.stringify(collectionobj));
-        getData.then(function (response) {
-            showMsgBox('999', 'Approved', response.data.Result, 'success', 'btn-success');
-               
-                $scope.loadData(); 
+        getData.then(function (response) { 
+            showMsgBox('999', 'Approved', response.data.Result, 'success', 'btn-success'); 
+            $scope.LoadLicenseReg();
+            $scope.hideLoader();
         });
+       
     };
     var Id = '';
     $scope.SetValue = function (ID, fuCandidatePhoto) {
@@ -1013,7 +1093,9 @@
     };
 
     
-    $scope.ddlSelectStoreValue = function (StoreId, StoreCode) {
+    $scope.ddlSelectStoreValue = function (StoreId) {
+        var x = angular.element(document.body).scope().StoreList.find(s => s.StoreId == StoreId);
+        var StoreCode = x.StoreCode;
         $scope.ISopen = false;
         $scope.StoreId = StoreId;
         $scope.StoreCode = StoreCode;
@@ -1031,6 +1113,22 @@
         var getData = myService.methode('POST', ("../RetailSection/GetNoticeList"), JSON.stringify(collectionobj));
         getData.then(function (response)
         {
+            $scope.NoticeDate = response.data.Result[0].NoticeDate;
+            $scope.NoticeMode = response.data.Result[0].NoticeMode;
+            $scope.HearingDate = response.data.Result[0].HearingDate;
+            $scope.OfficerName = response.data.Result[0].OfficerName;
+            $scope.Address = response.data.Result[0].Address;
+            $scope.RepresentativeName = response.data.Result[0].RepresentativeName;
+            $scope.RepresentativeEmail = response.data.Result[0].RepresentativeEmail;
+            $scope.Description = response.data.Result[0].Description;
+
+            $scope.Probability = response.data.Result[0].Probability;
+            $scope.Interest = response.data.Result[0].Interest;
+            $scope.LateFee = response.data.Result[0].LateFee;
+            $scope.Fines = response.data.Result[0].Fines;
+            $scope.Penalities = response.data.Result[0].Penalities;
+            $scope.Other = response.data.Result[0].Other;
+
             $scope.DocStage = response.data.Result[0].DocStage;
             if ($scope.DocStage == 'First Stage' && $scope.LoginAs == 'Client')
             {
@@ -1078,6 +1176,17 @@
             $scope.hideLoader();
         });
     }
+
+    $scope.$watch('LoginAs', function (newVal, oldVal) {
+        if (newVal) {
+            $scope.BindNoticeStoreList();
+            $scope.GetLicenseRequestData();
+            $scope.BindNoticeStoreList();
+            $scope.BindNoticeClient();
+            $scope.Funcationlitycheck();
+            $scope.LoadLicenseReg();
+        }
+    });
     $scope.BindNoticeDepartment = function (NStoreId) {
         $scope.showLoader();
         var collectionobj = {};
@@ -1093,63 +1202,105 @@
         });
     }
     
+    //$scope.BindNoticeUpload = function (input, imgfileid) {
+    //    fileName = document.querySelector('#fNoticeUpload').value;
+    //    if (fileName != "")
+    //    {
+    //        extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+    //        if (extension == 'jpg' || extension == 'jpeg')
+    //        {
+    //            if (input.files && input.files[0]) {
+    //                var filerdr = new FileReader();
+    //                filerdr.onload = function (e) {
+    //                    $scope.NoticeUpload = e.target.result;
+    //                    $scope.$applyAsync();
+    //                }
+    //                filerdr.readAsDataURL(input.files[0]);
+    //            }
+    //            else {
+    //                $scope.NoticeUpload = '';
+    //                $scope.$applyAsync();
+    //            } 
+    //        }
+    //        else if (extension == 'png')
+    //        {
+    //          if (input.files && input.files[0]) {
+    //            var filerdr = new FileReader();
+    //            filerdr.onload = function (e) {
+    //                $scope.NoticeUpload = e.target.result;
+    //                $scope.$applyAsync();
+    //            }
+    //            filerdr.readAsDataURL(input.files[0]);
+    //        }
+    //        else {
+    //            $scope.NoticeUpload = '';
+    //            $scope.$applyAsync();
+    //        }
+    //      }
+    //        else if( extension == 'pdf')
+    //        {
+    //            if (input.files && input.files[0]) {
+    //                var filerdr = new FileReader();
+    //                filerdr.onload = function (e) {
+    //                    $scope.NoticeUpload = e.target.result;
+    //                    $scope.$applyAsync();
+    //                }
+    //                filerdr.readAsDataURL(input.files[0]);
+    //            }
+    //            else {
+    //                $scope.NoticeUpload = '';
+    //                $scope.$applyAsync();
+    //            }
+    //        }
+    //        else
+    //        {
+    //            showMsgBox('999', 'Rejected', 'File Not Correct Format,please Upload in jpg,jpeg,png or pdf format', 'warning', 'btn-warning');
+    //            return;
+    //        }
+    //    };
+    //}
+
     $scope.BindNoticeUpload = function (input, imgfileid) {
-        fileName = document.querySelector('#fNoticeUpload').value;
-        if (fileName != "")
-        {
-            extension = fileName.substring(fileName.lastIndexOf('.') + 1);
-            if (extension == 'jpg')
-            {
-                if (input.files && input.files[0]) {
-                    var filerdr = new FileReader();
-                    filerdr.onload = function (e) {
-                        $scope.NoticeUpload = e.target.result;
-                        $scope.$applyAsync();
-                    }
-                    filerdr.readAsDataURL(input.files[0]);
-                }
-                else {
-                    $scope.NoticeUpload = '';
-                    $scope.$applyAsync();
-                } 
-            }
-            else if (extension == 'png')
-            {
-              if (input.files && input.files[0]) {
-                var filerdr = new FileReader();
-                filerdr.onload = function (e) {
-                    $scope.NoticeUpload = e.target.result;
-                    $scope.$applyAsync();
-                }
-                filerdr.readAsDataURL(input.files[0]);
-            }
-            else {
+        var fileInput = document.querySelector('#fNoticeUpload');
+        var file = input.files[0];
+        var fileName = fileInput.value;
+
+        if (fileName != "") {
+            var extension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+
+            // Validate file size (max 1MB)
+            if (file && file.size > 1048576) { // 1MB = 1048576 bytes
+                showMsgBox('999', 'File Too Large', 'File size must be less than or equal to 1 MB.', 'warning', 'btn-warning');
+                input.value = ""; // Clear file input
                 $scope.NoticeUpload = '';
                 $scope.$applyAsync();
+                return;
             }
-          }
-            else if( extension == 'pdf')
-            {
-                if (input.files && input.files[0]) {
+
+            // Allowed formats
+            if (['jpg', 'jpeg', 'png', 'pdf'].includes(extension)) {
+                if (file) {
                     var filerdr = new FileReader();
                     filerdr.onload = function (e) {
                         $scope.NoticeUpload = e.target.result;
                         $scope.$applyAsync();
-                    }
-                    filerdr.readAsDataURL(input.files[0]);
-                }
-                else {
+                    };
+                    filerdr.readAsDataURL(file);
+                } else {
+                    fileInput.value = ""; // Clear input
                     $scope.NoticeUpload = '';
                     $scope.$applyAsync();
                 }
-            }
-            else
-            {
-                showMsgBox('999', 'Rejected', 'File Not Correct Format,please Upload in jpg,png or pdf format', 'warning', 'btn-warning');
+            } else {
+                showMsgBox('999', 'Rejected', 'File Not Correct Format, please upload in jpg, jpeg, png, or pdf format.', 'warning', 'btn-warning');
+                input.value = ""; // Clear file input
+                $scope.NoticeUpload = '';
+                $scope.$applyAsync();
                 return;
             }
-        };
-    }
+        }
+    };
+
 
 
     $scope.SaveRecord = function () {
@@ -1167,7 +1318,7 @@
     var IdFM = '';
     $scope.AfterSave = function () {
         debugger;
-        if (isValidate()) {
+        
             $scope.showLoader();
             var collectionobj = {}; 
             collectionobj.UserId = LoginId;
@@ -1212,8 +1363,22 @@
                     return;
                 }
             }
-           
-            var getData = myService.methode('POST', ("../RetailSection/InsertUpdateNotice"), JSON.stringify(collectionobj));
+            collectionobj.NoticeDate = $scope.NoticeDate;
+            collectionobj.NoticeMode = $scope.NoticeMode;
+            collectionobj.HearingDate = $scope.HearingDate;
+            collectionobj.OfficerName = $scope.OfficerName;
+            collectionobj.Address = $scope.Address;
+            collectionobj.RepresentativeName = $scope.RepresentativeName;
+            collectionobj.RepresentativeEmail = $scope.RepresentativeEmail;
+        collectionobj.Description = $scope.Description;
+        collectionobj.Probability = $scope.Probability;
+        collectionobj.Interest = $scope.Interest;
+        collectionobj.LateFee = $scope.LateFee;
+        collectionobj.Fines = $scope.Fines;
+        collectionobj.Penalities = $scope.Penalities;
+        collectionobj.Other = $scope.Other;
+
+    var getData = myService.methode('POST', ("../RetailSection/InsertUpdateNotice"), JSON.stringify(collectionobj));
             getData.then(function (response)
             {
                 showMsgBox('999', 'Alert', response.data.Result, 'warning', 'btn-warning');
@@ -1223,8 +1388,7 @@
                 $scope.ClearControl();
                
                
-            });
-        }
+            }); 
     }
 
     $scope.ClearControl=function()
@@ -1248,110 +1412,123 @@
             $scope.NoticeClientList = response.data.Result;
             // for inspection
             $('#noticesinspections').DataTable().destroy();
-            dTable2 = $('#noticesinspections');
+            angular.element(document).ready(function () {
+             
+                dTable2 = $('#noticesinspections');
 
-            dTable2.DataTable({
-                searching: false,
-                dom: 'Bfrtip',
-                buttons: [
-                    //'colvis',
-                    {
-                        extend: 'csv',
-                        filename: 'Notices & Inspections',
-                        orientation: 'landscape', //portrait
-                        title: function () {
-                            var printTitle = 'Store Master';
-                            return printTitle
-                        },
-                        exportOptions: {
-                            columns: [1, 2, 3, 4, 5]
-                        },
-                    },
-
-                    'excel',
-                    {
-                        extend: 'pdfHtml5',
-                        text: 'Export PDF',
-                        filename: 'Notices & Inspections',
-                        orientation: 'landscape', //portrait
-                        pageSize: 'A4', //A3 , A5 , A6 , legal , letter 
-                        customize: function (doc) {
-                            doc.styles['table'] = { width: '100%' }
-                            doc.pageMargins = [20, 60, 20, 30];
-                            doc.styles.tableHeader.fontSize = 15;
-                            doc['header'] = (function () {
-                                return {
-                                    columns: [
-                                        {
-                                            alignment: 'center',
-                                            fontSize: 14,
-                                            text: 'Notices & Inspections'
-                                        }
-                                    ],
-                                    margin: 40
-                                }
-                            });
-                        },
-                        exportOptions: {
-                            columns: [1, 2, 3, 4, 5]
+                dTable2.DataTable({
+                    searching: false,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        //'colvis',
+                        {
+                            extend: 'csv',
+                            filename: 'Notices & Inspections',
+                            orientation: 'landscape', //portrait
+                            title: function () {
+                                var printTitle = 'Store Master';
+                                return printTitle
+                            },
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5]
+                            },
+                            action: function (e, dt, button, config) {
+                                $scope.ManageLog('Notices & Inspections csv Download');
+                                $.fn.dataTable.ext.buttons.csvHtml5.action.call(this, e, dt, button, config);
+                            }
                         },
 
-                    },
-                    , {
-                        extend: 'print',
-                        filename: 'Notices & Inspections',
-                        orientation: 'landscape', //portrait
-                        title: function () {
-                            var printTitle = 'Notices & Inspections';
-                            return printTitle
+                        'excel',
+                        {
+                            extend: 'pdfHtml5',
+                            text: 'Export PDF',
+                            filename: 'Notices & Inspections',
+                            orientation: 'landscape', //portrait
+                            pageSize: 'A4', //A3 , A5 , A6 , legal , letter 
+                            customize: function (doc) {
+                                doc.styles['table'] = { width: '100%' }
+                                doc.pageMargins = [20, 60, 20, 30];
+                                doc.styles.tableHeader.fontSize = 15;
+                                doc['header'] = (function () {
+                                    return {
+                                        columns: [
+                                            {
+                                                alignment: 'center',
+                                                fontSize: 14,
+                                                text: 'Notices & Inspections'
+                                            }
+                                        ],
+                                        margin: 40
+                                    }
+                                });
+                            },
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5]
+                            },
+                            action: function (e, dt, button, config) {
+                                $scope.ManageLog('Notices & Inspections pdf Download');
+                                $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, button, config);
+                            }
                         },
-                        customize: function (win) {
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '14px');
+                        , {
+                            extend: 'print',
+                            filename: 'Notices & Inspections',
+                            orientation: 'landscape', //portrait
+                            title: function () {
+                                var printTitle = 'Notices & Inspections';
+                                return printTitle
+                            },
+                            customize: function (win) {
+                                $(win.document.body).addClass('white-bg');
+                                $(win.document.body).css('font-size', '14px');
 
-                            $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', '14px')
-                                .css('color', 'black');
+                                $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', '14px')
+                                    .css('color', 'black');
 
-                        },
-                        exportOptions: {
-                            columns: [1, 2, 3, 4, 5]
-                        },
-                    }
-                ],
+                            },
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5]
+                            },
+                            action: function (e, dt, button, config) {
 
+                                $scope.ManageLog('Notices & Inspections print Download');
+                                $.fn.dataTable.ext.buttons.print.action.call(this, e, dt, button, config);
+                            }
+                        }
+                    ],
+
+                });
             });
                 // end added by pradeep
             $scope.hideLoader();
         });
     }
-    $scope.BindExecuter = function () {
+    //$scope.BindExecuter = function () {
      
-        var collectionobj = {};
-        collectionobj.ActionType = 10; 
-        collectionobj.Id = LoginId;
-        var getData = myService.methode('POST', ("../RetailSection/SearchCompliance"), JSON.stringify(collectionobj));
-        getData.then(function (response) {
-
-            $scope.LoginAs = response.data.Result[0].LoginAs;
-            if (loginType == '1')
-            {
-                $scope.LoginAs = 'Admin';
-            }
-            if ($scope.LoginAs == 'Executer') {
-                $scope.loginType = '1'
-            }
+    //    var collectionobj = {};
+    //    collectionobj.ActionType = 10; 
+    //    collectionobj.Id = LoginId;
+    //    var getData = myService.methode('POST', ("../RetailSection/SearchCompliance"), JSON.stringify(collectionobj));
+    //    getData.then(function (response) { 
+    //        $scope.LoginAs = response.data.Result[0].LoginAs; 
+    //        if (loginType == '1') {
+    //            $scope.LoginAs = 'Admin';
+    //        }
+    //        if ($scope.LoginAs == 'Executer') {
+    //            $scope.loginType = '1';
+    //        }
            
-            $scope.GetLicenseRequestData();
-            $scope.BindNoticeStoreList();
-            $scope.BindNoticeClient();
-            $scope.Funcationlitycheck();
-            $scope.LoadLicenseReg();
-            $scope.$applyAsync();
-        });
-        $scope.hideLoader();
-    };
+    //        //$scope.GetLicenseRequestData();
+    //        //$scope.BindNoticeStoreList();
+    //        //$scope.BindNoticeClient();
+    //        //$scope.Funcationlitycheck();
+    //        // $scope.LoadLicenseReg();
+    //        $scope.$applyAsync();
+    //    });
+    //    $scope.hideLoader();
+    //};
 
     //-------------------------End Notice
     //-----------------------------Excelation Process

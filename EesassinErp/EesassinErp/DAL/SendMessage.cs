@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -16,17 +14,17 @@ namespace DAL
         public string SendGeneralSMS(SMSBAL obj)
         {
             string returnmsg = "0";
-             
+
             var param = new List<SqlParameter>
                {
-                 
+
                     new SqlParameter("@Mobile", obj.ContactNo),
                     new SqlParameter("@Message", obj.Msg),
-                    new SqlParameter("@Action", obj.Action), 
+                    new SqlParameter("@Action", obj.Action),
                     new SqlParameter("@Result", ""),
             };
             string Getvalue = SqlDBHelper.SqlHelper.ExecuteNonQueryPassingOutPara("USP_SendMessage", CommandType.StoredProcedure, param.ToArray(), "@Result");
-          
+
             if (Getvalue != "")
             {
                 WebRequest request = WebRequest.Create(Getvalue);
@@ -100,4 +98,4 @@ namespace DAL
         //    return dt;
         //}
     }
-}        
+}

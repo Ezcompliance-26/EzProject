@@ -49,13 +49,14 @@
                                 <div class="collapse in" id="collapseinputbox">
                                     <form id="user-form">
 
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15" ng-if="notopen !=1">
                                             <label class="control-label">Party Type<span class="vd_red">*</span></label>
                                             <div class="input-box">
-                                                <select id="ddlVT" autocomplete='address-level2' class="select2 form-control validate" ng-model="PartyType" ng-change="AllParty()">
-                                                    <option value="">Select </option>
-                                                    <option value="Vendor">Vendor</option>
-                                                    <option value="Auditor">Auditor</option>
+                                                
+                                                <select id="ddlVT" autocomplete='address-level2' class="select2 form-control validate" ng-model="PartyType" ng-change="AllParty(PartyType)">
+                                                    <option  value="">Select </option>
+                                                    <option  value="Vendor">Vendor</option>
+                                                    <option  value="Auditor">Auditor</option>
                                                     <option value="Client">Client</option>
                                                     @*<option value="Other">Other</option>*@
                                                 </select>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace EesassinErp.BAL
+﻿namespace BAL
 {
     public class LSDBAL
     {
@@ -23,5 +18,7 @@ namespace EesassinErp.BAL
         public string State { get; set; }
         public string Address { get; set; }
         public string License { get; set; }
+
+        public string LicenceApplicable { get; set; }
     }
 }

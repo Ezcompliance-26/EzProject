@@ -4,10 +4,11 @@
     {
       var  trans = [];
       trans = window.location.href.slice(window.location.href.indexOf('?') + 1).split('%');
-      var splitvalue = trans[0].split('|');
+        var splitvalue = trans[0].split('|');
                        
       $scope.InvoiceNo = splitvalue[0];
-      $scope.ClientId = splitvalue[1];
+        $scope.ClientId = splitvalue[1];
+        $scope.Vendord = splitvalue[2];
       debugger;
      $scope.GetAuditorCompliance();
     }
@@ -37,6 +38,7 @@
         collectionobj.Action = 4;
         collectionobj.InvoiceNo = $scope.InvoiceNo;
         collectionobj.Id = $scope.ClientId;
+        collectionobj.VendorId = $scope.Vendord;
         
         var getData = myService.methode('POST', "../DocumentMaster/GetAuditorCompliance", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response)
@@ -74,6 +76,7 @@
                 var collectionobj = {};
                 collectionobj.Action = 5;
                 collectionobj.InvoiceNo = $scope.InvoiceNo;
+                collectionobj.VendorId = $scope.Vendord;
                 var getData = myService.methode('POST', "../DocumentMaster/GetAuditorCompliance", '{obj:' + JSON.stringify(collectionobj) + '}');
                 getData.then(function (response) {
                     $scope.DocList = response.data;

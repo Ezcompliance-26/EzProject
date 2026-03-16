@@ -255,7 +255,7 @@ function showMsgBox(response, title, text, type, ButtonClass) {
                 text: "Sorry, Duplicate Record found!",
                 type: "warning",
                 confirmButtonClass: 'btn-warning',
-                timer: 1000,
+                timer: 3000,
             });
             returnflag = false;
             try { angular.element(document).scope().hideLoader(); }
@@ -268,7 +268,7 @@ function showMsgBox(response, title, text, type, ButtonClass) {
                 text: "Sorry, Child Record found!",
                 type: "warning",
                 confirmButtonClass: 'btn-warning',
-                timer: 1000,
+                timer: 3000,
             });
             returnflag = false;
             try { angular.element(document).scope().hideLoader(); }
@@ -281,7 +281,7 @@ function showMsgBox(response, title, text, type, ButtonClass) {
                 text: "Submitted successfully.",
                 type: "success",
                 confirmButtonClass: 'btn-success',
-                timer: 1000,
+                timer: 3000,
             });
             try { angular.element(document).scope().hideLoader(); }
             catch (ex) { }
@@ -299,7 +299,7 @@ function showMsgBox(response, title, text, type, ButtonClass) {
                 text: "Updated successfully.",
                 type: "success",
                 confirmButtonClass: 'btn-success',
-                timer: 1000,
+                timer: 3000,
             });
             try { angular.element(document).scope().hideLoader(); }
             catch (ex) { }
@@ -316,7 +316,7 @@ function showMsgBox(response, title, text, type, ButtonClass) {
                 text: "Deleted successfully.",
                 type: "success",
                 confirmButtonClass: 'btn-success',
-                timer: 1000,
+                timer: 3000,
             });
             try { angular.element(document).scope().hideLoader(); }
             catch (ex) { }
@@ -333,7 +333,7 @@ function showMsgBox(response, title, text, type, ButtonClass) {
                 text: "Fields have been cleared.",
                 type: "success",
                 confirmButtonClass: 'btn-success',
-                timer: 1000,
+                timer: 3000,
             });
             try { angular.element(document).scope().hideLoader(); }
             catch (ex) { }
@@ -350,7 +350,24 @@ function showMsgBox(response, title, text, type, ButtonClass) {
                 text: "Vendor Query Still Pending",
                 type: "warning",
                 confirmButtonClass: 'btn-warning',
-                timer: 1000,
+                timer: 3000,
+            });
+            try { angular.element(document).scope().hideLoader(); }
+            catch (ex) { }
+            try {
+                angular.element(document).scope().ClearOk();
+            }
+            catch (ex) {
+                console.log(ex.message);
+            }
+            break;
+        case "6": /*Deleted successfully.*/
+            swal({
+                title: "File Approval",
+                text: "Uploaded file does not appear to be valid. Do you want to continue?",
+                type: "Alert",
+                confirmButtonClass: 'btn-success',
+                timer: 3000,
             });
             try { angular.element(document).scope().hideLoader(); }
             catch (ex) { }
@@ -400,11 +417,11 @@ function showMsgBox(response, title, text, type, ButtonClass) {
             swal({
                 title: title,
                 text: text,
-                type: type,
+                icon: type,
                 confirmButtonClass: ButtonClass,
-                timer: 1000,
+                timer: 3000,
             });
-            //returnflag = false;
+        /*    returnflag = false;*/
             try { angular.element(document).scope().hideLoader(); }
             catch (ex) { }
             break;
@@ -420,7 +437,7 @@ function showMsgBox(response, title, text, type, ButtonClass) {
             returnflag = false;
             break;
     }
-    return returnflag;
+  return returnflag;
 }
 
 function deleteConfirmbox(confirmText, functions) {
@@ -964,122 +981,271 @@ function isValidateList(parendiv) {
 
     return modelStateIsvalid;
 }
+//function isValidate(parendiv) {
+
+//    var modelStateIsvalid = true;
+//    var firstElement = null;
+//    if (parendiv != null) {
+//        var inputelement = parendiv.find('input.validate');
+//        var textarea = parendiv.find('textarea.validate');
+//        var ddlelement = parendiv.find('select.validate');
+
+//        $.each(inputelement, function (index) {
+//            if ($(this).val() == "") {
+//                $(this).addClass("red-validation");
+//                modelStateIsvalid = false;
+//                if (firstElement == null)
+//                    firstElement = $(this);
+//            }
+//            else {
+//                $(this).removeClass("red-validation");
+//            }
+//        });
+
+//        $.each(textarea, function (index) {
+//            if ($(this).val() == "") {
+//                $(this).addClass("red-validation");
+//                modelStateIsvalid = false;
+//                if (firstElement == null)
+//                    firstElement = $(this);
+//            }
+//            else {
+//                $(this).removeClass("red-validation");
+//            }
+//        });
+
+//        $.each(ddlelement, function (index) {
+//            if ($(this).children('option:selected').index() == 0) {
+//                $(this).addClass("red-validation");
+//                modelStateIsvalid = false;
+//                if (firstElement == null)
+//                    firstElement = $(this);
+//            } else {
+//                $(this).removeClass("red-validation");
+//            }
+//        });
+//    }
+//    else {
+//        $.each($('input'), function (index) {
+//            if ($(this).hasClass('validate')) {
+//                if ($(this).val() == "") {
+//                    $(this).addClass("red-validation");
+//                    modelStateIsvalid = false;
+//                    if (firstElement == null)
+//                        firstElement = $(this);
+//                }
+//                else {
+//                    $(this).removeClass("red-validation");
+//                }
+
+//            }
+//            else {
+//                $(this).removeClass("red-validation");
+//            }
+
+//        });
+
+//        $.each($('textarea.validate'), function (index) {
+//            if ($(this).val() == "") {
+//                $(this).addClass("red-validation");
+//                modelStateIsvalid = false;
+//                if (firstElement == null)
+//                    firstElement = $(this);
+//            }
+//            else {
+//                $(this).removeClass("red-validation");
+//            }
+//        });
+
+//        $.each($('select.validate'), function (index) {
+//            ////
+//            if ($(this).children('option:selected').index() == 0) {
+//                $(this).addClass("red-validation");
+//                modelStateIsvalid = false;
+//                if (firstElement == null)
+//                    firstElement = $(this);
+//            } else {
+//                $(this).removeClass("red-validation");
+//            }
+//        });
+
+//        $.each($('.validate-chk'), function (index) {
+//            if ($(this).find('input[type = "checkbox"]:checked').length == 0) {
+//                $(this).addClass("red-validation");
+//                modelStateIsvalid = false;
+//                if (firstElement == null)
+//                    firstElement = $(this);
+//            }
+//            else {
+//                $(this).removeClass("red-validation");
+//            }
+//        });
+
+//        var emailelements = $('input[type="email"].validate');
+//        $.each(emailelements, function (index) {
+//            var emailValue = $(this).val();
+//            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//            if (emailValue == "" || !emailPattern.test(emailValue)) {
+//                $(this).addClass("red-validation");
+//                modelStateIsValid = false;
+//                if (firstElement == null)
+//                    firstElement = $(this);
+//            } else {
+//                $(this).removeClass("red-validation");
+//            }
+//        });
+//    }
+//    if (firstElement != null) {
+//        firstElement.focus();
+//    }
+
+//    return modelStateIsvalid;
+//}
 function isValidate(parendiv) {
 
     var modelStateIsvalid = true;
     var firstElement = null;
+
+    // 🔹 helper to get field name
+    function getFieldName(el) {
+        return el.attr('placeholder')
+            || el.attr('name')
+            || el.closest('.form-group').find('label').text()
+            || el.prev('label').text()
+            || 'This field';
+    }
+
+    // 🔹 helper to add/remove red border (select2 supported)
+    function addError(el) {
+        el.addClass("red-validation");
+
+        if (el.hasClass('select2-hidden-accessible')) {
+            el.next('.select2').find('.select2-selection')
+                .addClass("red-validation");
+        }
+    }
+
+    function removeError(el) {
+        el.removeClass("red-validation");
+
+        if (el.hasClass('select2-hidden-accessible')) {
+            el.next('.select2').find('.select2-selection')
+                .removeClass("red-validation");
+        }
+    }
+
     if (parendiv != null) {
+
         var inputelement = parendiv.find('input.validate');
         var textarea = parendiv.find('textarea.validate');
         var ddlelement = parendiv.find('select.validate');
 
-        $.each(inputelement, function (index) {
+        $.each(inputelement, function () {
             if ($(this).val() == "") {
-                $(this).addClass("red-validation");
+                addError($(this));
                 modelStateIsvalid = false;
-                if (firstElement == null)
-                    firstElement = $(this);
-            }
-            else {
-                $(this).removeClass("red-validation");
-            }
-        });
-
-        $.each(textarea, function (index) {
-            if ($(this).val() == "") {
-                $(this).addClass("red-validation");
-                modelStateIsvalid = false;
-                if (firstElement == null)
-                    firstElement = $(this);
-            }
-            else {
-                $(this).removeClass("red-validation");
-            }
-        });
-
-        $.each(ddlelement, function (index) {
-            if ($(this).children('option:selected').index() == 0) {
-                $(this).addClass("red-validation");
-                modelStateIsvalid = false;
-                if (firstElement == null)
-                    firstElement = $(this);
+                if (firstElement == null) firstElement = $(this);
             } else {
-                $(this).removeClass("red-validation");
+                removeError($(this));
             }
         });
-    }
-    else {
-        $.each($('input'), function (index) {
-            if ($(this).hasClass('validate')) {
-                if ($(this).val() == "") {
-                    $(this).addClass("red-validation");
-                    modelStateIsvalid = false;
-                    if (firstElement == null)
-                        firstElement = $(this);
-                }
-                else {
-                    $(this).removeClass("red-validation");
-                }
 
-            }
-            else {
-                $(this).removeClass("red-validation");
-            }
-
-        });
-
-        $.each($('textarea.validate'), function (index) {
+        $.each(textarea, function () {
             if ($(this).val() == "") {
-                $(this).addClass("red-validation");
+                addError($(this));
                 modelStateIsvalid = false;
-                if (firstElement == null)
-                    firstElement = $(this);
-            }
-            else {
-                $(this).removeClass("red-validation");
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
             }
         });
 
-        $.each($('select.validate'), function (index) {
-            ////
+        $.each(ddlelement, function () {
             if ($(this).children('option:selected').index() == 0) {
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
+            }
+        });
+
+    } else {
+
+        $.each($('input.validate'), function () {
+            if ($(this).val() == "") {
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
+            }
+        });
+
+        $.each($('textarea.validate'), function () {
+            if ($(this).val() == "") {
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
+            }
+        });
+
+        $.each($('select.validate'), function () {
+            if ($(this).children('option:selected').index() == 0) {
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
+            }
+        });
+
+        // 🔹 checkbox group validation
+        $.each($('.validate-chk'), function () {
+            if ($(this).find('input[type="checkbox"]:checked').length == 0) {
                 $(this).addClass("red-validation");
                 modelStateIsvalid = false;
-                if (firstElement == null)
-                    firstElement = $(this);
+                if (firstElement == null) firstElement = $(this);
             } else {
                 $(this).removeClass("red-validation");
             }
         });
 
-        $.each($('.validate-chk'), function (index) {
-            if ($(this).find('input[type = "checkbox"]:checked').length == 0) {
-                $(this).addClass("red-validation");
-                modelStateIsvalid = false;
-                if (firstElement == null)
-                    firstElement = $(this);
-            }
-            else {
-                $(this).removeClass("red-validation");
-            }
-        });
-
+        // 🔹 email validation
         var emailelements = $('input[type="email"].validate');
-        $.each(emailelements, function (index) {
+        $.each(emailelements, function () {
             var emailValue = $(this).val();
             var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
             if (emailValue == "" || !emailPattern.test(emailValue)) {
-                $(this).addClass("red-validation");
-                modelStateIsValid = false;
-                if (firstElement == null)
-                    firstElement = $(this);
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
             } else {
-                $(this).removeClass("red-validation");
+                removeError($(this));
             }
         });
     }
-    if (firstElement != null) {
-        firstElement.focus();
+
+    // 🔥 POPUP + AUTO FOCUS
+    if (!modelStateIsvalid && firstElement != null) {
+
+        // focus fix for select2
+        if (firstElement.hasClass('select2-hidden-accessible')) {
+            firstElement.next('.select2')
+                .find('.select2-selection')
+                .focus();
+        } else {
+            firstElement.focus();
+        }
+
+        swal(
+            "Validation Error",
+            getFieldName(firstElement) + " is required or invalid. Please check highlighted fields.",
+            "error"
+        );
     }
 
     return modelStateIsvalid;
@@ -1323,10 +1489,10 @@ function loadDataTablesUsingPreDefinedColumn(tblheader, data, backward) {
                 }
                 else {
                     if ($('#anchor label').text().indexOf(headertext) == -1) {
-                        // $("#anchor").append('<div class="checkbox checkbox-success check-box"><input type="checkbox" class="toggle-vis" data-column=' + i + '><label class="">' + headertext + '</label></div>');
+                        $("#anchor").append('<div class="checkbox checkbox-success check-box"><input type="checkbox" class="toggle-vis" data-column=' + i + '><label class="">' + headertext + '</label></div>');
                     }
                 }
-
+                
 
                 if (val.CssClass == 'undefined' || val.CssClass == null) {
                     theadrow.append('<th>' + headertext + '</th>');
@@ -2280,7 +2446,7 @@ function BasicDatatable(tableid) {
                 extend: 'print',
                 titleAttr: 'Print',
                 messageTop: message,
-                autoPrint: false,
+                autoPrint: true,
                 exportOptions: {
                     stripHtml: false,
                     columns: function (idx, data, node) {
@@ -2592,120 +2758,12 @@ function datatable(hideColumn, backward) {
                             tagName[i].setAttribute("val", fontSize)
                         }
                     }
-                },
-                //{
-                //    extend: 'pdfHtml5',
-                //    titleAttr: 'PDF',
-                //    //messageTop: message,
-                //    exportOptions: {
-                //        columns: function (idx, data, node) {
-
-                //            return table.column(idx).visible();
-                //        }
-                //    },
-                //    customize: function (doc) {
-                //        doc.defaultStyle.fontSize = fontSize;
-                //        //Remove the title created by datatTables
-                //        doc.content.splice(1, 0);
-                //        //Create a date string that we use in the footer. Format is dd-mm-yyyy
-                //        var now = new Date();
-                //        var jsDate = now.getDate() + '-' + (now.getMonth() + 1) + '-' + now.getFullYear();
-                //        // Logo converted to base64
-                //        doc.styles.tableHeader.alignment = 'left';
-                //        //var col = $('#example').DataTable().columns(':visible').nodes().length;
-                //        //var widths = ["*"];
-                //        //for (var i = 1; i < col; i++) {
-                //        //    widths.push("*");
-                //        //}
-                //        //doc.content[1].table.widths = widths;
-                //        //var imgs = $('.ReportHeader').find('img');
-                //        //var base64 = getBase64Image(document.getElementById("imageid"));
-                //        //var image1 = getBase64ImageUsingImage(imgs[0]);
-
-                //        // The above call should work, but not when called from codepen.io
-                //        // So we use a online converter and paste the string in.
-                //        // Done on http://codebeautify.org/image-to-base64-converter
-                //        // It's a LONG string scroll down to see the rest of the code !!!
-
-
-
-                //        // A documentation reference can be found at
-                //        // https://github.com/bpampuch/pdfmake#getting-started
-                //        // Set page margins [left,top,right,bottom] or [horizontal,vertical]
-                //        // or one number for equal spread
-                //        // It's important to create enough space at the top for a header !!!
-                //        doc.pageMargins = [10, 100, 20, 20];
-
-                //        // Set the font size fot the entire document
-                //        //doc.defaultStyle.fontSize = 7;
-                //        // Set the fontsize for the table header
-                //        //doc.styles.tableHeader.fontSize = 7;
-                //        // Create a header object with 3 columns
-                //        // Left side: Logo
-                //        // Middle: brandname
-                //        // Right side: A document title
-                //        //alert(logo)
-                //        doc['header'] = (function () {
-                //            return {
-                //                columns: [
-                //                    //{
-                //                    //    image: image1,
-                //                    //    width: 50
-                //                    //},
-                //                    {
-                //                        margin: [0, 30, 0, 0],
-                //                        alignment: 'center',
-                //                        image: logo,
-                //                        width: 600
-                //                    }
-                //                    //{
-                //                    //    alignment: 'right',
-                //                    //    fontSize: 14,
-                //                    //    text: 'Custom PDF export with dataTables'
-                //                    //}
-                //                ]
-
-                //            }
-                //        });
-                //        // Create a footer object with 2 columns
-                //        // Left side: report creation date
-                //        // Right side: current page and total pages
-                //        doc['footer'] = (function (page, pages) {
-                //            return {
-                //                columns: [
-                //                    {
-                //                        margin: [20, 0, 0, 0],
-                //                        alignment: 'left',
-                //                        text: ['Created on: ', { text: jsDate.toString() }]
-                //                    },
-                //                    {
-                //                        margin: [0, 0, 20, 0],
-                //                        alignment: 'right',
-                //                        text: ['page ', { text: page.toString() }, ' of ', { text: pages.toString() }]
-                //                    }
-                //                ]
-                //            }
-                //        });
-
-
-                //        // Change dataTable layout (Table styling)
-                //        // To use predefined layouts uncomment the line below and comment the custom lines below
-                //        // doc.content[0].layout = 'lightHorizontalLines'; // noBorders , headerLineOnly
-                //        //var objLayout = {};
-                //        //objLayout['hLineWidth'] = function (i) { return .5; };
-                //        //objLayout['vLineWidth'] = function (i) { return .5; };
-                //        //objLayout['hLineColor'] = function (i) { return '#aaa'; };
-                //        //objLayout['vLineColor'] = function (i) { return '#aaa'; };
-                //        //objLayout['paddingLeft'] = function (i) { return 4; };
-                //        //objLayout['paddingRight'] = function (i) { return 4; };
-                //        //doc.content[0].layout = objLayout;
-                //    }
-                //},
+                }, 
                 {
                     extend: 'print',
                     titleAttr: 'Print',
                     messageTop: message,
-                    autoPrint: false,
+                    autoPrint: true,
                     footer: addfunfoot == 1 ? true : false,
                     exportOptions: {
                         stripHtml: false,
@@ -2714,9 +2772,10 @@ function datatable(hideColumn, backward) {
                         }
                     },
                     customize: function (win) {
+                       
                         var url = window.location.href.replace(window.location.pathname, '');
                         var title = $(win.document.head).find('title');
-                        $(win.document.head).html('').append(title).append('<link href="' + url + '/Content/plugins/assets/css/print/print-bootstrap.min.css" rel="stylesheet" />').append('<link href="' + url + '/Content/plugins/assets/css/print/print-main.css" rel="stylesheet" />');
+                        $(win.document.head).html('').append(title).append('<link href="../Content/plugins/assets/css/print/print-bootstrap.min.css" rel="stylesheet" />').append('<link href="../Content/plugins/assets/css/print/print-main.css" rel="stylesheet" />');
 
                         $(win.document.head).append('<style>table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_desc_disabled:before {opacity: 0;}table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {opacity: 0;}</style>');
 
@@ -2928,7 +2987,7 @@ function datatable(hideColumn, backward) {
                     extend: 'print',
                     titleAttr: 'Print',
                     messageTop: message,
-                    autoPrint: false,
+                    autoPrint: true,
                     footer: addfunfoot == 1 ? true : false,
                     exportOptions: {
                         stripHtml: false,
@@ -2938,8 +2997,8 @@ function datatable(hideColumn, backward) {
                     },
                     customize: function (win) {
                         var url = window.location.href.replace(window.location.pathname, '');
-                        var title = $(win.document.head).find('title');
-                        $(win.document.head).html('').append(title).append('<link href="' + url + '/Content/plugins/assets/css/print/print-bootstrap.min.css" rel="stylesheet" />').append('<link href="' + url + '/Content/plugins/assets/css/print/print-main.css" rel="stylesheet" />');
+                        var title = $(win.document.head).find('title'); 
+                        $(win.document.head).html('').append(title).append('<link href="../Content/plugins/assets/css/print/print-bootstrap.min.css" rel="stylesheet" />').append('<link href="../Content/plugins/assets/css/print/print-main.css" rel="stylesheet" />');
 
                         $(win.document.head).append('<style>table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before, table.dataTable thead .sorting_desc:before, table.dataTable thead .sorting_asc_disabled:before, table.dataTable thead .sorting_desc_disabled:before {opacity: 0;}table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {opacity: 0;}</style>');
 
@@ -3472,4 +3531,256 @@ function getParameterByName(name) {
     return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+function looselyMatch(requiredText, extractedText) {
 
+    if (!requiredText || !extractedText) {
+        return false;
+    }
+
+    const normalize = text => text
+        .toUpperCase()
+        .replace(/[^A-Z\s]/g, '')  // remove punctuation
+        .split(/\s+/);             // split into words
+
+    const requiredWords = normalize(requiredText);
+    const extractedWords = normalize(extractedText);
+
+    let matchedCount = 0;
+
+    requiredWords.forEach(reqWord => {
+        for (let word of extractedWords) {
+            // basic stemming: match if startsWith or difference is 1 character (like THANK/THANKS)
+            if (word.startsWith(reqWord)) {
+                matchedCount++;
+                break;
+            }
+        }
+    });
+
+    // if at least 70% of required words matched, consider valid
+    return matchedCount / requiredWords.length >= 0.7;
+}
+//-----------------------------------------------------------get match text
+ 
+ 
+
+
+//---------------------------------------------validation for file-----------------------
+
+function validateDocument(file, SelectedColumn, callback) {
+    var collectionobj = {
+        Action: 5,
+        SelectedColumn: SelectedColumn
+    };
+   
+    $.ajax({
+        url: "../Retail/SearchRetailFileMatching",
+        method: "POST",
+        data: JSON.stringify(collectionobj),
+        contentType: "application/json",
+        success: function (response) {
+            debugger;
+            var response = typeof response === 'string' ? JSON.parse(response) : response;
+
+            if (response && response.Result) {
+
+                if (!response.Result.length) {
+                    callback(true);
+                    return;
+                }
+                const requiredText = response.Result[0].MatchingText.toUpperCase();
+                const fileType = file.type;
+
+                const isPDF = fileType === 'application/pdf';
+                const isImage = fileType.startsWith('image/');
+                const isExcel = fileType === "application/vnd.ms-excel" ||
+                    fileType ===   'text/csv' ||
+                    fileType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                if (!isPDF && !isImage && !isExcel) {
+                    alert("Only PDF, Image, or Excel files are allowed.");
+                    callback(false);
+                    return;
+                }
+
+                // ========== PDF HANDLING ================
+                //if (isPDF) {
+                //    const reader = new FileReader();
+                //    reader.onload = function () {
+                //        const typedarray = new Uint8Array(reader.result);
+                //        pdfjsLib.getDocument({ data: typedarray }).promise.then(function (pdf) {
+                //            let matched = false;
+                //            let processedPages = 0;
+
+                //            for (let i = 1; i <= pdf.numPages; i++) {
+                //                pdf.getPage(i).then(function (page) {
+                //                    page.getTextContent().then(function (textContent) {
+                //                        let text = '';
+                //                        for (let item of textContent.items) {
+                //                            text += item.str + ' ';
+                //                        }
+
+                //                        if (text.trim().length > 20 && text.toUpperCase().includes(requiredText)) {
+                //                            matched = true;
+                //                            callback(true);
+                //                            return;
+                //                        } else {
+                //                            // Fallback to OCR
+                //                            pdf.getPage(1).then(function (page) {
+                //                                const viewport = page.getViewport({ scale: 1.5 }); // Lower scale = faster rendering
+                //                                const canvas = document.createElement('canvas');
+                //                                const context = canvas.getContext('2d');
+                //                                canvas.width = viewport.width;
+                //                                canvas.height = viewport.height;
+
+                //                                page.render({ canvasContext: context, viewport: viewport }).promise.then(function () {
+                //                                    Tesseract.recognize(canvas, 'eng', { tessjs_create_pdf: '0' }).then(function (result) {
+                //                                        // Extract only the top part
+                //                                        debugger;
+                                                     
+                //                                        let extractedText = result.data.text.trim().toUpperCase().slice(0, 500); // 3-4 lines max
+                                                      
+                //                                       if (looselyMatch(requiredText, extractedText)) {
+                //                                            callback(true);
+                //                                        } else {
+                //                                            callback(false);
+                //                                        } 
+                //                                    }).catch(function () {
+                //                                        alert("OCR failed");
+                //                                        callback(false);
+                //                                    });
+                //                                });
+                //                            });
+
+                //                        }
+
+                //                        //// Handle case where all pages processed but not matched
+                //                        //if (++processedPages === pdf.numPages && !matched) {
+                //                        //    callback(false);
+                //                        //}
+                //                    });
+                //                });
+                //            }
+                //        }).catch(function () {
+                //            alert("Error reading PDF file.");
+                //            callback(false);
+                //        });
+                //    };
+                //    reader.readAsArrayBuffer(file);
+                //}
+                if (isPDF) {
+                    const reader = new FileReader();
+                    reader.onload = function () {
+                        const typedarray = new Uint8Array(reader.result);
+
+                        pdfjsLib.getDocument({ data: typedarray }).promise.then(async function (pdf) {
+
+                            let fullText = '';
+
+                            for (let i = 1; i <= pdf.numPages; i++) {
+                                const page = await pdf.getPage(i);
+                                const textContent = await page.getTextContent();
+
+                                textContent.items.forEach(item => {
+                                    fullText += item.str + ' ';
+                                });
+                            }
+
+                            fullText = fullText.trim().toUpperCase();
+
+                            // 🚫 IMAGE BASED PDF CHECK
+                            if (fullText.length < 50) {
+                                swal("Invalid File", "This PDF is scanned or image-based. Text extraction failed. Please verify the file.", "error");
+                               
+                                callback(true);
+                                return;
+                            }
+
+                            // ✅ TEXT MATCH CHECK
+                            if (fullText.includes(requiredText)) {
+                                callback(true);
+                            } else {
+                                callback(false);
+                            }
+
+                        }).catch(function () {
+                            alert("Error reading PDF file.");
+                            callback(false);
+                        });
+                    };
+                    reader.readAsArrayBuffer(file);
+                }
+
+
+                // ========== IMAGE HANDLING ================
+                else if (isImage) {
+                    const reader = new FileReader();
+                    reader.onload = function () {
+                        Tesseract.recognize(reader.result, 'eng')
+                            .then(function (result) {
+                                const extractedText = result.data.text.toUpperCase();
+                                if (extractedText.includes(requiredText)) {
+                                    callback(true);
+                                } else {
+                                  //  alert("The file you uploaded doesn't seem to be correct. Are you sure this is the right file?");
+                                    callback(false);
+                                    return;
+                                }
+                            })
+                            .catch(function () {
+                                alert("Image OCR failed.");
+                                callback(false);
+                                return;
+                            });
+                    };
+                    reader.readAsDataURL(file);
+                }
+
+                // ========== EXCEL HANDLING ================
+                else if (isExcel) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        try {
+                            const data = new Uint8Array(e.target.result);
+                            const workbook = XLSX.read(data, { type: 'array' });
+
+                            let allText = '';
+                            workbook.SheetNames.forEach(function (sheetName) {
+                                const sheet = workbook.Sheets[sheetName];
+                                const sheetText = XLSX.utils.sheet_to_csv(sheet);
+                                allText += sheetText + ' ';
+                            });
+
+                            if (allText.toUpperCase().includes(requiredText)) {
+                                callback(true);
+                                return;
+                            } else {
+                                 alert("The file you uploaded doesn't seem to be correct. Upload anyway");
+                                callback(true);
+                                return;
+                            }
+                        } catch (err) {
+                            alert("Error processing Excel file. Upload anyway");
+                            callback(true);
+                            return;
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                }
+
+            } else {
+                alert("Unable to fetch matching text from server. Upload anyway");
+                callback(true);
+                return;
+            }
+        },
+        error: function () {
+            alert("Server error occurred while fetching required text. Upload anyway");
+            callback(true);
+            return;
+        }
+    });
+}
+
+
+    //---------------------------------------------------------------

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace BAL
+﻿namespace BAL
 {
     public class PaymentBAL
     {
@@ -17,12 +12,12 @@ namespace BAL
         public string EmailId { get; set; }
         public string ContactNo { get; set; }
         public string LicenceReqId { get; set; }
-        public string OrderId { get; set; } 
+        public string OrderId { get; set; }
         public string PaymentMode { get; set; }
         public string PaymentStatus { get; set; }
         public string TransId { get; set; }
         public string UserName { get; set; }
-        
+
 
     }
 }
