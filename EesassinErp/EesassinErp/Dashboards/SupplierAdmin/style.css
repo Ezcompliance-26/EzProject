@@ -1,0 +1,312 @@
+﻿.supplierAdminPage {
+    font-family: "Inter", sans-serif;
+    --primary: #E45D27; /* theme accent */
+    --primary-dark: #c44b1d;
+    --card-bg: #FEF3EC;
+    background: #FFF1EB;
+    color: #223;
+    min-height: 83vh;
+}
+
+.dropdown-menu {
+    min-width: 120px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.add-btn, .save-btn{
+    border-radius: 999px;
+    color: #fff;
+    background: var(--primary);
+    padding: 4px 8px;
+    font-weight: 400;
+    font-size: 0.85rem;
+    -webkit-tap-highlight-color: transparent;
+}
+
+    .save-btn:hover,
+    .add-btn:hover {
+        background: var(--primary-dark);
+        color: #fff;
+    }
+
+.cancel-btn {
+    border-radius: 999px;
+    color: var(--primary);
+    background: transparent;
+    border: 1px solid var(--primary);
+    padding: 4px 8px;
+    font-weight: 400;
+    font-size: 0.85rem;
+    -webkit-tap-highlight-color: transparent;
+}
+
+    .cancel-btn:hover {
+        background: var(--primary);
+        color: #fff;
+    }
+
+/* ===== Fix Add Party button click blink ===== */
+
+.supplierAdminPage .add-btn {
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+    /* prevent white flash on click */
+    .supplierAdminPage .add-btn:active,
+    .supplierAdminPage .add-btn:focus,
+    .supplierAdminPage .add-btn:focus-visible {
+        background: var(--primary) !important;
+        color: #fff !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+/* remove mobile tap highlight */
+.supplierAdminPage .add-btn {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* Toggle pill - single capsule container */
+.supplierAdminPage .toggle-pill {
+    display: inline-flex;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.03);
+    padding: 4px;
+    overflow: hidden;
+    gap: 4px;
+    align-items: center;
+}
+
+    /* inner buttons: make them visually full-pill, no borders, equal width */
+    .supplierAdminPage .toggle-pill .btn-pill {
+        background: transparent;
+        border: 0;
+        padding: 4px 8px;
+        margin: 0;
+        font-weight: 400;
+        color: #333;
+        border-radius: 999px;
+        transition: background .15s ease, color .15s ease, transform .06s ease;
+        white-space: nowrap;
+        min-width: 80px;
+    }
+
+        /* active pill */
+        .supplierAdminPage .toggle-pill .btn-pill.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(196,75,29,0.08);
+        }
+
+        /* ensure focus ring for accessibility (subtle) */
+        .supplierAdminPage .toggle-pill .btn-pill:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(228,93,39,0.12);
+        }
+
+/* Section cards */
+.supplierAdminPage .section-card {
+    background: transparent;
+    border: none;
+}
+
+    .supplierAdminPage .section-card .card-body {
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        /* min-height: 320px;*/
+    }
+
+    .supplierAdminPage .section-card h4 {
+        color: var(--primary);
+    }
+
+
+/* KPI CARDS */
+.supplierAdminPage .kpi-row {
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.supplierAdminPage .kpi-card {
+    flex: 1;
+    min-width: 220px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border-left: 5px solid #E45D27;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .supplierAdminPage .kpi-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+
+.supplierAdminPage .kpi-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+}
+
+.supplierAdminPage .kpi-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-top: 4px;
+    color: #E45D27;
+}
+
+/* Table wrapper and hide scrollbar visually */
+.supplierAdminPage .small-table-wrapper .table-responsive {
+    max-height: 75vh;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scroll-behavior: smooth;
+    position: relative;
+}
+
+    .supplierAdminPage .small-table-wrapper .table-responsive::-webkit-scrollbar {
+        display: none;
+    }
+
+/* table header sticky */
+.supplierAdminPage .small-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #F37437;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+    padding: 8px 10px;
+}
+
+/* table body */
+.supplierAdminPage .small-table tbody td {
+    background-color: var(--card-bg);
+    font-size: 0.78rem;
+    vertical-align: middle;
+    text-align: left;
+    padding: 8px 10px;
+    white-space: nowrap;
+}
+
+/* hover */
+.supplierAdminPage .small-table tbody tr:hover td {
+    background-color: #FFE8D9;
+}
+
+/* action menu */
+
+.supplierAdminPage .action-menu .btn {
+    border-radius: 999px;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+    padding: 4px 8px;
+    font-weight: 400;
+    font-size: 0.78rem;
+}
+
+    .supplierAdminPage .action-menu .btn:hover {
+        background: var(--primary);
+        color: #fff;
+    }
+
+
+/* filter button */
+.supplierAdminPage .filter-btn,
+.supplierAdminPage .filter-btn {
+    border-radius: 999px;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+    padding: 4px 8px;
+    font-weight: 400;
+    font-size: 0.85rem;
+}
+
+    .supplierAdminPage .filter-btn.active,
+    .supplierAdminPage .filter-btn:hover,
+    .supplierAdminPage .filter-btn.active,
+    .supplierAdminPage .filter-btn:hover {
+        background: var(--primary);
+        color: #fff;
+    }
+
+/* small inputs */
+.supplierAdminPage .table-toolbar .form-control-sm {
+    height: 34px;
+    border-radius: 999px 0 0 999px;
+    border-right: none;
+    border-color: var(--primary);
+}
+
+/* Search button */
+.supplierAdminPage .input-group .btn {
+    /* border-radius: 0 999px 999px 0;
+    border-left: none;*/
+}
+
+/* Export button (rounded) */
+.supplierAdminPage .export-btn, .search-btn {
+    border-radius: 999px;
+    color: #fff;
+    background: var(--primary);
+    padding: 6px 8px;
+    font-weight: 400;
+    font-size: 0.85rem;
+    -webkit-tap-highlight-color: transparent;
+}
+
+    .supplierAdminPage .export-btn:hover,
+    .supplierAdminPage .search-btn:hover {
+        background: var(--primary-dark);
+        color: #fff;
+    }
+
+/* ================= Add Party Modal ================= */
+
+.supplierAdminPage .supplierAdminModal .modal-header {
+    background: var(--primary);
+    color: #fff;
+}
+
+.supplierAdminPage .supplierAdminModal .modal-title {
+    font-weight: 400;
+}
+
+.supplierAdminPage .supplierAdminModal .modal-body {
+    background: var(--card-bg);
+}
+
+.supplierAdminPage .supplierAdminModal .form-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #444;
+}
+
+    .supplierAdminPage .supplierAdminModal .form-label span {
+        color: #E45D27;
+    }
+
+.supplierAdminPage .supplierAdminModal .form-control-sm,
+.supplierAdminPage .supplierAdminModal .form-select-sm {
+    font-size: 0.78rem;
+    border-radius: 6px;
+}
+
+.supplierAdminPage .supplierAdminModal .modal-footer {
+    background: var(--card-bg);
+    border-top: 1px solid #eee;
+}

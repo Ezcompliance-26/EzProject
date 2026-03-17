@@ -1,0 +1,892 @@
+﻿ @{
+    ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
+    ViewBag.Title = "New Employee Master";
+    Layout = "~/Views/Common/_NewRetailLayout.cshtml";
+}
+
+<script src="~/Masters/NewEmployeeMaster/script.js"></script>
+<link href="~/Masters/NewEmployeeMaster/style.css" rel="stylesheet" />
+
+<div class="employeeMasterPage px-4 py-2">
+    <!-- Top bar: instruction left + Bulk Download button right -->
+    <div class="d-flex align-items-center justify-content-between mb-3 top-bar">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <div class="limit-instruction">Location Employee Limit: <strong>600</strong></div>
+            <div class="limit-instruction">Created: <strong>250</strong></div>
+            <div class="limit-instruction">Left: <strong>350</strong></div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <!-- New Employee (rounded pill) -->
+            <button class="btn btn-sm btn-newEmployee" id="btnNewEmployee" type="button" data-bs-toggle="modal" data-bs-target="#newEmployeeModal">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                <span>New Employee</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= New Employee Modal ================= -->
+    <div class="modal fade" id="newEmployeeModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content employee-modal">
+
+                <!-- Header -->
+                <div class="modal-header employee-modal-header">
+                    <h6 class="modal-title">Add New Employee</h6>
+                    <button type="button" class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body employee-modal-body">
+                    <form>
+
+                        <!-- Employee Details  -->
+                        <h6 class="section-title">Employee Details</h6>
+                        <div class="row g-3">
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Employee Code *</label>
+                                <input class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Ref Employee Code</label>
+                                <input class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Employee Name *</label>
+                                <input class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Store Code</label>
+                                <select class="form-select form-select-sm">
+                                    <option>Select</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Designation</label>
+                                <input class="form-control form-control-sm">
+                            </div>
+
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Department</label>
+                                <input class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Father / Husband Name</label>
+                                <input class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select form-select-sm">
+                                    <option>Select</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Marital Status</label>
+                                <select class="form-select form-select-sm">
+                                    <option>Select</option>
+                                </select>
+                            </div>
+                            <!-- Dates & Status  -->
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Date of Joining</label>
+                                <input type="date" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Date of Leaving</label>
+                                <input type="date" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Status</label>
+                                <select class="form-select form-select-sm">
+                                    <option>Select</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Contact  -->
+                        <hr>
+                        <h6 class="section-title">Contact & Address</h6>
+                        <div class="row g-3">
+                            <div class="col-lg-6">
+                                <label class="form-label">Present Address</label>
+                                <input class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="form-label">Permanent Address</label>
+                                <input class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Mobile Number</label>
+                                <input class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Alternate Mobile</label>
+                                <input class="form-control form-control-sm">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Employee Email ID</label>
+                                <input class="form-control form-control-sm">
+                            </div>
+                        </div>
+
+                        <!-- Identity & Bank  -->
+                        <hr>
+                        <h6 class="section-title">Statutory & Bank Details</h6>
+                        <div class="row g-3">
+                            <div class="col-lg-3 col-md-6"><label class="form-label">PAN No</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Aadhaar No</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">UAN No</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">PF Account No</label><input class="form-control form-control-sm"></div>
+
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Bank Account No.</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Bank IFSC Code</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Previous ESIC</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Gross Salary</label><input class="form-control form-control-sm"></div>
+                        </div>
+
+                        <!-- Nominee  -->
+                        <hr>
+                        <h6 class="section-title">Nominee Details</h6>
+                        <div class="row g-3">
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Nominee Name</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Relation</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">DOB</label><input type="date" class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Address</label><input class="form-control form-control-sm"></div>
+                        </div>
+
+                        <!-- Upload Documents  -->
+                        <hr>
+                        <h6 class="section-title">Upload Documents</h6>
+
+                        <div class="row g-3">
+
+                            <!-- PAN Card -->
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">PAN Card</label>
+                                <div class="upload-field">
+                                    <div class="upload-input-wrap">
+                                        <input type="file" class="upload-input" accept=".pdf,.jpg,.jpeg,.png">
+                                        <span class="file-name">No file chosen</span>
+                                    </div>
+                                    <div class="upload-actions">
+                                        <i class="bi bi-eye upload-icon" title="View"></i>
+                                        <i class="bi bi-download upload-icon" title="Download"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Aadhaar Card -->
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Aadhaar Card</label>
+                                <div class="upload-field">
+                                    <div class="upload-input-wrap">
+                                        <input type="file" class="upload-input" accept=".pdf,.jpg,.jpeg,.png">
+                                        <span class="file-name">No file chosen</span>
+                                    </div>
+                                    <div class="upload-actions">
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cheque/Passbook Copy -->
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Cheque/Passbook Copy</label>
+                                <div class="upload-field">
+                                    <div class="upload-input-wrap">
+                                        <input type="file" class="upload-input" accept=".pdf">
+                                        <span class="file-name">No file chosen</span>
+                                    </div>
+                                    <div class="upload-actions">
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Educational Certificate -->
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Educational Certificate</label>
+                                <div class="upload-field">
+                                    <div class="upload-input-wrap">
+                                        <input type="file" class="upload-input" accept=".pdf">
+                                        <span class="file-name">No file chosen</span>
+                                    </div>
+                                    <div class="upload-actions">
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Experience Certificate -->
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Experience Certificate</label>
+                                <div class="upload-field">
+                                    <div class="upload-input-wrap">
+                                        <input type="file" class="upload-input" accept=".pdf">
+                                        <span class="file-name">No file chosen</span>
+                                    </div>
+                                    <div class="upload-actions">
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Relieving Letter -->
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Relieving Letter</label>
+                                <div class="upload-field">
+                                    <div class="upload-input-wrap">
+                                        <input type="file" class="upload-input" accept=".pdf">
+                                        <span class="file-name">No file chosen</span>
+                                    </div>
+                                    <div class="upload-actions">
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payslip -->
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Payslip</label>
+                                <div class="upload-field">
+                                    <div class="upload-input-wrap">
+                                        <input type="file" class="upload-input" accept=".pdf">
+                                        <span class="file-name">No file chosen</span>
+                                    </div>
+                                    <div class="upload-actions">
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Photo -->
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Photo</label>
+                                <div class="upload-field">
+                                    <div class="upload-input-wrap">
+                                        <input type="file" class="upload-input" accept=".jpg,.jpeg,.png">
+                                        <span class="file-name">No file chosen</span>
+                                    </div>
+                                    <div class="upload-actions">
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </form>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer employee-modal-footer">
+                    <button class="btn cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn import-save-btn">Submit</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Capsule Toggle (single capsule container) -->
+    <div class="mb-3">
+        <div class="toggle-pill" role="tablist" aria-label="View or Generate">
+            <button type="button" class="btn btn-pill active" data-target="#viewCard" aria-pressed="true">View</button>
+            <button type="button" class="btn btn-pill" data-target="#generateCard" aria-pressed="false">Generate</button>
+        </div>
+    </div>
+
+    <!-- Dynamic sections -->
+    <div class="section-wrap">
+        <!-- VIEW CARD (default visible) -->
+        <div id="viewCard" class="card section-card active">
+            <div class="card-body p-3 h-100 d-flex flex-column">
+
+                <!-- Toolbar -->
+                <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="dropdown">
+                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Month
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">January</a></li>
+                                <li><a class="dropdown-item" href="#">February</a></li>
+                                <li><a class="dropdown-item" href="#">March</a></li>
+                                <!-- ... -->
+                            </ul>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Year
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">2025</a></li>
+                                <li><a class="dropdown-item" href="#">2024</a></li>
+                            </ul>
+                        </div>
+
+                        <button class="btn btn-sm filter-btn active">Go</button>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
+                        <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
+                            <div class="input-group input-group-sm">
+                                <input id="estSearch" type="text" class="form-control form-control-sm" placeholder="Search..." />
+                                <button class="btn btn-sm" style="border-color: #E45D27" id="estSearchBtn" type="button"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#">CSV</a></li>
+                                    <li><a class="dropdown-item" href="#">PDF</a></li>
+                                    <li><a class="dropdown-item" href="#">Print</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table wrapper -->
+                <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0 small-table">
+                            <thead>
+                                <tr>
+                                    <th>Sr.No</th>
+                                    <th>Employee Code</th>
+                                    <th>Ref Employee Code</th>
+                                    <th>Employee Name</th>
+                                    <th>Designation</th>
+                                    <th>D.O.J</th>
+                                    <th>Department</th>
+                                    <th>Compliance Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>EMP03310</td>
+                                    <td>63178</td>
+                                    <td>Deepak</td>
+                                    <td>Team Leader</td>
+                                    <td>11/11/2024</td>
+                                    <td>Operations</td>
+                                    <td>
+                                        <div class="doc-status-wrap">
+                                            <div class="doc-progress">
+                                                <div class="doc-progress-bar progress-low" style="width: 35%;"></div>
+                                            </div>
+                                            <span class="doc-progress-text">35%</span>
+                                        </div>
+                                    </td>
+                                    <td class="action-menu">
+                                        <button class="btn btn-sm" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   href="javascript:void(0)"
+                                                   data-bs-toggle="modal"
+                                                   data-bs-target="#employeeViewModal">
+                                                    View More
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   href="#"
+                                                   data-bs-toggle="modal"
+                                                   data-bs-target="#complianceDocumentsModal">
+                                                    Compliance Documents
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>EMP03310</td>
+                                    <td>63178</td>
+                                    <td>Arjun</td>
+                                    <td>Team Leader</td>
+                                    <td>11/11/2024</td>
+                                    <td>Operations</td>
+                                    <td>
+                                        <div class="doc-status-wrap">
+                                            <div class="doc-progress">
+                                                <div class="doc-progress-bar progress-mid" style="width: 65%;"></div>
+                                            </div>
+                                            <span class="doc-progress-text">65%</span>
+                                        </div>
+                                    </td>
+                                    <td class="action-menu">
+                                        <button class="btn btn-sm" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="#">View More</a></li>
+                                            <li><a class="dropdown-item" href="#">Compliance Documents</a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>EMP03310</td>
+                                    <td>63178</td>
+                                    <td>Ansh</td>
+                                    <td>Team Leader</td>
+                                    <td>11/11/2024</td>
+                                    <td>Operations</td>
+                                    <td>
+                                        <div class="doc-status-wrap">
+                                            <div class="doc-progress">
+                                                <div class="doc-progress-bar progress-high" style="width: 90%;"></div>
+                                            </div>
+                                            <span class="doc-progress-text">90%</span>
+                                        </div>
+                                    </td>
+                                    <td class="action-menu">
+                                        <button class="btn btn-sm" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="#">View More</a></li>
+                                            <li><a class="dropdown-item" href="#">Compliance Documents</a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="table-pagination d-flex justify-content-between align-items-center mt-2" id="PaginationWrap">
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-sm" id="Prev" type="button">Previous</button>
+                            <button class="btn btn-sm" id="Next" type="button">Next</button>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <div id="PageInfo" style="font-size:0.85rem;color:#555;"></div>
+                            <button class="btn btn-sm btn-primary" id="viewAllRows" type="button">View All Rows</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= Employee View Modal ================= -->
+        <div class="modal fade employeeViewModalPage"
+             id="employeeViewModal"
+             tabindex="-1"
+             aria-hidden="true">
+
+            <div class="modal-dialog modal-md modal-dialog-slideout">
+                <div class="modal-content rounded-3">
+
+                    <!-- HEADER -->
+                    <div class="modal-header ev-header">
+                        <button type="button"
+                                class="btn-close btn-close-white ms-auto"
+                                data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- BODY -->
+                    <div class="modal-body ev-body">
+
+                        <!-- PROFILE -->
+                        <div class="ev-profile text-center">
+                            <div class="ev-avatar">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+
+                            <h6 class="ev-name">Deepak</h6>
+
+                            <div class="ev-meta">
+                                DOJ : 11/11/2024 <br />
+                                Ref Employee Code : 63178
+                            </div>
+                        </div>
+
+                        <!-- CONTACT -->
+                        <div class="ev-section">
+                            <div class="ev-transfer-title text-center">
+                                <span class="ev-transfer-chip">Contact</span>
+                            </div>
+
+                            <div class="ev-info">
+                                <div class="ev-info-row">
+                                    <label>Email :</label>
+                                    <span>deepak@email.com</span>
+                                </div>
+                                <div class="ev-info-row">
+                                    <label>Phone Number :</label>
+                                    <span>9876543210</span>
+                                </div>
+                                <div class="ev-info-row">
+                                    <label>Address :</label>
+                                    <span>Mumbai, Maharashtra</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- DOCUMENTS -->
+                        <div class="ev-section">
+                            <div class="ev-transfer-title text-center">
+                                <span class="ev-transfer-chip">Documents</span>
+                            </div>
+
+
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Aadhaar Card Front Side</div>
+                                    <div class="ev-doc-date">Last updated : 12 Jan 2025</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon" title="Upload"></i>
+                                    <i class="bi bi-eye ev-doc-icon" title="View"></i>
+                                </div>
+                            </div>
+
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Aadhaar Card Back Side</div>
+                                    <div class="ev-doc-date">Last updated : 08 Jan 2025</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">PAN Card</div>
+                                    <div class="ev-doc-date">Last updated : 02 Jan 2025</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                    <i class="bi bi-eye ev-doc-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Education Certificate</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Experience Certificate</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Relieving Letter</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Payslips</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Photos</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Cheque / Passbook</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- ================= TRANSFER LOG ================= -->
+                        <div class="ev-section ev-transfer-section mt-3">
+
+                            <div class="ev-transfer-title text-center">
+                                <span class="ev-transfer-chip">Transfer Logs</span>
+                            </div>
+
+                            <div class="ev-transfer-table">
+                                <table class="ev-transfer-table-inner">
+                                    <thead>
+                                        <tr>
+                                            <th>Site Code</th>
+                                            <th>Site Name</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>SC001</td>
+                                            <td>Head Office</td>
+                                            <td>01-Apr-2024</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>SC002</td>
+                                            <td>Branch Office</td>
+                                            <td>01-Jan-2023</td>
+                                            <td>31-Mar-2024</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="modal-footer ev-footer">
+                        <button class="btn ev-footer-btn secondary" data-bs-toggle="modal"data-bs-target="#transferEmployeeModal">Transfer</button>
+                        <button class="btn ev-footer-btn primary">View More</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= Transfer Employee Modal ================= -->
+        <div class="modal fade employeeViewModalPage"
+             id="transferEmployeeModal"
+             tabindex="-1"
+             aria-hidden="true">
+
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content te-modal-content">
+
+                    <!-- HEADER -->
+                    <div class="modal-header te-header">
+                        <h5 class="modal-title mb-0">Transfer Employee</h5>
+                        <button type="button"
+                                class="btn-close btn-close-white"
+                                data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- BODY -->
+                    <div class="modal-body te-body">
+
+                        <p class="te-subtitle">
+                            Transfer the employee to the site you want
+                        </p>
+
+                        <!-- Search Section -->
+                        <div class="te-search-wrapper">
+                            <input type="text"
+                                   class="form-control te-search-input"
+                                   placeholder="Enter Site Code" />
+
+                            <button class="btn te-search-btn">
+                                Search
+                            </button>
+                        </div>
+
+                        <hr />
+
+                        <div class="te-units-title">Sites</div>
+
+                        <!-- Sites List -->
+                        <div class="te-unit-row">
+                            <div class="te-unit-left">
+                                <div class="te-unit-code">00003739</div>
+                                <div class="te-unit-emp">8988 Employee</div>
+                            </div>
+                            <button class="btn te-transfer-btn"
+                                    data-bs-dismiss="modal">
+                                Transfer
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ================= Compliance Documents Modal ================= -->
+        <div class="modal fade complianceDocsModal"
+             id="complianceDocumentsModal"
+             tabindex="-1"
+             aria-hidden="true">
+
+            <div class="modal-dialog modal-md modal-dialog-slideout">
+                <div class="modal-content rounded-3">
+
+                    <!-- HEADER -->
+                    <div class="modal-header complianceDocs-header">
+                        <h6 class="modal-title text-white">Compliance Documents</h6>
+                        <button type="button"
+                                class="btn-close btn-close-white"
+                                data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- BODY -->
+                    <div class="modal-body complianceDocs-body">
+
+                        <!-- DOCUMENT ITEM -->
+                        <div class="doc-item">
+
+                            <div class="doc-row">
+
+                                <div class="doc-info">
+                                    <div class="doc-name">PAN Card</div>
+                                    <div class="doc-meta">Last Updated: 02/01/2026 (v2)</div>
+                                </div>
+
+                                <div class="doc-actions">
+                                    <i class="bi bi-upload action-icon"></i>
+                                    <i class="bi bi-eye action-icon"></i>
+                                    <i class="bi bi-download action-icon"></i>
+                                    <i class="bi bi-chevron-down toggle-history"
+                                       data-bs-toggle="collapse"
+                                       data-bs-target="#panHistory"></i>
+                                </div>
+
+                            </div>
+
+                            <!-- HISTORY -->
+                            <div class="collapse doc-history" id="panHistory">
+                                <div class="history-item">
+                                    <span class="version">v1</span>
+                                    <span class="date">Uploaded: 12/12/2025</span>
+                                    <i class="bi bi-download action-icon small-icon"></i>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- DOCUMENT ITEM  -->
+                        <div class="doc-item">
+
+                            <div class="doc-row">
+
+                                <div class="doc-info">
+                                    <div class="doc-name">GST Certificate</div>
+                                    <div class="doc-meta">Last Updated: 15/01/2026 (v3)</div>
+                                </div>
+
+                                <div class="doc-actions">
+                                    <i class="bi bi-upload action-icon"></i>
+                                    <i class="bi bi-eye action-icon"></i>
+                                    <i class="bi bi-download action-icon"></i>
+                                    <i class="bi bi-chevron-down toggle-history"
+                                       data-bs-toggle="collapse"
+                                       data-bs-target="#gstHistory"></i>
+                                </div>
+
+                            </div>
+
+                            <!-- HISTORY -->
+                            <div class="collapse doc-history" id="gstHistory">
+                                <div class="history-item">
+                                    <span class="version">v2</span>
+                                    <span class="date">Uploaded: 10/12/2025</span>
+                                    <i class="bi bi-download action-icon small-icon"></i>
+                                </div>
+
+                                <div class="history-item">
+                                    <span class="version">v1</span>
+                                    <span class="date">Uploaded: 05/10/2025</span>
+                                    <i class="bi bi-download action-icon small-icon"></i>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- ================= GENERATE CARD (hidden by default) ================= -->
+        <div id="generateCard" class="card section-card d-none">
+            <div class="card-body p-3">
+                <h6>Import Master File</h6>
+                @*<p class="text-muted">Upload CSV or Excel to import multiple files.</p>*@
+
+                <!-- Download Template -->
+                <button class="btn btn-sm mb-3" id="empMasterDownloadTemplate">
+                    <i class="bi bi-download me-1"></i> Download Master Template
+                </button>
+
+                <!-- Upload Box -->
+                <div class="est-import-box p-3">
+                    <label class="form-label  mb-2">Choose Master File</label>
+                    <input type="file" id="locationImportFile" class="form-control" />
+
+                    <div class="d-flex gap-2 mt-3">
+                        <button class="btn import-save-btn px-4" id="importSaveBtn">
+                            Save
+                        </button>
+
+                        <button class="btn cancel-btn px-4" id="importCancelBtn">
+                            Cancel
+                        </button>
+                    </div>
+
+                    <div id="generateFilePreview" class="mt-3 d-none"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
