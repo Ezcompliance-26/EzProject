@@ -1,0 +1,283 @@
+﻿@{
+    ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
+    ViewBag.Title = "Notifications";
+    Layout = "~/Views/Common/_NewRetailLayout.cshtml";
+}
+
+<style>
+    .notificationsPage {
+        font-family: "Inter", sans-serif;
+        --primary: #E45D27; /* theme accent */
+        --primary-dark: #c44b1d;
+        --card-bg: #FEF3EC;
+        background: #FFF1EB;
+        color: #223;
+        min-height: 85vh;
+    }
+    /* ================= FULL NOTIFICATION PAGE ================= */
+    .notifPage {
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    /* Header */
+    .notifPage-header h4 {
+        font-weight: 400;
+        color:var(--primary);
+    }
+
+    /* Buttons */
+    .notifActionBtn,
+    .notifLoadMoreBtn {
+        border: 1px solid var(--primary);
+        background: transparent;
+        color: var(--primary);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+        .notifActionBtn:hover,
+        .notifLoadMoreBtn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+    /* Search */
+    .notifSearchInput {
+        flex: 1;
+        min-width: 260px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid #E45D27;
+        font-size: 13px;
+    }
+
+    /* List */
+    .notifPage-list {
+        background: var(--card-bg);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    /* Row */
+    .notifPage-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px;
+        border-bottom: 1px solid #f1f1f1;
+        cursor: pointer;
+    }
+
+        .notifPage-item.unread {
+            background: #FFF0E6;
+        }
+
+        .notifPage-item:hover {
+            background: #FFE8D9;
+        }
+
+    /* Left */
+    .notifContent {
+        flex: 1;
+    }
+
+    .notifTitle {
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    .notifMsg {
+        font-size: 12px;
+        color: #555;
+    }
+
+    .notifMeta {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 4px;
+    }
+
+    /* Right */
+    .notifActions {
+        display: flex;
+        align-items: center;
+    }
+
+    .notifDownloadBtn {
+        border: 1px solid var(--primary);
+        background: transparent;
+        color: var(--primary);
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+        .notifDownloadBtn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+    /* Mobile */
+    @@media (max-width: 576px) {
+        .notifPage-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const list = document.getElementById('notifPageList');
+        const search = document.getElementById('pageNotifSearch');
+        const loadMoreBtn = document.getElementById('loadMoreNotif');
+        const subText = document.getElementById('notifPageSub');
+
+        let page = 1;
+        let activeCategory = 'all';
+        let readFilter = 'all';
+
+        const notifications = [
+            { id: 1, title: 'License Expiring', msg: 'Factory Act license expires in 5 days', type: 'expired', read: false, time: '2h ago' },
+            { id: 2, title: 'Compliance Updated', msg: 'New compliance added', type: 'compliance', read: false, time: '5h ago' },
+            { id: 3, title: 'Location Added', msg: 'New branch added in Pune', type: 'location', read: true, time: '1d ago' },
+            { id: 4, title: 'License Approved', msg: 'Trade license approved', type: 'license', read: true, time: '2d ago' }
+        ];
+
+        function updateSubText() {
+            const unread = notifications.filter(n => !n.read).length;
+            subText.textContent = `You have ${unread} unread notifications`;
+        }
+
+        function render(reset = true) {
+            if (reset) list.innerHTML = '';
+
+            const term = search.value.toLowerCase();
+
+            notifications
+                .filter(n => activeCategory === 'all' || n.type === activeCategory)
+                .filter(n => readFilter === 'all' ||
+                    (readFilter === 'read' && n.read) ||
+                    (readFilter === 'unread' && !n.read))
+                .filter(n => n.title.toLowerCase().includes(term) || n.msg.toLowerCase().includes(term))
+                .slice(0, page * 5)
+                .forEach(n => {
+                    const row = document.createElement('div');
+                    row.className = `notifPage-item ${n.read ? '' : 'unread'}`;
+                    row.innerHTML = `
+                    <div class="notifContent">
+                        <div class="notifTitle">${n.title}</div>
+                        <div class="notifMsg">${n.msg}</div>
+                        <div class="notifMeta">
+                            <span class="notifType type-${n.type}">${n.type}</span>
+                            <span class="notifTime">${n.time}</span>
+                        </div>
+                    </div>
+                    <div class="notifActions">
+                        <button class="notifDownloadBtn">Download</button>
+                    </div>
+                `;
+                    row.addEventListener('click', () => {
+                        n.read = true;
+                        updateSubText();
+                        render();
+                    });
+                    list.appendChild(row);
+                });
+        }
+
+        document.querySelectorAll('[data-category]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('[data-category]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeCategory = btn.dataset.category;
+                page = 1;
+                render();
+            });
+        });
+
+        document.querySelectorAll('[data-read]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('[data-read]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                readFilter = btn.dataset.read;
+                page = 1;
+                render();
+            });
+        });
+
+        document.getElementById('pageMarkAllRead').onclick = () => {
+            notifications.forEach(n => n.read = true);
+            updateSubText();
+            render();
+        };
+
+        loadMoreBtn.onclick = () => {
+            page++;
+            render(false);
+        };
+
+        search.oninput = () => render();
+
+        updateSubText();
+        render();
+    });
+</script>
+
+
+
+<div class="notificationsPage px-4 py-4">
+    <!-- FULL NOTIFICATIONS PAGE  -->
+    <div class="notifPage container-fluid py-4">
+
+        <!-- HEADER -->
+        <div class="notifPage-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <div>
+                <h4 class="mb-0">Notifications</h4>
+                <small class="text-muted" id="notifPageSub">You have 0 unread notifications</small>
+            </div>
+            <button id="pageMarkAllRead" class="notifActionBtn">Mark all as read</button>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="notifPage-filters mb-3">
+
+            <!-- ROW 1 -->
+            <div class="d-flex flex-wrap gap-2 justify-content-between mb-2">
+                <input type="text" id="pageNotifSearch" class="notifSearchInput"
+                       placeholder="Search notifications...">
+
+                <div class="notifTabs">
+                    <button class="active" data-read="all">All</button>
+                    <button data-read="unread">Unread</button>
+                    <button data-read="read">Read</button>
+                </div>
+            </div>
+
+            <!-- ROW 2 -->
+            <div class="notifTabs">
+                <button class="active" data-category="all">All</button>
+                <button data-category="compliance">Compliance</button>
+                <button data-category="license">License</button>
+                <button data-category="location">Location</button>
+                <button data-category="expired">Expired</button>
+            </div>
+        </div>
+
+        <!-- LIST -->
+        <div id="notifPageList" class="notifPage-list"></div>
+
+        <!-- LOAD MORE -->
+        <div class="text-center mt-3">
+            <button id="loadMoreNotif" class="notifLoadMoreBtn">Load more notifications</button>
+        </div>
+
+    </div>
+
+
+</div>

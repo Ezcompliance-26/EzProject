@@ -45,7 +45,7 @@
     <link rel="stylesheet" href="~/CommonDashboard/Style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="~/Content/plugins/vendors/bower_components/sweetalert/dist/sweetalert.css" rel="stylesheet" />
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function toggleNotification() {
             var panel = document.getElementById("notificationPanel");
@@ -58,9 +58,14 @@
                 panel.style.top = "50px";
             }
         }
+
     </script>
-   
+
+
     <style>
+        button.swal2-confirm.swal2-styled {
+            background-color: #fd670b !important;
+        }
         .loader-overlay {
             position: fixed;
             top: 0;
@@ -267,7 +272,7 @@
 
             <div class="dropdown">
                 <button class="profile-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    <img src="{{Photo}}" alt="Profile">
+                    <img ng-src="{{Photo || '../content/profile.png'}}" alt="Profile">
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="/RetailSection/Userprofile" ng-click="ManageLog('open Profile page')">Profile</a></li>

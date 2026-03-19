@@ -39,7 +39,69 @@ if (loginType == "-1" || loginType == null || loginType == "" || loginType == "n
 
     window.top.location.href = '../Login/Login';
 }
+ 
 
+var sessionPopupShown = false;
+var sessionPopupShown = false;
+
+app.factory('sessionInterceptor', function ($q) {
+
+    return {
+
+        response: function (response) {
+
+            // agar server ne login page HTML bhej diya (session expire)
+            if (!sessionPopupShown &&
+                typeof response.data === "string" &&
+                response.data.indexOf("<!DOCTYPE html>") !== -1 &&
+                response.data.indexOf("Sign in to access") !== -1) {
+
+                sessionPopupShown = true;
+
+                Swal.fire({
+                    title: "Session Expired",
+                    text: "Your session expired or multiple login detected.",
+                    icon: "warning",
+                    confirmButtonText: "Login Again",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(function () {
+                    window.location.href = "/Login/Login";
+                });
+
+                return $q.reject(response);
+            }
+
+            return response;
+        },
+
+        responseError: function (rejection) {
+
+            if (rejection.status === 401 && !sessionPopupShown) {
+
+                sessionPopupShown = true;
+
+                Swal.fire({
+                    title: "Session Expired",
+                    text: "Your session expired or multiple login detected.",
+                    icon: "warning",
+                    confirmButtonText: "Login Again",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(function () {
+                    window.location.href = "/Login/Login";
+                });
+            }
+
+            return $q.reject(rejection);
+        }
+
+    };
+
+});
+app.config(function ($httpProvider) {
+    $httpProvider.interceptors.push('sessionInterceptor');
+});
 app.directive('fileModel', ['$parse', function ($parse) {
     return {
         restrict: 'A',
@@ -607,6 +669,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
             });
         }, 1000);
     };
+    debugger;
 
     //if (DashboardSwitch != 'Supplier' && DashboardSwitch != null) {
     //if (loginType != '1') { 

@@ -1,0 +1,270 @@
+﻿@{
+    ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
+    ViewBag.Title = "NotificationDetails";
+    Layout = "~/Views/Common/_NewRetailLayout.cshtml";
+}
+
+<style>
+    .notifDetailsPage {
+        font-family: "Inter", sans-serif;
+        --primary: #E45D27;
+        --primary-dark: #c44b1d;
+        --card-bg: #FEF3EC;
+        background: #FFF1EB;
+        min-height: 85vh;
+    }
+
+        /* Wrapper (modal look) */
+        .notifDetailsPage .nd-wrapper {
+            background: #FFF1EB;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* Header */
+        .notifDetailsPage .nd-header {
+            background: var(--card-bg);
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .notifDetailsPage .nd-logo-box img {
+            height: 42px;
+        }
+
+        /* Download */
+        .notifDetailsPage .nd-download-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            transition: background 0.2s;
+        }
+
+            .notifDetailsPage .nd-download-btn:hover {
+                background: var(--primary-dark);
+            }
+
+        /* Title bar */
+        .notifDetailsPage .nd-title {
+            background: var(--primary);
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Body */
+        .notifDetailsPage .nd-body {
+            padding: 16px;
+            font-size: 0.85rem;
+        }
+
+        /* Meta */
+        .notifDetailsPage .nd-meta-item label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #555;
+            display: block;
+        }
+
+        .notifDetailsPage .nd-meta-item span {
+            font-size: 0.82rem;
+        }
+
+        .notifDetailsPage .nd-meta-item #govtReleaseBtn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            transition: background 0.2s;
+        }
+
+            .notifDetailsPage .nd-meta-item #govtReleaseBtn:hover {
+                background: var(--primary-dark);
+            }
+
+        /* Content */
+        .notifDetailsPage .nd-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 14px;
+            max-height: 45vh;
+            overflow-y: auto;
+            word-break: break-word;
+        }
+
+            .notifDetailsPage .nd-content * {
+                max-width: 100%;
+            }
+
+            .notifDetailsPage .nd-content table {
+                width: 100%;
+                table-layout: fixed;
+            }
+
+</style>
+
+<div class="notifDetailsPage px-4 py-4">
+
+    <div class="nd-wrapper">
+
+        <!-- HEADER -->
+        <div class="nd-header d-flex align-items-center justify-content-between">
+            <div class="nd-logo-box">
+                <img src="~/Masters/LocationMaster/logo.svg" alt="Logo" />
+            </div>
+
+            <button class="nd-download-btn">
+                Download <i class="bi bi-download ms-1"></i>
+            </button>
+        </div>
+
+        <!-- TITLE BAR -->
+        <div class="nd-title">
+            Notification Name
+        </div>
+
+        <!-- BODY -->
+        <div class="nd-body">
+
+            <!-- META INFO -->
+            <div class="row g-3 nd-meta">
+                <div class="col-md-4">
+                    <div class="nd-meta-item">
+                        <label>State/Country Act Title</label>
+                        <span>State</span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="nd-meta-item">
+                        <label>Date of Notification</label>
+                        <span>07/01/26</span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="nd-meta-item">
+                        <label>State</label>
+                        <span>Dadra and Nagar Haveli</span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="nd-meta-item">
+                        <label>Effective Date of Notification</label>
+                        <span>30/01/26</span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="nd-meta-item">
+                        <label>Notification Number</label>
+                        <span>G.O.(P) No. 86/2024/LBR</span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="nd-meta-item">
+                        <label>Govt. Department</label>
+                        <span>Provident Fund Department</span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="nd-meta-item">
+                        <label>Govt. Release</label>
+                        <button id="govtReleaseBtn">
+                                Download 
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+            <h5 class="text-center">Summary</h5>
+
+            <!-- CONTENT -->
+            <div class="nd-content mt-3" id="dvDetail">
+                <p>
+                    In exercise of the powers conferred under the relevant provisions of the Act,
+                    the Government hereby issues the following notification in public interest.
+                </p>
+
+                <p>
+                    This notification shall come into force with effect from
+                    <strong>30th January, 2026</strong>, and shall be applicable to all establishments
+                    covered under the said Act within the State of Dadra and Nagar Haveli.
+                </p>
+
+                <h6><strong>1. Applicability</strong></h6>
+                <p>
+                    The provisions of this notification shall apply to every establishment employing
+                    twenty or more persons and registered under the Provident Fund Act.
+                </p>
+
+                <h6><strong>2. Revised Compliance Requirements</strong></h6>
+                <p>
+                    Employers are required to ensure the following compliances within the prescribed timelines:
+                </p>
+
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>Requirement</th>
+                            <th>Due Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Submission of Monthly Returns</td>
+                            <td>On or before 15th of every month</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Payment of Contributions</td>
+                            <td>Within 15 days from wage disbursement</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Annual Reconciliation Statement</td>
+                            <td>31st March of every financial year</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h6><strong>3. Penalties for Non-Compliance</strong></h6>
+                <p>
+                    Any failure to comply with the provisions of this notification shall attract penalties
+                    as prescribed under the Act, including monetary fines and legal proceedings, as applicable.
+                </p>
+
+                <p>
+                    The employer shall be responsible for ensuring timely compliance and maintenance of
+                    accurate records for inspection by the concerned authorities.
+                </p>
+
+                <p>
+                    <strong>By order and in the name of the Governor,</strong>
+                    <br />
+                    Secretary,<br />
+                    Provident Fund Department
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
