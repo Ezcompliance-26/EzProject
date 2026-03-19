@@ -285,7 +285,8 @@
         else {
             row.isFileValid = true;
         }
-      
+        
+
         //✅ Check for PDF extension
         const isPDF = file.type === 'application/pdf';
         if (!isPDF) {
@@ -426,7 +427,7 @@
         if (row.IsVerified == '' && $scope.IsExecuter == 'Client') {
             showMsgBox("Please enter Verified Status");
             return;
-        } NewverifyRecord
+        }
         if (row.CRemark1 == '' && row.IsVerified == 'Clarify' && $scope.IsExecuter == 'Client') {
             showMsgBox("Please enter Remark in condition of Clarify.");
             return;
@@ -514,6 +515,10 @@
         $scope.SelectedState = State;
         $scope.refreshDropdowns();
     }
+    $scope.getAct = function (Act) {
+        $scope.SelectedAct = Act;
+        $scope.refreshDropdowns();
+    }
     $scope.getstatus = function (Status) {
         $scope.SelectedStatus = Status;
         $scope.refreshDropdowns();
@@ -578,29 +583,18 @@
                 }
             });
 
-            if ($scope.currentEventRow) {
-
-                $scope.selectedEvents = $scope.labourcomplianceRows.filter(function (r) {
-                    return r.Frequency === 'Event'
-                        && r.Act === $scope.currentEventRow.Act
-                        && r.ComplianceName === $scope.currentEventRow.ComplianceName;
-                });
-
-                $scope.selectedEvents = angular.copy($scope.selectedEvents);
-            }
-          
             /* ----- DISTINCT DROPDOWNS -----*/
             $scope.statusDisplayMap = {
                 'Complied': 'Complied',
-                'NonComplied': 'Non Complied',
-                'Delaycomplied': 'Delay complied',
+                'NonComplied': 'Non-Complied',
+                'Delayed': 'Delayed',
                 'NonApplicable': 'Non-Applicable',
                 'Pending': 'Pending',
                 'Verified': 'Verified'
             };
             $scope.StateList = [];
             $scope.YearList = [];
-            $scope.StatusList = ['Complied', 'Non Complied', 'Delay complied', 'Non-Applicable', 'Pending', 'Verified'];
+            $scope.StatusList = ['Complied', 'Non-Complied', 'Delayed', 'Non-Applicable', 'Pending', 'Verified'];
 
             angular.forEach($scope.AllRows, function (row) {
 
@@ -612,10 +606,72 @@
                     $scope.YearList.push(row.Year);
                 }
             });
-          
+          //  // ---- COUNT LOGIC START ----
+          //  var complied = 0;
+          //  var nonComplied = 0;
+          //  var delayComplied = 0;
+          //  var nonApplicable = 0;
+          //  var pending = 0;
+          //  var verified = 0;   // ✅ Declare variable
+          //  var TotalClarification = 0;
+          //  angular.forEach($scope.labourcomplianceRows, function (row) {
+
+          //      var status = (row.CStatus || '')
+          //          .toLowerCase()
+          //          .replace(/\s+/g, '')     // remove spaces
+          //          .replace(/-/g, '')       // remove hyphen
+          //          .trim();
+
+          //      var verifyStatus = (row.IsVerified || '').trim();
+
+          //      switch (status) {
+
+          //          case 'complied':
+          //              complied++;
+          //              break;
+
+          //          case 'noncomplied':
+          //              nonComplied++;
+          //              break;
+
+          //          case 'delaycomplied':
+          //              delayComplied++;
+          //              break;
+
+          //          case 'nonapplicable':
+          //              nonApplicable++;
+          //              break;
+
+          //          default:
+          //              pending++;
+          //              break;
+          //      }
+
+          //      if (verifyStatus.toLowerCase() === 'verified') {
+          //          verified++;
+          //      }
+          //      if (verifyStatus.toLowerCase() === 'clarify') {
+          //          TotalClarification++;
+          //      }
+                
+          //  });
+
+
+          //  // Tile binding variables
+          //  $scope.TotalComplied = complied;
+          //  $scope.TotalNonComplied = nonComplied + pending;
+          //  $scope.TotalDelayComplied = delayComplied;
+          //  $scope.TotalNonApplicable = nonApplicable;
+          ///*  $scope.TotalPending = pending;*/
+          //  $scope.TotalVerified = verified;  // ✅ Fixed
+          //  $scope.TotalClarification = TotalClarification;
+          //  // ---- COUNT LOGIC END ----
             $scope.updateTilesCount($scope.labourcomplianceRows);
         });
     };
+	
+	// Toggle button Change - Vansh Chaudhary
+    $scope.SelectedAct = 'All';
     $scope.filterByAct = function (act) {
 
         $scope.SelectedAct = act;
@@ -631,6 +687,22 @@
         // ✅ Call AFTER filtering
         $scope.updateTilesCount($scope.labourcomplianceRows);
     };
+	
+    /* $scope.filterByAct = function (act) {
+
+        $scope.SelectedAct = act;
+
+        if (act === 'All') {
+            $scope.labourcomplianceRows = angular.copy($scope.AllRows);
+        } else {
+            $scope.labourcomplianceRows = $scope.AllRows.filter(function (row) {
+                return row.Act === act;
+            });
+        }
+
+        // ✅ Call AFTER filtering
+        $scope.updateTilesCount($scope.labourcomplianceRows);
+    }; */
 
     $scope.refreshDropdowns = function () {
 
@@ -697,25 +769,17 @@
         angular.element('body').removeClass('modal-open');
         angular.element('body').css('padding-right', '');
     };
-    $scope.loadEventRows = function (row) { 
-        $scope.selectedEvents = $scope.labourcomplianceRows.filter(function (r) {
-            return r.Frequency === 'Event'
-                && r.Act === row.Act
-                && r.ComplianceName === row.ComplianceName;
-        });
 
-        $scope.selectedEvents = angular.copy($scope.selectedEvents);
-    };
     $scope.openEventModal = function (row) {
-
         if (row.Frequency !== 'Event') {
-            return;
-        }
-
-        $scope.currentEventRow = row;   // 👈 isko store kar lo future refresh ke liye
-        $scope.loadEventRows(row);
-
+            return;  
+        } 
+        $('#eventModal').modal('show');
+        $scope.selectedEvent1 = angular.copy(row);
+        $scope.CACEventId = row.CACId;
         var modalEl = document.getElementById('eventModal');
+
+        // Agar pehle se instance ho to reuse karo
         var modalInstance = bootstrap.Modal.getInstance(modalEl);
 
         if (!modalInstance) {
@@ -737,13 +801,12 @@
 
     }
 
-     
     $scope.NewfileSelected = function (files, row) {
 
         if (!files || files.length === 0)  return;
 
         const file = files[0];
-       
+
         // PDF check
         if (file.type !== 'application/pdf') {
             swal("Invalid File", "Only PDF files are allowed.", "error");
@@ -768,8 +831,6 @@
 
         // ✅ Store file in row (NOT in $scope)
         row.UploadFile = file;
-        row.isFileValid = true;
-        $scope.$applyAsync();
     };
 
     $scope.NewverifyRecord = function (row) {
@@ -777,7 +838,7 @@
             showMsgBox("Please enter both Status  and Actual Submission Date.");
             return;
         }
-        if (row.IsVerified == '' && $scope.PFVerify=='1') {
+        if (row.IsVerified == '') {
             showMsgBox("Please enter Verified Status");
             return;
         }
@@ -816,7 +877,6 @@
                 $scope.UploadFile = '';
                 showMsgBox(response.data.Result);
                 $scope.BindNewSearch();
-
             }, function (error) {
                 console.error('Error', error);
             });
@@ -832,19 +892,7 @@
         var verified = 0;
         var TotalClarification = 0;
 
-        var uniqueCacIdMap = {};
-
         angular.forEach(data, function (row) {
-
-            var cacId = row.CACId || row.CacId || row.cacid;
-
-            // 🔹 Agar CACId pehle se count ho chuka hai to skip
-            if (uniqueCacIdMap[cacId]) {
-                return;
-            }
-
-            // Mark as counted
-            uniqueCacIdMap[cacId] = true;
 
             var status = (row.CStatus || '')
                 .toLowerCase()
@@ -852,9 +900,7 @@
                 .replace(/-/g, '')
                 .trim();
 
-            var verifyStatus = (row.IsVerified || '')
-                .toLowerCase()
-                .trim();
+            var verifyStatus = (row.IsVerified || '').toLowerCase().trim();
 
             switch (status) {
 
@@ -964,7 +1010,7 @@
 
             if (result) {
                 $scope.Cname = result.ComplianceName || 'N/A';
-                $scope.Rule = result.Rules || 'N/A';
+                $scope.Rule = result.Rule || 'N/A';
                 $scope.Section = result.Section || 'N/A';
                 $scope.FormNo = result.FormNo || 'N/A';
                 $scope.Risk = result.Risk || 'N/A';
@@ -1321,72 +1367,7 @@
         document.body.removeChild(link);
     };
 
-    $scope.showLastEventOnly = function (row) {
 
-        // Sirf Event frequency par logic lagega
-        if (row.Frequency !== 'Event') {
-            return true;
-        }
-
-        // Same Act + ComplianceName + Event wali rows nikalo
-        var sameRows = $scope.labourcomplianceRows.filter(function (r) {
-            return r.Frequency === 'Event'
-                && r.Act === row.Act
-                && r.ComplianceName === row.ComplianceName;
-        });
-
-        // Agar sirf 1 hi hai to show karo
-        if (sameRows.length <= 1) {
-            return true;
-        }
-
-        // Last wali row ka Id nikalo
-        var lastRow = sameRows[sameRows.length - 1];
-
-        // Sirf last wali ko show karo
-        return row === lastRow;
-    };
-    $scope.addEventRow = function () {
-
-        if (!$scope.selectedEvents.length) return;
-
-        var baseRow = $scope.selectedEvents[0];   // sirf static info lene ke liye
-
-        var newRow = {
-            Id: 0,
-            CACId: baseRow.CACId,
-            CSIID: baseRow.CACId,
-
-            Act: baseRow.Act,
-            ComplianceName: baseRow.ComplianceName,
-            RegistrationNumber: baseRow.RegistrationNumber,
-            Frequency: baseRow.Frequency,
-            Month: baseRow.Month,
-            STATE_NM: baseRow.STATE_NM,
-            DueDate: baseRow.DueDate, 
-            // 👇 Fresh editable fields
-            CStatus: '',
-            ActualSubmissionDate: null,
-            DelayDays: 0,
-            UploadFile: null,
-            CreateOn: '',
-            VRemark1: '',
-            CRemark: '',
-            IsVerified: '0',
-            openthis: '0',
-         
-            // 👇 Important for Submit button
-            Flag: '0'
-        };
-
-        $scope.selectedEvents.push(newRow);
-    };
-    $scope.removeEventRow = function (index) {
-
-        if ($scope.selectedEvents.length > 1) {
-            $scope.selectedEvents.splice(index, 1);
-        }
-    };
 }
 
 
