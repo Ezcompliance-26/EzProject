@@ -51,11 +51,18 @@ namespace EesassinErp
 
             if (loginId == null || sessionId == null)
             {
-                filterContext.Result = new ContentResult
+                filterContext.HttpContext.Response.StatusCode = 401;
+
+                filterContext.Result = new JsonResult
                 {
-                    Content = "<script>alert('Your session expired or multiple login detected.'); window.location='/Login/Login';</script>",
-                    ContentType = "text/html"
+                    Data = new
+                    {
+                        Result = "SessionExpired",
+                        Message = "Your multiple login detected."
+                    },
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
                 };
+
                 return;
             }
 
@@ -73,15 +80,19 @@ namespace EesassinErp
 
             if (dbSession != sessionId)
             {
-                //filterContext.HttpContext.Session.Clear();
-                //filterContext.Result = new RedirectResult("~/Login/Login");
-             
-                filterContext.Result = new ContentResult
+                filterContext.HttpContext.Response.StatusCode = 401;
+
+                filterContext.Result = new JsonResult
                 {
-                    Content = "<script>alert('Your session expired or multiple login detected.'); window.location='/Login/Login';</script>",
-                    ContentType = "text/html"
+                    Data = new
+                    {
+                        Result = "SessionExpired",
+                        Message = "Your multiple login detected."
+                    },
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet
                 };
-                return;
+
+                return; 
             }
 
             base.OnActionExecuting(filterContext);

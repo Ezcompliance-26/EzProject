@@ -18,6 +18,12 @@
     };
     $scope.showEntryForm = false;
 
+
+    $scope.ResetForm = function () {
+        $scope.ListSet = [];
+        $scope.AllActList = [];
+        $scope.AddListSet();
+    }
     
     $scope.switchView = function () {
         $scope.showEntryForm = !$scope.showEntryForm;

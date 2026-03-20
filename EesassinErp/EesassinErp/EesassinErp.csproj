@@ -273,8 +273,7 @@
       <HintPath>..\packages\MimeKit.4.8.0\lib\netstandard2.0\MimeKit.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\EesassinErp\EesassinErp\bin\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
@@ -1160,6 +1159,7 @@
     <Content Include="scripts\RetailJsLib\Mailingcontroller.js" />
     <Content Include="scripts\RetailJsLib\MainDashboardController.js" />
     <Content Include="scripts\RetailJsLib\ManualBulkPaymetController.js" />
+    <Content Include="scripts\RetailJsLib\NewEmployeeMasterController.js" />
     <Content Include="scripts\RetailJsLib\NewletterDetail.js" />
     <Content Include="scripts\RetailJsLib\NewletterDetailAll.js" />
     <Content Include="scripts\RetailJsLib\NoticeInspectionMaster.js" />

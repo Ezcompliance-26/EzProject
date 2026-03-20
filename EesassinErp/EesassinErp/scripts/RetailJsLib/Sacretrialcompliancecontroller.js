@@ -1,20 +1,6 @@
 ﻿app.Sacretrialcompliancecontroller = function ($scope, $element, $filter, myService, $http, $sce) {
 
-
-    //$scope.BindFilter = function () {
-    //    var collectionobj = {};
-    //    collectionobj.Action = 12;
-    //    collectionobj.UserId = LoginId;
-    //    var getData = myService.methode('POST', "../Retail/SearchSecretarialCompliance", '{obj:' + JSON.stringify(collectionobj) + '}');
-    //    getData.then(function (response) {
-    //        $scope.SMasterList = response.data.Result;
-    //        const monthMap = ["Invalid Month", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    //       const distinctYears = [...new Set(response.data.Result.map(item => item.Year))];
-    //        $scope.YearsList = distinctYears;
-
-
-    //    });
-    //}
+ 
 
     $scope.getMonthName = function (num) {
         const months = [
@@ -197,15 +183,7 @@
         document.body.removeChild(link);
     };
 
-
-
-
-
-
-
-
-
-
+     
     $scope.PrintTable1 = function () {
 
         var tableContent = document.querySelector('#complianceTable1').outerHTML;
@@ -237,8 +215,7 @@
         printWindow.close();
     };
 
-
-    // Helper functions to get state/act names from IDs
+     
     function getStateName(stateCode) {
         let state = $scope.AllStateList.find(x => x.SATE_CODE == stateCode);
         return state ? state.STATE_NM : stateCode;
@@ -355,9 +332,7 @@
             alert("No file uploaded.");
         }
     };
-
-
-    // Export table as PDF
+     
     $scope.exportToPDF = function () {
         const { jsPDF } = window.jspdf; // Ensure jsPDF is loaded
         const doc = new jsPDF();
@@ -477,8 +452,7 @@
                 console.error('Error', error);
             });
         }
-    }
-    /* ------------------------------- new labour*/
+    } 
     $scope.SelectedState = '';
     $scope.SelectedStatus = '';
     $scope.SelectedMonth = '';
@@ -555,7 +529,9 @@
         });
         $scope.updateTilesCount($scope.labourcomplianceRows);
     };
-
+    $scope.currentPage = 1;
+    $scope.pageSize = 10;
+    $scope.totalRecords = 0;
     $scope.BindNewSearch = function () {
 
         var collectionobj = {};
@@ -565,8 +541,8 @@
         collectionobj.Month = $scope.Month;
         collectionobj.Year = $scope.Year;
 
-        collectionobj.PageNo = 1;
-        collectionobj.PageSz = 10;
+        collectionobj.PageNo = $scope.currentPage;
+        collectionobj.PageSz = $scope.pageSize;
 
         var getData = myService.methode(
             'POST',
@@ -577,7 +553,7 @@
         getData.then(function (response) {
             $scope.AllRows = response.data.Result || [];
             $scope.labourcomplianceRows = response.data.Result || [];
-
+            $scope.totalRecords = response.data.TotalCount || $scope.AllRows.length;
             $scope.ActList = [];
             angular.forEach($scope.AllRows, function (row) {
                 if (row.Act && $scope.ActList.indexOf(row.Act) === -1) {
@@ -602,6 +578,31 @@
             }); 
             $scope.updateTilesCount($scope.labourcomplianceRows);
         });
+    };
+    $scope.viewAll = function () {
+        $scope.pageSize = $scope.totalRecords;
+        $scope.currentPage = 1;
+        $scope.BindNewSearch(1);
+    };
+    $scope.nextPage = function () {
+        if (($scope.currentPage * $scope.pageSize) < $scope.totalRecords) {
+            $scope.currentPage++;
+            $scope.BindNewSearch($scope.currentPage);
+        }
+    };
+
+    $scope.prevPage = function () {
+        if ($scope.currentPage > 1) {
+            $scope.currentPage--;
+            $scope.BindNewSearch($scope.currentPage);
+        }
+    };
+    $scope.updatePageInfo = function () {
+
+        var start = (($scope.currentPage - 1) * $scope.pageSize) + 1;
+        var end = Math.min($scope.currentPage * $scope.pageSize, $scope.totalRecords);
+
+        $scope.pageInfo = "Showing " + start + " to " + end + " of " + $scope.totalRecords;
     };
     $scope.filterByAct = function (act) {
 
@@ -744,7 +745,7 @@
             showMsgBox("Please enter both Status  and Actual Submission Date.");
             return;
         }
-        if (row.IsVerified == '') {
+        if (row.IsVerified == '' || row.IsVerified == '0' || row.IsVerified == null || row.IsVerified == 'null' ) {
             showMsgBox("Please enter Verified Status");
             return;
         }
@@ -1070,7 +1071,7 @@
                 formatDate(row.ActualSubmissionDate) || '',
                 row.DelayDays || '',
                 row.CreateOn || '',
-                row.IsVerified || '',
+                (row.IsVerified == 0 ? '' : (row.IsVerified || '')),
             ];
 
             csv.push(rowData.map(val => `"${val}"`).join(","));
@@ -1164,7 +1165,7 @@
                 <td>${formatDate(row.ActualSubmissionDate)}</td>
                 <td>${row.DelayDays || ''}</td>
                 <td>${row.CreateOn}</td>
-                <td>${row.IsVerified || ''}</td>
+           <td>${row.IsVerified == 0 ? '' : (row.IsVerified || '')}</td>
             </tr>
         `;
         });
