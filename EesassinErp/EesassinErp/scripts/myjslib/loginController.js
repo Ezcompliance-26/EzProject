@@ -11,10 +11,9 @@ myLoginApp.service("myLoginService", function ($http) {
         });
     };
 });
- 
 
 myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginService) {
-    sessionStorage.clear();
+
     // ---- init ----
     $scope.Username = $scope.Password = $scope.Captcha = $scope.MobileNo = $scope.NewPassword = '';
     $scope.Step1 = true; $scope.Step2 = $scope.Step3 = false;
@@ -47,81 +46,44 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
 
     // --------------- Login flow ---------------
     $scope.Login = function () {
-        sessionStorage.clear();
-       
         if (!isValidate()) return;
         setBtn('#btnLogin', '<i class="fa fa-spinner fa-spin"></i> Please wait', true);
 
-        var obj = { Username: $scope.Username, Password: $scope.Password, CaptchaToken: $scope.CaptchaToken, Captcha: $scope.Captcha, Action: "1" };
+        var obj = { Username: $scope.Username, Password: $scope.Password, Captcha: $scope.Captcha, Action: "1" };
 
         postObj('../Login/GetUserId', obj).then(function (res) {
             var data = res.data;
-           
             if (data == '89') { showMsg("Invalid Captcha!", "red"); resetBtn(); $scope.Captcha = ''; $scope.GetCaptchaImage(); return; }
             if (data == '-1') { showMsg("Invalid credentials!", "red"); resetBtn(); $scope.Captcha = ''; $scope.GetCaptchaImage(); return; }
              
-            if (!data || !data.length) {
-                showMsg("Session expired. Please refresh page.", "red");
-                $scope.GetCaptchaImage();
-                resetBtn();
-                return;
-            }
+            if (!data || !data.length) { resetBtn(); return; }
             
             var d = data[0];
-
-            var d = data[0];
-
-            if (!d || !d.LoginId) {
-                showMsg("Login session expired. Please reload page.", "red");
-                resetBtn();
-                return;
-            } 
             if (["-1", null, ""].includes(d.LoginId)) { showMsg("Authentication failed. Contact admin.", "red"); resetBtn(); $scope.GetCaptchaImage(); return; }
             if (d.LoginId == "-11") { showMsg("Session Active, close other sessions!", "red"); resetBtn(); $scope.GetCaptchaImage(); return; }
 
             storeSession(d);
-          
+
             if (['3', '4'].includes($scope.ModuleId)) {
                 $scope.RedirectToModule();
                 return;
             }
-           
 
-          /*  showMsg("You have logged in successfully.", "green");*/
-            startLoginMessages();
-            $scope.ManageLog('Login successfully');
+            showMsg("You have logged in successfully.", "green");
+            $scope.ManageLog(d.LoginId, 'Login');
             $scope.Captcha = ''; $scope.GetCaptchaImage();
             window.location.href = '../Dashboard/Dashboard';
         }).finally(resetBtn);
     };
-    $scope.ManageLog = function (Activity) {
 
-        var collectionobj = {
-            Action: "8",
-            ClientId: $scope.Username,
-            Activity: Activity
-        };
-
-        postObj('../RetailSection/MaintainLog', collectionobj)
-            .then(function (res) { 
-                console.log('Log saved successfully', res);
-            })
-            .catch(function (err) {
-                console.error('Error while saving log', err);
-            });
-    };
-
-   
     // --------------- RedirectToModule ---------------
     $scope.RedirectToModule = function () {
-        // ✅ AUTO START WHEN DASHBOARD LOADS
-     
         var obj = { Action: "15", LoginId: $scope.ModuleId, Username: $scope.Username };
         postObj('../Login/GetModulePermission', obj).then(function (res) {
             var data = res.data && res.data.Result;
             if (!data || !data.length) {
-                sessionStorage.setItem("DashboardSwitch", "Supplier");
-                $scope.ManageLog('Login Supplier Section');
+               
+                $scope.ManageLog($scope.ModuleId, 'Login Supplier Section');
                 return window.location.href = '../Dashboard/Dashboard';
             }
 
@@ -129,77 +91,29 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
          
             $scope.Captcha = ''; $scope.GetCaptchaImage();
 
-            if (d.LoginType == '1' || d.Module_Name === 'Supplier') { 
-                startLoginMessages();
-                sessionStorage.setItem("DashboardSwitch", "Supplier");
-                $scope.ManageLog('Login Supplier Section');
+            if (d.LoginType == '1' || d.Module_Name === 'Supplier') {
+                showMsg("You have logged in successfully.", "green");
+                $scope.ManageLog(d.LoginId, 'Login Supplier Section');
                 return window.location.href = '../Dashboard/Dashboard';
-            } 
-
-            if (d.Module_Name === 'Retail') { 
-                startLoginMessages();
-                sessionStorage.setItem("DashboardSwitch", "AdminRetail");
-                $scope.ManageLog('Login Retail Section');
-                return window.location.href = d.Path;
             }
 
-            if (d.Module_Name === 'Both')
-            {
+            if (d.Module_Name === 'Retail') {
+                showMsg("You have logged in successfully.", "green");
+                $scope.ManageLog(d.LoginId, 'Login Retail Section');
+                return window.location.href = '../Dashboard/CommonDashboard';
+            }
+
+            if (d.Module_Name === 'Both') {
                 var sel = $("#ddlModule option:selected").text();
-                if (sel === 'Supplier')
-                {
-                    sessionStorage.setItem("DashboardSwitch", "Supplier");
-                    $scope.ManageLog('Login Supplier Section');
-                    if (d.LoginType == '5') {
-                        sessionStorage.setItem("DashboardSwitch", "AdminSupplier");
-                        showMsg("You have logged in successfully.", "green");
-                        $scope.ManageLog(d.LoginId, 'Login');
-                        $scope.Captcha = ''; $scope.GetCaptchaImage();
-                        return window.location.href = '../Dashboard/VBoard';
-                    } else { return window.location.href = '../Dashboard/Dashboard'; sessionStorage.setItem("DashboardSwitch", "Supplier"); }
-                } 
-                if (sel === 'Retail')
-                {
-                    if (d.LoginType == '5') {
-                        sessionStorage.setItem("DashboardSwitch", "AdminRetail");
-                        showMsg("You have logged in successfully.", "green");
-                        $scope.ManageLog(d.LoginId, 'Login');
-                        $scope.Captcha = ''; $scope.GetCaptchaImage();
-                        return window.location.href = '../RetailSection/NewLocationDashboard';
-                    }
-                    else {
-
-                        sessionStorage.setItem("DashboardSwitch", "Retail");
-                        $scope.ManageLog('Login Retail Section');
-                        return
-                        window.location.href = '../RetailSection/NewLocationDashboard';
-
-                    }
-                   
-                }
+                if (sel === 'Supplier') { $scope.ManageLog(d.LoginId, 'Login Supplier Section'); return window.location.href = '../Dashboard/Dashboard'; }
+                if (sel === 'Retail') { $scope.ManageLog(d.LoginId, 'Login Retail Section'); return window.location.href = '../Dashboard/CommonDashboard'; }
                 showMsg("Please select module!", "red"); resetBtn();
                 return;
             }
 
-            if (d.LoginType == '2' && $scope.Username == 'UserAA') {
-                startLoginMessages();
-                sessionStorage.setItem("DashboardSwitch", "Supplier");
-                $scope.ManageLog('Login Supplier Section');
-                return window.location.href = '../Dashboard/NewVendorDashboard';
-            }
-            else if (d.LoginType == '2' && $scope.Username != 'UserAA') {
-                startLoginMessages();
-                sessionStorage.setItem("DashboardSwitch", "Supplier");
-                $scope.ManageLog('Login Supplier Section');
-                return window.location.href = '../Dashboard/Dashboard';
-            }
-            else {
-                // fallback
-                $scope.ManageLog('Login Supplier Section');
-                window.location.href = '../Dashboard/Dashboard';
-            }
-
-           
+            // fallback
+            $scope.ManageLog(d.LoginId, 'Login Supplier Section');
+            window.location.href = '../Dashboard/Dashboard';
         });
     };
 
@@ -208,11 +122,7 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
         if (!isValidate()) return;
         setBtn('#btnLogin', '<i class="fa fa-spinner fa-spin"></i> Please wait', true);
 
-        var obj = {
-            Username: $scope.Username, Password: $scope.Password,
-            CaptchaToken: $scope.CaptchaToken,
-            Captcha: $scope.Captcha, Action: "18"
-        };
+        var obj = { Username: $scope.Username, Password: $scope.Password, Captcha: $scope.Captcha, Action: "18" };
 
         postObj('../Login/GetUserId', obj).then(function (res)
         {
@@ -231,9 +141,8 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
 
             if ([1, 2, 3, 4].includes(d.LoginType)) {
                 if ($scope.ModuleId === '3' || $scope.ModuleId === '4') return $scope.RedirectToModule();
-              /*  showMsg("You have logged in successfully.", "green");*/
-                startLoginMessages();
-                $scope.ManageLog('Login successfully');
+                showMsg("You have logged in successfully.", "green");
+                $scope.ManageLog(d.LoginId, 'Login');
                 $scope.Captcha = ''; $scope.GetCaptchaImage();
                 window.location.href = '../Dashboard/Dashboard';
             }
@@ -255,9 +164,9 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
         postObj('../Login/chkUserId', { Username: $scope.MobileNo, Action: "8" }).then(function (res) {
             var d = res.data && res.data[0];
             if (!d) { showMsgBox('999', 'Alert', 'Invalid Contact No or Email Id', 'warning', 'btn-warning'); resetBtn('#btnRLogin'); return; }
-            $scope.Otp = d.Otp;
+            $scope.Otp = d.Otp; 
             if ($scope.WHEREOTPGO == "Phone") sendOtpSMS();
-            else sendOtpEmail();
+            else sendOtpEmail(); 
         }).finally(function () { setBtn('#btnRLogin', 'Send Otp', false); });
     };
 
@@ -302,17 +211,14 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
     };
 
     // --------------- Misc small functions ---------------
-    $scope.Redirect = function () { setBtn('#btnWelcome', '<i class="fa fa-spinner fa-spin"></i> Please wait', true); $scope.ManageLog('Welcome Click'); setBtn('#btnWelcome', 'LOG IN', false); window.location.href = '../Login/Login'; };
+    $scope.Redirect = function () { setBtn('#btnWelcome', '<i class="fa fa-spinner fa-spin"></i> Please wait', true); $scope.ManageLog(null, 'Welcome Click'); setBtn('#btnWelcome', 'LOG IN', false); window.location.href = '../Login/Login'; };
 
     $scope.resetusername = function () { $scope.Step1 = true; $scope.Step2 = $scope.Step3 = false; };
     $scope.forgetpass = function () { $scope.Step1 = $scope.Step2 = false; $scope.Step3 = true; };
     $scope.Next = function () { $scope.Step1 = false; $scope.Step2 = true; $scope.Step3 = false; };
 
     $scope.CheckUserName = function () {
-        if (!$scope.Username) {
-            $('#username-input').css('border-bottom', '1px solid red');
-            showMsgBox('999', 'Alert', 'Please Enter Username', 'warning', 'btn-warning'); return;
-        }
+        if (!$scope.Username) { $('#username-input').css('border-bottom', '1px solid red'); showMsgBox('999', 'Alert', 'Please Enter Username', 'warning', 'btn-warning'); return; }
         setBtn('#btnStep1Login', '<i class="fa fa-spinner fa-spin"></i> Please wait', true);
         postObj('../Login/chkUserId', { Username: $scope.Username, Action: "23" }).then(function (res) {
             setBtn('#btnStep1Login', 'Next', false);
@@ -324,23 +230,11 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
 
     $scope.PassWordEnterKey = function (event) { if (event && event.keyCode == 13) $scope.Login(); };
 
-    //$scope.GetCaptchaImage = function () {
-    //    $scope.refresh = 'fa fa-spinner fa-spin';
-    //    getPlain("../Login/CaptchaImage").then(function (res)
-    //    {
-    //        $timeout(function () {
-    //            $scope.CaptchaSrc = res.data; $scope.refresh = 'fa fa-refresh';
-    //        }, 200);
-    //    });
-    //};
     $scope.GetCaptchaImage = function () {
         $scope.refresh = 'fa fa-spinner fa-spin';
-        postObj('../Login/CaptchaImage', {}).then(function (res) {
-            var obj = res.data;   // already JSON
-            $scope.CaptchaSrc = obj.image;
-            $scope.CaptchaToken = obj.token;
-        });
+        getPlain("../Login/CaptchaImage").then(function (res) { $timeout(function () { $scope.CaptchaSrc = res.data; $scope.refresh = 'fa fa-refresh'; }, 200); });
     };
+
     $scope.CheckCaptchaSum = function () {
         myLoginService.methode('POST', "../Login/GetUserId", '{sum:' + JSON.stringify($scope.Captcha) + '}').then(function (res) { console.log(res.data); });
     };
@@ -389,40 +283,19 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
     };
 
     // ManageLog
-    //$scope.ManageLog = function (ClientId, Activity) {
-    //    postObj("../RetailSection/MaintainLog", { Action: 3, ClientId: ClientId, Activity: Activity }).then(function () { });
-    //};
+    $scope.ManageLog = function (ClientId, Activity) {
+        postObj("../RetailSection/MaintainLog", { Action: 3, ClientId: ClientId, Activity: Activity }).then(function () { });
+    };
+
+    // back button inside reset password step ----- Vansh Chaudhary
+
+    $scope.backToLogin = function () {
+        $scope.Step3 = false;
+        $scope.Step2 = true;
+    };
 
     // single resetBtn definition
     function resetBtn() { $('#btnLogin').html('Login').prop('disabled', false); }
 
-     
-    function startLoginMessages() {
-
-        var messages = [
-            { text: "You have logged in successfully.", color: "green" },
-            { text: "Finalizing setup...", color: "gray" },
-            { text: "Initializing your session...", color: "teal" },
-            { text: "Applying your settings...", color: "purple" },
-            { text: "Loading your dashboard...", color: "green" },
-            { text: "Fetching your personalized data...", color: "orange" }, 
-            { text: "Syncing latest updates...", color: "teal" },
-            { text: "Preparing reports and widgets...", color: "brown" },
-            { text: "Almost ready for you...", color: "purple" }, 
-            { text: "Welcome! Taking you to dashboard now.", color: "green" }
-        ];
-
-        var index = 0;
-
-        function showNext() {
-            if (index < messages.length) {
-                showMsg(messages[index].text, messages[index].color);
-                index++;
-                setTimeout(showNext, 1000); // 1.2 sec gap
-            }
-        }
-
-        showNext();
-    }
-
 });
+
