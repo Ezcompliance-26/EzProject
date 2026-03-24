@@ -1,6 +1,5 @@
 ﻿ 
 var LoginId = sessionStorage.getItem("LoginId");
-debugger;
 var MapId = sessionStorage.getItem("MapId");
 var MapUser = sessionStorage.getItem("MapUser");
 var BranchCode = sessionStorage.getItem("BranchCode");
@@ -669,7 +668,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
             });
         }, 1000);
     };
-    debugger;
+    
 
     //if (DashboardSwitch != 'Supplier' && DashboardSwitch != null) {
     //if (loginType != '1') { 
@@ -2438,8 +2437,6 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         );
 
         getData.then(function (response) {
-            debugger;
-
             if (response.data && response.data.Result) {
 
                 $scope.UserDetail = response.data.Result.Table || [];
@@ -2466,7 +2463,6 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     };
     $scope.BindMenus = function () {
         var collectionobj = {};
-        debugger;
         collectionobj.Id = LoginId;
         collectionobj.Action = 5
        

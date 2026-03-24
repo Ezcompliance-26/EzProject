@@ -214,71 +214,91 @@ namespace EesassinErp.Controllers
         {
             try
             {
-                if (!string.IsNullOrEmpty(dataURI) && dataURI.StartsWith("data:application/"))
+                if (!string.IsNullOrEmpty(dataURI) && (dataURI.StartsWith("data:application/") || dataURI.StartsWith("data:image/")))
                 {
-                    string extension = Regex.Match(dataURI, @"^data:application\/[a-zA-Z]+;base64,").Value;
-                    extension = extension.Replace("data:application/", "").Replace(";base64,", "");
-                    string fileName = Guid.NewGuid().ToString("N") + "." + extension;
-                    byte[] fileData = Convert.FromBase64String(dataURI.Substring(dataURI.IndexOf(',') + 1));
-                    string folderPath = "";
-                    string uploadpath = "";
-                    if (For == "Employee")
+                    if (!string.IsNullOrEmpty(dataURI) && dataURI.StartsWith("data:application/"))
                     {
-                        uploadpath = "../DownloadMat/Retail/Employee/" + fileName;
-                        folderPath = Server.MapPath("../DownloadMat/Retail/Employee/");
-                    }
-                    else if (For == "StoreLicense")
-                    {
-                        uploadpath = "../DownloadMat/Retail/StoreLicense/" + fileName;
-                        folderPath = Server.MapPath("../DownloadMat/Retail/StoreLicense/");
-                    }
-                    else
-                    {
-                        uploadpath = "../DownloadMat/Retail/Store/" + fileName;
-                        folderPath = Server.MapPath("../DownloadMat/Retail/Store/");
-                    }
+                        string extension = Regex.Match(dataURI, @"^data:application\/[a-zA-Z]+;base64,").Value;
+                        extension = extension.Replace("data:application/", "").Replace(";base64,", "");
+                        string fileName = Guid.NewGuid().ToString("N") + "." + extension;
+                        byte[] fileData = Convert.FromBase64String(dataURI.Substring(dataURI.IndexOf(',') + 1));
+                        string folderPath = "";
+                        string uploadpath = "";
+                        if (For == "Employee")
+                        {
+                            uploadpath = "../DownloadMat/Retail/Employee/" + fileName;
+                            folderPath = Server.MapPath("../DownloadMat/Retail/Employee/");
+                        }
+                        else if (For == "StoreLicense")
+                        {
+                            uploadpath = "../DownloadMat/Retail/StoreLicense/" + fileName;
+                            folderPath = Server.MapPath("../DownloadMat/Retail/StoreLicense/");
+                        }
+                        else
+                        {
+                            uploadpath = "../DownloadMat/Retail/Store/" + fileName;
+                            folderPath = Server.MapPath("../DownloadMat/Retail/Store/");
+                        }
 
-                    string filePath = Path.Combine(folderPath, fileName);
-                    string directory = Path.GetDirectoryName(filePath);
-                    if (!Directory.Exists(directory))
-                    {
-                        Directory.CreateDirectory(directory);
+                        string filePath = Path.Combine(folderPath, fileName);
+                        string directory = Path.GetDirectoryName(filePath);
+                        if (!Directory.Exists(directory))
+                        {
+                            Directory.CreateDirectory(directory);
+                        }
+                        System.IO.File.WriteAllBytes(filePath, fileData);
+                        return uploadpath;
                     }
-                    System.IO.File.WriteAllBytes(filePath, fileData);
-                    return uploadpath;
+                    if (!string.IsNullOrEmpty(dataURI) && dataURI.StartsWith("data:image/"))
+                    {
+                        string extension = Regex.Match(dataURI, @"^data:image\/[a-zA-Z]+;base64,").Value;
+                        extension = extension.Replace("data:image/", "").Replace(";base64,", "");
+                        string fileName = Guid.NewGuid().ToString("N") + "." + extension;
+                        byte[] fileData = Convert.FromBase64String(dataURI.Substring(dataURI.IndexOf(',') + 1));
+                        string folderPath = "";
+                        string uploadpath = "";
+                        if (For == "Employee")
+                        {
+                            uploadpath = "../DownloadMat/Retail/Employee/" + fileName;
+                            folderPath = Server.MapPath("../DownloadMat/Retail/Employee/");
+                        }
+                        else if (For == "StoreLicense")
+                        {
+                            uploadpath = "../DownloadMat/Retail/StoreLicense/" + fileName;
+                            folderPath = Server.MapPath("../DownloadMat/Retail/StoreLicense/");
+                        }
+                        else
+                        {
+                            uploadpath = "../DownloadMat/Retail/Store/" + fileName;
+                            folderPath = Server.MapPath("../DownloadMat/Retail/Store/");
+                        }
+
+                        string filePath = Path.Combine(folderPath, fileName);
+                        string directory = Path.GetDirectoryName(filePath);
+                        if (!Directory.Exists(directory))
+                        {
+                            Directory.CreateDirectory(directory);
+                        }
+                        System.IO.File.WriteAllBytes(filePath, fileData);
+                        return uploadpath;
+                    }
                 }
-                if (!string.IsNullOrEmpty(dataURI) && dataURI.StartsWith("data:image/"))
+                else if (!string.IsNullOrEmpty(dataURI) && dataURI != "null" && dataURI != "undefined")
                 {
-                    string extension = Regex.Match(dataURI, @"^data:image\/[a-zA-Z]+;base64,").Value;
-                    extension = extension.Replace("data:image/", "").Replace(";base64,", "");
-                    string fileName = Guid.NewGuid().ToString("N") + "." + extension;
-                    byte[] fileData = Convert.FromBase64String(dataURI.Substring(dataURI.IndexOf(',') + 1));
                     string folderPath = "";
                     string uploadpath = "";
                     if (For == "Employee")
                     {
-                        uploadpath = "../DownloadMat/Retail/Employee/" + fileName;
+                        uploadpath = "../DownloadMat/Retail/Employee/" + dataURI;
                         folderPath = Server.MapPath("../DownloadMat/Retail/Employee/");
+                        string filePath = Path.Combine(folderPath, dataURI);
+                        string directory = Path.GetDirectoryName(filePath);
+                        if (!Directory.Exists(directory))
+                        {
+                            Directory.CreateDirectory(directory);
+                        }
+                        return uploadpath;
                     }
-                    else if (For == "StoreLicense")
-                    {
-                        uploadpath = "../DownloadMat/Retail/StoreLicense/" + fileName;
-                        folderPath = Server.MapPath("../DownloadMat/Retail/StoreLicense/");
-                    }
-                    else
-                    {
-                        uploadpath = "../DownloadMat/Retail/Store/" + fileName;
-                        folderPath = Server.MapPath("../DownloadMat/Retail/Store/");
-                    }
-
-                    string filePath = Path.Combine(folderPath, fileName);
-                    string directory = Path.GetDirectoryName(filePath);
-                    if (!Directory.Exists(directory))
-                    {
-                        Directory.CreateDirectory(directory);
-                    }
-                    System.IO.File.WriteAllBytes(filePath, fileData);
-                    return uploadpath;
                 }
             }
             catch (Exception ex)

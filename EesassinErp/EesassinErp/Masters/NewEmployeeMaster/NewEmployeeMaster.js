@@ -70,10 +70,6 @@
             $scope.PartyId = MapId;
             $scope.AllUserListsLoad(MapId);
         }
-
-
-
-
     }, 100);
 
     $scope.BindGenderList = function () {
@@ -106,69 +102,69 @@
     $scope.EmployeeeMasterList = [];
     $scope.DisplayExcel = function () {
         $scope.showLoader();
-        var reader = new FileReader();
+
+        $scope.EmployeeeMasterList = [];
+
         var fileUploader = $('#input-excel');
+
+        if (!fileUploader[0].files.length) {
+            alert("Please select file");
+            return;
+        }
+
+        var reader = new FileReader();
         reader.readAsArrayBuffer(fileUploader[0].files[0]);
-        reader.onload = function (fileUploader) {
-            var data = new Uint8Array(reader.result);
+
+        reader.onload = function (e) {
+
+            var data = new Uint8Array(e.target.result);
             var wb = XLSX.read(data, { type: 'array' });
+
             var htmlstr = XLSX.write(wb, { sheet: "Sheet1", type: 'binary', bookType: 'html' });
-            $('#wrapper')[0].innerHTML = htmlstr;
+
+            $('#wrapper').html(htmlstr).removeClass('d-none');
+
             var table = $('#wrapper').find('table');
-            table.addClass('table compact table-hover table-striped table-bordered nowrap dataTable tblcss');
+            table.addClass('table table-bordered');
+
             $("tr:first-child td").each(function () {
                 $(this).replaceWith('<th>' + $(this).text() + '</th>');
             });
-            //$('<thead></thead>').prependTo('table').append($('table tr:first'));
+
             setTimeout(function () {
+
                 var tr = table.find('tr');
-                $.each(tr, function (index) {
-                    $scope.EmployeeMasterData = { 'EmployeeDesignation': "", 'EmployeeName': "" };
+
+                $.each(tr, function () {
+
                     var td = $(this).find('td');
                     if (td.length == 0) return;
-                    $scope.EmployeeMasterData['RefEmployeeCode'] = $(td[0]).text();
-                    $scope.EmployeeMasterData['EmployeeName'] = $(td[1]).text();
-                    $scope.EmployeeMasterData['EmployeeDesignation'] = $(td[2]).text();
-                    $scope.EmployeeMasterData['EmployeeDepartment'] = $(td[3]).text();
-                    $scope.EmployeeMasterData['Father_Husband_Name'] = $(td[4]).text();
-                    $scope.EmployeeMasterData['Gendar'] = $(td[5]).text();
-                    $scope.EmployeeMasterData['MaritalStatus'] = $(td[6]).text();
-                    $scope.EmployeeMasterData['DateOfBirth'] = $(td[7]).text();
-                    $scope.EmployeeMasterData['PresentAddress'] = $(td[8]).text();
-                    $scope.EmployeeMasterData['PermanemtAddress'] = $(td[9]).text();
-                    $scope.EmployeeMasterData['AdharCardNumber'] = $(td[10]).text();
-                    $scope.EmployeeMasterData['PANNumber'] = $(td[11]).text();
-                    $scope.EmployeeMasterData['MobileNumber'] = $(td[12]).text();
-                    $scope.EmployeeMasterData['AlternativeMobileNumber'] = $(td[13]).text();
-                    $scope.EmployeeMasterData['EmployeeEmailID'] = $(td[14]).text();
-                    $scope.EmployeeMasterData['BankAccountNumber'] = $(td[15]).text();
-                    $scope.EmployeeMasterData['BankIFSCCode'] = $(td[16]).text();
-                    $scope.EmployeeMasterData['PreviousUAN'] = $(td[17]).text();
-                    $scope.EmployeeMasterData['PreviousESI'] = $(td[18]).text();
-                    $scope.EmployeeMasterData['GrossSalary'] = $(td[19]).text();
-                    $scope.EmployeeMasterData['DOJ'] = $(td[20]).text();
-                    $scope.EmployeeMasterData['NomineeName'] = $(td[21]).text();
-                    $scope.EmployeeMasterData['NomineeAddress'] = $(td[22]).text();
-                    $scope.EmployeeMasterData['NomineeRelation'] = $(td[23]).text();
-                    $scope.EmployeeMasterData['NomineeDOB'] = $(td[24]).text();
-                    $scope.EmployeeMasterData['StoreCode'] = $(td[25]).text();
-                    $scope.EmployeeMasterData['IsActive'] = $(td[26]).text();
-                    $scope.EmployeeMasterData['LeavingDate'] = $(td[27]).text();
-                    $scope.EmployeeMasterData['PFAccount'] = $(td[28]).text();
 
-                    $scope.EmployeeeMasterList.push($scope.EmployeeMasterData);
-                    $scope.btnValiadte = true;
-                })
-                if ($scope.EmployeeeMasterList.length == 0) return;
+                    var obj = {};
+
+                    obj.RefEmployeeCode = $(td[0]).text();
+                    obj.EmployeeName = $(td[1]).text();
+                    obj.EmployeeDesignation = $(td[2]).text();
+
+                    $scope.EmployeeeMasterList.push(obj);
+                });
+
+                $scope.btnValiadte = true;
                 $scope.disableValiadte = false;
+
                 $scope.$applyAsync();
-            }, 1000);
+
+            }, 500);
+
             $scope.hideLoader();
         }
-    }
-    $scope.btnValiadte = false;
+    };
 
     $scope.SaveRecord = function () {
+        if (!$scope.EmployeeeMasterList || $scope.EmployeeeMasterList.length === 0) {
+            showMsgBox('999', 'Alert', 'Please Select valid file', 'warning', 'btn-warning');
+            return;
+        }
         $scope.showLoader();
         var collectionobj = {};
         collectionobj.EmployeeMaster = $scope.EmployeeeMasterList;
@@ -178,8 +174,6 @@
         collectionobj.UserId = LoginId
         var getData = myService.methode('POST', "../RetailSection/IUDBulkEmployeee", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
-            debugger;
-
             showMsgBox('999', 'Alert', 'Save Successfully', 'warning', 'btn-warning');
 
             $scope.GetEmployeeMaster();
@@ -343,6 +337,7 @@
 
 
     $scope.ShowDivEmployeeMasterGrid = function () {
+        $scope.IsActionType = 1;
         $scope.SaveEmployee();
     };
 
@@ -397,18 +392,21 @@
                 formData.append("DOBofNominee", $scope.DOBofNominee.toISOString());
                 formData.append("StoreCode", $scope.StoreCode);
                 formData.append("Status", $scope.IsActive);
-                formData.append("PANCardFilePath", $scope.PANCardFilePath);
-                formData.append("Cheque_Passbook_FilePath", $scope.Cheque_Passbook_FilePath);
-                formData.append("EducationCertificateFilePath", $scope.EducationCertificateFilePath);
-                formData.append("ExperienceCertificateFilePath", $scope.ExperienceCertificateFilePath);
-                formData.append("AdhaarCard_FrontSide_FilePath", $scope.AdhaarCard_FrontSide_FilePath);
-                formData.append("AdhaarCard_BackSide_FilePath", $scope.AdhaarCard_BackSide_FilePath);
-                formData.append("RelievingLetterfFilePath", $scope.RelievingLetterfFilePath);
-                formData.append("PayslipsFilePath", $scope.PayslipsFilePath);
-                formData.append("Photos_1_FilePath", $scope.Photos_1_FilePath);
-                formData.append("Photos_2_FilePath", $scope.Photos_2_FilePath);
-                formData.append("Photos_3_FilePath", $scope.Photos_3_FilePath);
-                formData.append("Photos_4_FilePath", $scope.Photos_4_FilePath);
+                function getFileName(file) {
+                    return file ? file.name : null;
+                }
+                formData.append("PANCardFilePath", getFileName($scope.PANCardFilePath));
+                formData.append("Cheque_Passbook_FilePath", getFileName($scope.Cheque_Passbook_FilePath));
+                formData.append("EducationCertificateFilePath", getFileName($scope.EducationCertificateFilePath));
+                formData.append("ExperienceCertificateFilePath", getFileName($scope.ExperienceCertificateFilePath));
+                formData.append("AdhaarCard_FrontSide_FilePath", getFileName($scope.AdhaarCard_FrontSide_FilePath));
+                formData.append("AdhaarCard_BackSide_FilePath", getFileName($scope.AdhaarCard_BackSide_FilePath));
+                formData.append("RelievingLetterfFilePath", getFileName($scope.RelievingLetterfFilePath));
+                formData.append("PayslipsFilePath", getFileName($scope.PayslipsFilePath));
+                formData.append("Photos_1_FilePath", getFileName($scope.Photos_1_FilePath));
+                formData.append("Photos_2_FilePath", getFileName($scope.Photos_2_FilePath));
+                formData.append("Photos_3_FilePath", getFileName($scope.Photos_3_FilePath));
+                formData.append("Photos_4_FilePath", getFileName($scope.Photos_4_FilePath));
                 formData.append("ActionType", $scope.IsActionType);
                 $.ajax({
                     url: "../RetailSection/InsertUpdateDelEmployeeMaster",
@@ -419,10 +417,11 @@
                     processData: false,
                     success: function (response) {
                         var data = JSON.parse(response);
-
+                        console.log(response);
                         if (showMsgBox(data.Result)) {
                             //if (data.Result == 1 || data.Result == 2) {
-                            window.top.location.href = '../RetailSection/EmployeeMaster?EmployeesMaster';
+                            //window.top.location.href = '../RetailSection/EmployeeMaster?EmployeesMaster';
+                            window.top.location.href = '../RetailSection/NewEmployeeMaster';
                             $scope.EmployeeMasterGrid = true;
                             $scope.EmployeeMasterForm = false;
 
@@ -446,16 +445,58 @@
     };
     $scope.uploadFile = function (fieldName, input) {
         if (input.files && input.files[0]) {
+            var file = input.files[0];
+            $scope[fieldName] = file;
+            var fileNameField = fieldName.replace("FilePath", "FileName");
+            $scope[fileNameField] = file.name;
             var filerdr = new FileReader();
             filerdr.onload = function (e) {
-                $scope[fieldName] = e.target.result;
+                $scope[fieldName + "_Preview"] = e.target.result;
                 $scope.$applyAsync();
-                var iconClass = $scope.getFileIconClass($scope[fieldName]);
-            }
-            filerdr.readAsDataURL(input.files[0]);
+                var iconClass = $scope.getFileIconClass($scope[fieldName + "_Preview"]);
+            };
+            filerdr.readAsDataURL(file);
         }
         else {
             $scope.$applyAsync();
+        }
+    };
+    $scope.ViewFile = function (path) {
+        if (!path) {
+            alert("File not available");
+            return;
+        }
+        if (typeof path === "object" && path.name) {
+
+            var fileURL = URL.createObjectURL(path);
+            window.open(fileURL, '_blank');
+        }
+        else {
+            window.open(path, '_blank');
+        }
+    };
+    $scope.DownloadFile = function (path) {
+        if (!path) {
+            alert("File not available");
+            return;
+        }
+        if (typeof path === "object" && path.name) {
+            var url = URL.createObjectURL(path);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = path.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+        else {
+            var a = document.createElement("a");
+            a.href = path;
+            a.download = '';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
     };
     function IsFileValidation() {
@@ -554,14 +595,14 @@
     $scope.openDocumentFunction = function (documentPath) {
         window.open(documentPath, '_blank');
     };
-    //$scope.openModal = function (id) {
-    //    debugger;
-    //    $scope.EditEmployee(id);
-    //    var modal = new bootstrap.Modal(document.getElementById('newEmployeeModal'));
-    //    modal.show();
-    //};
+    $scope.openModal = function (id) {
+        $scope.EditEmployee(id);
+
+        var modal = new bootstrap.Modal(document.getElementById('newEmployeeModal'));
+        modal.show();
+    };
     $scope.EditEmployee = function (Id) {
-        debugger;       
+        debugger;
         var selectedEmployee = $scope.EmployeeList.find(function (employee) {
             return employee.Id === Id;
         });
@@ -634,6 +675,7 @@
         $('#profileview').modal('hide');
         $scope.IsActionType = 2;
         $scope.EmployeeUploadDocs = false;
+
     };
     $scope.FireDoc = function (Id) {
         $('#' + Id).click();
@@ -691,7 +733,6 @@
 
 
     $scope.UpdateDocument = function (fieldName, input) {
-        debugger;
         if (input.files && input.files[0]) {
             var filerdr = new FileReader();
             filerdr.onload = function (e) {
@@ -727,10 +768,171 @@
             $scope.$applyAsync();
         }
     };
-    $scope.ExportPdf = function () {
-        $('#example').DataTable().buttons(0, 1).trigger();
-    }
     $scope.ExportExcel = function () {
-        $('#example').DataTable().buttons(0, 0).trigger();
-    }
+
+        var table = $('#example').DataTable();
+
+        if (table.button) {
+            table.button('.buttons-csv').trigger();
+        } else {
+            console.error("Buttons extension not loaded");
+        }
+    };
+
+    $scope.ExportPdf = function () {
+
+        var table = $('#example').DataTable();
+
+        if (table.button) {
+            table.button('.buttons-pdf').trigger();
+        } else {
+            console.error("Buttons extension not loaded");
+        }
+    };
+
+    $scope.ExportPrint = function () {
+
+        var table = $('#example').DataTable();
+
+
+        if (table.button) {
+            table.button('.buttons-print').trigger();
+        } else {
+            console.error("Buttons extension not loaded");
+        }
+    };
+    $scope.ExportToCSV = function () {
+        if (!$scope.EmployeeList || $scope.EmployeeList.length === 0) {
+            alert("No data to export");
+            return;
+        }
+        var csv = [];
+        var headers = [
+            "Sr.No",
+            "Employee Code",
+            "Ref Employee Code",
+            "Employee Name",
+            "Designation",
+            "D.O.J",
+            "Department",
+            "Compliance Status"
+        ];
+        csv.push(headers.join(","));
+        angular.forEach($scope.EmployeeList, function (item, index) {
+            var row = [
+                index + 1,
+                item.EmployeeCode || "",
+                item.RefEmployeeCode || "",
+                item.EmployeeName || "",
+                item.EmployeeDesignation || "",
+                item.DisplayDOJ || "",
+                item.EmployeeDepartment || "",
+                item.DocumentStatus || ""
+            ];
+            csv.push(row.join(","));
+        });
+        var csvString = csv.join("\n");
+        var blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+        var link = document.createElement("a");
+        var url = URL.createObjectURL(blob);
+
+        link.setAttribute("href", url);
+        link.setAttribute("download", "EmployeeMaster.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+    $scope.ExportToPDF = function () {
+        if (!$scope.EmployeeList || $scope.EmployeeList.length === 0) {
+            alert("No data to export");
+            return;
+        }
+        var html = `
+        <html>
+        <head>
+            <title>Employee Master</title>
+            <style>
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid black; padding: 8px; font-size: 12px; }
+                th { background: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <h3 style="text-align:center;">Employee Master</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sr.No</th>
+                        <th>Employee Code</th>
+                        <th>Ref Code</th>
+                        <th>Name</th>
+                        <th>Designation</th>
+                        <th>D.O.J</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>   `;
+
+        angular.forEach($scope.EmployeeList, function (item, index) {
+            html += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${item.EmployeeCode || ''}</td>
+                <td>${item.RefEmployeeCode || ''}</td>
+                <td>${item.EmployeeName || ''}</td>
+                <td>${item.EmployeeDesignation || ''}</td>
+                <td>${item.DisplayDOJ || ''}</td>
+                <td>${item.EmployeeDepartment || ''}</td>
+                <td>${item.DocumentStatus || ''}</td>
+            </tr>
+        `;
+        });
+        html += `
+                </tbody>
+            </table>
+        </body>
+        </html>`;
+        var win = window.open('', '', 'height=700,width=900');
+        win.document.write(html);
+        win.document.close();
+        win.print();
+    };
+    $scope.ExportToPrint = function () {
+        if (!$scope.EmployeeList || $scope.EmployeeList.length === 0) {
+            alert("No data to print");
+            return;
+        }
+        var html = `<html><head><title>Print Employee Master</title><style>table { width: 100%; border-collapse: collapse; }th, td { border: 1px solid black; padding: 8px; font-size: 12px; text-align:center; }
+                th { background: #f2f2f2; }</style></head><body><h3 style="text-align:center;">Employee Master</h3><table><thead><tr><th>Sr.No</th><th>Employee Code</th>
+                        <th>Ref Employee Code</th><th>Employee Name</th>
+                        <th>Designation</th><th>D.O.J</th>
+                        <th>Department</th><th>Compliance Status</th>
+                    </tr></thead>
+                <tbody>`;
+
+        angular.forEach($scope.EmployeeList, function (item, index) {
+            html += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${item.EmployeeCode || ''}</td>
+                <td>${item.RefEmployeeCode || ''}</td>
+                <td>${item.EmployeeName || ''}</td>
+                <td>${item.EmployeeDesignation || ''}</td>
+                <td>${item.DisplayDOJ || ''}</td>
+                <td>${item.EmployeeDepartment || ''}</td>
+                <td>${item.DocumentStatus || ''}</td>
+            </tr>`;
+        });html += `</tbody></table></body></html>`;
+
+        var win = window.open('', '', 'height=700,width=900');
+        win.document.write(html);
+        win.document.close();
+        win.print();
+    };
+    $scope.CancelImport = function () {
+        document.getElementById("input-excel").value = "";
+        document.getElementById("wrapper").classList.add("d-none");
+    };
+
 }
