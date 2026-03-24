@@ -1681,7 +1681,7 @@ namespace EesassinErp.Controllers
 
         public ActionResult RetailFactoryCompliance()
         {
-            return View();
+            return View("factorycompl");
         }
         [HttpPost]
         public async Task<string> IUDFactoryStatutory()
@@ -1756,6 +1756,10 @@ namespace EesassinErp.Controllers
             return View();
         }
         public ActionResult LabourCodeCompliance()
+        {
+            return View();
+        }
+        public ActionResult factorycompl()
         {
             return View();
         }

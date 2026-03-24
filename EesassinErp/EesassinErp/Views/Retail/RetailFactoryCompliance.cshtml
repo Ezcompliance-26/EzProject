@@ -245,70 +245,82 @@
         color: white;
         font-size: 16px;
     }
+    .filters select {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        background: transparent;
+        padding-right: 30px; /* space for arrow */
+    }
+
+    /* Wrapper */
+    .select-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+        /* Custom ORANGE arrow */
+        .select-wrapper::after {
+            content: "▼";
+            font-size: 12px;
+            color: #f26b2e;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+    .filters {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
 </style>
 
 <div class="dashboard-container">
-    <!-- Main Content -->
     <main class="main-content">
-        <!-- Header -->
-        <!-- Overview Cards -->
-        <!-- Graphs and Statistics -->
-        <!-- Statutory Due Dates Summary -->
         <section class="compliance-summary5" style="position:relative">
-
             <div class="container">
-                <!-- Tabs -->
                 <div class="tabs">
-                    @*<div class="tab active" data-tab="statutory">Statutory Due Dates</div>*@
-                    @*<div class="tab" data-tab="internal">Internal Due Dates</div>*@
                 </div>
-
-                <!-- Statutory Content -->
                 <div class="content active" id="statutory">
-                    <!-- Filters -->
-
-
                     <div class="filters" style="margin-top:15px;  gap:10px; flex-wrap:wrap; align-items:center;">
-
                         <div ng-init="BindFilter()">
-                            <select ng-model="State">
-                                <option value="">Select State</option>
-                                <option ng-repeat="x in SMasterList  | unique:'State'" value="{{x.State}}"> {{x.STATE_NM}}  </option>
-                            </select>
-                            <select ng-model="Month">
-                                <option value="">Select Month</option>
-                                <option ng-repeat="x in SMasterList  | unique:'Month'" value="{{x.Month}}"> {{x.Month}}  </option>
-                            </select>
-                            <select ng-model="Year">
-                                <option value="">Select Year</option>
-                                <option ng-repeat="x in YearsList | orderBy: '-'" value="{{x}}"> {{x}}  </option>
-                            </select>
+                            <div class="select-wrapper">
+                                <select ng-model="State">
+                                    <option value="">Select State</option>
+                                    <option ng-repeat="x in SMasterList  | unique:'State'" value="{{x.State}}"> {{x.STATE_NM}}  </option>
+                                </select>
+                            </div>
+                            <div class="select-wrapper">
+                                <select ng-model="Month">
+                                    <option value="">Select Month</option>
+                                    <option ng-repeat="x in SMasterList  | unique:'Month'" value="{{x.Month}}"> {{x.Month}}  </option>
+                                </select>
+                            </div>
+                            <div class="select-wrapper">
+                                <select ng-model="Year">
+                                    <option value="">Select Year</option>
+                                    <option ng-repeat="x in YearsList | orderBy: '-'" value="{{x}}"> {{x}}  </option>
+                                </select>
+                                </div>
+                            </div>
+                            <button ng-click="BindSearch();BindFORTILESSearch()">Search</button>
+                            <div style=" color: #fff; border: none; border-radius: 5px; background: #6f42c1; ">
+                                <a href="#" class="btn expbtn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="margin-top: 2px; color: #fff; background: #6f42c1; ">Export</a>
+                                <ul class="dropdown-menu escalul" aria-labelledby="escalbtnLink">
+                                    <li><a ng-click="ExportTableToExcel();ManageLog('Export in Excel')" class="dropdown-item">Export in Excel</a></li>
+
+                                    <li><a class="dropdown-item" ng-click="PrintTable();ManageLog('Export in PDF')">Export in PDF</a></li>
+                                </ul>
+                            </div>
+
+
+
+
                         </div>
-                        <button ng-click="BindSearch();BindFORTILESSearch()">Search</button>
-                        <div style=" color: #fff; border: none; border-radius: 5px; background: #6f42c1; ">
-                            <a href="#" class="btn expbtn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="margin-top: 2px; color: #fff; background: #6f42c1; ">Export</a>
-                            <ul class="dropdown-menu escalul" aria-labelledby="escalbtnLink">
-                                <li><a ng-click="ExportTableToExcel();ManageLog('Export in Excel')" class="dropdown-item">Export in Excel</a></li>
-
-                                <li><a class="dropdown-item" ng-click="PrintTable();ManageLog('Export in PDF')">Export in PDF</a></li>
-                            </ul>
-                        </div>
-
-
-
-
-                    </div>
-
-
                     <div class="dashboard">
-
-                      
-
-
-
-
-
-                        <!-- Tile 3: Complied Docs -->
                         <div class="tile tile-green compliance-tile">
                             <i class="fas fa-file-alt"></i>
                             <h2>Complied Docs (<strong>{{totalComplied}}</strong>)</h2>
@@ -318,9 +330,6 @@
                             </span>
                             <a class="fa fa-eye" style="cursor: pointer; color: white" ng-click="openModal('Complied Docs')"></a>
                         </div>
-
-
-                        <!-- Tile 2: Pending Docs -->
                         <div class="tile tile-red compliance-tile">
                             <i class="fas fa-hourglass-half"></i>
                             <h2>Non Complied  (<strong>{{totalNonComplied}}</strong>)</h2>
@@ -330,19 +339,12 @@
                             </span>
                             <a class="fa fa-eye" style="cursor: pointer; color: white" ng-click="openModal('Non Complied Docs')"></a>
                         </div>
-
-
-                        <!-- Tile 2: Pending Docs -->
                         <div class="tile tile-yellow compliance-tile">
                             <i class="fas fa-check-circle"></i>
                             <h2>Delayed Complied (<strong>{{totalDelayComplied}}</strong>)</h2>
                             <span class="tile-percentage">{{delayCompliedPercentage}}%</span>
                             <a class="fa fa-eye" style="cursor: pointer; color: white" ng-click="openModal('Delayed Docs')"></a>
                         </div>
-
-
-
-                        <!-- Tile 4: Delayed Docs -->
                         <div class="tile tile-dark compliance-tile">
                             <i class="fas fa-exclamation-triangle"></i>
                             <h2>Pending  Docs (<strong>{{totalPending}}</strong>)</h2>
@@ -353,25 +355,13 @@
 
                             <a class="fa fa-eye" style="cursor:pointer; color:white" ng-click="openModal('Pending Docs')"></a>
                         </div>
-
-
-                        <!-- Tile 2: Pending Docs -->
                         <div class="tile tile-green compliance-tile" style="background-color ='#6f42c1'">
                             <i class="fas fa-check-circle"></i>
                             <h2>Verified Docs (<strong>{{totalVerified}}</strong>)</h2>
                             <span class="tile-percentage">{{verifiedPercentage}}%</span>
                             <a class="fa fa-eye" style="cursor: pointer; color: white" ng-click="openModal('Verified')"></a>
                         </div>
-
-
-
-
-
-
-
-
                     </div>
-
 
                     <!-- Table -->
                     <div style="max-height: 700px; overflow-y: auto;">
@@ -517,7 +507,6 @@
                             </div>
                         </div>
                     </div>
-
                     <table class="table table-bordered table-striped" style="font-size:10PX">
                         <tfoot>
                             <tr class="search-row">
@@ -533,11 +522,7 @@
                             </tr>
                         </tfoot>
                     </table>
-
                 </div>
-
-                <!-- Icon in the table -->
-                <!-- Modal Structure -->
                 <div class="modal fade" id="remarkModal" tabindex="-1" role="dialog" aria-labelledby="remarkModalLabel">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">

@@ -1141,6 +1141,7 @@
     <Content Include="scripts\RetailJsLib\DepartmentMasterController.js" />
     <Content Include="scripts\RetailJsLib\EnitfyController.js" />
     <Content Include="scripts\RetailJsLib\ExpectationController.js" />
+    <Content Include="scripts\RetailJsLib\FactoryComplianceController.js" />
     <Content Include="scripts\RetailJsLib\LabourCodeController.js" />
     <Content Include="scripts\RetailJsLib\FileRetailMatchingController.js" />
     <Content Include="scripts\RetailJsLib\GradeMasterController.js" />
@@ -3450,6 +3451,7 @@
     <Content Include="Views\RetailSection\Index.cshtml" />
     <Content Include="Views\Retail\NSecretarialCompliance.cshtml" />
     <Content Include="Views\RetailSection\NewEmployeeMaster.cshtml" />
+    <Content Include="Views\Retail\factorycompl.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -3503,7 +3505,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63292</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:8880/</IISUrl>
+          <IISUrl>http://localhost:8882/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
