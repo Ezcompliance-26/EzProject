@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
     public class SiteManagerController : Controller
     {
         public ActionResult PartySiteManager()

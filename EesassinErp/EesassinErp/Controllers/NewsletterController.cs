@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
     public class NewsletterController : Controller
     {
         public ActionResult Newsletter()

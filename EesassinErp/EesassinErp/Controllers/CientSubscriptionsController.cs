@@ -2,7 +2,6 @@
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
     public class CientSubscriptionsController : Controller
     {
         public ActionResult CientSubscript()

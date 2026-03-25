@@ -3,8 +3,8 @@
     Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
 
- 
-<script src="../Scripts/RetailJsLib/SecretarialStatutorySetupController.js"></script>
+<script src="../Scripts/RetailJsLib/StatutorySetupController.js"></script>
+
 <style>
     .statutorySetupPage {
         font-family: "Inter", sans-serif;
@@ -124,7 +124,7 @@
 
         <!-- Header -->
         <div class="page-header d-flex justify-content-between align-items-center mb-3">
-            <h4 style="color: var(--primary)">Secretarial Setup</h4>
+            <h4 style="color: var(--primary)">Labour Setup</h4>
 
             <div class="d-flex gap-2">
 
@@ -152,13 +152,18 @@
         <div class="small-table-wrapper" ng-show="showEntryForm">
 
             <div class="table-responsive rounded-3">
-                <table class="table small-table" ng-init="AddListSet()" >
+                <table class="table small-table" ng-init="AddListSet()" @*ng-show="showEntryForm"*@>
                     <thead>
                         <tr>
-                            <th>Sr.No.</th> 
+                            <th>Sr.No.</th>
                             <th>State</th>
+                            <th>Location</th>
                             <th>Act</th>
-                            <th>Compliance Name</th>
+                            @*<th>Compliance Name</th>*@
+                            <th>Registration Number</th>
+                            <th>Valid From</th>
+                            <th>Valid To</th>
+                            <th>Type Code</th>
                             <th>Registration Type</th>
                             <th>Upload</th>
                             <th>Action</th>
@@ -168,25 +173,36 @@
                         <tr ng-repeat="obj in ListSet track by $index">
                             <td>{{$index + 1}}</td>
                             <td>
-                                <select class="form-control validate" ng-model="obj.State" ng-init="AllState()" ng-change="BindAct(obj.State, $index)">
+                                <select class="form-control validate" ng-model="obj.State" ng-init="AllState()" ng-change="BindAct(obj.State, $index);BindStore(obj.State, $index)">
                                     <option value="">Select State</option>
                                     <option ng-repeat="x in AllStateList" value="{{x.SATE_CODE}}">{{x.STATE_NM}}</option>
                                 </select>
                             </td>
-                            
+                            <td>
+                                <select id="myDropdown" class="form-control validate" ng-model="obj.StoreId">
+                                    <option value="">Select</option>
+                                    <option ng-repeat="x in StoreList" value="{{x.SCode}}"> {{x.StoreCode}} </option>
+                                </select>
+                            </td>
+
                             <td>
                                 <select class="form-control validate" ng-model="obj.Act" ng-change="BindCompliance(obj.Act,obj.State, $index)">
                                     <option value="">Select Act</option>
                                     <option ng-repeat="x in AllActList[$index]" value="{{x.ActId}}">{{x.Act}}</option>
                                 </select>
                             </td>
+                            @*<td>
+                            <select class="form-control validate" ng-model="obj.ComplianceName">
+                                <option value="">Select Compliance</option>
+                                <option ng-repeat="x in AllComlist[$index]" value="{{x.CName}}">{{x.CName}}</option>
+                            </select>
+                        </td>*@
+                            <td><input type="text" class="form-control validate" ng-model="obj.RegistrationNumber" /></td>
                             <td>
-                                <select class="form-control validate" ng-model="obj.ComplianceName">
-                                    <option value="">Select Compliance</option>
-                                    <option ng-repeat="x in AllComlist[$index]" value="{{x.CName}}">{{x.CName}}</option>
-                                </select>
+                                <input type="date" class="form-control validate" ng-model="obj.ValidFrom" value="{{convertTodate(obj.ValidFrom)}}" />
                             </td>
-                             
+                            <td><input type="date" class="form-control validate" ng-model="obj.ValidTo" value="{{convertTodate(obj.ValidTo)}}" /></td>
+                            <td><input type="text" class="form-control validate" ng-model="obj.TypeCode" /></td>
                             <td>
 
                                 <select class="form-control validate" ng-model="obj.RegistrationType">
@@ -231,28 +247,36 @@
         <div class="small-table-wrapper" ng-show="showEntryForm==false">
 
             <div class="table-responsive rounded-3">
-                <table class="table small-table" ng-init="Binddasboard()" >
+                <table class="table small-table" ng-init="Binddasboard()" @*ng-show="showEntryForm==false"*@>
                     <thead>
                         <tr>
                             <th>State</th>
+                            <th>Location</th>
                             <th>Act</th>
-                            <th>ComplianceName</th> 
+                            @*<th>ComplianceName</th>*@
+                            <th>RegistrationNumber</th>
+                            <th>ValidFrom</th>
+                            <th>ValidTo</th>
+                            <th>TypeCode</th>
                             <th>RegistrationType</th>
                             <th>Upload</th>
                             <th>CreatedOn</th>
                         </tr>
                     </thead>
                     <tbody>
-                       
-
                         <tr ng-repeat="obj in dashboardlist">
                             <td>{{ obj.STATE_NM }}</td>
+                            <td>{{ obj.StoreCode }}</td>
                             <td>
                                 {{ obj.actname  }}
                             </td>
-                            <td>{{obj.ComplianceName}}</td> 
+                            @*<td>{{obj.ComplianceName}}</td>*@
+                            <td>{{ obj.RegistrationNumber }}</td>
+                            <td>{{ obj.ValidFrom | date:'yyyy-MM-dd' }}</td>
+                            <td>{{ obj.ValidTo | date:'yyyy-MM-dd' }}</td>
+                            <td>{{ obj.TypeCode }}</td>
                             <td>{{ obj.RegistrationType }}</td>
-                            <td>
+                            <td> 
                                 <span ng-if="obj.Upoad">
                                     <a href="#" ng-click="viewFile(obj.Upoad)">
                                         Download

@@ -910,10 +910,10 @@ document.getElementById('lmUpdateStoreBtn')?.addEventListener('click', function 
             });
         }
 
-        // Download checklist (UI-only)
-        root.querySelector('#pmDownloadChecklist')?.addEventListener('click', function () {
-            alert('Download checklist (UI-only)');
-        });
+        //// Download checklist (UI-only)
+        //root.querySelector('#pmDownloadChecklist')?.addEventListener('click', function () {
+        //    alert('Download checklist (UI-only)');
+        //});
 
         // Save/Submit/Cancel (UI-only behaviour kept)
         root.querySelector('#pmSaveDraftBtn')?.addEventListener('click', function () {
@@ -1495,8 +1495,8 @@ document.getElementById('lmUpdateStoreBtn')?.addEventListener('click', function 
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const total =  0;
-    const needsValidation = 0;
+    const total = locations.length;
+    const needsValidation = locations.filter(x => x.needsValidation).length;
     const recent = 5; // Example
     const qualityScore = "92%"; // Example
 
@@ -1505,3 +1505,154 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("kpiRecentActivities").textContent = recent;
     document.getElementById("kpiQualityScore").textContent = qualityScore;
 });
+
+
+/*================Compliance Document Modal script=====================*/
+    // Rows ADD, REMOVE, UPDATE
+
+(function () {
+    const modal = document.getElementById('lmCompDocModal');
+    if (!modal) return;
+
+    const tableBody = modal.querySelector('#lm-compDoc-TableBody');
+
+    // FIRST darkOrange button = Add Row
+    const addRowBtn = modal.querySelector('.table-toolbar .btn-darkOrange');
+
+    /* ---------- ROW TEMPLATE (UPDATED TO MATCH TABLE) ---------- */
+    function createRow() {
+        return `
+        <tr>
+            <td class="lm-serial"></td>
+
+            <td>
+                <input type="text" class="form-control form-control-sm">
+            </td>
+
+            <!-- Other Locations -->
+            <td>
+                <div class="dropdown lm-multiselect">
+                    <button class="form-select form-select-sm lm-multiselect-btn"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <span class="lm-multiselect-text">Select</span>
+                        <span class="lm-multiselect-caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <label class="dropdown-item d-flex align-items-center gap-2">
+                                <input type="checkbox" value="Location A">
+                                <span>Location A</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item d-flex align-items-center gap-2">
+                                <input type="checkbox" value="Location B">
+                                <span>Location B</span>
+                            </label>
+                        </li>
+                        <li>
+                            <label class="dropdown-item d-flex align-items-center gap-2">
+                                <input type="checkbox" value="Location C">
+                                <span>Location C</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+
+            <!-- Remarks -->
+            <td>
+                <div class="d-flex align-items-center gap-2" style="min-width:150px;">
+                    <input type="text" class="form-control form-control-sm">
+                    
+                </div>
+            </td>
+
+            <td>
+                <input type="date" class="form-control form-control-sm">
+            </td>
+
+            <td>
+                <input type="date" class="form-control form-control-sm">
+            </td>
+
+            <td>
+                <label class="btn btn-sm btn-upload px-3" style="white-space:nowrap; cursor:pointer;">
+                    Choose File
+                    <input type="file" hidden>
+                </label>
+            </td>
+
+            <td>
+                <button class="btn btn-sm btn-view">View</button>
+            </td>
+
+            <td>
+                <button class="btn btn-sm btn-view">Download</button>
+            </td>
+
+            <td>
+                <button class="btn btn-sm btn-submit px-3">Save</button>
+            </td>
+
+            <td class="action-menu">
+                <button class="btn btn-sm" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item lm-row-update">Update</a></li>
+                    <li><a class="dropdown-item lm-row-remove text-danger">Remove</a></li>
+                </ul>
+            </td>
+        </tr>`;
+    }
+
+    /* ---------- SERIAL NUMBER UPDATE ---------- */
+    function updateSerialNumbers() {
+        tableBody.querySelectorAll('tr').forEach((row, index) => {
+            const serialCell = row.querySelector('.lm-serial');
+            if (serialCell) serialCell.textContent = index + 1;
+        });
+    }
+
+    /* ---------- ADD ROW ---------- */
+    addRowBtn.addEventListener('click', function () {
+        tableBody.insertAdjacentHTML('beforeend', createRow());
+        updateSerialNumbers();
+    });
+
+    /* ---------- UPDATE / REMOVE ---------- */
+    tableBody.addEventListener('click', function (e) {
+
+        // UPDATE → insert new row below
+        const updateBtn = e.target.closest('.lm-row-update');
+        if (updateBtn) {
+            const currentRow = updateBtn.closest('tr');
+            if (!currentRow) return;
+
+            currentRow.insertAdjacentHTML('afterend', createRow());
+            updateSerialNumbers();
+            return;
+        }
+
+        // REMOVE → confirm then delete
+        const removeBtn = e.target.closest('.lm-row-remove');
+        if (removeBtn) {
+            const row = removeBtn.closest('tr');
+            if (!row) return;
+
+            const confirmed = confirm('Are you sure you want to remove this document row?');
+            if (!confirmed) return;
+
+            row.remove();
+            updateSerialNumbers();
+        }
+    });
+
+})();
+
+

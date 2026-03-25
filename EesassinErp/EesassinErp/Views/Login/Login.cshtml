@@ -47,19 +47,15 @@
             background-color: white;
         }
 
-        /*.red-validation {
+        .red-validation {
             border: 1px solid #d65e65 !important;
-        }*/
+        }
 
         input[type="text"], input[type="password"] {
             padding: 10px;
             width: 99%;
             border: 1px solid #ccc;
             border-radius: 6px;
-        }
-
-        #username-input, #txtContactNo {
-            margin-bottom: 1rem;
         }
 
         .password-container {
@@ -95,15 +91,9 @@
     height:38px;
     border:1px solid #ccc;
     border-radius:6px;
-    padding: 6px;
+    padding:0 10px;
     font-size:14px;
     background:#fff;
-}
-
-.module-dropdown:focus {
-    border: 1px solid #ff6e6e !important;
-    box-shadow: 0 0 0 2px rgba(255, 110, 110, 0.2);
-    outline: none;
 }
 
         .change-username {
@@ -244,7 +234,7 @@
                 <img src="../login/image/ezfulllogo 3.png" alt="Company Logo" class="company-logo" />
             </div>
 
-            <p>Sign in to access India's smart unified Compliance System</p>
+            <p>Sign in to access India's smart unified Compliance System.</p>
 
             <!-- Dynamic form container -->
             <div class="form-group" id="form-container">
@@ -269,7 +259,7 @@
             <span style="float: right; color: #007BFF; cursor: pointer; font-size: 70%; margin-bottom: 0.5rem;" ng-click="resetusername()">Change user name</span>
         </label>*@
                     <div class="change-username">
-                        <span ng-click="resetusername()">Change User Name</span>
+                        <span ng-click="resetusername()">Change user name</span>
                     </div>
 
                     <input type="text" ng-model="Username" class="validate" disabled />
@@ -306,7 +296,7 @@
                         <img alt="Captcha" ng-src="{{CaptchaSrc}}" />
                         <i class="fa fa-refresh" aria-hidden="true" ng-click="GetCaptchaImage();" style="cursor: pointer;"></i>
                     </div> @*<br />*@
-                    <input class="form-control numbersOnly validate" id="txtCaptcha" type="text" name="txtCaptcha" ng-model="Captcha" placeholder="Total Sum">
+                    <input class="form-control numbersOnly validate" id="txtCaptcha" type="text" name="txtCaptcha" ng-model="Captcha" placeholder="How much is the sum">
 
 
                     <div class="forgot-password">

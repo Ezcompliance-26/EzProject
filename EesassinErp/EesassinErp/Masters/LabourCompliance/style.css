@@ -5,7 +5,7 @@
     --card-bg: #FEF3EC;
     background: #FFF1EB;
     color: #223;
-    min-height: 80%;
+    min-height: 100vh;
 }
 
 .dropdown-menu {
@@ -15,34 +15,49 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
-/* KPI CARDS */
-.lb-kpi-card {
+/* ================= KPI SECTION ================= */
+.labourCompPage .lb-kpi-card {
     background: #fff;
     border-radius: 14px;
     padding: 12px 16px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     border-left: 5px solid #E45D27;
     transition: 0.2s ease;
+    display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    height: 100%;
 }
 
-    .lb-kpi-card:hover {
+    .labourCompPage .lb-kpi-card:hover {
         transform: translateY(-3px);
         box-shadow: 0 4px 20px rgba(0,0,0,0.12);
     }
 
-.lb-kpi-title {
-    font-size: 0.9rem;
+.labourCompPage .lb-kpi-title {
+    font-size: 0.85rem;
     font-weight: 500;
     color: #555;
+    line-height: 1.2;
+    flex: 1;
+    padding-right: 8px;
 }
 
-.lb-kpi-value {
+.labourCompPage .lb-kpi-value {
     font-size: 1.4rem;
     font-weight: 700;
-    margin-top: 4px;
+    white-space: nowrap;
     color: #E45D27;
+}
+
+/* Mobile improvement */
+@media (max-width: 480px) {
+    .labourCompPage .lb-kpi-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
 }
 
 /* Toggle pill - single capsule container */
@@ -50,8 +65,7 @@
     display: inline-flex;
     border-radius: 999px;
     background: rgba(0,0,0,0.03);
-    padding: 4px;
-    overflow: hidden;
+    padding: 2px;
     gap: 4px;
     align-items: center;
 }
@@ -60,14 +74,15 @@
     .labourCompPage .toggle-pill .btn-pill {
         background: transparent;
         border: 0;
-        padding: 6px 8px;
+        padding: 4px 8px;
         margin: 0;
         font-weight: 400;
+        font-size: 0.8rem;
         color: #333;
         border-radius: 999px;
         transition: background .15s ease, color .15s ease, transform .06s ease;
         white-space: nowrap;
-        min-width: 60px;
+        min-width: 40px;
     }
 
         /* active pill */
@@ -104,6 +119,7 @@
     -ms-overflow-style: none; /* IE and Edge */
     scroll-behavior: smooth;
     position: relative;
+
 }
 
     .labourCompPage .small-table-wrapper .table-responsive::-webkit-scrollbar {
@@ -121,7 +137,7 @@
     font-size: 0.78rem;
     text-align: left;
     vertical-align: middle;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     padding: 8px 10px;
 }
 
@@ -132,7 +148,7 @@
     vertical-align: middle;
     text-align: left;
     padding: 8px 10px;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 /* hover */
@@ -326,7 +342,12 @@
     border-radius: 6px;
     border: 1px solid #dcdcdc;
     outline: none;
-    width: 120px;
+    /*width: 130px;*/
+}
+
+.labourCompPage .small-table .form-select,
+.labourCompPage .small-table .form-control {
+    width: 130px;
 }
 
 /* 2nd and 3rd Col wrap*/
@@ -441,3 +462,10 @@
     .labourCompPage #eventModal .modal-footer .eventSubmitBtn:hover {
         background: var(--primary-dark);
     }
+.labourCompPage #eventModal .table {
+    min-width: 1200px;
+}
+
+.labourCompPage .modal-xl {
+    max-width: 90%;
+}

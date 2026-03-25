@@ -5,7 +5,6 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
     public class CommunicationController : Controller
     {
         // GET: Communication

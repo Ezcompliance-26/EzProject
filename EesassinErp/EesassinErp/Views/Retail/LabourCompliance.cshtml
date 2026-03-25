@@ -289,25 +289,16 @@
                 <div class="row g-2 align-items-center table-toolbar mb-2">
                     <div class="col-12 col-lg-8 d-flex flex-wrap gap-2">
 
-                        
-
-                        
-
                         <div class="dropdown">
-                            <button class="btn btn-sm filter-btn dropdown-toggle" data-bs-toggle="dropdown">
-                                {{SelectedAct || 'Act'}}
+                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Acts
                             </button>
-
                             <ul class="dropdown-menu">
-                                <li ng-repeat="Act in ActList">
-                                    <a class="dropdown-item"
-                                       href=""
-                                       ng-click="getAct(Act)">
-                                        {{Act}}
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item" href="#">All</a></li>
+                                <li><a class="dropdown-item" href="#">Professional Tax</a></li>
+                                <li><a class="dropdown-item" href="#">Labour Welfare Fund</a></li>
+                                <li><a class="dropdown-item" href="#">The Employees' State Insurance Act, 1948</a></li>
                             </ul>
-
                         </div>
 
                         <div class="dropdown">
@@ -407,7 +398,6 @@
                 <!-- Table wrapper -->
                 <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3">
                     <div class="table-container">
-                       
                         <table class="table table-sm mb-0 small-table custom-table" id="lbTable">
                             <thead>
                                 <tr style="background-color: #F37437">
@@ -433,7 +423,7 @@
                             </thead>
                             <tbody>
 
-                                <tr ng-repeat="row in labourcomplianceRows |  filter:globalSearch">
+                                <tr ng-repeat="row in labourcomplianceRows | filter:{Calendartype : 'Statutory'}  | filter:globalSearch">
                                     <td>{{$index + 1}}</td>
                                     <td>{{row.Act}}</td>
                                     <td>
@@ -516,12 +506,12 @@
                                         </div>
                                     </td>
                                     @*<td class="d-flex align-items-center gap-2 no-print">
-                        <input class="form-control form-control-sm" ng-model="row.VRemark1" type="text" id="VRemark" style="font-size:10px" ng-show="row.Flag !='1'" />
+            <input class="form-control form-control-sm" ng-model="row.VRemark1" type="text" id="VRemark" style="font-size:10px" ng-show="row.Flag !='1'" />
 
-                        <i ng-if="row.VRemark !=''" class="bi bi-eye-fill" style="cursor: pointer; color: #F37437" ng-click="openRemarkModal(row.VRemark,'Client Remark')"></i>
+            <i ng-if="row.VRemark !=''" class="bi bi-eye-fill" style="cursor: pointer; color: #F37437" ng-click="openRemarkModal(row.VRemark,'Client Remark')"></i>
 
 
-                    </td>*@
+        </td>*@
 
                                     <td class="no-print">
                                         <select class="form-select form-select-sm"

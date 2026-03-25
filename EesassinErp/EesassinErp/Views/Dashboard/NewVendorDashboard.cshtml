@@ -6,7 +6,7 @@
 }
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link href="~/Dashboards/NewVendorDashboard/style.css" rel="stylesheet" />
+<link href="~/Dashboards/NewVendorDashboard/style.css" rel="stylesheet"/>
 <script src="~/Dashboards/NewVendorDashboard/script.js"></script>
 
 <div class="vendorDashboard px-2 py-2">
@@ -540,27 +540,24 @@
     </div>
 
 
-
-
-
     <!-- ========================= CONTAINER 2 ========================= -->
-    <div class="container-fluid mt-4" id="container2">
+    <!--<div class="container-fluid mt-4" id="container2">
         <div class="custom-card p-3" style="height: 320px;">
             <div class="row h-100 g-0">
 
                 <!-- LEFT: INVOICE COMPLIANCE -->
-                <div class="col-md-7 d-flex flex-column justify-content-between border-end border-orange pe-3">
+                <!--<div class="col-md-7 d-flex flex-column justify-content-between border-end border-orange pe-3">
                     <h5 class="fw-medium text-orange mb-2">Invoice Compliance</h5>
 
                     <div class="invoiceComplianceChart chart-wrapper flex-grow-1 ">
                         <canvas id="invoiceComplianceChartCanvas" height="120"></canvas>
                     </div>
-                </div>
+                </div>-->
 
                 <!-- RIGHT: AUDITOR COMPLIANCE -->
-                <div class="col-md-5 d-flex flex-column ps-3 position-relative">
-                    <!-- Arrow Button -->
-                    @*<a href="#" class="position-absolute top-0 end-0 m-2 text-orange arrow-btn">
+                <!--<div class="col-md-5 d-flex flex-column ps-3 position-relative">-->
+                    <!-- Arrow Button -->-->
+                    <!--@*<a href="#" class="position-absolute top-0 end-0 m-2 text-orange arrow-btn">
                             <i class="bi bi-arrow-up-right-circle"></i>
                         </a>*@
                     <h5 class="fw-medium text-orange mb-3">Auditor Compliance</h5>
@@ -571,21 +568,21 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <!-- ========================= CONTAINER 3 ========================= -->
-    <div class="container-fluid mt-4" id="container3">
+    <!--<div class="container-fluid mt-4" id="container3">
         <div class="custom-card p-3">
             <div class="row h-100 g-3">
-                <div class="lower-wrapper d-flex gap-3 mt-2" style="flex:1; min-height:0;">
+                <div class="lower-wrapper d-flex gap-3 mt-2" style="flex:1; min-height:0;">-->
                     <!-- Work in Progress (left) -->
-                    <div class="card flex-fill d-flex flex-column p-3" style="flex:1 1 0;">
+                    <!--<div class="card flex-fill d-flex flex-column p-3" style="flex:1 1 0;">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h5 class="fw-medium text-orange mb-0">Work in Progress</h5>
                             <a href="#" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
-                        </div>
+                        </div>-->
                         <!-- Table -->
-                        <div class="container3-table-wrapper flex-grow-1 overflow-auto rounded-3">
+                        <!--<div class="container3-table-wrapper flex-grow-1 overflow-auto rounded-3">
                             <table class="table table-sm mb-0 text-center align-middle">
                                 <thead class="container3-thead sticky-top">
                                     <tr>
@@ -621,17 +618,17 @@
                             </table>
                         </div>
 
-                    </div>
+                    </div>-->
 
                     <!-- Highlights (right) -->
-                    <div class="card flex-fill d-flex flex-column p-3" style="flex:1 1 0;">
+                    <!--<div class="card flex-fill d-flex flex-column p-3" style="flex:1 1 0;">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h5 class="fw-medium text-orange mb-0">Highlights</h5>
                             <a href="#" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
-                        </div>
+                        </div>-->
 
                         <!-- Table -->
-                        <div class="container3-table-wrapper flex-grow-1 overflow-auto rounded-3">
+                        <!--<div class="container3-table-wrapper flex-grow-1 overflow-auto rounded-3">
                             <table class="table table-sm mb-0 text-center align-middle">
                                 <thead class="container3-thead sticky-top">
                                     <tr>
@@ -662,15 +659,15 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
 
     <!-- ================= VENDOR ↔ AUDITOR QUERY SECTION ================= -->
-    <div class="container-fluid mt-4" id="vendorQuerySection">
-        <div class="custom-card p-3">
+    <!--<div class="container-fluid mt-4" id="vendorQuerySection">
+        <div class="custom-card p-3">-->
 
             <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <!--<div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="fw-medium mb-0" style="color: var(--primary)">Vendor – Auditor Queries</h5>
 
                 <button class="btn btn-sm cv-btn-primary"
@@ -678,10 +675,10 @@
                         data-bs-target="#raiseQueryModal">
                     <i class="bi bi-plus-circle me-1"></i> Raise Query
                 </button>
-            </div>
+            </div>-->
 
             <!-- QUERY LIST -->
-            <div class="table-responsive mb-3 rounded-3">
+            <!--<div class="table-responsive mb-3 rounded-3">
                 <table class="table table-sm align-middle mb-0">
                     <thead class="container3-thead">
                         <tr>
@@ -724,10 +721,10 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div>-->
 
             <!-- QUERY THREAD -->
-            <div class="query-thread p-3 rounded-3">
+            <!--<div class="query-thread p-3 rounded-3">
                 <div class="query-message vendor">
                     <div class="d-flex justify-content-between">
                         <strong>Vendor</strong>
@@ -747,10 +744,10 @@
                     <p class="mb-0">
                         Acknowledgment uploaded. Please verify and proceed.
                     </p>
-                </div>
+                </div>-->
 
                 <!-- REPLY BOX -->
-                <div class="mt-3">
+                <!--<div class="mt-3">
                     <textarea class="form-control form-control-sm"
                               rows="2"
                               placeholder="Type your reply..."></textarea>
@@ -769,10 +766,10 @@
             </div>
 
         </div>
-    </div>
+    </div>-->
 
     <!-- ================= RAISE QUERY MODAL ================= -->
-    <div class="modal fade" id="raiseQueryModal" tabindex="-1">
+    @*<div class="modal fade" id="raiseQueryModal" tabindex="-1">
         <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">
 
@@ -821,7 +818,7 @@
 
             </div>
         </div>
-    </div>
+    </div>*@
 
 
 

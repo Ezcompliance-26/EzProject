@@ -132,29 +132,11 @@
                                             </div>
                                         </div>
                                         <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
-                                            <label class="control-label">Store Limit<span class="vd_red">*</span></label>
+                                            <label class="control-label">Store LIMIT<span class="vd_red">*</span></label>
                                             <div class="input-box">
                                                 <input id="txtStoreLimit" type="text" ng-model="StoreLimit" onblur="validateNumberAndDecimalOnly('#txtStoreLimit')"
                                                        class="form-control text-right clear validate" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
 
-                                                <div class="text-box-msg-r">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
-                                            <label class="control-label">User Limit<span class="vd_red">*</span></label>
-                                            <div class="input-box">
-                                                <input id="txtUserLimit" type="text" ng-model="UserLimit" onblur="validateNumberAndDecimalOnly('#txtUserLimit')"
-                                                       class="form-control text-right clear validate" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
-
-                                                <div class="text-box-msg-r">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
-                                            <label class="control-label">Party Creation Date</label>
-                                            <div class="input-box">
-                                                @Html.TextBox("txtPartyDate", "", new { @class = "form-control clear", @type = "date", @placeholder = "", @ng_model = "PartyDate" })
                                                 <div class="text-box-msg-r">
                                                 </div>
                                             </div>

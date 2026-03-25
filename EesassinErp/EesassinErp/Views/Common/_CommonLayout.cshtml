@@ -35,29 +35,31 @@
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/plugins/vendors/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css")" />
 
     <script type="text/javascript" src="@Url.Content("~/scripts/jquery-1.12.4.js")"></script>
-    <script src="~/scripts/myjslib/myJs.js"></script>
+    @RenderSection("styles", required: false)
 
-    <script src="@Url.Content("~/Scripts/angular.min.js")"></script>
-    <script src="@Url.Content("~/Scripts/angular-sanitize.min.js")"></script>
-    <script src="@Url.Content("~/Scripts/angular-filter.min.js")"></script>
-    <script src="@Url.Content("~/Scripts/angular-ui.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jscolor.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/myjslib/myJs.js?Ver="+ViewBag.Version+"")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/moment.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/angular.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/angular-sanitize.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/angular-filter.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/angular-ui.js")"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.5/tinymce.min.js"></script>
+    <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/angular-ui-tinymce/0.0.19/tinymce.js'></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/myjslib/app.js?Ver="+ViewBag.Version+"")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/myjslib/service.js?Ver="+ViewBag.Version+"")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/myjslib/controller.js?Ver="+ViewBag.Version+"")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/myjslib/ddlBindings.js?Ver="+ViewBag.Version+"")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/myjslib/Authorization.js?Ver="+ViewBag.Version+"")"></script>
+    <script src="~/scripts/managebyuser.js"></script>
 
-    <!-- ✅ YAHI MISSING THA -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-route.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.5/tinymce.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-tinymce/0.0.19/tinymce.js"></script>
-    <script src="~/Scripts/angular-route.min.js"></script>
-    <script src="@Url.Content("~/Scripts/myjslib/app.js?Ver="+ViewBag.Version+"")"></script>
-    <script src="@Url.Content("~/Scripts/myjslib/service.js?Ver="+ViewBag.Version+"")"></script>
-    <script src="@Url.Content("~/Scripts/myjslib/controller.js?Ver="+ViewBag.Version+"")"></script>
     <link href="~/chatbot/chatbot.css" rel="stylesheet" />
     <script src="~/chatbot/chatbot.js"></script>
     <style>
         #session-timer {
             font-weight: bold;
             color: #a39393;
-            display: none
+           display:none
         }
     </style>
     <script>
@@ -260,8 +262,8 @@
                 <ul class="nav navbar-right top-nav pull-right manage-box">
                     <li class="dropdown auth-drp">
                         <div>
-                            <a ng-if="loginType == 1 || loginType == 5" ng-click="GoToRetail()" class="header-button">Go To Retail</a>
-                            @*<a ng-if="loginType == 1" onclick="clearServerCookies();reloadJavaScript()" class="header-button">Clear Cookies</a>*@
+                            <a ng-if="loginType==1" ng-click="GoToRetail()" class="header-button">Go To Retail</a>
+                            <a ng-if="loginType==1" onclick="clearServerCookies();reloadJavaScript()" class="header-button">Clear Cookies</a>
 
                         </div>
                     </li>
@@ -273,22 +275,17 @@
                             </div>
 
                             <div class="login-user-name">
-                                {{Name}} <p  >
-    <lablel class="login-user-name user-auth-name-box" ng-if="loginType==2">Vendor</lablel>
-    <lablel class="login-user-name user-auth-name-box" ng-if="loginType==3">Auditor</lablel>
-    <lablel class="login-user-name user-auth-name-box" ng-if="loginType==4">Client</lablel>
-    <lablel class="login-user-name user-auth-name-box" ng-if="loginType==5">Admin</lablel>
-    <lablel class="login-user-name user-auth-name-box" ng-if="loginType==1">SuperAdmin</lablel>
-</p>
+                                {{Name}} <p ng-if="loginType !=1">
+                                    <lablel class="login-user-name user-auth-name-box" ng-if="loginType==2">Vendor</lablel>
+                                    <lablel class="login-user-name user-auth-name-box" ng-if="loginType==3">Auditor</lablel>
+                                    <lablel class="login-user-name user-auth-name-box" ng-if="loginType==4">Client</lablel>
+                                </p>
                             </div>
 
                             <div class="last-login-time-box">
                                 <lable class="last-login-time">Last Login Time : </lable>
                                 <lable class="last-login-time" ng-model="LastLogin" ng-bind="LastLogin"></lable>
-                                 
-                                 
                             </div>
-                             
                             <input type="hidden" id="hfCode" ng-model="Code" ng-value="Code" />
                             <div class="user-auth-img-box">
                                 <a title="Change Password" data-path="@Url.Action("ChangePassCode", "ChangePassCode")"
@@ -322,7 +319,7 @@
             <ul class="nav navbar-nav side-nav nicescroll-bar">
                 @*<li class="navigation-header"> <span>Main</span> <i class="mdi mdi-more"></i> </li>*@
                 <li>
-                    <a href="/Dashboard/Dashboard">
+                    <a href="@Url.Action("DashBoard", "DashBoard")">
                         <div class="pull-left"><i class="fa fa-dashboard mr-12"></i><span class="right-nav-text">Dashboard</span></div>
                         <div class="clearfix"></div>
                     </a>
@@ -731,10 +728,10 @@
             <footer class="footer container-fluid ">
                 <div class="row">
                     <div class="col-sm-12 col-xs-12">
-                        <div class="pull-left session-box " style="margin-left: 2%;" ng-cloak>Ezcompliance&nbsp; | &nbsp; Address :   4th-5th Floor, A-131, Sector 136, Noida, Uttar Pradesh – 201304</div>
+                        <div class="pull-left session-box " ng-cloak> {{BranchName}} &nbsp; | &nbsp; Address {{BranchAddress}} </div>
 
-                        <div class="pull-right copyright-box ">Copyright © 2022 Ezcompliance. All Rights Reserved &nbsp; | &nbsp; Powered by <a href="https://ezcompliance.in/" target="_blank">Ezcompliance</a></div>
-                        <div class="clearfix"><label id="session-timer"></label></div>
+                        <div class="pull-right copyright-box ">Copyright © 2022 Talent Cabin India. All Rights Reserved &nbsp; | &nbsp; Powered by <a href="#" target="_blank">Talent Cabin India</a></div>
+                        <div class="clearfix"><label id="session-timer" style></label></div>
                     </div>
                 </div>
             </footer>
@@ -807,8 +804,8 @@
         <i id="chatIconSymbol" class="fa-solid fa-headset fa-2xl" style="color: #ffffff;"></i>
     </div>
     @*<div id="chatIcon" onclick="openChat()">
-            <i class="fa-solid fa-headset fa-2xl" style="color: #ffffff;"></i>
-        </div>*@
+        <i class="fa-solid fa-headset fa-2xl" style="color: #ffffff;"></i>
+    </div>*@
 
     <div id="chatContainer">
         <div class="chat-message" id="robotMessage">
@@ -853,46 +850,7 @@
         </div>
     </div>
 
-    <div ng-show="showLogoutProcess"
-         style="position:fixed; top:0; left:0; width:100%; height:100%;
-            background:rgba(0,0,0,0.6); z-index:99999;
-            display:flex; align-items:center; justify-content:center;">
 
-        <div style="background:#fff; width:420px; padding:25px; border-radius:8px;
-                text-align:center; box-shadow:0 0 20px rgba(0,0,0,0.3);">
-
-            <h3 style="margin-bottom:15px;">Please wait...</h3>
-
-            <div style="text-align:left; font-size:14px; line-height:26px;">
-
-                <div>
-                    <b>1.</b> Securing and saving your data...
-                    <span ng-show="logoutStep >= 1" style="color:green;">✔</span>
-                </div>
-
-                <div>
-                    <b>2.</b> Updating system preferences and settings...
-                    <span ng-show="logoutStep >= 2" style="color:green;">✔</span>
-                </div>
-
-                <div>
-                    <b>3.</b> Recording activity logs for audit...
-                    <span ng-show="logoutStep >= 3" style="color:green;">✔</span>
-                </div>
-
-                <div ng-show="logoutStep >= 4" style="margin-top:10px; font-weight:bold; color:#d9534f;">
-                    Finalizing session and logging out securely...
-                </div>
-
-            </div>
-
-            <div style="margin-top:20px;">
-                <span style="font-size:12px; color:#777;">
-                    Please do not refresh or close the browser.
-                </span>
-            </div>
-        </div>
-    </div>
 </div>
 </body>
 </html>

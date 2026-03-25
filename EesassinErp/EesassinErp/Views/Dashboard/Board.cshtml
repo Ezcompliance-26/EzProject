@@ -42,15 +42,7 @@
     .lm-multiselect .border-bottom {
         padding: 4px 8px !important;
     }
-
-    .admin-user-modal .form-select {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
 </style>
-
-
 
 <div class="adminSetup px-4 py-2">
     <!-- Capsule Toggle (single capsule container) -->
@@ -948,19 +940,14 @@
                                 </select>
 
                                 <label class="form-label mt-2">License</label>
-                       
-                            <select class="form-select"
-                                    ng-model="addLicense.selectedLicense"
-                                    ng-options="x as (x.LicenseName + ' (' + x.State + ' - ' + x.CategoryName + ')') for x in FilteredLicenseList track by x.Id">
-                                <option value="">Select License</option>
-                            </select>
 
-                                <div class="mt-2 small text-muted" ng-if="addLicense.selectedLicense">
-                                    {{addLicense.selectedLicense.LicenseName}} |
-                                    {{addLicense.selectedLicense.State}} |
-                                    {{addLicense.selectedLicense.CategoryName}} |
-                                    {{addLicense.selectedLicense.Act}}
-                                </div>
+                                <!-- License dropdown changes-->
+                                <select class="form-select license-select"
+                                        ng-model="addLicense.selectedLicense"
+                                        ng-options="x as (x.LicenseName + ' | ' + x.State + ' | ' + x.CategoryName + ' | ' + x.Act) for x in FilteredLicenseList">
+                                    <option value="">Select License</option>
+                                    <option value="acgsv">hgfjsgdahdkjhasskjdsdfghjkjhgfdsdftyuiuytrdfvbnmbjh</option>
+                                </select>
 
                             </div>
                             <div class="col-md-12">
@@ -1134,3 +1121,15 @@
 <!-- Bootstrap JS -->
 <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>-->
 
+<!-- Script for license dropdown inside license management-->
+<script>
+    $(document).ready(function () {
+        $('#LicenseDocument').on('shown.bs.modal', function () {
+            $('.license-select').select2({
+                dropdownParent: $('#LicenseDocument'),
+                placeholder: "Select License",
+                width: '100%'
+            });
+        });
+    });
+</script>

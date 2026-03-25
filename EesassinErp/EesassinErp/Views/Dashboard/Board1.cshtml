@@ -14,11 +14,6 @@
 <script src="~/scripts/RetailJsLib/AdminDashboardcontroller.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    .license-scroll {
-        width: 350px;
-        height: 150px;
-        overflow-y: auto;
-    }
     .location-btn {
         height: 32px; /* yahan adjust kar sakte ho */
         padding: 4px 10px;
@@ -56,14 +51,14 @@
             <button type="button" class="btn btn-pill" data-target="#users" ng-click="ManageLog('Users')" aria-pressed="false">Users</button>
             <button type="button" class="btn btn-pill" data-target="#permissions" ng-click="ManageLog('Permissions');GetPagesSectionMasterList()" aria-pressed="false">Permissions</button>
             <button type="button" class="btn btn-pill" data-target="#storeMapping" ng-click="ManageLog('Location Management');AllUserListsLoad();GetPagesSectionMasterList()" aria-pressed="false">Location Management</button>
-            <button type="button" class="btn btn-pill" data-target="#industryMapping" ng-click="AllIndustry();ManageLog('License Management');" aria-pressed="false">License Management</button>
+            <button type="button" class="btn btn-pill" data-target="#industryMapping" ng-click="ManageLog('License Management');AllIndustry();AllLicense()" aria-pressed="false">License Management</button>
             <button type="button" class="btn btn-pill" data-target="#activityReport" ng-click="ManageLog('Log Report');BindActivity()" aria-pressed="false">Log Report</button>
             <button type="button" class="btn btn-pill" data-target="#complianceDocCard" ng-click="ManageLog('Location Doc');BindComDoc()" aria-pressed="false">Location Doc</button>
         </div>
     </div>
 
     <!-- Dynamic sections -->
-    <div class="section-wrap" ng-init="BindMenuForDash();UserList();Limit();AllIndustry(); ">
+    <div class="section-wrap" ng-init="BindMenuForDash();UserList();Limit(); ">
 
         <!-- CARD 1 : Overview (default visible) -->
         <div id="overview" class="card section-card active adminOverview">
@@ -630,10 +625,8 @@
                         <div class="search-container">
                             <div class="input-group input-group-sm">
                                 <input type="text"
-                                       class="form-control form-control-sm" ng-model="SearchIndustry" 
-                                       placeholder="Search..." ng-change="SearchData()" />
-                             
-                                     
+                                       class="form-control form-control-sm" ng-model="SearchIndustry"
+                                       placeholder="Search..." />
                                 <button class="btn btn-sm btn-outline-primary" type="button">
                                     <i class="bi bi-search"></i>
                                 </button>
@@ -649,12 +642,6 @@
                                        ng-model="chkAll"
                                        ng-change="chkAllRow()" />
                                 <label for="checkAllIndustryMapping" class="mb-0">Check All</label>
-
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <button class="btn btn-sm add-user-btn" data-bs-toggle="modal" data-bs-target="#LicenseDocument">
-                                    <i class="bi bi-plus-lg me-1"></i> Add License
-                                </button>
                             </div>
 
                         </div>
@@ -678,7 +665,7 @@
                                     </th>
 
                                     <th class="srno" style="width:60px;">S.No.</th>
-                                    <th>License Name</th> 
+                                    <th>License Name</th>
                                     <th>State</th>
                                     <th>Category</th>
                                     <th>Act</th>
@@ -688,19 +675,12 @@
                                 <tr ng-repeat="x in OverallList | filter:SearchIndustry" id="industryMappingTableBody">
 
                                     <td class="text-center" style="width:50px;">
-                                        <div class="checkbox checkbox-primary table-check-wt"  ng-if="x.LicenseType == 'a'">
+                                        <div class="checkbox checkbox-primary table-check-wt">
 
                                             <input type="checkbox" class="clear" id="chkAllow" ng-model="x.IsAllow" ng-checked="x.IsAllow"
                                                    ng-change="chkRowAll($index)" />
                                             <label></label>
                                         </div>
-
-                                        <!-- Delete Icon (jab LicenseType C ho) -->
-                                        <i class="fa fa-trash text-danger"
-                                           style="cursor:pointer;"
-                                           ng-if="x.LicenseType == 'c'"
-                                           ng-click="deleteCustomLicense(x,$index)">
-                                        </i>
                                     </td>
 
 
@@ -709,7 +689,7 @@
                                         <input type="hidden" value="{{x.LicenseId}}" />
                                     </td>
 
-                                    <td>{{x.LicenseName}}</td> 
+                                    <td>{{x.LicenseName}}</td>
                                     <td>{{x.State}}</td>
                                     <td>
                                         {{x.CategoryName}}
@@ -719,39 +699,10 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-between mt-2">
-
-                        <div>
-                            Showing {{(currentPage-1)*pageSize + 1}}
-                            -
-                            {{(currentPage-1)*pageSize + OverallList.length}}
-                            of {{totalRecords}} Licenses
-                        </div>
-
-                        <div>
-
-                            <button class="btn btn-sm save-btn"
-                                    ng-disabled="currentPage==1"
-                                    ng-click="PrevPage()">
-                                Prev
-                            </button>
-
-                            Page {{currentPage}}
-
-                            <button class="btn btn-sm save-btn"
-                                    ng-disabled="currentPage*pageSize >= totalRecords"
-                                    ng-click="NextPage()">
-                                Next
-                            </button>
-
-                        </div>
-
-                    </div>
                     <div class="d-flex justify-content-end mt-3">
                         <button class="btn btn-sm save-btn" ng-click="SaveIndustryMappingRecord()">
                             Save
                         </button>
-                        
                     </div>
 
                 </div>
@@ -906,75 +857,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-        <div class="modal fade" id="LicenseDocument" tabindex="-1"> 
-            <div class="modal-dialog">
-                <div class="modal-content admin-user-modal" ng-init="AllRecordLicense()">
-
-                    <div class="modal-header">
-                        <h6 class="modal-title">License Document</h6>
-                        <button type="button" class="btn-close"
-                                ng-click="ManageLog('Close License Doc')"
-                                data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="row g-3">
-
-                            <div class="col-md-12">
-
-                                <label class="form-label">State</label>
-                                <select class="form-control"
-                                        ng-model="SelectedState"
-                                        ng-options="s for s in StateList"
-                                        ng-change="FilterLicense()">
-                                    <option value="">Select State</option>
-                                </select>
-
-                                <label class="form-label mt-2">Category</label>
-                                <select class="form-control"
-                                        ng-model="SelectedCategory"
-                                        ng-options="c for c in CategoryList"
-                                        ng-change="FilterLicense()">
-                                    <option value="">Select Category</option>
-                                </select>
-
-                                <label class="form-label mt-2">License</label>
-                                <select class="form-control license-scroll" style="width:100%"
-                                        ng-model="addLicense.selectedLicense"
-                                        size="6"
-                                        ng-options="x as (x.LicenseName + ' | ' + x.State + ' | ' + x.CategoryName + ' | ' + x.Act) for x in FilteredLicenseList">
-                                    <option value="">Select License</option>
-                                </select>
-
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label">Unique Code</label>
-                                <input type="text" class="form-control" ng-model="addLicense.UniqueId">
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button class="btn btn-sm save-user-btn"
-                                ng-click="SaveCustomLicense();ManageLog('Save License Document')">
-                            Save
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-
-    </div>
 
         <!-- CARD 7 : Compliance Doc -->
         <div id="complianceDocCard" class="card section-card d-none">

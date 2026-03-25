@@ -817,10 +817,7 @@
                             </ul>
                         </div>
 
-                        <button class="btn btn-sm filter-btn" 
-                                ng-click="resetLicenseFilter()">
-                            Reset
-                        </button>
+
                     </div>
 
                     <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
@@ -950,101 +947,55 @@
                     <i class="bi bi-download me-1"></i> Export
                 </button>*@
             </div>
-            <div class="card-body p-3 d-flex flex-column" ng-init="started()">
+            <div class="card-body p-3 d-flex flex-column">
                 <!-- Toolbar -->
                 <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
                     <div class="d-flex align-items-center gap-2">
-                        <div class="dropdown">
-                            <button class="btn btn-sm filter-btn dropdown-toggle"
-                                    type="button"
-                                    data-bs-toggle="dropdown">
-                                {{SelectedLicenseName || 'License Name'}}
-                            </button>
-
-                            <ul class="dropdown-menu">
-
-                                <li>
-                                    <a class="dropdown-item"
-                                       ng-click="selectLicenseReport('')">
-                                        All Licenses
-                                    </a>
-                                </li>
-
-                                <li ng-repeat="lic in LicenseNameList">
-                                    <a class="dropdown-item"
-                                       ng-click="selectLicenseReport(lic.LicenseName)">
-                                        {{lic.LicenseName}}
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn btn-sm filter-btn dropdown-toggle"
-                                    type="button"
-                                    data-bs-toggle="dropdown">
+                        <div class="dropdown" ng-init="BindStore();started()">
+                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Location Code
                             </button>
-
                             <ul class="dropdown-menu">
-                                <li ng-repeat="xx in StoreList">
+                                <li>
                                     <a class="dropdown-item"
+                                       ng-repeat="xx in StoreList | unique:'StoreCode'"
                                        ng-click="calldata(xx.StoreCode,1)">
-                                        {{xx.StoreCode + ' [ ' + xx.RefStoreCode + ' ]'}}
+                                        {{ xx.StoreCode + ' [ ' + xx.RefStoreCode + ' ]' }}
                                     </a>
                                 </li>
                             </ul>
+
                         </div>
                         <div class="dropdown">
-                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" ng-init="GetStatusMaster()">
                                 Application Status
                             </button>
-
                             <ul class="dropdown-menu">
-                                <li ng-repeat="xx in ApplicationStatusList">
-                                    <a class="dropdown-item"
-                                       ng-click="calldata(xx.AttributeValue,2)">
-                                        {{xx.AttributeValue}}
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item" ng-repeat="xx in ApplicationStatusList" value="{{xx.AttributeValue}}" ng-click="calldata(xx.AttributeValue,2)"> {{xx.AttributeValue}} </a></li>
+
                             </ul>
                         </div>
                         <div class="dropdown">
-                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 License Status
                             </button>
-
                             <ul class="dropdown-menu">
-                                <li ng-repeat="xx in LicenseStatusList">
-                                    <a class="dropdown-item"
-                                       ng-click="calldata(xx.AttributeValue,3)">
-                                        {{xx.AttributeValue}}
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item" ng-repeat="xx in LicenseStatusList" value="{{xx.AttributeValue}}" ng-click="calldata(xx.AttributeValue,3)"> {{xx.AttributeValue}}</a></li>
+                                <li><a class="dropdown-item" href="#">Not Issued</a></li>
                             </ul>
                         </div>
                         <div class="dropdown">
-                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Renewal Status
                             </button>
-
                             <ul class="dropdown-menu">
-                                <li ng-repeat="xx in RenewalStatusList">
-                                    <a class="dropdown-item"
-                                       ng-click="calldata(xx.AttributeValue,4)">
-                                        {{xx.AttributeValue}}
-                                    </a>
-                                </li>
+                                <li><a class="dropdown-item" ng-click="calldata('Renew',4);ManageLog('Click on Renewed')">Renewed</a></li>
+                                <li><a class="dropdown-item" ng-click="calldata('NonRenew',4);ManageLog('Click on Not Renewed')">Not Renewed</a></li>
                             </ul>
+
                         </div>
 
-                        <button class="btn btn-sm search-btn"
-                                ng-click="ResetFilter();ManageLog('Click on Reset')"
-                                ng-disabled="isResetting">
-
-                            {{isResetting ? 'Please Wait...' : 'Reset'}}
-
-                        </button>
+                        <button class="btn btn-sm search-btn" ng-click="ResetReport();started();ManageLog('Click on Reset')">Reset</button>
 
                     </div>
 
@@ -1089,14 +1040,14 @@
                             <!-- ✅ Select All -->
                             <div class="column-item">
                                 <input type="checkbox"
-                                       ng-model="selectAllColumns"    ng-change="toggleSelectAll()" />
+                                       ng-model="selectAllColumns"
+                                       ng-change="toggleSelectAll()" />
                                 <strong>Select All</strong>
                             </div> 
-                                  
                             <!-- ✅ Individual Columns -->
                             <div ng-repeat="col in tblHeader" class="column-item">
                                 <input type="checkbox"
-                                       ng-model="col.ShowColumn"  ng-disabled="col.FixedColumn"
+                                       ng-model="col.ShowColumn"
                                        ng-change="updateVisibleColumns(col)" />
                                 {{col.HeaderText}}
                             </div>
@@ -1113,7 +1064,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="exLicTableBody">
-                                        <tr ng-repeat="row in tableData | filter:licenseFilter | filter:searchText">
+                                        <tr ng-repeat="row in tableData | filter:searchText">
                                             <td ng-repeat="col in tblHeader" ng-show="col.ShowColumn">
                                                 {{row[col.HeaderValue]}}
                                             </td>
@@ -1203,6 +1154,5 @@
             }
                 }
         </style>
-
     </div>
 </div>

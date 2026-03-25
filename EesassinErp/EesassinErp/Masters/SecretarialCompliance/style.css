@@ -5,82 +5,60 @@
     --card-bg: #FEF3EC;
     background: #FFF1EB;
     color: #223;
-    min-height: 100%;
+    min-height: 100vh;
 }
 
 .dropdown-menu {
-    max-height: 300px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    min-width: 120px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
-/* KPI CARDS */
-.sc-kpi-card {
+/* ================= KPI SECTION ================= */
+.secretarialCompPage .lb-kpi-card {
     background: #fff;
     border-radius: 14px;
     padding: 12px 16px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     border-left: 5px solid #E45D27;
     transition: 0.2s ease;
+    display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    height: 100%;
 }
 
-    .sc-kpi-card:hover {
+    .secretarialCompPage .lb-kpi-card:hover {
         transform: translateY(-3px);
         box-shadow: 0 4px 20px rgba(0,0,0,0.12);
     }
 
-.sc-kpi-title {
-    font-size: 0.9rem;
+.secretarialCompPage .lb-kpi-title {
+    font-size: 0.85rem;
     font-weight: 500;
     color: #555;
+    line-height: 1.2;
+    flex: 1;
+    padding-right: 8px;
 }
 
-.sc-kpi-value {
+.secretarialCompPage .lb-kpi-value {
     font-size: 1.4rem;
     font-weight: 700;
-    margin-top: 4px;
+    white-space: nowrap;
     color: #E45D27;
 }
 
-/* Toggle pill - single capsule container */
-.secretarialCompPage .toggle-pill {
-    display: inline-flex;
-    border-radius: 999px;
-    background: rgba(0,0,0,0.03);
-    padding: 4px;
-    overflow: hidden;
-    gap: 4px;
-    align-items: center;
-}
-
-    /* inner buttons: make them visually full-pill, no borders, equal width */
-    .secretarialCompPage .toggle-pill .btn-pill {
-        background: transparent;
-        border: 0;
-        padding: 8px 18px;
-        margin: 0;
-        font-weight: 400;
-        color: #333;
-        border-radius: 999px;
-        transition: background .15s ease, color .15s ease, transform .06s ease;
-        white-space: nowrap;
-        min-width: 80px;
+/* Mobile improvement */
+@media (max-width: 480px) {
+    .secretarialCompPage .lb-kpi-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
     }
-
-        /* active pill */
-        .secretarialCompPage .toggle-pill .btn-pill.active {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 6px 18px rgba(196,75,29,0.08);
-        }
-
-        /* ensure focus ring for accessibility (subtle) */
-        .secretarialCompPage .toggle-pill .btn-pill:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(228,93,39,0.12);
-        }
+}
 
 /* Section cards */
 .secretarialCompPage .section-card {
@@ -96,35 +74,31 @@
     }
 
 /* Table wrapper and hide scrollbar visually */
-.secretarialCompPage .small-table-wrapper {
-    max-height: auto;
+.secretarialCompPage .small-table-wrapper .table-responsive {
+    max-height: 75vh;
     overflow-y: auto;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
     scroll-behavior: smooth;
+    position: relative;
 }
 
-    .secretarialCompPage .small-table-wrapper::-webkit-scrollbar {
+    .secretarialCompPage .small-table-wrapper .table-responsive::-webkit-scrollbar {
         display: none;
     }
-
-.secretarialCompPage .small-table-wrapper {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
 
 /* table header sticky */
 .secretarialCompPage .small-table thead th {
     position: sticky;
     top: 0;
-    z-index: 2;
+    z-index: 1;
     background-color: #F37437;
     color: #fff;
     font-weight: 600;
     font-size: 0.78rem;
-    text-align: center;
+    text-align: left;
     vertical-align: middle;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     padding: 8px 10px;
 }
 
@@ -133,9 +107,9 @@
     background-color: var(--card-bg);
     font-size: 0.78rem;
     vertical-align: middle;
-    text-align: center;
+    text-align: left;
     padding: 8px 10px;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 /* hover */
@@ -143,7 +117,8 @@
     background-color: #FFE8D9;
 }
 
-.secretarialCompPage .small-table tbody td .store-code-link {
+.secretarialCompPage .small-table tbody td .store-code-link,
+.secretarialCompPage .small-table tbody td .event-link {
     text-decoration: none;
 }
 
@@ -212,37 +187,6 @@
         box-shadow: 0 0 0 3px rgba(228,93,39,0.12);
     }
 
-/* Pagination area */
-.secretarialCompPage .table-pagination {
-    border-top: 1px solid rgba(0,0,0,0.04);
-    padding-top: 8px;
-    margin-top: 8px;
-}
-
-    .secretarialCompPage .table-pagination .btn {
-        border-radius: 999px;
-        font-size: 0.85rem;
-        padding: 6px 12px;
-        border: 1px solid var(--primary);
-        background: #fff;
-        color: var(--primary);
-    }
-
-        .secretarialCompPage .table-pagination .btn:hover {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
-
-.secretarialCompPage #viewAllRows {
-    background-color: var(--primary);
-    color: #fff;
-    border: none;
-}
-
-    .secretarialCompPage #viewAllRows:hover {
-        background-color: var(--primary-dark);
-    }
 
 /* statuses */
 .secretarialCompPage .badge {
@@ -292,7 +236,7 @@
 
 /* Table Buttons*/
 
-.btn-upload, .btn-view, .btn-submit{
+.secretarialCompPage .btn-upload, .btn-view, .btn-submit {
     border-radius: 999px;
     border: 1px solid var(--primary);
     color: var(--primary);
@@ -301,13 +245,14 @@
     font-weight: 400;
     font-size: 0.78rem;
 }
-    .btn-upload:hover, .btn-view:hover, .btn-submit:hover {
+
+    .secretarialCompPage .btn-upload:hover, .btn-view:hover, .btn-submit:hover {
         background: var(--primary);
         color: #fff;
     }
 
 
-.btn-close {
+.secretarialCompPage .btn-close {
     border-radius: 999px;
     color: #fff;
     background: var(--primary);
@@ -315,9 +260,10 @@
     font-weight: 400;
     font-size: 0.85rem;
 }
-    .btn-close:hover {
-        background: var(--primary-dark);
-    }
+
+.btn-close:hover {
+    background: var(--primary-dark);
+}
 
 /* Table Selects*/
 .secretarialCompPage .form-select, .form-control {
@@ -326,7 +272,12 @@
     border-radius: 6px;
     border: 1px solid #dcdcdc;
     outline: none;
-    width: 120px;
+    /*width: 130px;*/
+}
+
+.secretarialCompPage .small-table .form-select,
+.secretarialCompPage .small-table .form-control {
+    width: 130px;
 }
 
 /* 2nd and 3rd Col wrap*/
@@ -343,7 +294,7 @@
     min-width: 260px; /* change this value to taste */
     overflow-wrap: anywhere; /* better wrap for long words/links */
     word-break: break-word; /* fallback for older browsers */
-    text-align: center; /* keep multi-line content readable */
+    text-align: left; /* keep multi-line content readable */
     vertical-align: middle;
     padding-right: 12px; /* small breathing room for wrapped lines */
 }
@@ -361,4 +312,91 @@
 /*shorter width for Act Name if you want them different sizes */
 .secretarialCompPage .small-table tbody td:nth-child(2) {
     min-width: 150px; /* tweak separately if desired */
+}
+
+
+/* ============Compliance Details Modal========== */
+.secretarialCompPage #complianceDetailsModal .compDetail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--primary);
+    border-bottom: 1px solid #eee;
+}
+
+    .secretarialCompPage #complianceDetailsModal .compDetail-header .compDetail-back-btn {
+        border: none;
+        background: transparent;
+        font-size: 1.2rem;
+        color: #fff;
+        transition: transform .18s ease, background .18s ease;
+    }
+
+        .secretarialCompPage #complianceDetailsModal .compDetail-header .compDetail-back-btn:hover {
+            transform: translateX(-4px);
+            background: var(--card-bg);
+            color: var(--primary);
+        }
+
+    .secretarialCompPage #complianceDetailsModal .compDetail-header .modal-title {
+        flex-grow: 0; /* Prevent the title from stretching */
+        width: 100%;
+        padding-right: 3rem;
+        text-align: center; /* Keep the heading centered */
+    }
+
+/* ============Event Modal========== */
+
+.secretarialCompPage #eventModal .event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    color: #E45D27;
+    background: var(--card-bg);
+    border-bottom: 1px solid #eee;
+}
+
+    .secretarialCompPage #eventModal .event-header .event-back-btn {
+        border: none;
+        background: transparent;
+        font-size: 1.2rem;
+        color: #E45D27;
+        transition: transform .18s ease, background .18s ease;
+    }
+
+        .secretarialCompPage #eventModal .event-header .event-back-btn:hover {
+            transform: translateX(-4px);
+            background: #f7e3d6;
+        }
+
+    .secretarialCompPage #eventModal .event-header .modal-title {
+        flex-grow: 0; /* Prevent the title from stretching */
+        width: 100%;
+        color: var(--primary);
+        padding-right: 3rem;
+        text-align: center; /* Keep the heading centered */
+    }
+
+.secretarialCompPage #eventModal .modal-footer .eventSubmitBtn {
+    border-radius: 999px;
+    color: #fff;
+    background: var(--primary);
+    padding: 6px 14px;
+    font-weight: 400;
+    font-size: 0.85rem;
+    -webkit-tap-highlight-color: transparent;
+}
+
+    .secretarialCompPage #eventModal .modal-footer .eventSubmitBtn:hover {
+        background: var(--primary-dark);
+    }
+
+.secretarialCompPage #eventModal .table {
+    min-width: 1200px;
+}
+
+.secretarialCompPage .modal-xl {
+    max-width: 90%;
 }

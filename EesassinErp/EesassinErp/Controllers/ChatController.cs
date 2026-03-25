@@ -11,7 +11,6 @@ using DAL;
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
     public class ChatController : Controller
     {
         [HttpPost]

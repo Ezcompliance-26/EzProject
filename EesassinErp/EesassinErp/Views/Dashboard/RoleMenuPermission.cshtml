@@ -47,7 +47,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding ">
                                 <div class="collapse in" id="collapseinputbox">
                                     <form id="user-form">
-                                        @*<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Party Type<span class="vd_red">*</span></label>
                                             <div class="input-box" ng-init="BindModuleTypeList()">
                                                 <select id="ddlModuleType" autocomplete='address-level2' class="select2 form-control validate" ng-model="PartyType" ng-change="AllPartySiteLoad()">
@@ -57,8 +57,8 @@
                                                 <div class="text-box-msg-r">
                                                 </div>
                                             </div>
-                                        </div>*@
-                                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mgbt-xs-15"  ng-init="AllPartySiteLoad()">
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Select Party <span class="vd_red">*</span></label>
                                             <div class="input-box">
                                                 <select id="ddlCustomerId" autocomplete='address-level2' class="select2 form-control validate" ng-model="PartyId" ng-change="GetRoles(PartyId);AllUserListsLoad(PartyId)">
@@ -72,7 +72,7 @@
                                         <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Select User<span class="vd_red">*</span></label>
                                             <div class="input-box">
-                                                <select autocomplete='address-level2' class="select2 form-control validate" id="ddlUserList"  ng-change="GetPagesSectionMasterList()" ng-model="UserId"  >
+                                                <select autocomplete='address-level2' class="select2 form-control validate" id="ddlUserList" ng-model="UserId"  >
                                                     <option value="">Select</option>
                                                     <option ng-repeat="x in AllUserList" value="{{x.LoginId}}">{{x.Name}}</option>
                                                 </select>
@@ -80,24 +80,24 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @*<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Role<span class="vd_red">*</span></label>
                                             <div class="input-box">
-                                                <select id="ddlRole" class="select2 form-control" ng-model="Id" ng-change="GetPagesSectionMasterList()">
+                                                <select id="ddlRole" class="select2 form-control validate" ng-model="Id" ng-change="GetPagesSectionMasterList()">
                                                     <option value="">Select Role</option>
                                                     <option ng-repeat="roles in RoleList" value="{{roles.Id}}">{{roles.Name}}</option>
                                                 </select>
                                                 <div class="text-box-msg-r">
                                                 </div>
                                             </div>
-                                        </div>*@
-                                        @*<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Check All</label>
                                             <div class="input-box">
-                                               
+                                                <input type="checkbox" id="chkMaster" ng-click="checkUncheckAll()" />
                                                 <label for="chkMaster"></label>
                                             </div>
-                                        </div>*@
+                                        </div>
                                         <div class="col-md-12 col-sm-12 col-xs-12">
                                         </div>
                                         <div class="col-md-12 col-sm-12 col-xs-12 mgbt-xs-15" ng-hide="hide">
@@ -125,8 +125,7 @@
                                                             <th>Section Name</th>
                                                             <th class="text-center w-50-p">
                                                                 <div>
-                                                                    <label>View</label>/Check All
-                                                                    <input type="checkbox" id="chkMaster" ng-click="checkUncheckAll()" />
+                                                                    <label>View</label>
                                                                 </div>
                                                             
                                                                 <br />
@@ -196,7 +195,7 @@
                                                             <td class="text-center">
                                                                 <div ng-if="sectionlist.AllowViewFlag">
                                                                     <div class="checkbox checkbox-primary table-check-wt">
-                                                                       
+
                                                                         <input type="checkbox" class="clear" id="chkAllowView" ng-model="chkAllow[$index]['View']"
                                                                                ng-checked="chkAllow[$index]['View']" ng-init="chkAllow[$index]['View'] = sectionlist.ViewFlag" />
                                                                         <label for="chkAllowView{{$index}}"></label>

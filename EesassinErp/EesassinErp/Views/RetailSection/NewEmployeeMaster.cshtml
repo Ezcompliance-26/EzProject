@@ -1,54 +1,13 @@
-﻿@{
+﻿ @{
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
     ViewBag.Title = "New Employee Master";
     Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
+
 <script src="~/Masters/NewEmployeeMaster/script.js"></script>
 <link href="~/Masters/NewEmployeeMaster/style.css" rel="stylesheet" />
-<script src="~/Masters/NewEmployeeMaster/NewEmployeeMaster.js?Ver=@ViewBag.Version"></script>
-<script>
 
-    $(document).ready(function () {
-        $('.ddfile').change(function () {
-            //console.log(this.files);
-            var f = this.files;
-            var el = $(this).parent();
-            if (f.length > 1) {
-                console.log(this.files, 1);
-                el.text('Sorry, multiple files are not allowed');
-                return;
-            }
-            // el.removeClass('focus');
-            el.html(f[0].name + '<br>' +
-                '<span class="sml">' +
-                'type: ' + f[0].type + ', ' +
-                Math.round(f[0].size / 1024) + ' KB</span>');
-        });
-
-        $('input[type=file]').on('focus', function () {
-            $(this).parent().addClass('focus');
-        });
-
-        $('input[type=file]').on('blur', function () {
-            $(this).parent().removeClass('focus');
-        });
-
-    });
-</script>
-<script>
-    function printDiv() {
-        var divName = "tbl_exporttable_to_xls";
-
-        var printContents = document.getElementById(divName).innerHTML;
-        var originalContents = document.body.innerHTML;
-
-        document.body.innerHTML = printContents;
-
-        window.print();
-
-        document.body.innerHTML = originalContents;
-    }</script>
-<div class="employeeMasterPage px-4 py-2" ng-show="EmployeeMasterGrid">
+<div class="employeeMasterPage px-4 py-2">
     <!-- Top bar: instruction left + Bulk Download button right -->
     <div class="d-flex align-items-center justify-content-between mb-3 top-bar">
         <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -56,9 +15,10 @@
             <div class="limit-instruction">Created: <strong>250</strong></div>
             <div class="limit-instruction">Left: <strong>350</strong></div>
         </div>
+
         <div class="d-flex align-items-center gap-2">
             <!-- New Employee (rounded pill) -->
-            <button class="btn btn-sm btn-newEmployee" id="btnNewEmployee" type="button" data-bs-toggle="modal" data-bs-target="#newEmployeeModal" ng-click="GenerateEmployeeCode();ManageLog('click on New Employee button')">
+            <button class="btn btn-sm btn-newEmployee" id="btnNewEmployee" type="button" data-bs-toggle="modal" data-bs-target="#newEmployeeModal">
                 <i class="bi bi-plus-lg" aria-hidden="true"></i>
                 <span>New Employee</span>
             </button>
@@ -69,92 +29,81 @@
     <div class="modal fade" id="newEmployeeModal" tabindex="-1">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content employee-modal">
+
                 <!-- Header -->
                 <div class="modal-header employee-modal-header">
                     <h6 class="modal-title">Add New Employee</h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"></button>
                 </div>
+
                 <!-- Body -->
                 <div class="modal-body employee-modal-body">
                     <form>
+
                         <!-- Employee Details  -->
                         <h6 class="section-title">Employee Details</h6>
                         <div class="row g-3">
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Employee Code *</label>
-                                <input class="form-control form-control-sm validate"
-                                       id="txtEmployeeCode"
-                                       ng-model="EmployeeCode"
-                                       disabled>
+                                <input class="form-control form-control-sm">
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Ref Employee Code</label>
-                                <input class="form-control form-control-sm" id="txtRefEmployeeCode" ng-model="RefEmployeeCode">
+                                <input class="form-control form-control-sm">
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Employee Name *</label>
-                                <input class="form-control form-control-sm validate" id="txtEmployeeName" ng-model="EmployeeName">
+                                <input class="form-control form-control-sm">
                             </div>
-                            <div class="col-lg-3 col-md-6" ng-init="BindAllStoreList()">
+                            <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Store Code</label>
-                                <select class="form-select form-select-sm" ng-model="StoreCode">
-                                    <option value="">Select</option>
-                                    <option ng-repeat="x in AllStoreList" value="{{x.StoreId}}">
-                                        {{x.StoreCode}}
-                                    </option>
+                                <select class="form-select form-select-sm">
+                                    <option>Select</option>
                                 </select>
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Designation</label>
-                                <input class="form-control form-control-sm" id="txtEmployeeDesignation" ng-model="EmployeeDesignation">
+                                <input class="form-control form-control-sm">
                             </div>
 
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Department</label>
-                                <input class="form-control form-control-sm" id="txtEmployeeDepartment" ng-model="EmployeeDepartment">
+                                <input class="form-control form-control-sm">
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Father / Husband Name</label>
-                                <input class="form-control form-control-sm" id="txtFatherHusbandName" ng-model="FatherHusbandName">
+                                <input class="form-control form-control-sm">
                             </div>
-                            <div class="col-lg-3 col-md-6" ng-init="BindGenderList()">
+                            <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Gender</label>
-                                <select class="form-select form-select-sm"
-                                        ng-model="Gender">
-                                    <option value="">Select</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
+                                <select class="form-select form-select-sm">
+                                    <option>Select</option>
                                 </select>
                             </div>
-                            <div class="col-lg-3 col-md-6" ng-init="BindMaritalStatusList()">
+                            <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Marital Status</label>
-                                <select class="form-select form-select-sm"
-                                        ng-model="MaritalStatus">
-                                    <option value="">Select</option>
-                                    <option value="Married">Married</option>
-                                    <option value="UnMarried">UnMarried</option>
+                                <select class="form-select form-select-sm">
+                                    <option>Select</option>
                                 </select>
                             </div>
                             <!-- Dates & Status  -->
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Date of Birth</label>
-                                <input type="date" class="form-control form-control-sm validate" id="txtDateofBirth" ng-model="DateofBirth">
+                                <input type="date" class="form-control form-control-sm">
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Date of Joining</label>
-                                <input type="date" class="form-control form-control-sm" id="txtDOJ" ng-model="DOJ">
+                                <input type="date" class="form-control form-control-sm">
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Date of Leaving</label>
-                                <input type="date" class="form-control form-control-sm" id="txtleavingDate" ng-model="LeavingDate">
+                                <input type="date" class="form-control form-control-sm">
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Status</label>
-                                <select class="form-select form-select-sm"
-                                        ng-model="IsActive">
-                                    <option value="">Select</option>
-                                    <option value="0">Deactive</option>
-                                    <option value="1">Active</option>
+                                <select class="form-select form-select-sm">
+                                    <option>Select</option>
                                 </select>
                             </div>
                         </div>
@@ -165,23 +114,23 @@
                         <div class="row g-3">
                             <div class="col-lg-6">
                                 <label class="form-label">Present Address</label>
-                                <input class="form-control form-control-sm" id="txtPresentAddress" ng-model="PresentAddress">
+                                <input class="form-control form-control-sm">
                             </div>
                             <div class="col-lg-6">
                                 <label class="form-label">Permanent Address</label>
-                                <input class="form-control form-control-sm" id="txtPermanentAddress" ng-model="PermanentAddress">
+                                <input class="form-control form-control-sm">
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Mobile Number</label>
-                                <input class="form-control form-control-sm" id="txtMobileNumber" ng-model="MobileNumber" onblur="validatePhoneNo('#txtMobileNumber')" numeric-only dynamic-length maxlength="10" minlength="10">
+                                <input class="form-control form-control-sm">
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Alternate Mobile</label>
-                                <input class="form-control form-control-sm" id="txtAlternativeMobileNumber" ng-model="AlternativeMobileNumber" onblur="validatePhoneNo('#txtAlternativeMobileNumber')" numeric-only dynamic-length maxlength="10" minlength="10">
+                                <input class="form-control form-control-sm">
                             </div>
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Employee Email ID</label>
-                                <input class="form-control form-control-sm" id="txtEmployeeEmailID" ng-model="EmployeeEmailID" onblur="validateEmail('#txtEmployeeEmailID')">
+                                <input class="form-control form-control-sm">
                             </div>
                         </div>
 
@@ -189,266 +138,173 @@
                         <hr>
                         <h6 class="section-title">Statutory & Bank Details</h6>
                         <div class="row g-3">
-                            <div class="col-lg-3 col-md-6"><label class="form-label">PAN No</label><input class="form-control form-control-sm" id="txtPANNumber" ng-model="PANNumber" dynamic-length maxlength="10" minlength="10"></div>
-                            <div class="col-lg-3 col-md-6"><label class="form-label">Aadhaar No</label><input class="form-control form-control-sm" id="txtAdharCardNumber" ng-model="AdharCardNumber" numeric-only dynamic-length maxlength="12" minlength="12"></div>
-                            <div class="col-lg-3 col-md-6"><label class="form-label">UAN No</label><input class="form-control form-control-sm" id="txtPreviousUAN" ng-model="PreviousUAN"></div>
-                            <div class="col-lg-3 col-md-6"><label class="form-label">PF Account No</label><input class="form-control form-control-sm" id="txtPFAccount" ng-model="PFAccount"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">PAN No</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Aadhaar No</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">UAN No</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">PF Account No</label><input class="form-control form-control-sm"></div>
 
-                            <div class="col-lg-3 col-md-6"><label class="form-label">Bank Account No.</label><input class="form-control form-control-sm" id="txtBankAccountNumber" ng-model="BankAccountNumber" numeric-only></div>
-                            <div class="col-lg-3 col-md-6"><label class="form-label">Bank IFSC Code</label><input class="form-control form-control-sm" id="txtBankIFSCCode" ng-model="BankIFSCCode"></div>
-                            <div class="col-lg-3 col-md-6"><label class="form-label">Previous ESIC</label><input class="form-control form-control-sm" id="txtPreviousESI" ng-model="PreviousESI"></div>
-                            <div class="col-lg-3 col-md-6"><label class="form-label">Gross Salary</label><input class="form-control form-control-sm" id="txtGrossSalary" ng-model="GrossSalary" numeric-only></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Bank Account No.</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Bank IFSC Code</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Previous ESIC</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Gross Salary</label><input class="form-control form-control-sm"></div>
                         </div>
 
                         <!-- Nominee  -->
                         <hr>
                         <h6 class="section-title">Nominee Details</h6>
                         <div class="row g-3">
-                            <div class="col-lg-3 col-md-6"><label class="form-label">Nominee Name</label><input class="form-control form-control-sm" id="txtNameofNominee" ng-model="NameofNominee"></div>
-                            <div class="col-lg-3 col-md-6"><label class="form-label">Relation</label><input class="form-control form-control-sm" id="txtRelationofNominee" ng-model="RelationofNominee"></div>
-                            <div class="col-lg-3 col-md-6"><label class="form-label">DOB</label><input type="date" class="form-control form-control-sm" id="txtDOBofNominee" ng-model="DOBofNominee"></div>
-                            <div class="col-lg-3 col-md-6"><label class="form-label">Address</label><input class="form-control form-control-sm" id="txtAddressofNominee" ng-model="AddressofNominee"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Nominee Name</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Relation</label><input class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">DOB</label><input type="date" class="form-control form-control-sm"></div>
+                            <div class="col-lg-3 col-md-6"><label class="form-label">Address</label><input class="form-control form-control-sm"></div>
                         </div>
+
                         <!-- Upload Documents  -->
                         <hr>
                         <h6 class="section-title">Upload Documents</h6>
-                        <div class="row g-3" ng-show="EmployeeUploadDocs">
+
+                        <div class="row g-3">
+
                             <!-- PAN Card -->
-                            <div class="col-lg-3 col-md-6"  ng-show="EmployeeUploadDocs">
+                            <div class="col-lg-3 col-md-6">
                                 <label class="form-label">PAN Card</label>
                                 <div class="upload-field">
                                     <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input" accept=".pdf,.jpg,.jpeg,.png" id="fuPANCardFilePath{{$index}}" onchange="angular.element(this).scope().uploadFile('PANCardFilePath', this)" ng-model="PANCardFilePath">
-                                        <span class="file-name"> {{ PANCardFileName || 'No file chosen' }} </span>
+                                        <input type="file" class="upload-input" accept=".pdf,.jpg,.jpeg,.png">
+                                        <span class="file-name">No file chosen</span>
                                     </div>
                                     <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon" title="View" ng-click="ViewFile(PANCardFilePath)"></i>
-                                        <i class="bi bi-download upload-icon" title="Download" ng-click="DownloadFile(PANCardFilePath)"></i>
+                                        <i class="bi bi-eye upload-icon" title="View"></i>
+                                        <i class="bi bi-download upload-icon" title="Download"></i>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6" ng-show="EmployeeUploadDocs">
-                                <label class="form-label">Aadhaar Card <small>Front Side</small></label>
+
+                            <!-- Aadhaar Card -->
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Aadhaar Card</label>
                                 <div class="upload-field">
                                     <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input"
-                                               accept=".pdf,.jpg,.jpeg,.png"
-                                               id="fuAdhaarCard_FrontSide_FilePath{{$index}}"
-                                               onchange="angular.element(this).scope().uploadFile('AdhaarCard_FrontSide_FilePath', this)" ng-model="AdhaarCard_FrontSide_FilePath">
-                                        <span class="file-name">
-                                            {{ AdhaarCard_FrontSide_FileName || 'No file chosen' }}
-                                        </span>
+                                        <input type="file" class="upload-input" accept=".pdf,.jpg,.jpeg,.png">
+                                        <span class="file-name">No file chosen</span>
                                     </div>
                                     <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon"
-                                           title="View"
-                                           ng-click="ViewFile(AdhaarCard_FrontSide_FilePath)"></i>
-                                        <i class="bi bi-download upload-icon"
-                                           title="Download"
-                                           ng-click="DownloadFile(AdhaarCard_FrontSide_FilePath)"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6" ng-show="EmployeeUploadDocs">
-                                <label class="form-label">Aadhaar Card <small>Back Side</small></label>
-                                <div class="upload-field">
-                                    <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input" accept=".pdf,.jpg,.jpeg,.png" id="fuAdhaarCard_BackSide_FilePath{{$index}}"
-                                               onchange="angular.element(this).scope().uploadFile('AdhaarCard_BackSide_FilePath', this)" ng-model="AdhaarCard_BackSide_FilePath">
-                                        <span class="file-name"> {{ AdhaarCard_BackSide_FileName || 'No file chosen' }} </span>
-                                    </div>
-                                    <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon"
-                                           title="View"
-                                           ng-click="ViewFile(AdhaarCard_BackSide_FilePath)"></i>
-                                        <i class="bi bi-download upload-icon"
-                                           title="Download"
-                                           ng-click="DownloadFile(AdhaarCard_BackSide_FilePath)"></i>
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Cheque/Passbook Copy -->
-                            <div class="col-lg-3 col-md-6" ng-show="EmployeeUploadDocs">
+                            <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Cheque/Passbook Copy</label>
                                 <div class="upload-field">
                                     <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input" accept=".pdf" id="fuCheque_Passbook_FilePath{{$index}}" onchange="angular.element(this).scope().uploadFile('Cheque_Passbook_FilePath', this)" ng-model="Cheque_Passbook_FilePath">
-                                        <span class="file-name">
-                                            {{ Cheque_Passbook_FileName || 'No file chosen' }}
-                                        </span>
+                                        <input type="file" class="upload-input" accept=".pdf">
+                                        <span class="file-name">No file chosen</span>
                                     </div>
                                     <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon" title="View" ng-click="ViewFile(Cheque_Passbook_FilePath)"></i>
-                                        <i class="bi bi-download upload-icon" title="Download" ng-click="DownloadFile(Cheque_Passbook_FilePath)"></i>
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
                                     </div>
                                 </div>
                             </div>
+
                             <!-- Educational Certificate -->
-                            <div class="col-lg-3 col-md-6" ng-show="EmployeeUploadDocs">
+                            <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Educational Certificate</label>
                                 <div class="upload-field">
                                     <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input" accept=".pdf" id="fuEducationCertificateFilePath{{$index}}" onchange="angular.element(this).scope().uploadFile('EducationCertificateFilePath', this)" ng-model="EducationCertificateFilePath">
-                                        <span class="file-name">{{ EducationCertificateFileName || 'No file chosen' }} </span>
+                                        <input type="file" class="upload-input" accept=".pdf">
+                                        <span class="file-name">No file chosen</span>
                                     </div>
                                     <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon" title="View" ng-click="ViewFile(EducationCertificateFilePath)"></i>
-                                        <i class="bi bi-download upload-icon" title="Download" ng-click="DownloadFile(EducationCertificateFilePath)"></i>
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
                                     </div>
                                 </div>
                             </div>
+
                             <!-- Experience Certificate -->
-                            <div class="col-lg-3 col-md-6" ng-show="EmployeeUploadDocs">
+                            <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Experience Certificate</label>
                                 <div class="upload-field">
                                     <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input" accept=".pdf" id="fuExperienceCertificateFilePath{{$index}}" onchange="angular.element(this).scope().uploadFile('ExperienceCertificateFilePath', this)" ng-model="ExperienceCertificateFilePath">
-                                        <span class="file-name">
-                                            {{ ExperienceCertificateFileName || 'No file chosen' }}
-                                        </span>
+                                        <input type="file" class="upload-input" accept=".pdf">
+                                        <span class="file-name">No file chosen</span>
                                     </div>
                                     <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon" title="View" ng-click="ViewFile(ExperienceCertificateFilePath)"></i>
-                                        <i class="bi bi-download upload-icon" title="Download" ng-click="DownloadFile(ExperienceCertificateFilePath)"></i>
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Relieving Letter -->
-                            <div class="col-lg-3 col-md-6" ng-show="EmployeeUploadDocs">
+                            <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Relieving Letter</label>
                                 <div class="upload-field">
                                     <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input" accept=".pdf" id="fuRelievingLetterfFilePath{{$index}}" onchange="angular.element(this).scope().uploadFile('RelievingLetterfFilePath', this)" ng-model="RelievingLetterfFilePath" >
-                                        <span class="file-name">
-                                            {{ RelievingLetterfFileName || 'No file chosen' }}
-                                        </span>
+                                        <input type="file" class="upload-input" accept=".pdf">
+                                        <span class="file-name">No file chosen</span>
                                     </div>
                                     <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon" title="View" ng-click="ViewFile(RelievingLetterfFilePath)"></i>
-                                        <i class="bi bi-download upload-icon" title="Download" ng-click="DownloadFile(RelievingLetterfFilePath)"></i>
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Payslip -->
-                            <div class="col-lg-3 col-md-6" ng-show="EmployeeUploadDocs">
-                                <label class="form-label">Payslips</label>
-                                <div class="upload-field">
-                                    <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input" accept=".pdf" id="fuPayslipsFilePath{{$index}}" onchange="angular.element(this).scope().uploadFile('PayslipsFilePath', this)" ng-model="PayslipsFilePath" >
-                                        <span class="file-name"> {{ PayslipsFileName || 'No file chosen' }} </span>
-                                    </div>
-                                    <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon" title="View" ng-click="ViewFile(PayslipsFilePath)"></i>
-                                        <i class="bi bi-download upload-icon" title="Download" ng-click="DownloadFile(PayslipsFilePath)"></i>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-lg-3 col-md-6">
-                                <label class="form-label">Photo-1</label>
+                                <label class="form-label">Payslip</label>
                                 <div class="upload-field">
                                     <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input" accept=".jpg,.jpeg,.png"
-                                               id="fuPhotos_1_FilePath{{$index}}"
-                                               onchange="angular.element(this).scope().uploadFile('Photos_1_FilePath', this)"
-                                               ng-model="Photos_1_FilePath" />
-                                        <span class="file-name">
-                                            {{ Photos_1_FileName || 'No file chosen' }}
-                                        </span>
+                                        <input type="file" class="upload-input" accept=".pdf">
+                                        <span class="file-name">No file chosen</span>
                                     </div>
                                     <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon"
-                                           title="View"
-                                           ng-click="ViewFile(Photos_1_FilePath)"></i>
-                                        <i class="bi bi-download upload-icon"
-                                           title="Download"
-                                           ng-click="DownloadFile(Photos_1_FilePath)"></i>
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6" ng-show="EmployeeUploadDocs">
-                                <label class="form-label">Photo-2</label>
+
+                            <!-- Photo -->
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Photo</label>
                                 <div class="upload-field">
                                     <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input"
-                                               accept=".jpg,.jpeg,.png"
-                                               id="fuPhotos_2_FilePath{{$index}}"
-                                               onchange="angular.element(this).scope().uploadFile('Photos_2_FilePath', this)"
-                                               ng-model="Photos_2_FilePath" />
-                                        <span class="file-name">
-                                            {{ Photos_2_FileName || 'No file chosen' }}
-                                        </span>
+                                        <input type="file" class="upload-input" accept=".jpg,.jpeg,.png">
+                                        <span class="file-name">No file chosen</span>
                                     </div>
                                     <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon"
-                                           title="View"
-                                           ng-click="ViewFile(Photos_2_FilePath)"></i>
-                                        <i class="bi bi-download upload-icon"
-                                           title="Download"
-                                           ng-click="DownloadFile(Photos_2_FilePath)"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6" ng-show="EmployeeUploadDocs">
-                                <label class="form-label">Photo-3</label>
-                                <div class="upload-field">
-                                    <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input"
-                                               accept=".jpg,.jpeg,.png"
-                                               id="fuPhotos_3_FilePath{{$index}}"
-                                               onchange="angular.element(this).scope().uploadFile('Photos_3_FilePath', this)"
-                                               ng-model="Photos_3_FilePath" />
-                                        <span class="file-name">
-                                            {{ Photos_3_FileName || 'No file chosen' }}
-                                        </span>
-                                    </div>
-                                    <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon"
-                                           title="View"
-                                           ng-click="ViewFile(Photos_3_FilePath)"></i>
-                                        <i class="bi bi-download upload-icon"
-                                           title="Download"
-                                           ng-click="DownloadFile(Photos_3_FilePath)"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6" ng-show="EmployeeUploadDocs">
-                                <label class="form-label">Photo-4</label>
-                                <div class="upload-field">
-                                    <div class="upload-input-wrap">
-                                        <input type="file" class="upload-input"
-                                               accept=".jpg,.jpeg,.png"
-                                               id="fuPhotos_4_FilePath{{$index}}"
-                                               onchange="angular.element(this).scope().uploadFile('Photos_4_FilePath', this)"
-                                               ng-model="Photos_4_FilePath" />
-                                        <span class="file-name">
-                                            {{ Photos_4_FileName || 'No file chosen' }}
-                                        </span>
-                                    </div>
-                                    <div class="upload-actions">
-                                        <i class="bi bi-eye upload-icon"
-                                           title="View"
-                                           ng-click="ViewFile(Photos_4_FilePath)"></i>
-                                        <i class="bi bi-download upload-icon"
-                                           title="Download"
-                                           ng-click="DownloadFile(Photos_4_FilePath)"></i>
+                                        <i class="bi bi-eye upload-icon"></i>
+                                        <i class="bi bi-download upload-icon"></i>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
+
+
+
                     </form>
                 </div>
+
                 <!-- Footer -->
                 <div class="modal-footer employee-modal-footer">
                     <button class="btn cancel-btn" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn import-save-btn" ng-click="ShowDivEmployeeMasterGrid();ManageLog('Submit in Employee Master ')">Submit</button>
+                    <button class="btn import-save-btn">Submit</button>
                 </div>
+
             </div>
         </div>
     </div>
+
+
+
+
     <!-- Capsule Toggle (single capsule container) -->
     <div class="mb-3">
         <div class="toggle-pill" role="tablist" aria-label="View or Generate">
@@ -462,6 +318,7 @@
         <!-- VIEW CARD (default visible) -->
         <div id="viewCard" class="card section-card active">
             <div class="card-body p-3 h-100 d-flex flex-column">
+
                 <!-- Toolbar -->
                 <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
                     <div class="d-flex align-items-center gap-2">
@@ -476,6 +333,7 @@
                                 <!-- ... -->
                             </ul>
                         </div>
+
                         <div class="dropdown">
                             <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Year
@@ -485,6 +343,7 @@
                                 <li><a class="dropdown-item" href="#">2024</a></li>
                             </ul>
                         </div>
+
                         <button class="btn btn-sm filter-btn active">Go</button>
                     </div>
 
@@ -495,44 +354,24 @@
                                 <button class="btn btn-sm" style="border-color: #E45D27" id="estSearchBtn" type="button"><i class="bi bi-search"></i></button>
                             </div>
                         </div>
+
                         <div>
-                            @*<div class="dropdown">
-                                    <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="" ng-click="ExportExcel(); $event.preventDefault(); ManageLog('Export CSV')"> CSV </a></li>
-                                        <li><a class="dropdown-item" href="" ng-click="ExportPdf();ManageLog('click on Export in PDF button  Employee button')">PDF</a></li>
-                                        <li><a class="dropdown-item" href="" ng-click="ExportPdf();ManageLog('click on Export in PDF button  Employee button')">Print</a></li>
-                                    </ul>
-                                </div>*@
                             <div class="dropdown">
-                                <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown">
-                                    Export
-                                </button>
+                                <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" href="" ng-click="ExportToCSV()">
-                                            CSV
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="" ng-click="ExportToPDF(); $event.preventDefault(); ManageLog('Export PDF')">
-                                            PDF
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="" ng-click="ExportToPrint(); $event.preventDefault(); ManageLog('Export Print')">
-                                            Print
-                                        </a>
-                                    </li>
+                                    <li><a class="dropdown-item" href="#">CSV</a></li>
+                                    <li><a class="dropdown-item" href="#">PDF</a></li>
+                                    <li><a class="dropdown-item" href="#">Print</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <!-- Table wrapper -->
                 <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3">
                     <div class="table-responsive">
-                        <table id="example" class="table table-sm mb-0 small-table" ng-init="GetEmployeeMaster()">
+                        <table class="table table-sm mb-0 small-table">
                             <thead>
                                 <tr>
                                     <th>Sr.No</th>
@@ -547,30 +386,34 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="employee in EmployeeList">
-                                    <td>{{$index + 1}}</td>
-                                    <td>{{ employee.EmployeeCode }}</td>
-                                    <td>{{ employee.RefEmployeeCode }}</td>
-                                    <td>{{ employee.EmployeeName }}</td>
-                                    <td>{{ employee.EmployeeDesignation }}</td>
-                                    <td>{{ employee.DisplayDOJ }}</td>
-                                    <td>{{ employee.EmployeeDepartment }}</td>
+                                <tr>
+                                    <td>1</td>
+                                    <td>EMP03310</td>
+                                    <td>63178</td>
+                                    <td>Deepak</td>
+                                    <td>Team Leader</td>
+                                    <td>11/11/2024</td>
+                                    <td>Operations</td>
                                     <td>
                                         <div class="doc-status-wrap">
                                             <div class="doc-progress">
                                                 <div class="doc-progress-bar progress-low" style="width: 35%;"></div>
                                             </div>
-                                            <span class="doc-progress-text">{{ employee.DocumentStatus }}</span>
+                                            <span class="doc-progress-text">35%</span>
                                         </div>
                                     </td>
                                     <td class="action-menu">
                                         <button class="btn btn-sm" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li>
-                                                <a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#employeeViewModal" ng-click="openEmployeeModal(employee.Id)">
+                                                <a class="dropdown-item"
+                                                   href="javascript:void(0)"
+                                                   data-bs-toggle="modal"
+                                                   data-bs-target="#employeeViewModal">
                                                     View More
                                                 </a>
                                             </li>
+
                                             <li>
                                                 <a class="dropdown-item"
                                                    href="#"
@@ -583,6 +426,55 @@
                                         </ul>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>EMP03310</td>
+                                    <td>63178</td>
+                                    <td>Arjun</td>
+                                    <td>Team Leader</td>
+                                    <td>11/11/2024</td>
+                                    <td>Operations</td>
+                                    <td>
+                                        <div class="doc-status-wrap">
+                                            <div class="doc-progress">
+                                                <div class="doc-progress-bar progress-mid" style="width: 65%;"></div>
+                                            </div>
+                                            <span class="doc-progress-text">65%</span>
+                                        </div>
+                                    </td>
+                                    <td class="action-menu">
+                                        <button class="btn btn-sm" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="#">View More</a></li>
+                                            <li><a class="dropdown-item" href="#">Compliance Documents</a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>EMP03310</td>
+                                    <td>63178</td>
+                                    <td>Ansh</td>
+                                    <td>Team Leader</td>
+                                    <td>11/11/2024</td>
+                                    <td>Operations</td>
+                                    <td>
+                                        <div class="doc-status-wrap">
+                                            <div class="doc-progress">
+                                                <div class="doc-progress-bar progress-high" style="width: 90%;"></div>
+                                            </div>
+                                            <span class="doc-progress-text">90%</span>
+                                        </div>
+                                    </td>
+                                    <td class="action-menu">
+                                        <button class="btn btn-sm" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="#">View More</a></li>
+                                            <li><a class="dropdown-item" href="#">Compliance Documents</a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -603,210 +495,165 @@
         </div>
 
         <!-- ================= Employee View Modal ================= -->
-        <div class="modal fade employeeViewModalPage" id="employeeViewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade employeeViewModalPage"
+             id="employeeViewModal"
+             tabindex="-1"
+             aria-hidden="true">
+
             <div class="modal-dialog modal-md modal-dialog-slideout">
                 <div class="modal-content rounded-3">
+
                     <!-- HEADER -->
                     <div class="modal-header ev-header">
-                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"></button>
+                        <button type="button"
+                                class="btn-close btn-close-white ms-auto"
+                                data-bs-dismiss="modal"></button>
                     </div>
+
                     <!-- BODY -->
                     <div class="modal-body ev-body">
+
                         <!-- PROFILE -->
                         <div class="ev-profile text-center">
                             <div class="ev-avatar">
                                 <i class="bi bi-person-fill"></i>
                             </div>
-                            <h6 class="ev-name">{{employee.Name}}</h6>
+
+                            <h6 class="ev-name">Deepak</h6>
+
                             <div class="ev-meta">
-                                DOJ : {{employee.DOJ}} <br />
-                                Ref Employee Code : {{employee.RefEmployeeCode}}
+                                DOJ : 11/11/2024 <br />
+                                Ref Employee Code : 63178
                             </div>
                         </div>
+
                         <!-- CONTACT -->
                         <div class="ev-section">
                             <div class="ev-transfer-title text-center">
                                 <span class="ev-transfer-chip">Contact</span>
                             </div>
+
                             <div class="ev-info">
                                 <div class="ev-info-row">
                                     <label>Email :</label>
-                                    <span>{{employee.Email}}</span>
+                                    <span>deepak@email.com</span>
                                 </div>
                                 <div class="ev-info-row">
                                     <label>Phone Number :</label>
-                                    <span>{{employee.PhoneNumber}}</span>
+                                    <span>9876543210</span>
                                 </div>
                                 <div class="ev-info-row">
                                     <label>Address :</label>
-                                    <span>{{employee.Address}}, {{employee.City}}, {{employee.State}}</span>
+                                    <span>Mumbai, Maharashtra</span>
                                 </div>
                             </div>
                         </div>
-                        <!-- Aadhaar Front -->
-                        <div class="ev-doc-row">
-                            <div class="ev-doc-left">
-                                <div class="ev-doc-name">Aadhaar Card Front Side</div>
-                            </div>
-                            <div class="ev-doc-actions" ng-click="FireDoc('AdhaarFront')">
-                                <i class="bi bi-upload ev-doc-icon"></i>
 
-                                <input id="AdhaarFront" type="file" style="display:none"
-                                       onchange="angular.element(this).scope().UpdateDocument('AdhaarCard_FrontSide_FilePath', this);
-                         angular.element(this).scope().ManageLog('Adhaar Card Front Side in Employee Master ' + angular.element(this).scope().employee.Name)" />
 
-                                <i class="bi bi-eye ev-doc-icon"
-                                   ng-if="employee.AdhaarCard_FrontSide_FilePath"
-                                   ng-click="viewDocument(employee.AdhaarCard_FrontSide_FilePath);ManageLog('View Aadhar front Card ' + employee.Name)">
-                                </i>
+                        <!-- DOCUMENTS -->
+                        <div class="ev-section">
+                            <div class="ev-transfer-title text-center">
+                                <span class="ev-transfer-chip">Documents</span>
                             </div>
-                        </div>
-                        <!-- Aadhaar Back -->
-                        <div class="ev-doc-row">
-                            <div class="ev-doc-left">
-                                <div class="ev-doc-name">Aadhaar Card Back Side</div>
-                            </div>
-                            <div class="ev-doc-actions" ng-click="FireDoc('AdhaarBack')">
-                                <i class="bi bi-upload ev-doc-icon"></i>
 
-                                <input id="AdhaarBack" type="file" style="display:none"
-                                       onchange="angular.element(this).scope().UpdateDocument('AdhaarCard_BackSide_FilePath', this);
-                         angular.element(this).scope().ManageLog('Adhaar Card Back Side ' + angular.element(this).scope().employee.Name)" />
 
-                                <i class="bi bi-eye ev-doc-icon"
-                                   ng-if="employee.AdhaarCard_BackSide_FilePath"
-                                   ng-click="viewDocument(employee.AdhaarCard_BackSide_FilePath)">
-                                </i>
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Aadhaar Card Front Side</div>
+                                    <div class="ev-doc-date">Last updated : 12 Jan 2025</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon" title="Upload"></i>
+                                    <i class="bi bi-eye ev-doc-icon" title="View"></i>
+                                </div>
                             </div>
-                        </div>
-                        <!-- PAN -->
-                        <div class="ev-doc-row">
-                            <div class="ev-doc-left">
-                                <div class="ev-doc-name">PAN Card</div>
-                            </div>
-                            <div class="ev-doc-actions" ng-click="FireDoc('PANCardFilePath')">
-                                <i class="bi bi-upload ev-doc-icon"></i>
 
-                                <input id="PANCardFilePath" type="file" style="display:none"
-                                       onchange="angular.element(this).scope().UpdateDocument('PANCardFilePath', this);
-                         angular.element(this).scope().ManageLog('PAN Card ' + angular.element(this).scope().employee.Name)" />
-
-                                <i class="bi bi-eye ev-doc-icon" ng-if="employee.PANCardFilePath"
-                                   ng-click="viewDocument(employee.PANCardFilePath)">
-                                </i>
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Aadhaar Card Back Side</div>
+                                    <div class="ev-doc-date">Last updated : 08 Jan 2025</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
                             </div>
-                        </div>
-                        <!-- Education -->
-                        <div class="ev-doc-row">
-                            <div class="ev-doc-left">
-                                <div class="ev-doc-name">Education Certificate</div>
-                            </div>
-                            <div class="ev-doc-actions" ng-click="FireDoc('Education')">
-                                <i class="bi bi-upload ev-doc-icon"></i>
 
-                                <input id="Education" type="file" style="display:none"
-                                       onchange="angular.element(this).scope().UpdateDocument('EducationCertificateFilePath', this);
-                         angular.element(this).scope().ManageLog('Education Certificate ' + angular.element(this).scope().employee.Name)" />
-
-                                <i class="bi bi-eye ev-doc-icon"
-                                   ng-if="employee.EducationCertificateFilePath"
-                                   ng-click="viewDocument(employee.EducationCertificateFilePath)">
-                                </i>
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">PAN Card</div>
+                                    <div class="ev-doc-date">Last updated : 02 Jan 2025</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                    <i class="bi bi-eye ev-doc-icon"></i>
+                                </div>
                             </div>
-                        </div>
-                        <!-- Experience -->
-                        <div class="ev-doc-row">
-                            <div class="ev-doc-left">
-                                <div class="ev-doc-name">Experience Certificate</div>
-                            </div>
-                            <div class="ev-doc-actions" ng-click="FireDoc('Experience')">
-                                <i class="bi bi-upload ev-doc-icon"></i>
 
-                                <input id="Experience" type="file" style="display:none"
-                                       onchange="angular.element(this).scope().UpdateDocument('ExperienceCertificateFilePath', this);
-                         angular.element(this).scope().ManageLog('Experience Certificate ' + angular.element(this).scope().employee.Name)" />
-
-                                <i class="bi bi-eye ev-doc-icon"
-                                   ng-if="employee.ExperienceCertificateFilePath"
-                                   ng-click="viewDocument(employee.ExperienceCertificateFilePath)">
-                                </i>
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Education Certificate</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
                             </div>
-                        </div>
-                        <!-- Relieving -->
-                        <div class="ev-doc-row">
-                            <div class="ev-doc-left">
-                                <div class="ev-doc-name">Relieving Letter</div>
-                            </div>
-                            <div class="ev-doc-actions" ng-click="FireDoc('Relieving')">
-                                <i class="bi bi-upload ev-doc-icon"></i>
 
-                                <input id="Relieving" type="file" style="display:none"
-                                       onchange="angular.element(this).scope().UpdateDocument('RelievingLetterfFilePath', this);
-                         angular.element(this).scope().ManageLog('Relieving Letter ' + angular.element(this).scope().employee.Name)" />
-
-                                <i class="bi bi-eye ev-doc-icon"
-                                   ng-if="employee.RelievingLetterfFilePath"
-                                   ng-click="viewDocument(employee.RelievingLetterfFilePath)">
-                                </i>
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Experience Certificate</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
                             </div>
-                        </div>
-                        <!-- Payslips -->
-                        <div class="ev-doc-row">
-                            <div class="ev-doc-left">
-                                <div class="ev-doc-name">Payslips</div>
-                            </div>
-                            <div class="ev-doc-actions" ng-click="FireDoc('Payslips')">
-                                <i class="bi bi-upload ev-doc-icon"></i>
 
-                                <input id="Payslips" type="file" style="display:none"
-                                       onchange="angular.element(this).scope().UpdateDocument('PayslipsFilePath', this);
-                         angular.element(this).scope().ManageLog('Payslips ' + angular.element(this).scope().employee.Name)" />
-
-                                <i class="bi bi-eye ev-doc-icon"
-                                   ng-if="employee.PayslipsFilePath"
-                                   ng-click="viewDocument(employee.PayslipsFilePath)">
-                                </i>
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Relieving Letter</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
                             </div>
-                        </div>
-                        <!-- Photos -->
-                        <div class="ev-doc-row">
-                            <div class="ev-doc-left">
-                                <div class="ev-doc-name">Photos</div>
-                            </div>
-                            <div class="ev-doc-actions" ng-click="FireDoc('Photos')">
-                                <i class="bi bi-upload ev-doc-icon"></i>
 
-                                <input id="Photos" type="file" style="display:none"
-                                       onchange="angular.element(this).scope().UpdateDocument('Photos_1_FilePath', this);
-                         angular.element(this).scope().ManageLog('Photos ' + angular.element(this).scope().employee.Name)" />
-
-                                <i class="bi bi-eye ev-doc-icon"
-                                   ng-if="employee.Photos_1_FilePath"
-                                   ng-click="viewDocument(employee.Photos_1_FilePath)">
-                                </i>
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Payslips</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
                             </div>
-                        </div>
-                        <!-- Cheque -->
-                        <div class="ev-doc-row">
-                            <div class="ev-doc-left">
-                                <div class="ev-doc-name">Cheque / Passbook</div>
-                            </div>
-                            <div class="ev-doc-actions" ng-click="FireDoc('Cheque')">
-                                <i class="bi bi-upload ev-doc-icon"></i>
 
-                                <input id="Cheque" type="file" style="display:none"
-                                       onchange="angular.element(this).scope().UpdateDocument('Cheque_Passbook_FilePath', this);
-                         angular.element(this).scope().ManageLog('Cheque/Passbook ' + angular.element(this).scope().employee.Name)" />
-
-                                <i class="bi bi-eye ev-doc-icon"
-                                   ng-if="employee.Cheque_Passbook_FilePath"
-                                   ng-click="viewDocument(employee.Cheque_Passbook_FilePath)">
-                                </i>
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Photos</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
                             </div>
+
+                            <div class="ev-doc-row">
+                                <div class="ev-doc-left">
+                                    <div class="ev-doc-name">Cheque / Passbook</div>
+                                    <div class="ev-doc-date">Last updated : —</div>
+                                </div>
+                                <div class="ev-doc-actions">
+                                    <i class="bi bi-upload ev-doc-icon"></i>
+                                </div>
+                            </div>
+
                         </div>
 
-                        <!-- TRANSFER LOG -->
+                        <!-- ================= TRANSFER LOG ================= -->
                         <div class="ev-section ev-transfer-section mt-3">
+
                             <div class="ev-transfer-title text-center">
                                 <span class="ev-transfer-chip">Transfer Logs</span>
                             </div>
@@ -822,70 +669,89 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="x in TransferLog">
-                                            <td>{{x.UnitCode}}</td>
-                                            <td>{{x.uniname}}</td>
-                                            <td>{{x.StartDate}}</td>
-                                            <td>{{x.EndDate}}</td>
+                                        <tr>
+                                            <td>SC001</td>
+                                            <td>Head Office</td>
+                                            <td>01-Apr-2024</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td>SC002</td>
+                                            <td>Branch Office</td>
+                                            <td>01-Jan-2023</td>
+                                            <td>31-Mar-2024</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
+
+
                         </div>
+
 
                     </div>
 
                     <!-- FOOTER -->
                     <div class="modal-footer ev-footer">
-                        <button class="btn ev-footer-btn secondary"
-                                data-bs-toggle="modal"
-                                data-bs-target="#transferEmployeeModal">
-                            Transfer
-                        </button>
-                        <button class="btn ev-footer-btn primary" data-bs-target="#newEmployeeModal" ng-click="openModal(employee.Id); ManageLog('View More in Employee Master')">
-                            View More
-                        </button>
+                        <button class="btn ev-footer-btn secondary" data-bs-toggle="modal"data-bs-target="#transferEmployeeModal">Transfer</button>
+                        <button class="btn ev-footer-btn primary">View More</button>
                     </div>
+
                 </div>
             </div>
         </div>
 
         <!-- ================= Transfer Employee Modal ================= -->
-        <div class="modal fade employeeViewModalPage" id="transferEmployeeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade employeeViewModalPage"
+             id="transferEmployeeModal"
+             tabindex="-1"
+             aria-hidden="true">
+
             <div class="modal-dialog modal-sm modal-dialog-centered">
                 <div class="modal-content te-modal-content">
 
+                    <!-- HEADER -->
                     <div class="modal-header te-header">
                         <h5 class="modal-title mb-0">Transfer Employee</h5>
                         <button type="button"
                                 class="btn-close btn-close-white"
                                 data-bs-dismiss="modal"></button>
                     </div>
+
+                    <!-- BODY -->
                     <div class="modal-body te-body">
 
                         <p class="te-subtitle">
                             Transfer the employee to the site you want
                         </p>
+
+                        <!-- Search Section -->
                         <div class="te-search-wrapper">
-                            <input type="text" class="form-control te-search-input" ng-model="StoreSearch" placeholder="Enter Site Code" />
-                            <button class="btn te-search-btn"
-                                    ng-click="SearchStoreList()">
+                            <input type="text"
+                                   class="form-control te-search-input"
+                                   placeholder="Enter Site Code" />
+
+                            <button class="btn te-search-btn">
                                 Search
                             </button>
                         </div>
+
                         <hr />
+
                         <div class="te-units-title">Sites</div>
-                        <div class="te-unit-row" ng-repeat="x in TransferStoreList">
+
+                        <!-- Sites List -->
+                        <div class="te-unit-row">
                             <div class="te-unit-left">
-                                <div class="te-unit-code">{{x.StoreCode}}</div>
-                                <div class="te-unit-emp">{{x.TotalEmployee}}</div>
+                                <div class="te-unit-code">00003739</div>
+                                <div class="te-unit-emp">8988 Employee</div>
                             </div>
                             <button class="btn te-transfer-btn"
-                                    ng-click="SetTransfer(x.Id);ManageLog('Transfer ' + x.StoreCode)"
                                     data-bs-dismiss="modal">
                                 Transfer
                             </button>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -900,6 +766,7 @@
 
             <div class="modal-dialog modal-md modal-dialog-slideout">
                 <div class="modal-content rounded-3">
+
                     <!-- HEADER -->
                     <div class="modal-header complianceDocs-header">
                         <h6 class="modal-title text-white">Compliance Documents</h6>
@@ -907,15 +774,20 @@
                                 class="btn-close btn-close-white"
                                 data-bs-dismiss="modal"></button>
                     </div>
+
                     <!-- BODY -->
                     <div class="modal-body complianceDocs-body">
+
                         <!-- DOCUMENT ITEM -->
                         <div class="doc-item">
+
                             <div class="doc-row">
+
                                 <div class="doc-info">
                                     <div class="doc-name">PAN Card</div>
                                     <div class="doc-meta">Last Updated: 02/01/2026 (v2)</div>
                                 </div>
+
                                 <div class="doc-actions">
                                     <i class="bi bi-upload action-icon"></i>
                                     <i class="bi bi-eye action-icon"></i>
@@ -924,7 +796,9 @@
                                        data-bs-toggle="collapse"
                                        data-bs-target="#panHistory"></i>
                                 </div>
+
                             </div>
+
                             <!-- HISTORY -->
                             <div class="collapse doc-history" id="panHistory">
                                 <div class="history-item">
@@ -933,7 +807,9 @@
                                     <i class="bi bi-download action-icon small-icon"></i>
                                 </div>
                             </div>
+
                         </div>
+
                         <!-- DOCUMENT ITEM  -->
                         <div class="doc-item">
 
@@ -943,6 +819,7 @@
                                     <div class="doc-name">GST Certificate</div>
                                     <div class="doc-meta">Last Updated: 15/01/2026 (v3)</div>
                                 </div>
+
                                 <div class="doc-actions">
                                     <i class="bi bi-upload action-icon"></i>
                                     <i class="bi bi-eye action-icon"></i>
@@ -951,6 +828,7 @@
                                        data-bs-toggle="collapse"
                                        data-bs-target="#gstHistory"></i>
                                 </div>
+
                             </div>
 
                             <!-- HISTORY -->
@@ -967,34 +845,45 @@
                                     <i class="bi bi-download action-icon small-icon"></i>
                                 </div>
                             </div>
+
                         </div>
+
                     </div>
 
                 </div>
             </div>
         </div>
+
+
+
+
         <!-- ================= GENERATE CARD (hidden by default) ================= -->
         <div id="generateCard" class="card section-card d-none">
             <div class="card-body p-3">
                 <h6>Import Master File</h6>
-                <a href="/DownloadMat/EmployeeMasterSampleSheet.xlsx"
-                   download
-                   class="btn import-save-btn mb-3 d-inline-flex align-items-center">
-                    <i class="bi bi-download me-1"></i>
-                    Download Master Template
-                </a>
+                @*<p class="text-muted">Upload CSV or Excel to import multiple files.</p>*@
+
+                <!-- Download Template -->
+                <button class="btn btn-sm mb-3" id="empMasterDownloadTemplate">
+                    <i class="bi bi-download me-1"></i> Download Master Template
+                </button>
+
+                <!-- Upload Box -->
                 <div class="est-import-box p-3">
-                    <label class="form-label mb-2">Choose Master File</label>
-                    <input type="file" id="input-excel" class="form-control" onchange="angular.element(this).scope().DisplayExcel()" />
+                    <label class="form-label  mb-2">Choose Master File</label>
+                    <input type="file" id="locationImportFile" class="form-control" />
+
                     <div class="d-flex gap-2 mt-3">
-                        <button class="btn import-save-btn px-4" id="btnValiadte" ng-click="SaveRecord();ManageLog('click on Save Record button Employee Master Import')">
+                        <button class="btn import-save-btn px-4" id="importSaveBtn">
                             Save
                         </button>
-                        <button class="btn cancel-btn px-4" id="importCancelBtn" ng-click="CancelImport()">
+
+                        <button class="btn cancel-btn px-4" id="importCancelBtn">
                             Cancel
                         </button>
                     </div>
-                    <div id="wrapper" class="mt-3"></div>
+
+                    <div id="generateFilePreview" class="mt-3 d-none"></div>
                 </div>
             </div>
         </div>
