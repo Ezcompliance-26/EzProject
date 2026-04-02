@@ -19,10 +19,13 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
+   
     public class RetailSectionController : Controller
     {
-       
+        public ActionResult VendorRegistration()
+        {
+            return View();
+        }
         public ActionResult Index()
         {
             return View();
@@ -81,7 +84,7 @@ namespace EesassinErp.Controllers
             DateTime dobofNominee = Convert.ToDateTime(form["DOBofNominee"]);
             string storeCode = form["StoreCode"];
             string Status = form["Status"];
-
+            string SiteId = form["SiteId"];
             string panCardFilePath = null;
             string chequePassbookFilePath = null;
             string educationCertificateFilePath = null;
@@ -94,8 +97,8 @@ namespace EesassinErp.Controllers
             string photos2FilePath = null;
             string photos3FilePath = null;
             string photos4FilePath = null;
-            if (Convert.ToInt32(Id) == 0)
-            {
+            //if (Convert.ToInt32(Id) == 0)
+            //{
                 if (!string.IsNullOrEmpty(form["PANCardFilePath"]))
                 {
                     panCardFilePath = SaveFile(form["PANCardFilePath"], "Employee");
@@ -145,7 +148,7 @@ namespace EesassinErp.Controllers
                 {
                     photos4FilePath = SaveFile(form["Photos_4_FilePath"], "Employee");
                 }
-            }
+            //}
             try
             {
                 var employeeData = new RetialEmployeeManager
@@ -198,7 +201,8 @@ namespace EesassinErp.Controllers
                     Photos_3_FilePath = photos3FilePath,
                     Photos_4_FilePath = photos4FilePath,
                     LeavingDate = LeavingDate,
-                    PFAccount = PFAccount
+                    PFAccount = PFAccount,
+                    SiteId = SiteId
                 };
                 result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertUpdateDelEmployeeMaster(employeeData)));
             }
@@ -1933,6 +1937,12 @@ namespace EesassinErp.Controllers
             }
         }
 
+
+        public ActionResult Declaration()
+        {
+            return View();
+        }
+
         private string SaveFile(HttpPostedFileBase file, string uploadDir, string existingFilePath)
         {
             Debug.WriteLine("SaveFile");
@@ -2890,7 +2900,7 @@ namespace EesassinErp.Controllers
             return result;
         }
 
-        
+     
         public ActionResult NewLicenseMaster()
         {
             return View();
@@ -3075,5 +3085,105 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
+
+        public ActionResult NewEmployeeMaster1()
+        {
+            return View();
+        }
+
+        public ActionResult DownloadFile(string filePath, string fileName)
+        {
+            if (string.IsNullOrEmpty(filePath))
+                return HttpNotFound();
+
+            var fullPath = Server.MapPath(filePath);
+
+            if (!System.IO.File.Exists(fullPath))
+                return HttpNotFound();
+
+            string originalName = Path.GetFileName(fullPath);
+
+            // Agar filename blank ho to original use karo
+            string finalFileName = string.IsNullOrEmpty(fileName) ? originalName : fileName;
+
+            // Extension ensure karo
+            string extension = Path.GetExtension(fullPath);
+            if (!finalFileName.EndsWith(extension))
+            {
+                finalFileName += extension;
+            }
+
+            // Special char safe encoding
+            string headerFileName = Uri.EscapeDataString(finalFileName);
+
+            Response.Clear();
+            Response.ContentType = MimeMapping.GetMimeMapping(fullPath);
+            Response.AppendHeader("Content-Disposition", "attachment; filename*=UTF-8''" + headerFileName);
+
+            Response.TransmitFile(fullPath);
+            Response.End();
+
+            return null;
+        }
+        public ActionResult ViewFile(string filePath)
+        {
+            var fullPath = Server.MapPath(filePath);
+
+            if (!System.IO.File.Exists(fullPath))
+                return HttpNotFound();
+
+            string contentType = MimeMapping.GetMimeMapping(fullPath);
+
+            Response.AppendHeader("Content-Disposition", "inline");
+
+            return File(fullPath, contentType);
+        }
+        public async Task<string> InsertRegister(RetailBAL obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertRegister(obj)));
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<string> UploadVfile(RetailBAL obj, HttpPostedFileBase File1)
+        {
+           
+
+            if (File1 != null && File1.ContentLength > 0)
+            {
+                string folder = "../DownloadMat/VendorRegister/";
+                string dirPath = System.Web.HttpContext.Current.Server.MapPath(folder);
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+
+                string NewFileName = "";
+                string strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
+                NewFileName += strPassword;
+                NewFileName += DateTime.Now.Year.ToString();
+                NewFileName += DateTime.Now.Month.ToString();
+                NewFileName += DateTime.Now.Day.ToString();
+                string extention = ".pdf";
+                string uploadpath = folder + NewFileName + extention;
+                string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
+                obj.FileUploadPath = uploadpath;
+                File1.SaveAs(filePath); 
+            }
+             
+
+            string result = await Task.Factory.StartNew(() =>
+                JsonConvert.SerializeObject(DAL.DLL.InsertRegister(obj))
+            );
+
+            return result;
+        }
+        public async Task<string> SearchRegistration(RetailBAL obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchRegistration(obj)));
+            return result;
+        }
+
+
     }
 }

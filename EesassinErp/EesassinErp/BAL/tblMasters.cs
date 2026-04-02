@@ -17,12 +17,102 @@ namespace BAL
 
 
     }
-    public class RetailBAL
+    public class RetailBAL 
     {
         //--------------Mailing
+        public string GeneralDate { get; set; }
+        public string SignatoryName { get; set; }
+        public string SignatoryDesignation { get; set; }
+        public string AgencyName { get; set; }
+        public string RegisteredAddress { get; set; }
+        public string CorporateAddress { get; set; }
+        public string ContactPerson { get; set; }
+        public string Designation { get; set; }
+        public string Mobile { get; set; }
+        public string Email { get; set; }
+        public string Website { get; set; } 
+        public string Organization { get; set; }
 
-        
-               public string CSIID { get; set; }
+        //---------------- Step 2 : Statutory ----------------
+        public string PanNo { get; set; }
+        public string Tan { get; set; }
+        public string GSTIN { get; set; }
+        public string CIN { get; set; }
+        public string SHOPREGI { get; set; }
+        public string MSME { get; set; }
+        public string EPFREGNO { get; set; }
+        public string ESICREGNO { get; set; }
+        public string ProfessionalREGNO { get; set; }
+        public string LabourREGNO { get; set; }
+        public string ContractREGNO { get; set; }
+        public string LabourLicenseNO { get; set; }
+        public string LicenseValidity { get; set; }
+        public string LicenseEmployeeCount { get; set; }
+
+        //---------------- Step 4 : Bank ----------------
+        public string BankName { get; set; }
+        public string AccountNumber { get; set; }
+        public string IFSCCode { get; set; }
+        public string CancelledCheque { get; set; }
+
+        //---------------- Step 5 : Business Info ----------------
+        public string Service { get; set; }
+        public string Industries { get; set; }
+        public string TotalEmployees { get; set; }
+        public string OperationalLocations { get; set; }
+
+        //---------------- Step 6 : Experience ----------------
+        public string YearsOfExperience { get; set; }
+        public string KeyClients { get; set; }
+        public string SimilarContracts { get; set; }
+
+        //---------------- Files (1–21) ----------------
+     
+        public string File4 { get; set; }
+        public string File5 { get; set; }
+        public string File6 { get; set; }
+        public string File7 { get; set; }
+        public string File8 { get; set; }
+        public string File9 { get; set; }
+        public string File10 { get; set; }
+        public string File11 { get; set; }
+        public string File12 { get; set; }
+        public string File13 { get; set; }
+        public string File14 { get; set; }
+        public string File15 { get; set; }
+        public string File16 { get; set; }
+        public string File17 { get; set; }
+        public string File18 { get; set; }
+        public string File19 { get; set; }
+        public string File20 { get; set; }
+        public string File21 { get; set; }
+
+        //---------------- Reference 1 ----------------
+        public string NameOrganization1 { get; set; }
+        public string ServiceType1 { get; set; }
+        public string ConcernPerson1 { get; set; }
+        public string Designation1 { get; set; }
+        public string MobileNo1 { get; set; }
+        public string EmailId1 { get; set; }
+
+        //---------------- Reference 2 ----------------
+        public string NameOrganization2 { get; set; }
+        public string ServiceType2 { get; set; }
+        public string ConcernPerson2 { get; set; }
+        public string Designation2 { get; set; }
+        public string MobileNo2 { get; set; }
+        public string EmailId2 { get; set; }
+
+        //---------------- Reference 3 ----------------
+        public string NameOrganization3 { get; set; }
+        public string ServiceType3 { get; set; }
+        public string ConcernPerson3 { get; set; }
+        public string Designation3 { get; set; }
+        public string MobileNo3 { get; set; }
+        public string EmailId3 { get; set; } 
+    //------
+
+    public string CSIID { get; set; }
         public string StoreId { get; set; }
         public string TemplateName { get; set; }
         public string Subject { get; set; } 
@@ -297,7 +387,12 @@ namespace BAL
         public string CRemark { get; set; }
         public string IsVerified { get; set; }
 
- 
+
+         
+
+     
+
+
     }
 
 

@@ -68,6 +68,7 @@ namespace DAL
                 new SqlParameter("@UserIds", obj.LoginId),
                  new SqlParameter("@PFAccount", obj.PFAccount),
                   new SqlParameter("@LeavingDate", obj.LeavingDate),
+                  new SqlParameter("@SiteId",obj.SiteId),
 
                 new SqlParameter("@RESULT",""),
             };
@@ -527,6 +528,7 @@ namespace DAL
                 new SqlParameter("@UserId",obj.LoginId),
                  new SqlParameter("@Verify",obj.Verify),
                 new SqlParameter("@StoreId",obj.StoreId),
+                new SqlParameter("@EmpCode",obj.EmpCode),
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("RTL.USP_ROLEMANAGE", CommandType.StoredProcedure, param.ToArray()));
@@ -638,7 +640,9 @@ namespace DAL
                   new SqlParameter("@StoreCode",obj.StoreCode),
                  new SqlParameter("@ApplicationStatus",obj.ApplicationStatus),
                   new SqlParameter("@LicenseStatus",obj.LicenseStatus),
-                   new SqlParameter("@RenewalStatus",obj.RenewalStatus)
+                   new SqlParameter("@RenewalStatus",obj.RenewalStatus),
+                    new SqlParameter("@PageNo",obj.PageNo),
+                     new SqlParameter("@PageSize",obj.PageSize)
 
             };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.USP_LicenceRequest", CommandType.StoredProcedure, param.ToArray()));
@@ -1594,6 +1598,11 @@ namespace DAL
                 new SqlParameter("@State",obj.State),
                 new SqlParameter("@Address",obj.Address),
                 new SqlParameter("@LicenceId",obj.License),
+
+                 new SqlParameter("@PageNumber",obj.PageNumber),
+                  new SqlParameter("@PageSize",obj.PageSize),
+
+                
                  new SqlParameter("@LicenceApplicable",obj.LicenceApplicable),
                 new SqlParameter("@PartyId",obj.UserId)
             };
@@ -2621,6 +2630,7 @@ namespace DAL
 
         public async static Task<DataSet> bindingDashboard(RetailBAL obj)
         { 
+            
             var param = new List<SqlParameter>
                 {
                 new SqlParameter("@Id", obj.Id),
@@ -2809,10 +2819,119 @@ namespace DAL
             return dt;
         }
 
-        
+        public async static Task<DataTable> SearchRegistration(RetailBAL obj)
+        {
+            var param = new List<SqlParameter>
+                {
+                new SqlParameter("@Id", obj.Id),
+                new SqlParameter("@Action", obj.Action),
+                new SqlParameter("@LoginId", obj.UserId)
+                };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("USP_VendorRegistration", CommandType.StoredProcedure, param.ToArray()));
+            return dt;
+        }
 
 
+        public async static Task<string> InsertRegister(RetailBAL obj)
+        {
+            var param = new List<SqlParameter>
+           {
+        new SqlParameter("@Action", obj.Action),
 
+        // Step 1
+        new SqlParameter("@AgencyName", obj.AgencyName ?? ""),
+        new SqlParameter("@RegisteredAddress", obj.RegisteredAddress ?? ""),
+        new SqlParameter("@CorporateAddress", obj.CorporateAddress ?? ""),
+        new SqlParameter("@ContactPerson", obj.ContactPerson ?? ""),
+        new SqlParameter("@Designation", obj.Designation ?? ""),
+        new SqlParameter("@Mobile", obj.Mobile ?? ""),
+        new SqlParameter("@Email", obj.Email ?? ""),
+        new SqlParameter("@Website", obj.Website ?? ""),
+        new SqlParameter("@YearEstablishment", obj.Year ?? ""),
+        new SqlParameter("@Organization", obj.Organization ?? ""),
+
+        // Step 2 (Statutory)
+        new SqlParameter("@PanNo", obj.PanNo ?? ""),
+        new SqlParameter("@Tan", obj.Tan ?? ""),
+        new SqlParameter("@GSTIN", obj.GSTIN ?? ""),
+        new SqlParameter("@CIN", obj.CIN ?? ""),
+        new SqlParameter("@SHOPREGI", obj.SHOPREGI ?? ""),
+        new SqlParameter("@MSME", obj.MSME ?? ""),
+        new SqlParameter("@EPFREGNO", obj.EPFREGNO ?? ""),
+        new SqlParameter("@ESICREGNO", obj.ESICREGNO ?? ""),
+        new SqlParameter("@ProfessionalREGNO", obj.ProfessionalREGNO ?? ""),
+        new SqlParameter("@LabourREGNO", obj.LabourREGNO ?? ""),
+        new SqlParameter("@ContractREGNO", obj.ContractREGNO ?? ""),
+        new SqlParameter("@LabourLicenseNO", obj.LabourLicenseNO ?? ""),
+        new SqlParameter("@LicenseValidity", obj.LicenseValidity ?? ""),
+        new SqlParameter("@LicenseEmployeeCount", obj.LicenseEmployeeCount ?? ""),
+
+        // Step 4 (Bank)
+        new SqlParameter("@BankName", obj.BankName ?? ""),
+        new SqlParameter("@AccountNumber", obj.AccountNumber ?? ""),
+        new SqlParameter("@IFSCCode", obj.IFSCCode ?? ""),
+        new SqlParameter("@CancelledCheque", obj.CancelledCheque ?? ""),
+
+        // Step 5
+        new SqlParameter("@Service", obj.Service ?? ""),
+        new SqlParameter("@Industries", obj.Industries ?? ""),
+        new SqlParameter("@TotalEmployees", obj.TotalEmployees ?? ""),
+        new SqlParameter("@OperationalLocations", obj.OperationalLocations ?? ""),
+
+        // Step 6
+        new SqlParameter("@YearsOfExperience", obj.YearsOfExperience ?? ""),
+        new SqlParameter("@KeyClients", obj.KeyClients ?? ""),
+        new SqlParameter("@SimilarContracts", obj.SimilarContracts ?? ""),
+
+        // Files (1–21)
+        new SqlParameter("@File1", obj.FileUploadPath ?? ""), 
+
+        // Reference 1
+        new SqlParameter("@NameOrganization1", obj.NameOrganization1 ?? ""),
+        new SqlParameter("@ServiceType1", obj.ServiceType1 ?? ""),
+        new SqlParameter("@ConcernPerson1", obj.ConcernPerson1 ?? ""),
+        new SqlParameter("@Designation1", obj.Designation1 ?? ""),
+        new SqlParameter("@MobileNo1", obj.MobileNo1 ?? ""),
+        new SqlParameter("@EmailId1", obj.EmailId1 ?? ""),
+
+        // Reference 2
+        new SqlParameter("@NameOrganization2", obj.NameOrganization2 ?? ""),
+        new SqlParameter("@ServiceType2", obj.ServiceType2 ?? ""),
+        new SqlParameter("@ConcernPerson2", obj.ConcernPerson2 ?? ""),
+        new SqlParameter("@Designation2", obj.Designation2 ?? ""),
+        new SqlParameter("@MobileNo2", obj.MobileNo2 ?? ""),
+        new SqlParameter("@EmailId2", obj.EmailId2 ?? ""),
+
+        // Reference 3
+        new SqlParameter("@NameOrganization3", obj.NameOrganization3 ?? ""),
+        new SqlParameter("@ServiceType3", obj.ServiceType3 ?? ""),
+        new SqlParameter("@ConcernPerson3", obj.ConcernPerson3 ?? ""),
+        new SqlParameter("@Designation3", obj.Designation3 ?? ""),
+        new SqlParameter("@MobileNo3", obj.MobileNo3 ?? ""),
+        new SqlParameter("@EmailId3", obj.EmailId3 ?? ""),
+
+        new SqlParameter("@SignatoryName", obj.SignatoryName ?? ""),
+        new SqlParameter("@SignatoryDesignation", obj.SignatoryDesignation ?? ""),
+            new SqlParameter("@GeneralDate", obj.GeneralDate ?? ""), 
+
+        // Common
+        new SqlParameter("@LoginId", obj.UserId),
+        new SqlParameter("@Createdby", obj.UserId),
+
+        new SqlParameter("@RESULT", SqlDbType.VarChar, 500)
+        {
+            Direction = ParameterDirection.Output
+        }
+    };
+
+            return await Task.Factory.StartNew(() =>
+                SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar(
+                    "USP_VendorRegistration",
+                    CommandType.StoredProcedure,
+                    param.ToArray()
+                )
+            );
+        }
 
     }
 }

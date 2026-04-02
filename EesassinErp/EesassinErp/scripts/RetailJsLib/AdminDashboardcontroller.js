@@ -26,11 +26,12 @@
         fd.append('DocumentName', row.DocumentName);
         fd.append('Id', MapId);
 
-        $http.post('../RetailSection/IUDCOMPLIANCESTORE', fd, {
+        $http.post('../RetailSection/IUDCOMPLIANCESTORE', fd, { 
             transformRequest: angular.identity,
             headers: { 'Content-Type': undefined }
         })
             .then(function (res) {
+                $scope.hideLoader();
                 if (res.data && res.data.Result) {
                     showMsgBox(res.data.Result);
                     $scope.BindComDoc();
@@ -39,6 +40,7 @@
                 }
             })
             .catch(function () {
+                $scope.hideLoader();
                 showMsgBox('999', 'Error', 'Server error.', 'error', 'btn-danger');
             })
             .finally(function () {
@@ -65,6 +67,7 @@
             headers: { 'Content-Type': undefined }
         })
             .then(function (res) {
+                $scope.hideLoader();
                 if (res.data && res.data.Result) {
                     showMsgBox(res.data.Result);
                     $scope.BindComDoc();
@@ -73,6 +76,7 @@
                 }
             })
             .catch(function () {
+                $scope.hideLoader();
                 showMsgBox('999', 'Error', 'Server error.', 'error', 'btn-danger');
             })
             .finally(function () {
@@ -151,7 +155,7 @@
             headers: { 'Content-Type': undefined }
         })
             .then(function (res) {
-
+                $scope.hideLoader();
                 if (res.data && res.data.Result) {
 
                     showMsgBox(res.data.Result);
@@ -168,11 +172,13 @@
                     $('#LicenseDocument').modal('hide');
                 }
                 else {
+                    $scope.hideLoader();
                     showMsgBox('999', 'Error', 'Something went wrong.', 'error', 'btn-danger');
                 }
 
             })
             .catch(function () {
+                $scope.hideLoader();
                 showMsgBox('999', 'Error', 'Server error.', 'error', 'btn-danger');
             })
             .finally(function () {
@@ -206,6 +212,7 @@
             headers: { 'Content-Type': undefined }
         })
             .then(function (res) {
+                $scope.hideLoader();
                 if (res.data && res.data.Result) {
                     showMsgBox(res.data.Result);
 
@@ -218,6 +225,7 @@
                     $scope.BindComDoc();
                     $('#AddDocumentModel').modal('hide');
                 } else {
+                    $scope.hideLoader();
                     showMsgBox('999', 'Error', 'Something went wrong.', 'error', 'btn-danger');
                 }
             })
@@ -261,7 +269,7 @@
 
         myService.methode('POST', "../RetailSection/GetComDoc", JSON.stringify(collectionobj))
             .then(function (response) {
-
+                $scope.hideLoader();
                 var data = response.data.Result || [];
 
                 // 🔹 FRONT-END GROUPING (Document unique)
@@ -498,6 +506,7 @@
             getData.then(function (response) {
                 debugger;
                 if (showMsgBox(response.data.Result)) {
+                    $scope.hideLoader();
                     $scope.FireEmail(1, $scope.EmailId, 0); 
                     $scope.Limit();
                     $scope.UserNames = '';
@@ -505,6 +514,7 @@
                     $scope.UName = '';
                     $scope.ContactNumber = '';
                     $scope.EmailId = '';
+                    $scope.hideLoader();
                     /* data-bs-dismiss="modal"*/
                 }
             });
@@ -601,6 +611,7 @@
         var getData = myService.methode('POST', '../Dashboard/PagesSectionMasterList', '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             debugger;
+            $scope.hideLoader();
               /* $('#loadingModal').modal('hide');*/
             $scope.PagesSectionMasterList = response.data.Result;
               /* $('#loadingModal').modal('hide');*/
@@ -800,6 +811,7 @@
             JSON.stringify(collectionobj)
         ).then(function (response) {
             if (showMsgBox(response.data.Result)) {
+                $scope.hideLoader();
                 $scope.IsOpen = false;
                 $scope.FireEmail(10, $scope.StoreUserId, $scope.StoreId);
                 $('#emailSendingModal').modal('hide');
@@ -901,7 +913,8 @@
         );
 
         getData.then(function (response) {
-              /* $('#loadingModal').modal('hide');*/
+            /* $('#loadingModal').modal('hide');*/
+            $scope.hideLoader();
             $scope.OverallList = response.data.Result || [];
 
             if ($scope.OverallList.length > 0) {
@@ -987,6 +1000,7 @@
 
         getData.then(function (response) {
             /* $('#loadingModal').modal('hide');*/
+            $scope.hideLoader();
             $scope.LicenseList = response.data.Result || [];
             $scope.FilteredLicenseList = angular.copy($scope.LicenseList);
             $scope.StateList = [...new Set($scope.LicenseList.map(x => x.State))];
@@ -1167,6 +1181,7 @@
             headers: { 'Content-Type': undefined }
         })
             .then(function (res) {
+                $scope.hideLoader();
                 $scope.AllIndustry();
                 if (res.data && res.data.Result)
                 {

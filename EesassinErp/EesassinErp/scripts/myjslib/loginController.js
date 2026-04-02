@@ -28,10 +28,34 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
         $("#lblmsg").text(text).css('color', color);
         $("#msgbox").attr("class", color === "green" ? "box-v-g" : "box-v-r").fadeIn().delay(duration || 3000).fadeOut();
     }
-    function storeSession(obj) {
-        if (!obj) return;
-        Object.keys(obj).forEach(k => sessionStorage.setItem(k, obj[k]));
-        sessionStorage.setItem('Loadonce', 0); 
+    function storeSession(d) {
+        //if (!obj) return;
+        //Object.keys(obj).forEach(k => sessionStorage.setItem(k, obj[k]));
+
+        var sessionData = {
+            LoginId: d.LoginId,
+            MapId: d.MapId,
+            MapUser: d.MapUser,
+            BranchCode: d.BranchCode,
+            LoginType: d.LoginType,
+            LastLogin: d.LastLogin,
+            Desig: d.Desig,
+            Name: d.Name,
+            BranchName: d.BranchName,
+            ContactNo: d.ContactNo,
+            CreatedOn: d.CreatedOn,
+            Photo: d.Photo,
+            UserName: d.UserName,
+            BranchAddress: d.BranchAddress,
+            SessionId: d.SessionId,
+            EmailId: d.EmailId,
+            PartyEMail: d.PartyEMail, 
+            Loadonce: 0
+        };
+
+        // ✅ single write (FAST)
+        sessionStorage.setItem("userSession", JSON.stringify(sessionData)); 
+      /*  sessionStorage.setItem('Loadonce', 0); */
     }
 
     // focus small init (deferred so DOM exists)
@@ -87,10 +111,14 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
             }
            
 
+
           /*  showMsg("You have logged in successfully.", "green");*/
             startLoginMessages();
-            $scope.ManageLog('Login successfully');
-            $scope.Captcha = ''; $scope.GetCaptchaImage();
+            setTimeout(() => {
+                $scope.ManageLog('Login successfully');
+            }, 0);
+            
+          /*  $scope.Captcha = ''; $scope.GetCaptchaImage();*/
             window.location.href = '../Dashboard/Dashboard';
         }).finally(resetBtn);
     };
@@ -113,15 +141,18 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
 
    
     // --------------- RedirectToModule ---------------
-    $scope.RedirectToModule = function () {
-        // ✅ AUTO START WHEN DASHBOARD LOADS
-     
+    $scope.RedirectToModule = function () { 
         var obj = { Action: "15", LoginId: $scope.ModuleId, Username: $scope.Username };
-        postObj('../Login/GetModulePermission', obj).then(function (res) {
+        postObj('../Login/GetModulePermission', obj).then(function (res)
+        {
             var data = res.data && res.data.Result;
             if (!data || !data.length) {
-                sessionStorage.setItem("DashboardSwitch", "Supplier");
-                $scope.ManageLog('Login Supplier Section');
+                
+                $scope.DashboardSwitch = 'Supplier';
+                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                setTimeout(() => {
+                    $scope.ManageLog('Login Supplier Section');
+                }, 0);
                 return window.location.href = '../Dashboard/Dashboard';
             }
 
@@ -131,15 +162,21 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
 
             if (d.LoginType == '1' || d.Module_Name === 'Supplier') { 
                 startLoginMessages();
-                sessionStorage.setItem("DashboardSwitch", "Supplier");
-                $scope.ManageLog('Login Supplier Section');
+              
+                $scope.DashboardSwitch = 'Supplier';
+                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
                 return window.location.href = '../Dashboard/Dashboard';
             } 
 
             if (d.Module_Name === 'Retail') { 
                 startLoginMessages();
-                sessionStorage.setItem("DashboardSwitch", "AdminRetail");
-                $scope.ManageLog('Login Retail Section');
+                
+                $scope.DashboardSwitch = 'AdminRetail';
+                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                $scope.ManageLog('Login Retail Section'); 
+                setTimeout(() => {
+                    $scope.ManageLog(d.LoginId, 'Login Retail Section');
+                }, 0);
                 return window.location.href = d.Path;
             }
 
@@ -148,54 +185,95 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                 var sel = $("#ddlModule option:selected").text();
                 if (sel === 'Supplier')
                 {
-                    sessionStorage.setItem("DashboardSwitch", "Supplier");
+               
+                    $scope.DashboardSwitch = 'Supplier';
+                    sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
                     $scope.ManageLog('Login Supplier Section');
                     if (d.LoginType == '5') {
-                        sessionStorage.setItem("DashboardSwitch", "AdminSupplier");
+                       
+                        $scope.DashboardSwitch = 'AdminSupplier';
+                        sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
                         showMsg("You have logged in successfully.", "green");
-                        $scope.ManageLog(d.LoginId, 'Login');
+                      
+                        setTimeout(() => {
+                            $scope.ManageLog(d.LoginId, 'Login');
+                        }, 0);
                         $scope.Captcha = ''; $scope.GetCaptchaImage();
                         return window.location.href = '../Dashboard/VBoard';
-                    } else { return window.location.href = '../Dashboard/Dashboard'; sessionStorage.setItem("DashboardSwitch", "Supplier"); }
-                } 
+                    } else {
+                        $scope.DashboardSwitch = 'Supplier';
+                        sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                        return window.location.href = '../Dashboard/Dashboard';
+                      
+                    }
+                }
                 if (sel === 'Retail')
                 {
                     if (d.LoginType == '5') {
-                        sessionStorage.setItem("DashboardSwitch", "AdminRetail");
+                        $scope.DashboardSwitch = 'AdminRetail';
+                        sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
                         showMsg("You have logged in successfully.", "green");
-                        $scope.ManageLog(d.LoginId, 'Login');
+                     
+                        setTimeout(() => {
+                            $scope.ManageLog(d.LoginId, 'Login as Admin');
+                        }, 0);
                         $scope.Captcha = ''; $scope.GetCaptchaImage();
                         return window.location.href = '../RetailSection/NewLocationDashboard';
                     }
                     else {
 
-                        sessionStorage.setItem("DashboardSwitch", "Retail");
+                        
+                        $scope.DashboardSwitch = 'Retail';
+                        sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
                         $scope.ManageLog('Login Retail Section');
+                        setTimeout(() => {
+                            $scope.ManageLog(d.LoginId, 'Login in Retail');
+                        }, 0);
                         return
                         window.location.href = '../RetailSection/NewLocationDashboard';
 
                     }
-                   
+
                 }
                 showMsg("Please select module!", "red"); resetBtn();
                 return;
             }
+            if ([6].includes(d.LoginType)) {
+                startLoginMessages();
+
+                $scope.DashboardSwitch = 'Supplier';
+                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                setTimeout(() => {
+                    $scope.ManageLog(d.LoginId, 'Login Supplier Section');
+                }, 0);
+                return window.location.href = d.Path;
+            }
 
             if (d.LoginType == '2' && $scope.Username == 'UserAA') {
                 startLoginMessages();
-                sessionStorage.setItem("DashboardSwitch", "Supplier");
-                $scope.ManageLog('Login Supplier Section');
+               
+                $scope.DashboardSwitch = 'Supplier';
+                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                setTimeout(() => {
+                    $scope.ManageLog(d.LoginId, 'Login Supplier Section');
+                }, 0);
                 return window.location.href = '../Dashboard/NewVendorDashboard';
             }
             else if (d.LoginType == '2' && $scope.Username != 'UserAA') {
                 startLoginMessages();
-                sessionStorage.setItem("DashboardSwitch", "Supplier");
-                $scope.ManageLog('Login Supplier Section');
+              
+                $scope.DashboardSwitch = 'Supplier';
+                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                setTimeout(() => {
+                    $scope.ManageLog(d.LoginId, 'Login Supplier Section');
+                }, 0);
                 return window.location.href = '../Dashboard/Dashboard';
             }
             else {
                 // fallback
-                $scope.ManageLog('Login Supplier Section');
+                setTimeout(() => {
+                    $scope.ManageLog(d.LoginId, 'Login Supplier Section');
+                }, 0);
                 window.location.href = '../Dashboard/Dashboard';
             }
 
@@ -230,10 +308,8 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
             if (d.LoginId == "-11") { showMsg("Session Active, Please Close All Sessions!", "red"); resetBtn(); $scope.GetCaptchaImage(); return; }
 
             if ([1, 2, 3, 4].includes(d.LoginType)) {
-                if ($scope.ModuleId === '3' || $scope.ModuleId === '4') return $scope.RedirectToModule();
-              /*  showMsg("You have logged in successfully.", "green");*/
-                startLoginMessages();
-                $scope.ManageLog('Login successfully');
+                if ($scope.ModuleId === '3' || $scope.ModuleId === '4') return $scope.RedirectToModule(); 
+                startLoginMessages(); 
                 $scope.Captcha = ''; $scope.GetCaptchaImage();
                 window.location.href = '../Dashboard/Dashboard';
             }
@@ -387,13 +463,8 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
 
         $("#msgbox").fadeIn().delay(6000).fadeOut(function () { $("#lblmsg").html(''); });
     };
-
-    // ManageLog
-    //$scope.ManageLog = function (ClientId, Activity) {
-    //    postObj("../RetailSection/MaintainLog", { Action: 3, ClientId: ClientId, Activity: Activity }).then(function () { });
-    //};
-
-    // single resetBtn definition
+ 
+ 
     function resetBtn() { $('#btnLogin').html('Login').prop('disabled', false); }
 
      
@@ -402,13 +473,13 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
         var messages = [
             { text: "You have logged in successfully.", color: "green" },
             { text: "Finalizing setup...", color: "gray" },
-            { text: "Initializing your session...", color: "teal" },
-            { text: "Applying your settings...", color: "purple" },
-            { text: "Loading your dashboard...", color: "green" },
-            { text: "Fetching your personalized data...", color: "orange" }, 
-            { text: "Syncing latest updates...", color: "teal" },
-            { text: "Preparing reports and widgets...", color: "brown" },
-            { text: "Almost ready for you...", color: "purple" }, 
+            //{ text: "Initializing your session...", color: "teal" },
+            //{ text: "Applying your settings...", color: "purple" },
+            //{ text: "Loading your dashboard...", color: "green" },
+            //{ text: "Fetching your personalized data...", color: "orange" }, 
+            //{ text: "Syncing latest updates...", color: "teal" },
+            //{ text: "Preparing reports and widgets...", color: "brown" },
+            //{ text: "Almost ready for you...", color: "purple" }, 
             { text: "Welcome! Taking you to dashboard now.", color: "green" }
         ];
 

@@ -54,7 +54,8 @@ namespace BAL
 
         public string LoginId { get; set; }
         public string LoginType { get; set; }
-
+        public string Documents { get; set; }
+        public string VendorId { get; set; }
 
 
         public string ConvertDataTableToXml(DataTable dt)

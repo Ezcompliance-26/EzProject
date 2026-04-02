@@ -7,6 +7,7 @@
     $scope.Password = '';
     $scope.ResetControl();
     $scope.AllParty = function (PartyType) {
+ 
         $scope.PartyType = PartyType;
         $scope.UserNames = '';
         $scope.Password = '';
@@ -52,6 +53,9 @@
             collectionobj.EmailId = $scope.EmailId;
             if ($scope.PartyType == 'Vendor') {
                 collectionobj.LoginType = 2;
+            }
+            if ($scope.PartyType == 'VendorAdmin') {
+                collectionobj.LoginType = 6;
             }
             if ($scope.PartyType == 'Auditor') {
                 collectionobj.LoginType = 3;

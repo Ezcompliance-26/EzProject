@@ -487,7 +487,7 @@
 
     $scope.selectedColumns = [
         "SrNo",
-        "StoreCode", "RefStoreCode", "StoreName", "CompleteAddress", 
+        "StoreCode", "RefStoreCode", "StoreName", "CompleteAddress", "ProposedDate",
         "RegionName", "ZipCode", "StoreManagerName",
         "StoreManagerMobileNo", "StoreManagerEmail", "AreaManagerName", "AreaManagerMobileNo",
         "AreaManagerEmail", "ZonalManagerName", "ZonalManagerMobileNo", "ZonalManagerEmail",
@@ -500,6 +500,7 @@
         "SrNo": "Sr No",
         "StoreCode": "Location Code",
         "RefStoreCode": "Ref.LocationCode",
+        "ProposedDate": "Proposed Date",
         "StoreName": "Unit Name",
         "CompleteAddress": "Complete Address",
         "RegionName": "Region",
@@ -1454,7 +1455,7 @@
                 formData.append("PollutionRemark", $scope.PollutionRemark);
                 formData.append("OwnershipDocRemark", $scope.OwnershipDocRemark);
                 formData.append("AdditionalDocRemark", $scope.AdditionalDocRemark);
-                formData.append("LoginId", sessionStorage.getItem('LoginId'));
+                formData.append("LoginId",  LoginId);
 
                 $.ajax({
                     url: "../RetailSection/InsertUpdateDelStoreMaster",
@@ -2821,7 +2822,7 @@
         modal.show();
     };
     $scope.EditStore = function (StoreCode) {
-        $scope.showLoader();
+        
         $scope.TriggerEditButton();
         $scope.StoreCode = StoreCode;
         $scope.GETAdditionalDoc();
@@ -2839,8 +2840,12 @@
         $scope.ComplianceCategory = selectedStore.ComplianceCategory;
         $scope.onComplianceChange('1');
         $scope.CompleteAddress = selectedStore.CompleteAddress;
-        $scope.ProposedDate = new Date(selectedStore.ProposedDate);
-        $scope.StartDate = new Date(selectedStore.ProposedDate);
+        //$scope.ProposedDate = selectedStore.ProposedDate;/*new Date(selectedStore.ProposedDate);*/
+        //$scope.StartDate = selectedStore.ProposedDate /*new Date(selectedStore.ProposedDate);*/
+
+
+        $scope.ProposedDate = selectedStore.ProposedDate ? moment(selectedStore.ProposedDate, "DD-MM-YYYY").toDate() : null;
+        $scope.StartDate = selectedStore.ProposedDate ? moment(selectedStore.ProposedDate, "DD-MM-YYYY").toDate() : null;
         $scope.StoreLocation = selectedStore.StoreLocation;
 
         $scope.Country = selectedStore.CountryId;

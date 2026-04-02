@@ -6,7 +6,7 @@ namespace BAL
     {
         public string ActionType { get; set; }
         public string UserId { get; set; }
-
+        public string SiteId { get; set; }
         public DateTime? LeavingDate { get; set; }
         public string PFAccount { get; set; }
         public string SuperVisior1 { get; set; }

@@ -1850,5 +1850,19 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
+        public ActionResult LabourSetup()
+        {
+            return View();
+        }
+        public ActionResult SecretarialSetup()
+        {
+            return View();
+        }
+        public ActionResult Secreterialsetup()
+        {
+            return View();
+        }
+
+        
     }
 }

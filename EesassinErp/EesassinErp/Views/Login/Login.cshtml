@@ -11,7 +11,8 @@
     <link rel="stylesheet" type="text/css" href="../login/style.css">
     <link href="@Url.Content("~/Content/plugins/assets/css/font-icons/font-awesome.css")" rel="stylesheet" media="all" />
     <script type="text/javascript" src="@Url.Content("~/scripts/jquery-1.12.4.js")"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @*<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>*@
+    <script src="~/scripts/Rootfile/sweetalert.min.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/angular.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/myjslib/loginController.js?Ver="+ViewBag.Version+"")"></script>
 
@@ -35,8 +36,7 @@
         }
 
             .swal-button:hover {
-                background-color: #28a745;
-                !important /* green */
+                background-color: #28a745;    
                 color: white;
             }
 
@@ -81,7 +81,7 @@
 
             $('#username-input').keypress(function (event) {
                 if (event.which == 13) { // 13 = Enter key
-                  //  event.preventDefault(); // prevent default form submit (optional)
+                    //  event.preventDefault(); // prevent default form submit (optional)
 
                     $('#btnStep1Login').click(); // trigger button click
                     $('#username-input').focus();
@@ -105,7 +105,11 @@
             });
         });
     </script>
-
+    <script>
+        if (window.top !== window.self) {
+            window.top.location.href = window.location.href;
+        }
+    </script>
 </head>
 <body>
      
@@ -125,8 +129,13 @@
                     </div>
                     <div class="slide slide2">
                         <div class="gif-wrapper">
-                            <img src="../login/image/gif2.gif" class="gif" alt="EzCompliance" />
+                            @*<img src="../login/image/gif2.gif" class="gif" alt="EzCompliance" />*@
+                            <video autoplay muted loop playsinline style="width:100%">
+                                <source src="/login/gif.mp4" type="video/mp4">
+                            </video>
                         </div>
+
+
                     </div>
                     <!-- Slide 3 - Testimonials -->
                     <div class="slide slide3">

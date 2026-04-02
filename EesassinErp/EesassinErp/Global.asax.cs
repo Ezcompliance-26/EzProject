@@ -23,6 +23,11 @@ namespace EesassinErp
         protected void Application_Error()
         {
             Exception ex = Server.GetLastError();
+
+            if (Request.Url.AbsolutePath.Contains("DownloadMat"))
+            {
+                return; // 👈 PDF requests को skip करो
+            }
             Server.ClearError();
             Response.Redirect("~/Error/Error");
         }
@@ -38,7 +43,11 @@ namespace EesassinErp
         {
             string controller = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
             string action = filterContext.ActionDescriptor.ActionName;
-
+            // 👇 1. Sabse pehle DownloadMat skip karo
+            if (filterContext.HttpContext.Request.Url.AbsolutePath.Contains("DownloadMat"))
+            {
+                return;
+            }
             // Login aur Error controller skip kare
             if (controller.Equals("Login", StringComparison.OrdinalIgnoreCase) ||
                 controller.Equals("Error", StringComparison.OrdinalIgnoreCase))
@@ -58,7 +67,7 @@ namespace EesassinErp
                     Data = new
                     {
                         Result = "SessionExpired",
-                        Message = "Your multiple login detected."
+                        Message = "Session Expire"
                     },
                     JsonRequestBehavior = JsonRequestBehavior.AllowGet
                 };

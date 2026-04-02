@@ -374,6 +374,24 @@ namespace DAL
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("USP_LoginTable", CommandType.StoredProcedure, param.ToArray()));
         }
+
+
+        public async Task<string> IUDEmployeeDoc(BCommon obj)
+        {
+            //obj.UserName = CryptoHelper.Encrypt(obj.UserName);
+            //obj.Password = CryptoHelper.Encrypt(obj.Password);
+
+
+            var param = new List<SqlParameter>
+            {
+                    new SqlParameter("@Action",obj.Action),
+                    new SqlParameter("@LoginId",obj.LoginId),
+                   new SqlParameter("@Documents", string.IsNullOrEmpty(obj.Documents) ? "" : obj.Documents),
+                    new SqlParameter("@VendorId", obj.VendorId),
+                    new SqlParameter("@result",""),
+            };
+            return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("USP_LoginTable", CommandType.StoredProcedure, param.ToArray()));
+        }
         public DataTable GetUserByUserName(string userName)
         {
             var param = new List<SqlParameter>
@@ -390,6 +408,18 @@ namespace DAL
             {
                 new SqlParameter("@Action", obj.Action),
                 new SqlParameter("@LoginId",obj.LoginId)
+
+            };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("USP_LoginTable", CommandType.StoredProcedure, param.ToArray()));
+            return dt;
+        }
+        public async Task<DataTable> GetempRegistration(BCommon obj)
+        {
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter("@Action", obj.Action),
+                new SqlParameter("@LoginId",obj.LoginId),
+                  new SqlParameter("@Id",obj.Id)
 
             };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("USP_LoginTable", CommandType.StoredProcedure, param.ToArray()));

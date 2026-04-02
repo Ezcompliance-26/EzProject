@@ -1,4 +1,4 @@
-﻿app.NewLicenseRequestMasterController = function ($scope, $element, $filter, myService) {
+﻿app.NewLicenseRequestMasterController = function ($scope, $element, $filter, myService, $timeout ) {
     $scope.currentPage = 1;
     $scope.pageSize = 10;
     $scope.totalItems = 0;
@@ -91,10 +91,7 @@
         };
         var getData = myService.methode('POST', ("../RetailSection/LicenseRequestData"), JSON.stringify(collectionobj));
         getData.then(function (response) {
-            $scope.DocumentPending = response.data.Result[0].DocumentPending;
-            //$scope.NotApplied = response.data.Result[0].NotApplied;
-            //$scope.Issued = response.data.Result[0].Issued;
-            //$scope.NotIssued = response.data.Result[0].NotIssued;
+            $scope.DocumentPending = response.data.Result[0].DocumentPending; 
             $scope.RenewalPending = response.data.Result[0].RenewalPending;
             $scope.selectAll = false;
         })
@@ -146,6 +143,8 @@
 
             $scope.$applyAsync(function () {
                 $scope.LicenseRequestList = response.data.Result || [];
+             
+                
                 $scope.totalItems = $scope.LicenseRequestList.length > 0
                     ? $scope.LicenseRequestList[0].TotalRecords
                     : 0;
@@ -964,18 +963,18 @@
                     $scope.LMDocDate = license.DocumentDate
 
                     $scope.LMAppStatus = license.ApplicationStatus;
-                    $scope.AppDate = license.ApplicationDate ? moment(license.ApplicationDate, "MM/DD/YYYY").toDate() : null;
+                    $scope.AppDate = license.ApplicationDate ? moment(license.ApplicationDate, "DD-MM-YYYY").toDate() : null;
                     $scope.LMAppcopy = license.UploadApplicationCopy;
                     $scope.LMchallanCopy = license.UploadChallanCopy;
                     $scope.LMFeeCopy = license.UploadFeesCopy;
                     $scope.LMLicenseStatus = license.LicenseStatus;
-                    $scope.LMLicensDate = license.IssuedDate ? moment(license.IssuedDate, "MM/DD/YYYY").toDate() : null;
+                    $scope.LMLicensDate = license.IssuedDate ? moment(license.IssuedDate, "DD-MM-YYYY").toDate() : null;
                     $scope.LMLicenseNumber = license.LicenseNumber;
 
                     $scope.LMMachineNumber = license.MachineNumber;
-                    $scope.LMValidityStartDate = license.ValidityStartDate ? moment(license.ValidityStartDate, "MM/DD/YYYY").toDate() : null;
+                    $scope.LMValidityStartDate = license.ValidityStartDate ? moment(license.ValidityStartDate, "DD-MM-YYYY").toDate() : null;
 
-                    $scope.LMValidityEndDate = license.ValidityEndDate ? moment(license.ValidityEndDate, "MM/DD/YYYY").toDate() : null;
+                    $scope.LMValidityEndDate = license.ValidityEndDate ? moment(license.ValidityEndDate, "DD-MM-YYYY").toDate() : null;
                     $scope.LMLicenseCategory = license.LicenseCategory;
                     $scope.LMLicenseCopy = license.UploadLicenseCopy;
                     $scope.LMAmendmentCopy = license.UploadAmendmentCopy;
@@ -992,12 +991,12 @@
                     $scope.LMoverday = license.PaymentOverDueDate;
                     $scope.LMActualCost = license.ActualCost;
                     $scope.LMGovtFees = license.GovtFees;
-                    $scope.LMRenewalRequestDate = moment(license.RenewalRequestDate
-                        ? moment(license.RenewalRequestDate, ["DD/MM/YYYY", "DD/MM/YY"]).toDate()
-                        : null).format('DD-MM-YYYY');
-
-                    $scope.LMRenewalStartDate = license.RenewalStartDate ? moment(license.RenewalStartDate, "MM/DD/YYYY").toDate() : null;
-                    $scope.LMRenewalEnddate = license.RenewalEndDate ? moment(license.RenewalEndDate, "MM/DD/YYYY").toDate() : null;
+                    //$scope.LMRenewalRequestDate = moment(license.RenewalRequestDate
+                    //    ? moment(license.RenewalRequestDate, ["lDD/MM/YYYY", "DD/MM/YY"]).toDate()
+                    //    : null).format('DD-MM-YYYY');
+                    $scope.LMRenewalRequestDate = license.RenewalRequestDate ? moment(license.RenewalRequestDate, "DD-MM-YYYY").toDate() : null;
+                    $scope.LMRenewalStartDate = license.RenewalStartDate ? moment(license.RenewalStartDate, "DD-MM-YYYY").toDate() : null;
+                    $scope.LMRenewalEnddate = license.RenewalEndDate ? moment(license.RenewalEndDate, "DD-MM-YYYY").toDate() : null;
                     $scope.LMRenewalStatus = license.RenewalStatus;
                     $scope.LMUploadRenewedCopy = (license.UploadRenewedCopy !== 'undefined' && license.UploadRenewedCopy !== null) ? license.UploadRenewedCopy : "";
                     $scope.LMLStatus = license.LStatus;
@@ -2528,6 +2527,131 @@
             });
     };
 
+    $scope.page = 1;
+    $scope.pageSize = 50;
+    $scope.isLoadingMore = false;
+    $scope.isAllLoaded = false;
+
+    $scope.LicenseNameList = [];
+
+    $scope.LicenseListForNAme = [];
+
+    $scope.LoadMoreLicense = function () {
+        $scope.page += 20;
+        $scope.AllLicense();
+    };
+
+    $timeout(function () {
+        debugger;
+        var el = document.getElementById("licenseDropdown");
+
+        if (!el) return;
+
+        el.addEventListener("scroll", function () {
+
+            if (el.scrollTop + el.clientHeight >= el.scrollHeight - 5) {
+
+                if (!$scope.isLoadingMore && !$scope.isAllLoaded) {
+                    $scope.$apply(function () {
+                        $scope.LoadMoreLicense();
+                    });
+                }
+            }
+
+        });
+
+    }, 500);
+   
+    $scope.AllLicense = function (reset = false) {
+         
+        if (reset) {
+            $scope.page = 1;
+            $scope.LicenseNameList = [];
+            $scope.isAllLoaded = false;
+        }
+
+        if ($scope.isLoadingMore || $scope.isAllLoaded) return;
+
+        $scope.isLoadingMore = true;
+        $scope.showLoader();
+
+        var collectionobj = {
+            Action: 4,
+            UserId: LoginId,
+            PageNo: $scope.page,
+            PageSize: $scope.pageSize 
+        };
+
+        myService.methode('POST', "../RetailSection/LicenseRequestData", collectionobj)
+            .then(function (response) {
+
+                var data = response.data?.Result || [];
+
+                if (data.length < $scope.pageSize) {
+                    $scope.isAllLoaded = true; // no more data
+                }
+
+                // ✅ append (IMPORTANT)
+                $scope.LicenseNameList = $scope.LicenseNameList.concat(data);
+
+                // optional unique filter
+                $scope.GetUniqueLicenses();
+
+            }).finally(function () {
+                $scope.isLoadingMore = false;
+                $scope.hideLoader();
+            });
+    };
+
+    $scope.LicenseNameList = [];
+
+     
+
+    $scope.GetUniqueLicenses = function () {
+
+        var licenses = $scope.LicenseNameList.map(function (item) {
+            return item.Lname;
+        });
+         
+        $scope.LicenseListForNAme = [...new Set(licenses)];
+    };
+ 
+     
+    $scope.FilteredData = [];
+    $scope.StatusList = [];
+
+    $scope.NewFilterByStatus = function (status) {
+
+        $scope.LicenseRequestList = $scope.SelectedLicenseData.filter(function (item) {
+
+            var appStatus = (item.ApplicationStatus || '').trim().toLowerCase();
+            var licStatus = (item.LicenseStatus || '').trim().toLowerCase();
+            var selected = (status || '').trim().toLowerCase();
+
+            return appStatus === selected || licStatus === selected;
+        });
+    };
+
+    $scope.SelectedLicenseData = [];
+
+    $scope.FilterFileSta = function (lic) {
+
+        $scope.SelectedLicenseData = $scope.LicenseNameList.filter(function (item) {
+            return item.Lname === lic;
+        });
+
+        $scope.FilteredData = angular.copy($scope.SelectedLicenseData);
+
+        var statusArr = [];
+
+        $scope.SelectedLicenseData.forEach(function (item) {
+            statusArr.push(item.ApplicationStatus);
+            statusArr.push(item.LicenseStatus);
+        });
+
+        $scope.StatusList = [...new Set(statusArr.filter(x => x))];
+    }; 
+ 
     
     $scope.DownloadAllFiles = function (fieldName, label) {
         $scope.showLoader();
@@ -2552,14 +2676,31 @@
             return;
         }
 
-        var selectedStoreCodes = new Set();
+        //var selectedStoreCodes = new Set();
+
+        //selectedCheckboxes.forEach(cb => {
+        //    try {
+        //        var scope = angular.element(cb).scope();
+        //        var license = scope.license;
+        //        if (license && license.StoreCode) {
+        //            selectedStoreCodes.add(license.StoreCode);
+        //        }
+        //    } catch (e) {
+        //        console.warn("Failed to get license from checkbox:", e);
+        //    }
+        //});
+
+
+
+        var selectedLicenseIds = new Set();
 
         selectedCheckboxes.forEach(cb => {
             try {
                 var scope = angular.element(cb).scope();
                 var license = scope.license;
-                if (license && license.StoreCode) {
-                    selectedStoreCodes.add(license.StoreCode);
+
+                if (license && license.Id) {
+                    selectedLicenseIds.add(license.Id); // ✅ change here
                 }
             } catch (e) {
                 console.warn("Failed to get license from checkbox:", e);
@@ -2572,12 +2713,34 @@
                     var fileDataList = response.data.Result;
                     var filesToDownload = [];
 
+                    //fileDataList.forEach(function (license)
+                    //{
+                    //    // ✅ Only download if selected
+                    //    if (selectedStoreCodes.has(license.StoreCode)) {
+                    //        var fileUrl = license[fieldName];
+                    //        if (fileUrl && fileUrl !== "null" && fileUrl !== undefined && fileUrl !== "undefined" && fileUrl.trim() !== "") {
+
+                                
+                    //            var fileName = sanitizeFileName(`${license.StoreCode}_${license.LicenseName}__${license.RefStoreCode}__${label}.pdf`);
+                    //            filesToDownload.push({ url: fileUrl, name: fileName });
+                    //        }
+                    //    }
+                    //});
+
+
                     fileDataList.forEach(function (license) {
-                        // ✅ Only download if selected
-                        if (selectedStoreCodes.has(license.StoreCode)) {
+
+                        // ✅ Only exact selected license
+                        if (selectedLicenseIds.has(license.Id)) {
+
                             var fileUrl = license[fieldName];
-                            if (fileUrl && fileUrl !== "null") {
-                                var fileName = sanitizeFileName(`${license.StoreCode}_${license.LicenseName}__${license.RefStoreCode}__${fieldName}.pdf`);
+
+                            if (typeof fileUrl === "string" && fileUrl.trim() && fileUrl !== "null" && fileUrl !== "undefined") {
+
+                                var fileName = sanitizeFileName(
+                                    `${license.StoreCode}_${license.LicenseName}__${license.RefStoreCode}__${label}.pdf`
+                                );
+
                                 filesToDownload.push({ url: fileUrl, name: fileName });
                             }
                         }
@@ -2746,6 +2909,7 @@
         UserPassword: "User Password",
         MobileNumber: "Mobile Number",
         EmailId: "Email Id",
+        MachineNumber: "Machine Number",
         TentativeDate: "Tentative Date",
         LicenseCost: "License Cost",
         GovtFees: "Govt Fees"
@@ -2872,7 +3036,8 @@
   
 
 
-    $scope.ExportToExcel = function (dataToExport) {
+    $scope.ExportToExcel = function (dataToExport)
+    {
 
         var filteredData = dataToExport.map(function (row) {
             var filteredRow = {};

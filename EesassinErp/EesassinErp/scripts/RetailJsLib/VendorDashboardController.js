@@ -37,7 +37,27 @@
 
         });
     };
+    $scope.PPIds = [];
 
+    $scope.SelectAll = function () {
+        angular.forEach($scope.VendorList, function (item) {
+            item.Selected = $scope.IsAllSelected;
+        });
+        $scope.UpdateSelection();
+    };
+
+    $scope.UpdateSelection = function () {
+        $scope.PPIds = [];
+
+        angular.forEach($scope.VendorList, function (item) {
+            if (item.Selected) {
+                $scope.PPIds.push(item.PartyId);
+            }
+        });
+
+        // Check if all selected
+        $scope.IsAllSelected = $scope.VendorList.every(x => x.Selected);
+    };
     $scope.SelectIndustry = function (industry) {
 
         $scope.SelectedIndustry = industry;
@@ -273,7 +293,7 @@
             collectionobj.Name = $scope.UName;
             collectionobj.ContactNo = $scope.ContactNumber;
         collectionobj.EmailId = $scope.UserEmail;
-        collectionobj.LoginType = 2
+        collectionobj.LoginType = $scope.VendorType;
         collectionobj.LoginId = LoginId
             collectionobj.BranchCode = '001';
             collectionobj.Action = 7;
@@ -355,6 +375,13 @@
             }, 200);
             return;
         }
+        if ($scope.VendorType == '' || $scope.VendorType == undefined) {
+            showMsgBox('999', 'Alert', 'Vendor Type  Should be Required', 'warning', 'btn-warning')
+            setTimeout(function () {
+                document.getElementById("VendorType").focus();
+            }, 200);
+            return;
+        }
         var upper = 0,
             lower = 0,
             number = 0,
@@ -382,6 +409,152 @@
         }
 
     }
+
+    //-----------------------------------------employee Compliance doc
+    $scope.Saveempdoc = function () {
+
+        // Validation
+        if (!$scope.DocumentName || $scope.DocumentName.trim() === "") { 
+            showMsgBox('999', 'Alert', 'Please enter Document Name', 'warning', 'btn-warning') 
+            return;
+        }
+
+        // Optional: length validation
+        if ($scope.DocumentName.length < 3) {
+            showMsgBox('999', 'Document Name must be at least 3 characters', 'warning', 'btn-warning') 
+            return;
+        }
+
+        $scope.showLoader();
+
+        var collectionobj = {};
+        collectionobj.UserName = $scope.DocumentName;
+        collectionobj.Action = 30;
+        collectionobj.MapId = MapId;
+
+        var getData = myService.methode(
+            'POST',
+            "../DashBoard/IUDUserRegistration",
+            '{obj:' + JSON.stringify(collectionobj) + '}'
+        );
+
+        getData.then(function (response) {
+            if (showMsgBox(response.data.Result)) {
+                $scope.BindEmpDocumentList();
+            }
+        });
+    }
+
+
+
+    $scope.BindEmpDocumentList = function () {
+        var collectionobj = {};
+        collectionobj.Action = 31;
+        collectionobj.LoginId = MapId;
+        collectionobj.Id= $scope.SelectedVendorId
+        
+        var getData = myService.methode('POST', "../DashBoard/GetempRegistration", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            $scope.EmpDocumentList = response.data.Result;
+
+            // 🔥 Auto check fix
+            $scope.EmpDocumentList.forEach(function (item) {
+                item.IsCheck = item.IsCheck === true || item.IsCheck === "true";
+            }); 
+        });
+    }
+
+    $scope.checkAll = false;
+
+    $scope.toggleAll = function () {
+        angular.forEach($scope.EmpDocumentList, function (item) {
+            item.IsCheck = $scope.checkAll;
+        });
+    };
+
+    $scope.BindVendorListList = function ()
+    {
+        var collectionobj = {};
+        collectionobj.Action = 32;
+        collectionobj.LoginId = MapId;
+        debugger;
+        var getData = myService.methode('POST', "../DashBoard/GetUserRegistration", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            $scope.EVendorList = response.data.Result;
+        });
+    }
+    $scope.OnVendorChange = function () {
+
+        if (!$scope.SelectedVendorId) {
+            // sab uncheck
+            angular.forEach($scope.EmpDocumentList, function (x) {
+                x.IsCheck = false;
+            });
+            return;
+        }
+
+        var obj = {
+            VendorId: $scope.SelectedVendorId,
+            Action: 31 // mapping get action
+        };
+
+        var getData = myService.methode(
+            'POST',
+            "../DashBoard/IUDUserRegistration",
+            '{obj:' + JSON.stringify(obj) + '}'
+        );
+
+        getData.then(function (res) {
+
+            var mappedDocs = res.data.List || []; 
+            angular.forEach($scope.EmpDocumentList, function (x) {
+                x.IsCheck = false; 
+                var match = mappedDocs.find(m => m.DocumentId == x.DocumentId);
+                if (match) {
+                    x.IsCheck = true;
+                }
+            });
+
+        });
+    };
+
+    $scope.SaveVendorDocumentMapping = function () {
+
+        if (!$scope.SelectedVendorId) {
+          
+            showMsgBox('999', 'Please select vendor', 'warning', 'btn-warning')
+            return;
+            return;A
+        }
+
+        var selectedDocs = $scope.EmpDocumentList
+            .filter(x => x.IsCheck)
+            .map(x => x.Id);   
+
+        var obj = {
+            VendorId: $scope.SelectedVendorId,
+            Documents: selectedDocs.join(','),   
+            Action: 33
+        };
+
+        var getData = myService.methode(
+            'POST',
+            "../DashBoard/IUDEmployeeDoc",
+            '{obj:' + JSON.stringify(obj) + '}'
+        );
+
+        getData.then(function (res) {
+            if (showMsgBox(res.data.Result)) {
+                $scope.BindEmpDocumentList();
+            }
+        });
+    };
+    //---------------------------------------------------------------
+
+
+
+
+
     $scope.SelectedPartyId = null;
     $scope.SelectedPartyName = null;
 
@@ -554,7 +727,7 @@
    
     $scope.Vendorshow = function (input, imgfileid) {
 
-        var maxSizeKB = 1024; 
+        var maxSizeKB = 500; 
         var maxSizeBytes = maxSizeKB * 1024;
 
         if (input.files && input.files[0]) {
@@ -564,8 +737,10 @@
             // 🔴 File Size Validation
             if (file.size > maxSizeBytes) {
 
+                var fileSizeKB = (file.size / 1024).toFixed(2);
+
                 showMsgBox('999', 'Alert',
-                    'File size should not exceed 1 MB (1024 KB)',
+                    'Selected file is ' + fileSizeKB + ' KB. Max allowed is 500 KB',
                     'warning', 'btn-warning');
 
                 // Reset file input
@@ -591,19 +766,298 @@
         }
     };
 
-    $scope.AfterSave = function () {
 
+    $scope.RCCopyShow = function (input, imgfileid) {
+
+        var maxSizeKB = 500;
+        var maxSizeBytes = maxSizeKB * 1024;
+
+        if (input.files && input.files[0]) {
+
+            var file = input.files[0];
+
+            // 🔴 File Size Validation
+            if (file.size > maxSizeBytes) {
+
+                var fileSizeKB = (file.size / 1024).toFixed(2);
+
+                showMsgBox('999', 'Alert',
+                    'Selected file is ' + fileSizeKB + ' KB. Max allowed is 500 KB',
+                    'warning', 'btn-warning');
+
+                // Reset file input
+                input.value = "";
+                $scope.RCCopy = null;
+
+                return;
+            }
+
+            // ✅ If size valid
+            var filerdr = new FileReader();
+
+            filerdr.onload = function (e) {
+                $scope.RCCopy = e.target.result;
+                $scope.$applyAsync();
+            };
+
+            filerdr.readAsDataURL(file);
+        }
+        else {
+            $scope.RCCopy = null;
+            $scope.$applyAsync();
+        }
+    };
+    $scope.RenewalRCCopyShow = function (input, imgfileid) {
+
+        var maxSizeKB = 500;
+        var maxSizeBytes = maxSizeKB * 1024;
+
+        if (input.files && input.files[0]) {
+
+            var file = input.files[0];
+
+            // 🔴 File Size Validation
+            if (file.size > maxSizeBytes) {
+
+                var fileSizeKB = (file.size / 1024).toFixed(2);
+
+                showMsgBox('999', 'Alert',
+                    'Selected file is ' + fileSizeKB + ' KB. Max allowed is 500 KB',
+                    'warning', 'btn-warning');
+
+                // Reset file input
+                input.value = "";
+                $scope.RenewalRCCopy = null;
+
+                return;
+            }
+
+            // ✅ If size valid
+            var filerdr = new FileReader();
+
+            filerdr.onload = function (e) {
+                $scope.RenewalRCCopy = e.target.result;
+                $scope.$applyAsync();
+            };
+
+            filerdr.readAsDataURL(file);
+        }
+        else {
+            $scope.RenewalRCCopy = null;
+            $scope.$applyAsync();
+        }
+    };
+    $scope.BOCWRCCopyShow = function (input, imgfileid) {
+
+        var maxSizeKB = 500;
+        var maxSizeBytes = maxSizeKB * 1024;
+
+        if (input.files && input.files[0]) {
+
+            var file = input.files[0];
+
+            // 🔴 File Size Validation
+            if (file.size > maxSizeBytes) {
+
+                var fileSizeKB = (file.size / 1024).toFixed(2);
+
+                showMsgBox('999', 'Alert',
+                    'Selected file is ' + fileSizeKB + ' KB. Max allowed is 500 KB',
+                    'warning', 'btn-warning');
+
+                // Reset file input
+                input.value = "";
+                $scope.BOCWRCCopy = null;
+
+                return;
+            }
+
+            // ✅ If size valid
+            var filerdr = new FileReader();
+
+            filerdr.onload = function (e) {
+                $scope.BOCWRCCopy = e.target.result;
+                $scope.$applyAsync();
+            };
+
+            filerdr.readAsDataURL(file);
+        }
+        else {
+            $scope.BOCWRCCopy = null;
+            $scope.$applyAsync();
+        }
+    };
+    $scope.RenewalBOCWRCCopyShow = function (input, imgfileid) {
+
+        var maxSizeKB = 500;
+        var maxSizeBytes = maxSizeKB * 1024;
+
+        if (input.files && input.files[0]) {
+
+            var file = input.files[0];
+
+            // 🔴 File Size Validation
+            if (file.size > maxSizeBytes) {
+
+                var fileSizeKB = (file.size / 1024).toFixed(2);
+
+                showMsgBox('999', 'Alert',
+                    'Selected file is ' + fileSizeKB + ' KB. Max allowed is 500 KB',
+                    'warning', 'btn-warning');
+
+                // Reset file input
+                input.value = "";
+                $scope.RenewalBOCWRCCopy = null;
+
+                return;
+            }
+
+            // ✅ If size valid
+            var filerdr = new FileReader();
+
+            filerdr.onload = function (e) {
+                $scope.RenewalBOCWRCCopy = e.target.result;
+                $scope.$applyAsync();
+            };
+
+            filerdr.readAsDataURL(file);
+        }
+        else {
+            $scope.RenewalBOCWRCCopy = null;
+            $scope.$applyAsync();
+        }
+    };
+
+
+    $scope.DeleteVendorSite = function (deleteid) {
+        deleteConfirmbox(
+            "Do you want to delete this record?",
+            function () {
+                $scope.Deletemapping(deleteid);
+            }
+        );
+    };
+
+    $scope.Deletemapping = function (deleteid) {
+
+        var collectionobj = {
+            SiteId: deleteid,
+            ActionType: 10
+        };
+
+        var getData = myService.methode(
+            'POST',
+            "../SiteManager/InsertUpdateDelSiteManager",
+            JSON.stringify(collectionobj)
+        );
+
+        getData.then(function (response) {
+            if (showMsgBox(response.data.Result)) {
+                $scope.BindVendorSiteList();
+            }
+        }, function (error) {
+            console.log(error);
+        });
+    };
+
+    $scope.edit = 0;
+
+    $scope.EditVendorSite = function (item) {
+        $scope.edit = 1;
+        // 🔹 Hidden Id
+        $scope.SiteId = item.SiteId;
+
+        // 🔹 Basic Details
+        $scope.SiteName = item.SiteName;
+        $scope.SiteAddress = item.Address;
+        $scope.LocationCode = item.LocationCode;
+        $scope.EmailId = item.EmailId;
+        $scope.MobileNo = item.ContactNo;
+        $scope.Description = item.Description;
+
+        // 🔹 Bank & Tax
+        $scope.BankDetails = item.BankDetails;
+        $scope.AccountNo = item.AccountNo;
+        $scope.Panitno = item.Panitno;
+        $scope.Gstinuin = item.Gstinuin;
+
+        // 🔹 Location
+        $scope.Pincode = item.Pincode;
+        $("#ddlcountry").val(item.CountryId);
+        $("#ddlstate").val(item.StateId);
+        $("#ddlcity").val(item.CityId);
+
+        // 🔹 Party Multi Select
+        if (item.PartyIds) {
+            $scope.PPIds = item.PartyIds.split(',').map(Number);
+
+            angular.forEach($scope.VendorList, function (x) {
+                x.Selected = $scope.PPIds.includes(x.Id);
+            });
+        }
+
+        // 🔹 Contact
+        $scope.ContactPerson = item.ContactPerson;
+        $scope.ContactMobile = item.ContactMobile;
+
+        // 🔹 CLRA
+        $scope.CLRARC = item.CLRARC;
+        $scope.CLRLIC = item.CLRLIC;
+        $scope.ValidFrom = item.ValidFrom;
+        $scope.ValidTo = item.ValidTo;
+
+        // 🔹 Manpower
+        $scope.Manpowertype = item.Manpowertype;
+        $scope.ManPowerCount = item.ManPowerCount;
+
+        // 🔹 Labour
+        $scope.NLabourOffice = item.NLabourOffice;
+        $scope.Nature = item.Nature;
+        $scope.PrincipalRegistration = item.PrincipalRegistration;
+        $scope.IssuingAuthority = item.IssuingAuthority;
+        $scope.CLRA_MaxWorkers = item.CLRA_MaxWorkers;
+        $scope.CLRA_Validity = item.CLRA_Validity;
+
+        // 🔹 Files
+        $scope.RCCopy = item.RCCopy;
+        $scope.RenewalRCCopy = item.RenewalRCCopy;
+
+        // 🔹 BOCW
+        $scope.BOCW_Reg = item.BOCW_Reg;
+        $scope.BOCW_IssuingAuth = item.BOCW_IssuingAuth;
+        $scope.BOCW_MaxWorkers = item.BOCW_MaxWorkers;
+        $scope.BOCW_Validity = item.BOCW_Validity;
+
+        $scope.BOCWRCCopy = item.BOCWRCCopy;
+        $scope.RenewalBOCWRCCopy = item.RenewalBOCWRCCopy;
+
+        // 🔹 Safety
+        $scope.VendorType = item.VendorType;
+        $scope.MaxContractors = item.MaxContractors;
+        $scope.MaxWorkersSite = item.MaxWorkersSite;
+        $scope.PPEMandatory = item.PPEMandatory;
+        $scope.PPEType = item.PPEType;
+        $scope.SafetyTraining = item.SafetyTraining;
+        $scope.SiteInduction = item.SiteInduction;
+        $scope.PoliceVerification = item.PoliceVerification;
+        $scope.IDCardRequired = item.IDCardRequired;
+
+        // 🔹 Files
+        $scope.VendorFileDoc = item.VendorFileDoc;
+        $scope.AdminFileDoc = item.AdminFileDoc;
+    };
+
+    $scope.AfterSave = function () {
+        $scope.ActionId = 0;
+        if ($scope.edit == 1) { $scope.ActionId = 2 }
+        else { $scope.ActionId = 9 }
         function setError(id, message) {
 
-            // 🔹 Remove previous errors
             $(".form-control, select").removeClass("border-danger");
 
             var element = $(id);
-
-            // 🔹 Add red bottom border
             element.addClass("border-danger");
 
-            // 🔹 Focus after small delay (important for select2 / dropdown)
             setTimeout(function () {
                 element.focus();
             }, 100);
@@ -612,24 +1066,46 @@
             return false;
         }
 
-        // 🔴 Validation
-        if (!$scope.PartyId) return setError("#ddlparty", "Party Required");
-        if (!$scope.SiteName || !$scope.SiteName.trim()) return setError("#txtSiteName", "Site Name Required");
-        if (!$scope.SiteAddress || !$scope.SiteAddress.trim()) return setError("#txtSiteAddress", "Address Required");
-        if (!$scope.MobileNo) return setError("#txtMobileNo", "Contact No Required");
-        if (!$scope.EmailId) return setError("#txtEmailId", "Email Required");
-        if (!$scope.Pincode) return setError("#txtPincode", "Pincode Required");
-        if (!$("#ddlcountry").val()) return setError("#ddlcountry", "Country Required");
-        if (!$("#ddlstate").val()) return setError("#ddlstate", "State Required");
-        if (!$("#ddlcity").val()) return setError("#ddlcity", "City Required");
 
-        // 🔹 Clear all error borders before submit
+        if ($scope.ActionId == 9) {
+            if (!$scope.PPIds || $scope.PPIds.length === 0)
+                return setError("#ddlparty", "Party Required");
+        }
+        // 🔴 Validation
+      
+
+        if (!$scope.SiteName || !$scope.SiteName.trim())
+            return setError("#txtSiteName", "Site Name Required");
+
+        if (!$scope.SiteAddress || !$scope.SiteAddress.trim())
+            return setError("#txtSiteAddress", "Address Required");
+
+        if (!$scope.MobileNo)
+            return setError("#txtMobileNo", "Contact No Required");
+
+        if (!$scope.EmailId)
+            return setError("#txtEmailId", "Email Required");
+
+        if (!$scope.Pincode)
+            return setError("#txtPincode", "Pincode Required");
+
+        if ($scope.ActionId == 9) {
+            if (!$("#ddlcountry").val())
+                return setError("#ddlcountry", "Country Required");
+
+            if (!$("#ddlstate").val())
+                return setError("#ddlstate", "State Required");
+
+            if (!$("#ddlcity").val())
+                return setError("#ddlcity", "City Required");
+        }
         $(".form-control, select").removeClass("border-danger");
 
         $scope.showLoader();
-
+       
+      
         var collectionobj = {
-            PartyId: $scope.PartyId,
+            PartyIds: $scope.PPIds.join(',') ,
             PartyType: 'Vendor',
             SiteId: $scope.hfId,
             SiteName: $scope.SiteName,
@@ -658,7 +1134,36 @@
             AdminFileDoc: $scope.AdminFileDoc,
             Manpowertype: $scope.Manpowertype,
             ManPowerCount: $scope.ManPowerCount,
-            ActionType: 1
+
+            NLabourOffice: $scope.NLabourOffice,
+            Nature: $scope.Nature,
+            PrincipalRegistration: $scope.PrincipalRegistration,
+            IssuingAuthority: $scope.IssuingAuthority,
+            CLRA_MaxWorkers: $scope.CLRA_MaxWorkers,
+            CLRA_Validity: $scope.CLRA_Validity,
+
+            RCCopy: $scope.RCCopy,
+            RenewalRCCopy: $scope.RenewalRCCopy,
+
+            BOCW_Reg: $scope.BOCW_Reg,
+            BOCW_IssuingAuth: $scope.BOCW_IssuingAuth,
+            BOCW_MaxWorkers: $scope.BOCW_MaxWorkers,
+            BOCW_Validity: $scope.BOCW_Validity,
+
+            BOCWRCCopy: $scope.BOCWRCCopy,
+            RenewalBOCWRCCopy: $scope.RenewalBOCWRCCopy,
+
+            VendorType: $scope.VendorType,
+            MaxContractors: $scope.MaxContractors,
+            MaxWorkersSite: $scope.MaxWorkersSite,
+            PPEMandatory: $scope.PPEMandatory,
+            PPEType: $scope.PPEType,
+            SafetyTraining: $scope.SafetyTraining,
+            SiteInduction: $scope.SiteInduction,
+            PoliceVerification: $scope.PoliceVerification,
+            IDCardRequired: $scope.IDCardRequired,
+            SiteId: $scope.SiteId,
+            ActionType: $scope.ActionId
         };
 
         var getData = myService.methode(
@@ -669,9 +1174,11 @@
 
         getData.then(function (response) {
             if (showMsgBox(response.data.Result)) {
+
                 $scope.BindVendorSiteList();
+                 
                 $scope.SiteName = "";
-                $scope.Address = "";
+                $scope.SiteAddress = "";
                 $scope.EmailId = "";
                 $scope.MobileNo = "";
                 $scope.Description = "";
@@ -695,10 +1202,16 @@
                 $scope.VendorFileDoc = "";
 
                 $("#txtpincode").val('');
-
+                $scope.edit = 0;
                 $scope.CountryId = "";
                 $scope.StateId = "";
-                $scope.CityId = "";
+                $scope.CityId = ""; 
+                $scope.PPIds = [];
+                $scope.IsAllSelected = false;
+
+                angular.forEach($scope.VendorList, function (item) {
+                    item.Selected = false;
+                });
             }
         });
     };
@@ -794,6 +1307,75 @@
                 <td>${x.EmailId || ''}</td>
                 <td>${x.ContactNo || ''}</td>
                 <td>${x.Address || ''}</td>
+            </tr>
+        `;
+        });
+
+        html += `
+            </tbody>
+        </table>
+    </body>
+    </html>
+    `;
+
+        printWindow.document.write(html);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+    };
+
+
+
+
+
+    $scope.PrintemployeedocList = function () {
+
+        var list = $scope.EmpDocumentList || [];
+
+        if (!list.length) {
+            alert("No data available");
+            return;
+        }
+
+        var printWindow = window.open('', '', 'height=700,width=1000');
+        var today = new Date().toLocaleString();
+
+        var html = `
+    <html>
+    <head>
+        <title>Employee Compliance Documents</title>
+        <style>
+            body { font-family: Arial; padding: 20px; }
+            h2 { text-align: center; margin-bottom: 5px; }
+            .generated { text-align: right; font-size: 12px; margin-bottom: 15px; }
+            .count { text-align: left; font-size: 12px; margin-bottom: 15px; }
+
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #000; padding: 6px; font-size: 12px; text-align:center; }
+            th { background-color: #f2f2f2; }
+        </style>
+    </head>
+    <body>
+
+        <h2>Employee Compliance Documents</h2>
+        <div class="generated">Generated On: ${today}</div>
+        <div class="count">Total Records: ${list.length}</div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Document Name</th> 
+                </tr>
+            </thead>
+            <tbody>
+     `;
+
+        list.forEach(function (x, index) {
+            html += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${x.DocumentName || ''}</td> 
             </tr>
         `;
         });

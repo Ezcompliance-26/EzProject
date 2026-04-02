@@ -11,24 +11,41 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- AngularJS Core (CDN Recommended) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-route.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-sanitize.min.js"></script>
+    @*<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-route.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-sanitize.min.js"></script>*@
+
+
+
+    <script src="~/scripts/angular.min.js"></script>
+    <script src="~/scripts/Rootfile/angular-route.min.js"></script>
+    <script src="~/scripts/angular-sanitize.min.js"></script>
+
+
+
     <script src="~/scripts/myjslib/myJs.js"></script>
     <!-- Angular Plugins -->
     <script src="@Url.Content("~/Scripts/angular-filter.min.js")"></script>
     <script src="@Url.Content("~/Scripts/angular-ui.js")"></script>
 
     <!-- TinyMCE -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.5/tinymce.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-tinymce/0.0.19/tinymce.js"></script>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/4.9.5/tinymce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-tinymce/0.0.19/tinymce.js"></script>*@
+    <script src="~/scripts/Rootfile/tinymce.js"></script>
+    <script src="~/scripts/Rootfile/tinymce.min.js"></script>
+
 
     <!-- Other Libraries -->
     <script src="@Url.Content("~/Scripts/jscolor.js")"></script>
     <script src="@Url.Content("~/Scripts/moment.js")"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>*@
+
+
+    <script src="~/scripts/Rootfile/html2pdf.bundle.min.js"></script>
+    <script src="~/Scripts/Rootfile/xlsx.full.min.js"></script>
+    <script src="~/scripts/Rootfile/jspdf.umd.min.js"></script>
 
     <!-- Your Angular App Files (ALWAYS AFTER Angular & Plugins) -->
     <script src="@Url.Content("~/Scripts/myjslib/app.js?Ver="+ViewBag.Version+"")"></script>
@@ -36,14 +53,25 @@
     <script src="@Url.Content("~/Scripts/myjslib/controller.js?Ver="+ViewBag.Version+"")"></script>
     <script src="@Url.Content("~/Scripts/myjslib/ddlBindings.js?Ver="+ViewBag.Version+"")"></script>
     <script src="@Url.Content("~/Scripts/myjslib/Authorization.js?Ver="+ViewBag.Version+"")"></script>
+
+
+
+
     @*<script src="~/scripts/RetailJsLib/RController.js"></script>*@
     <script src="~/scripts/managebyuser.js"></script>
 
     <!-- CSS Files -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    @*<script src="~/scripts/Rootfile/bootstrap.bundle.min.js"></script>
+    <link href="~/scripts/Rootfile/bootstrap-icons.css" rel="stylesheet" />*@
+
+
+
     <link rel="stylesheet" href="~/CommonDashboard/Style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">*@
+<link href="~/scripts/Rootfile/all.min.css" rel="stylesheet" />
     <link href="~/Content/plugins/vendors/bower_components/sweetalert/dist/sweetalert.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -66,6 +94,7 @@
         button.swal2-confirm.swal2-styled {
             background-color: #fd670b !important;
         }
+
         .loader-overlay {
             position: fixed;
             top: 0;
@@ -111,9 +140,40 @@
             border-radius: 0 !important;
         }
     </style>
+
+    <style>
+      #cover-spin {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.7);
+    z-index: 9999;
+    display: none;
+}
+
+#cover-spin::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 4px solid #ddd;
+    border-top: 4px solid #F37437;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+ 
+    </style> 
 </head>
 <body>
-
+    <div id="cover-spin"></div>
     <!-- FULL PAGE PROCESS OVERLAY -->
     <div ng-show="showLogoutProcess"
          style="position:fixed; top:0; left:0; width:100%; height:100%;
@@ -169,15 +229,15 @@
         <div class="nav-left">
             <img src="~/CommonDashboard/assets/icons/logo.svg" alt="Logo" class="logo" />
         </div>
-
-        <!-- Center nav items -->   
+      
+        <!-- Center nav items -->
         <div class="nav-center d-flex gap-3">
             <!-- Dashboard dropdown -->
             <div class="dropdown">
                 <button class="dropbtn d-flex align-items-center" type="button" data-bs-toggle="dropdown">
                     Dashboard
                     <img src="~/CommonDashboard/assets/icons/DropArrow.svg" class="arrow ms-1" alt="Arrow">
-                </button> 
+                </button>
                 <ul class="dropdown-menu">
                     <li ng-if="isDashboardLoading">
                         <i class="fa fa-spinner fa-spin"></i> Loading...
@@ -276,7 +336,8 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="/RetailSection/Userprofile" ng-click="ManageLog('open Profile page')">Profile</a></li>
-                    <li><a class="dropdown-item" ng-show="loginType==5" ng-click="switchtoadmin();ManageLog('open Switch to Admin page')">Switch to Admin</a></li>
+                    <li><a class="dropdown-item" ng-show="loginType==5" ng-click="switchtoRetailadmin();ManageLog('open Switch to  Retail Admin page')">Switch to Admin</a></li>
+                    <li><a class="dropdown-item" ng-show="loginType==6" ng-click="switchtovendoradmin();ManageLog('open Switch to vendor Admin page')">Switch to Admin</a></li>
                     <li><a class="dropdown-item" ng-click="Logout();ManageLog('Logout from Retail Section')">Logout</a></li>
                 </ul>
             </div>
@@ -337,9 +398,15 @@
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+    @*<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+        <script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>*@
+
+
+    <script src="~/scripts/Rootfile/bootstrap.bundle.min.js"></script>
+    <script src="~/scripts/Rootfile/pdf.min.js"></script>
+    <script src="~/scripts/Rootfile/tesseract.min.js"></script>
+
     <script src="~/Content/plugins/vendors/bower_components/sweetalert/dist/sweetalert.js"></script>
     <script src="~/CommonDashboard/script.js"></script>
 </body>

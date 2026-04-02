@@ -44,5 +44,8 @@ namespace BAL
         public string FormIX { get; set; }
         public string WaterTestReport { get; set; }
         public string UFile { get; set; }
+
+
+        public string EmpCode { get; set; }
     }
 }

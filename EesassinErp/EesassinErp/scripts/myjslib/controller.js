@@ -1,25 +1,25 @@
-﻿ 
-var LoginId = sessionStorage.getItem("LoginId");
-debugger;
-var MapId = sessionStorage.getItem("MapId");
-var MapUser = sessionStorage.getItem("MapUser");
-var BranchCode = sessionStorage.getItem("BranchCode");
-var loginType = sessionStorage.getItem("loginType") || sessionStorage.getItem("LoginType");
-var LastLogin = sessionStorage.getItem("LastLogin");
-var Desig = sessionStorage.getItem("Desig");
-var Name = sessionStorage.getItem("Name");
-var BranchName = sessionStorage.getItem("BranchName");
-var ContactNo = sessionStorage.getItem("ContactNo");
-var CreatedOn = sessionStorage.getItem("CreatedOn");
-var Photo = sessionStorage.getItem("Photo");
-var UserName = sessionStorage.getItem("UserName");
-var BranchAddress = sessionStorage.getItem("BranchAddress"); 
-var SessionId = sessionStorage.getItem("SessionId");
-var REmailId = sessionStorage.getItem("EmailId");
-var Loadonce = sessionStorage.getItem("Loadonce"); 
-var PartyEMail = sessionStorage.getItem("PartyEMail");
-var DashboardSwitch = sessionStorage.getItem("DashboardSwitch");
+﻿var user = JSON.parse(sessionStorage.getItem("userSession")) || {};
+ 
 
+var LoginId = user.LoginId;
+var MapId = user.MapId;
+var MapUser = user.MapUser;
+var BranchCode = user.BranchCode;
+var loginType = user.LoginType;
+var LastLogin = user.LastLogin;
+var Desig = user.Desig;
+var Name = user.Name;
+var BranchName = user.BranchName;
+var ContactNo = user.ContactNo;
+var CreatedOn = user.CreatedOn;
+var Photo = user.Photo;
+var UserName = user.UserName;
+var BranchAddress = user.BranchAddress;
+var SessionId = user.SessionId;
+var REmailId = user.EmailId;
+var Loadonce = user.Loadonce;
+var PartyEMail = user.PartyEMail;
+var DashboardSwitch = sessionStorage.getItem("DashboardSwitch");
 
 var AuditorId = '';
 var VendorId = '';
@@ -39,7 +39,27 @@ if (loginType == "-1" || loginType == null || loginType == "" || loginType == "n
 
     window.top.location.href = '../Login/Login';
 }
- 
+app.directive('fileModel', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+
+            var model = $parse(attrs.fileModel);
+            var modelSetter = model.assign;
+
+            element.bind('change', function () {
+
+                scope.$apply(function () {
+                    modelSetter(scope, element[0].files[0]); // ✅ direct assign
+                });
+
+                if (attrs.onChange) {
+                    scope.$eval(attrs.onChange); // ✅ trigger function
+                }
+            });
+        }
+    };
+}]);
 
 var sessionPopupShown = false;
 var sessionPopupShown = false;
@@ -66,7 +86,7 @@ app.factory('sessionInterceptor', function ($q) {
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 }).then(function () {
-                    window.location.href = "/Login/Login";
+                    window.top.location.href = '../Login/Login';
                 });
 
                 return $q.reject(response);
@@ -89,7 +109,7 @@ app.factory('sessionInterceptor', function ($q) {
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 }).then(function () {
-                    window.location.href = "/Login/Login";
+                    window.top.location.href = '../Login/Login';
                 });
             }
 
@@ -129,6 +149,8 @@ app.directive('fileModel', function ($parse) {
 });
 
 
+
+ 
 app.directive('endDateAfterStart', function () {
     return {
         restrict: 'A',
@@ -993,7 +1015,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     };
 
     $scope.Logout = function () {
-     
+        sessionStorage.removeItem("MenuPermission");
         sessionStorage.clear();
         $scope.logoutWithProcess();  
         var collectionobj = {
@@ -2421,140 +2443,239 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
         }, 3200);
     };
-  $scope.BindDashboard = function () {
+  //$scope.BindDashboard = function () {
+  //    let MenuBinding = sessionStorage.getItem("MenuBinding");
 
-        var collectionobj = {}; 
-        collectionobj.PartyID = MapId;
-        collectionobj.UserId = LoginId;
-        if ($scope.DashboardSwitch == 'AdminSupplier' || $scope.DashboardSwitch=='Supplier') {
-            collectionobj.Action = 7;
-        } else { collectionobj.Action = 1;} 
+  //    if (MenuBinding) {
+  //        console.log("Using cached MenuBinding");
+
+  //        let data = JSON.parse(cachedMenu);
+  //        $scope.MenuAddDynamic = data;
+
+  //        applyFlags(data); // alag function bana lo flags ke liye
+  //        return;
+  //    }
+
+  //      var collectionobj = {}; 
+  //      collectionobj.PartyID = MapId;
+  //      collectionobj.UserId = LoginId;
+  //    if ($scope.DashboardSwitch == 'AdminSupplier' || $scope.DashboardSwitch == 'Supplier')
+  //    {
+  //          collectionobj.Action = 7;
+  //      } else { collectionobj.Action = 1;} 
+  //      $scope.isDashboardLoading = true;
+
+  //      var getData = myService.methode(
+  //          'POST',
+  //          "../Retail/bindingDashboard",
+  //          '{obj:' + JSON.stringify(collectionobj) + '}'
+  //      );
+
+  //      getData.then(function (response) {
+  //          debugger;
+
+  //          if (response.data && response.data.Result) {
+
+  //              $scope.UserDetail = response.data.Result.Table || [];
+  //              $scope.DahboardList = response.data.Result.Table1 || [];
+
+  //              if ($scope.UserDetail.length > 0) {
+  //                  $scope.UserName = $scope.UserDetail[0].UserName;
+  //                  $scope.Status = $scope.UserDetail[0].Status;
+  //                  $scope.LastLogin = $scope.UserDetail[0].LastLogin;
+  //                  $scope.LoginType = $scope.UserDetail[0].Desig;
+  //                  $scope.Photo = ($scope.UserDetail[0].Photo &&
+  //                      $scope.UserDetail[0].Photo.trim() !== '')
+  //                      ? $scope.UserDetail[0].Photo
+  //                      : '../content/profile.png';
+  //              }
+  //          }
+
+  //      }).catch(function (error) {
+  //          console.error("Dashboard load error", error);
+  //      }).finally(function () {
+          
+  //          $scope.isDashboardLoading = false;
+  //      });
+  //  };
+
+
+    $scope.BindDashboard = function () {
+
+        let cachedMenuBinding = sessionStorage.getItem("MenuBinding");
+
+        // ✅ CACHE USE
+        if (cachedMenuBinding) {
+            let data1 = JSON.parse(cachedMenuBinding);
+
+            $scope.UserDetail = data1.UserDetail || [];
+            $scope.DahboardList = data1.DahboardList || [];
+
+            // 👉 menu yahi se
+            $scope.MenuAddDynamic = $scope.DahboardList;
+
+            applyFlags($scope.MenuAddDynamic);
+            setUserInfo();
+            return;
+        }
+
+        var collectionobj = {
+            PartyID: MapId,
+            UserId: LoginId,
+            Action: ($scope.DashboardSwitch == 'AdminSupplier' || $scope.DashboardSwitch == 'Supplier') ? 7 : 1
+        };
+
         $scope.isDashboardLoading = true;
 
-        var getData = myService.methode(
-            'POST',
-            "../Retail/bindingDashboard",
-            '{obj:' + JSON.stringify(collectionobj) + '}'
-        );
+        myService.methode('POST', "../Retail/bindingDashboard", collectionobj)
+            .then(function (response) {
 
-        getData.then(function (response) {
-            debugger;
+                var res = response.data?.Result;
 
-            if (response.data && response.data.Result) {
+                if (res) {
+                    $scope.UserDetail = res.Table || [];
+                    $scope.DahboardList = res.Table1 || [];
 
-                $scope.UserDetail = response.data.Result.Table || [];
-                $scope.DahboardList = response.data.Result.Table1 || [];
+                    // 👉 menu same list se
+                    $scope.MenuAddDynamic = $scope.DahboardList;
 
-                if ($scope.UserDetail.length > 0) {
-                    $scope.UserName = $scope.UserDetail[0].UserName;
-                    $scope.Status = $scope.UserDetail[0].Status;
-                    $scope.LastLogin = $scope.UserDetail[0].LastLogin;
-                    $scope.LoginType = $scope.UserDetail[0].Desig;
-                    $scope.Photo = ($scope.UserDetail[0].Photo &&
-                        $scope.UserDetail[0].Photo.trim() !== '')
-                        ? $scope.UserDetail[0].Photo
-                        : '../content/profile.png';
+                    // ✅ CACHE STORE
+                    sessionStorage.setItem("MenuBinding", JSON.stringify({
+                        UserDetail: $scope.UserDetail,
+                        DahboardList: $scope.DahboardList
+                    }));
+
+                    applyFlags($scope.MenuAddDynamic);
+                    setUserInfo();
                 }
-            }
 
-        }).catch(function (error) {
-            console.error("Dashboard load error", error);
-        }).finally(function () {
-          
-            $scope.isDashboardLoading = false;
-        });
+            }).finally(function () {
+                $scope.isDashboardLoading = false;
+            });
+
+        function setUserInfo() {
+            if ($scope.UserDetail.length > 0) {
+                var u = $scope.UserDetail[0];
+
+                $scope.UserName = u.UserName;
+                $scope.Status = u.Status;
+                $scope.LastLogin = u.LastLogin;
+                $scope.LoginType = u.Desig;
+                $scope.Photo = (u.Photo && u.Photo.trim() !== '')
+                    ? u.Photo
+                    : '../content/profile.png';
+            }
+        }
     };
     $scope.BindMenus = function () {
-        var collectionobj = {};
-        debugger;
-        collectionobj.Id = LoginId;
-        collectionobj.Action = 5
+
+        let cachedMenu = sessionStorage.getItem("MenuPermission");
+
+        if (cachedMenu) {
+            console.log("Using cached menu");
+
+            let data = JSON.parse(cachedMenu);
+            $scope.MenuAddDynamic = data;
+
+            applyFlags(data); // alag function bana lo flags ke liye
+            return;
+        }
+
        
-        var getDetails = myService.methode('POST', ("../RetailSection/RetailRolePermisssion"), JSON.stringify(collectionobj));
-        getDetails.then(function (response)
-        {
-            angular.forEach(response.data.Result, function (menu)
-            {
+        var collectionobj = {};
+        collectionobj.Id = LoginId;
+        collectionobj.Action = 5;
 
-                // original URL ko token me convert kar do
+        var getDetails = myService.methode(
+            'POST',
+            "../RetailSection/RetailRolePermisssion",
+            JSON.stringify(collectionobj)
+        );
+
+        getDetails.then(function (response) {
+
+            angular.forEach(response.data.Result, function (menu) {
                 menu.OriginalUrl = menu.MenuUrl;
-
                 menu.MenuUrl = "/p/" + btoa(menu.MenuUrl);
             });
+
+            // ✅ cache me save karo
+            sessionStorage.setItem("MenuPermission", JSON.stringify(response.data.Result));
+
             $scope.MenuAddDynamic = response.data.Result;
-            let row = $scope.MenuAddDynamic.find(x => x.SectionName === 'Store Compliance Status');
-            let row1 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Location Master');
-            let row2 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Finance Common Compliance');
-            let row3 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Secretarial Common Compliance');
-            let row4 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Compliance Doc');
-            let row5 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Manage Project');
-            let row6 = $scope.MenuAddDynamic.find(x => x.SectionName === 'License Master');
-            let row7 = $scope.MenuAddDynamic.find(x => x.SectionName === 'Labour Compliance');
 
+            applyFlags(response.data.Result);
+        });
+    };
+    function applyFlags(menuData) {
 
-            if (row) {
-                console.log("ViewFlag =", row.ViewFlag);
-                $scope.SCS_ViewFlag = row.ViewFlag
-                $scope.SCS_AllowEditFlag = row.ViewFlag
-                $scope.SCS_EditFlag = row.ViewFlag
-                $scope.SCS_DeleteFlag = row.ViewFlag
-                $scope.SCS_UploadFlag = row.ViewFlag
-                $scope.SCS_DownloadFlag = row.ViewFlag
+        let row = menuData.find(x => x.SectionName === 'Store Compliance Status');
+        let row1 = menuData.find(x => x.SectionName === 'Location Master');
+        let row2 = menuData.find(x => x.SectionName === 'Finance Common Compliance');
+        let row3 = menuData.find(x => x.SectionName === 'Secretarial Common Compliance');
+        let row4 = menuData.find(x => x.SectionName === 'Compliance Doc');
+        let row5 = menuData.find(x => x.SectionName === 'Manage Project');
+        let row6 = menuData.find(x => x.SectionName === 'License Master');
+        let row7 = menuData.find(x => x.SectionName === 'Labour Compliance');
 
-            }
+        if (row) {
+            $scope.SCS_ViewFlag = row.ViewFlag;
+            $scope.SCS_AllowEditFlag = row.ViewFlag;
+            $scope.SCS_EditFlag = row.ViewFlag;
+            $scope.SCS_DeleteFlag = row.ViewFlag;
+            $scope.SCS_UploadFlag = row.ViewFlag;
+            $scope.SCS_DownloadFlag = row.ViewFlag;
+        }
 
-            if (row1) {
-                $scope.SMF_EditFlag = row1.EditFlag;
-                $scope.SMF_ViewFlag = row1.ViewFlag;
-                $scope.SM_DeleteFlag = row1.DeleteFlag;
-                $scope.SM_UploadFlag = row1.UploadFlag;
-                $scope.SM_DownloadFlag = row1.DownloadFlag;
-                $scope.SM_VerifyFlag = row1.VerifyFlag;
-                $scope.SM_NewStoreFlag = row1.NewStoreFlag;
+        if (row1) {
+            $scope.SMF_EditFlag = row1.EditFlag;
+            $scope.SMF_ViewFlag = row1.ViewFlag;
+            $scope.SM_DeleteFlag = row1.DeleteFlag;
+            $scope.SM_UploadFlag = row1.UploadFlag;
+            $scope.SM_DownloadFlag = row1.DownloadFlag;
+            $scope.SM_VerifyFlag = row1.VerifyFlag;
+            $scope.SM_NewStoreFlag = row1.NewStoreFlag;
+        }
 
-            }
-            if (row2) {
-                $scope.FINAETUP_Flag = row2.ViewFlag;
-            }
-            if (row3) {
-                $scope.SECRETUP_Flag = row3.ViewFlag;
-                $scope.Entity_Flag = row3.ViewFlag;
+        if (row2) {
+            $scope.FINAETUP_Flag = row2.ViewFlag;
+        }
 
-            }
-            if (row4) {
-                $scope.CD_ViewFlag = row4.ViewFlag;
-                $scope.CD_EditFlag = row4.EditFlag;
-                $scope.CD_DeleteFlag = row4.DeleteFlag;
-                $scope.CD_UploadFlag = row4.UploadFlag;
-                $scope.CD_DownloadFlag = row4.DownloadFlag;
-                $scope.CD_VerifyFlag = row4.VerifyFlag;
+        if (row3) {
+            $scope.SECRETUP_Flag = row3.ViewFlag;
+            $scope.Entity_Flag = row3.ViewFlag;
+        }
 
-            }
-            if (row5) {
-                $scope.MP_ViewFlag = row5.ViewFlag;
-            }
-            if (row6) {
-                $scope.Licenseurl = row6.url;
-                $scope.LR_ViewFlag = row6.ViewFlag;
-                $scope.LM_ViewFlag = row6.ViewFlag;
-                $scope.LM_EditFlag = row6.EditFlag;
-                $scope.LM_DeleteFlag = row6.DeleteFlag;
-                $scope.LM_UploadFlag = row6.UploadFlag;
-                $scope.LM_DownloadFlag = row6.DownloadFlag;
-                $scope.LM_VerifyFlag = row6.VerifyFlag;
-            }
-            if (row7) {
-                $scope.PFUpload = row7.UploadFlag;
-                $scope.PFVerify = row7.VerifyFlag;
-                
-            }
-            else {
-                console.log("Row not found");
-            }
+        if (row4) {
+            $scope.CD_ViewFlag = row4.ViewFlag;
+            $scope.CD_EditFlag = row4.EditFlag;
+            $scope.CD_DeleteFlag = row4.DeleteFlag;
+            $scope.CD_UploadFlag = row4.UploadFlag;
+            $scope.CD_DownloadFlag = row4.DownloadFlag;
+            $scope.CD_VerifyFlag = row4.VerifyFlag;
+        }
 
+        if (row5) {
+            $scope.MP_ViewFlag = row5.ViewFlag;
+        }
 
-        })
+        if (row6) {
+            $scope.Licenseurl = row6.url;
+            $scope.LR_ViewFlag = row6.ViewFlag;
+            $scope.LM_ViewFlag = row6.ViewFlag;
+            $scope.LM_EditFlag = row6.EditFlag;
+            $scope.LM_DeleteFlag = row6.DeleteFlag;
+            $scope.LM_UploadFlag = row6.UploadFlag;
+            $scope.LM_DownloadFlag = row6.DownloadFlag;
+            $scope.LM_VerifyFlag = row6.VerifyFlag;
+        }
+
+        if (row7) {
+            $scope.PFUpload = row7.UploadFlag;
+            $scope.PFVerify = row7.VerifyFlag;
+        }
     }
+   
     $scope.VerifyPassword = function () {
         var collectionobj = {};
         collectionobj.BranchCode = '001';
@@ -2594,16 +2715,15 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
 
 
-    $scope.switchtoadmin = function () {
-        if ($scope.DashboardSwitch == 'AdminRetail')
-        {
-            window.top.location.href = '../Dashboard/Board';
-        }
-        else
-        {
-            window.top.location.href = '../Dashboard/VBoard';
-        }
+    $scope.switchtoRetailadmin = function () {
+        window.top.location.href = '../Dashboard/Board';
     }
+
+    $scope.switchtovendoradmin = function () {
+        window.top.location.href = '../Dashboard/VBoard';
+    }
+
+     
     $scope.ClearControl = function (flag) { 
         if (flag == 1) {
             $scope.ResetControl(flag);
@@ -2769,6 +2889,27 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         $scope.Status = Status
         $scope.Closedby = Closedby
     }
+
+    $scope.DownloadFileC = function (documentPath, fileName) {
+
+        var url = "/RetailSection/DownloadFile?filePath="
+            + encodeURIComponent(documentPath)
+            + "&fileName="
+            + encodeURIComponent(fileName || '');
+
+        var link = document.createElement("a");
+        link.href = url;
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+    $scope.ViewFileC = function (documentPath) {
+
+        var url = "/RetailSection/ViewFile?filePath=" + encodeURIComponent(documentPath);
+
+        window.open(url, '_blank', 'width=900,height=600,scrollbars=yes,resizable=yes');
+    };
     $scope.ApproveClose = function (css,Id) {
          
             var collectionobj = {};
@@ -3653,7 +3794,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         app.AdminDashboardcontroller($scope, $element, $filter, myService, $http);
     }
     if (IsFunctionDefined('app.NewLicenseRequestMasterController')) {
-        app.NewLicenseRequestMasterController($scope, $element, $filter, myService);
+        app.NewLicenseRequestMasterController($scope, $element, $filter, myService,$timeout);
     }
     if (IsFunctionDefined('app.RetailClientStoreMappingController')) {
         app.RetailClientStoreMappingController($scope, $element, $filter, myService);
@@ -3673,8 +3814,20 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     if (IsFunctionDefined('app.Sacretrialcompliancecontroller')) {
         app.Sacretrialcompliancecontroller($scope, $element, $filter, myService, $http, $sce);
     }
+    if (IsFunctionDefined('app.WithoutInvoiceController')) {
+        app.WithoutInvoiceController($scope, $element, $filter, myService);
+    }
+    if (IsFunctionDefined('app.NewEmployeeController')) {
+        app.NewEmployeeController($scope, $element, $filter, myService, $http,$timeout);
+    }
+
+    if (IsFunctionDefined('app.NewVendorRegistrationController')) {
+        app.NewVendorRegistrationController($scope, $element, $filter, myService, $http);
+    }
+    if (IsFunctionDefined('app.DeclarationController')) {
+        app.DeclarationController($scope, $element, $filter, $sce, myService);
+    }
     
-     
 })
 
 function IsFunctionDefined(functionName) {

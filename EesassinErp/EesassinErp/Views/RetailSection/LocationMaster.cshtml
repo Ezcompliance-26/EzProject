@@ -322,7 +322,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">Location Area in sq.ft. <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control validate" id="txtSQFTStoreArea" ng-model="SQFTStoreArea" onblur="validateNumberAndDecimalOnly('#txtSQFTStoreArea')" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
+                                    <input type="text" class="form-control validate" id="txtSQFTStoreArea" ng-model="SQFTStoreArea" onblur="validateNumberAndDecimalOnly('#txtSQFTStoreArea')"  onkeyup="var val = $(this).val().replace(/[^0-9.]/g, '');var parts = val.split('.');if (parts.length > 2) {  val = parts[0] + '.' + parts.slice(1).join('');}$(this).val(val);"/>
                                 </div>
 
                                 @*<div class="col-md-3">
@@ -766,7 +766,7 @@
                             </button>
                             <ul class="dropdown-menu">
 
-                                <li ng-repeat="x in RegionNameList"><a class="dropdown-item" href="#" ng-click="setRegion(x)"> {{x}}</a></li>
+                                <li ng-repeat="x in RegionNameList  | orderBy"><a class="dropdown-item" href="#" ng-click="setRegion(x)"> {{x}}</a></li>
                             </ul>
                         </div>
 
@@ -775,7 +775,7 @@
                                 State
                             </button>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="x in StateNameList"><a class="dropdown-item" href="#" ng-click="setState(x)"> {{x}}</a></li>
+                                <li ng-repeat="x in StateNameList | orderBy"><a class="dropdown-item" href="#" ng-click="setState(x)"> {{x}}</a></li>
                             </ul>
                         </div>
 
@@ -784,7 +784,7 @@
                                 City
                             </button>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="x in CityNameList"><a class="dropdown-item" href="#" ng-click="setCity(x)"> {{x}}</a></li>
+                                <li ng-repeat="x in CityNameList | orderBy"><a class="dropdown-item" href="#" ng-click="setCity(x)"> {{x}}</a></li>
                             </ul>
                         </div>
                         <div class="dropdown">
@@ -793,7 +793,7 @@
                             </button>
                             <ul class="dropdown-menu">
 
-                                <li ng-repeat="x in StoreNameList"><a class="dropdown-item" href="#" ng-click="setStore(x)"> {{x}}</a></li>
+                                <li ng-repeat="x in StoreNameList | orderBy"><a class="dropdown-item" href="#" ng-click="setStore(x)"> {{x}}</a></li>
                             </ul>
                         </div>
                         <div class="dropdown">
@@ -801,7 +801,7 @@
                                 Year
                             </button>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="x in YearList">
+                                <li ng-repeat="x in YearList | orderBy">
                                     <a class="dropdown-item" ng-click="setyear(x)"> {{x}}</a>
                                 </li>
                             </ul>
@@ -812,7 +812,7 @@
                                 Month
                             </button>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="m in MonthList">
+                                <li ng-repeat="m in MonthList | orderBy">
                                     <a class="dropdown-item" href="" ng-click="setmonth(m)">
                                         {{m}}
                                     </a>
@@ -859,6 +859,7 @@
                                     <th>Location Code</th>
                                     <th>Ref. Location Code</th>
                                     <th>Unit Name</th>
+                                    @*<th>Proposed Date</th>*@
                                     <th>Category</th>
                                     <th>State</th>
                                     <th>City</th>
@@ -876,6 +877,7 @@
 
                                     <td>{{x.RefStoreCode}}</td>
                                     <td>{{x.StoreName}}</td>
+                                    @*<td>{{x.ProposedDate}}</td>*@
                                     <td>{{x.CategoryName}}</td>
 
                                     <td>
@@ -1408,19 +1410,22 @@
                         <ul class="doc-list text-start px-4">
 
                             <li ng-repeat="x in Sidelicence" class="d-flex justify-content-between align-items-center">
-
-                                <!-- License Name -->
                                 <span><b>{{x.LicenseName}}</b></span>
+                               
+                                <div>
+                                    <a ng-if="x.UploadLicenseCopy && x.UploadLicenseCopy != 'null' && x.UploadLicenseCopy != 'undefined'"
+                                       href="javascript:void(0)"
+                                       class="icon-link me-2"
+                                       ng-click="ViewFileC(x.UploadLicenseCopy,x.LicenseName)">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a ng-if="x.UploadLicenseCopy && x.UploadLicenseCopy != 'null' && x.UploadLicenseCopy != 'undefined'"
+                                       href="javascript:void(0)"
+                                       ng-click="DownloadFileC(x.UploadLicenseCopy,x.LicenseName)">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                </div>
 
-                                <!-- Eye Icon -->
-                                <a ng-if="x.ISUPLOAD!='-1'"
-                                   href="{{x.UploadLicenseCopy}}"
-                                   target="_blank"
-                                   class="icon-link"
-                                   ng-click="ManageLog('View ' + x.LicenseName + ', Store name ' + SetStore)">
-                                    <i class="fa fa-eye"></i>
-                                </a>
-                                <a ng-if="x.ISUPLOAD!='-1'" href="{{x.UploadLicenseCopy}}" download><span class="browtext"><i class="fa fa-download"></i></span></a>
                             </li>
                         </ul>
 
@@ -2584,5 +2589,4 @@
 
 <link href="~/Masters/LocationMaster/style.css" rel="stylesheet" />
 <script src="~/Masters/LocationMaster/script.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+ 
