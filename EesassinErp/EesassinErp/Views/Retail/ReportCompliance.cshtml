@@ -117,18 +117,8 @@
                                         <div>
 
                                             <div>
-                                                <div class="mt-2">
-                                                    <button type="button"
-                                                            class="btn btn-success mb-2"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#bulkDownloadModal">
-                                                        <i class="fa fa-download"></i> Bulk Download Docs
-                                                    </button>
-                                                    <p>{{ downloadAlertMessage }}</p>
-                                                    <p>{{ downloadMessage }}</p>
-                                                    <p>{{downloadSkipMessage}}</p>
-                                                </div>
                                                 <div class="row g-3 align-items-end">
+
 
                                                     <!-- State -->
                                                     <div class="col-md-2">
@@ -149,8 +139,8 @@
                                                             <select id="ddlComplianceCategory" class="select2 form-control validate" ng-model="ComplianceCategory" ng-change="BindStore()">
                                                                 <option value="">Select Compliance</option>
                                                                 @*<option value="1">Store</option>
-                        <option value="2">Warehouse</option>
-                        <option value="3">Factory</option>*@
+                                                                    <option value="2">Warehouse</option>
+                                                                    <option value="3">Factory</option>*@
                                                                 <option value="4">Establishment</option>
                                                                 @*<option value="5">Contractor</option>*@
                                                             </select>
@@ -252,13 +242,12 @@
                                                     </div>
 
 
-
-
-
-
-
-
-
+                                                    <button type="button"
+                                                            class="btn btn-success mb-2"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#bulkDownloadModal">
+                                                        <i class="fa fa-download"></i> Bulk Download Docs
+                                                    </button>
 
 
                                                 </div>
@@ -283,9 +272,9 @@ padding:10px;">
                                             <table class="table table-bordered table-striped" style="width:100%;">
                                                 <thead>
                                                     <tr>
-                                                        @*<th>
+                                                        <th>
                                                             <input type="checkbox" ng-model="selectAll" ng-click="toggleAll()" />
-                                                        </th>*@
+                                                        </th>
                                                         <th>DocumentName</th>
                                                         <th>DocumentType</th>
                                                         <th>Act</th>
@@ -297,7 +286,7 @@ padding:10px;">
                                                     </tr>
                                                     <!-- Search Inputs -->
                                                     <tr>
-                                                        @*<th></th>*@
+                                                        <th></th>
                                                         <th><input type="text" class="form-control" placeholder="Search DocumentName" ng-model="search.DocumentName"></th>
                                                         <th><input type="text" class="form-control" placeholder="Search DocumentType" ng-model="search.DocumentType"></th>
                                                         <th><input type="text" class="form-control" placeholder="Search Act" ng-model="search.Act"></th>
@@ -310,9 +299,9 @@ padding:10px;">
                                                 </thead>
                                                 <tbody>
                                                     <tr ng-repeat="x in DocumentList | filter:customFilter">
-                                                        @*<td>
+                                                        <td>
                                                             <input type="checkbox" ng-model="x.isSelected" ng-change="updateSelection()" />
-                                                        </td>*@
+                                                        </td>
                                                         <td>{{x.DocumentName}}</td>
                                                         <td>{{x.DocumentType}}</td>
                                                         <td class="text-center">{{x.Act}}</td>
@@ -483,17 +472,15 @@ padding:10px;">
                     </div>
                 </div>
             </div>
-           
+
             <!-- 🔹 Footer -->
             <div class="modal-footer">
-
                 <button type="button"
                         class="btn btn-success"
                         ng-click="DownloadSelected()"
                         data-bs-dismiss="modal">
                     <i class="fa fa-download"></i> Download
                 </button>
-
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>

@@ -454,9 +454,7 @@
                                     <th>Renewal End Date</th>
                                     <th>Renewal Status</th>
                                     <th>Upload Renewed License</th>
-                                    <th @*ng-if="loginType==1"*@
-                                        ><p @*ng-if="loginType==1"*@
-                                            >Action</p></th>
+                                    <th ng-if="loginType==1"><p ng-if="loginType==1">Action</p></th>
                                     <th ng-show="IsExecuter == 'Admin'"><p>Delete</p></th>
                                 </tr>
 
@@ -514,7 +512,7 @@
                                     </td>
                                     <td>
                                         <div id="UploadApplicationCopy{{$index}}" ng-disabled="{{IsValid}}">
-                                            <label class="vdoc" ng-hide="license.LStatus==2||license.LStatus==4">
+                                            <label class="vdoc" ng-hide="license.LStatus==2||license.LStatus==4||{{loginType}}==4">
                                                 Browse&nbsp;
                                                 <input id="license{{$index+1}}" class="pagerlink" type="file" style="display:none" ng-model="license.UploadApplicationCopy" onchange="angular.element(this).scope().uploadFile('UploadApplicationCopy', this)" ng-required="isChallanCopyMandatory" />
                                             </label>
@@ -525,7 +523,7 @@
                                     </td>
                                     <td>
                                         <div id="ChallanCopy{{$index}}" ng-disabled="{{IsValid}}">
-                                            <label class="vdoc" ng-hide="license.LStatus==2||license.LStatus==4">
+                                            <label class="vdoc" ng-hide="license.LStatus==2||license.LStatus==4||{{loginType}}==4">
                                                 Browse&nbsp;
                                                 <input id="UploadChallanCopy{{$index+1}}" type="file" style="display:none" ng-model="license.UploadChallanCopy" onchange="angular.element(this).scope().uploadFile('UploadChallanCopy', this)" ng-required="isChallanCopyMandatory" />
                                             </label>
@@ -537,7 +535,7 @@
 
                                     <td>
                                         <div id="FeesCopy{{$index+1}}" ng-disabled="{{IsValid}}">
-                                            <label class="vdoc" ng-hide="license.LStatus==2||license.LStatus==4">
+                                            <label class="vdoc" ng-hide="license.LStatus==2||license.LStatus==4||{{loginType}}==4">
                                                 Browse&nbsp;
                                                 <input id="UploadFeesCopy{{$index+1}}" type="file" style="display:none" ng-model="license.UploadFeesCopy" onchange="angular.element(this).scope().uploadFile('UploadFeesCopy', this)" />
                                             </label>
@@ -565,10 +563,9 @@
 
                                         <div ng-disabled="{{IsValid}}">
 
-                                            <label class="vdoc" ng-hide="license.LStatus==2||license.LStatus==4">
+                                            <label class="vdoc" ng-hide="license.LStatus==2||license.LStatus==4||{{loginType}}==4">
                                                 Browse&nbsp;
-                                                <input id="UploadLicenseCopy{{$index+1}}" type="file" style="display:none" ng-model="license.UploadLicenseCopy" onchange="angular.element(this).scope().uploadFile('UploadLicenseCopy', this)" />
-
+                                                <input id="UploadLicenseCopy{{$index+1}}" type="file" style="display:none" ng-model="UploadLicenseCopy" onchange="angular.element(this).scope().uploadFile('UploadLicenseCopy', this)" />
                                             </label>
                                             <a ng-show="license.UploadLicenseCopy||UploadLicenseCopy{{$index+1}}=='1'" ng-click="viewDocument(license.UploadLicenseCopy,'LicenseCopy');ManageLog('View License Copy Licence Name : '+license.LicenseName + ' & StoreName '+license.StoreCode)">
                                                 <i class="fa fa-download"></i>
@@ -611,8 +608,7 @@
                                     </td>
                                     <td>
                                         <div ng-disabled="{{IsValid}}">
-                                            <label class="vdoc" @*ng-if="loginType==1"*@
-                                                   ng-show="license.LStatus==4||license.LStatus==3">
+                                            <label class="vdoc" ng-if="loginType==1" ng-show="license.LStatus==4||license.LStatus==3">
                                                 Browse&nbsp;
                                                 <input id="UploadRenewedCopy{{$index+1}}" type="file" style="display:none" ng-model="license.UploadRenewedCopy" onchange="angular.element(this).scope().uploadFile('UploadRenewedCopy', this)" />
                                             </label>
@@ -627,10 +623,7 @@
                                         </div>
 
                                     </td>
-                                    <td>
-                                      
-                                        <a class="btn btn-warning" ng-click="SubmitLicense(license,$index);ManageLog('Submit License Licence Name : '+license.LicenseName + ' & StoreName '+license.StoreCode)" ng-hide="license.LStatus==2||license.LStatus==4">Save</a>
-                                    </td>
+                                    <td ng-hide="loginType == 4"><a class="btn btn-warning" ng-click="SubmitLicense(license,$index);ManageLog('Submit License Licence Name : '+license.LicenseName + ' & StoreName '+license.StoreCode)" ng-hide="license.LStatus==2||license.LStatus==4||{{loginType}}==4">Save</a></td>
                                     <td ng-show="IsExecuter == 'Admin'"><a class="btn btn-warning" ng-Click="DeleteRecord(license.LicenceRequstId);ManageLog('delete licence: '+license.LicenseName + ' & StoreName '+license.StoreCode)">Delete</a></td>
 
 
@@ -778,7 +771,7 @@
                                             <tr>
                                                 <th>
                                                     <div id="LMAppcopy" ng-disabled="{{IsValid}}">
-                                                        <label class="vdoc" ng-hide="LMLStatus==2||LMLStatus==4">
+                                                        <label class="vdoc" ng-hide="LMLStatus==2||LMLStatus==4||{{loginType}}==4">
                                                             Browse&nbsp;
                                                             <input id="LMAppcopy" class="pagerlink" type="file" style="display:none" ng-model="LMAppcopy" onchange="angular.element(this).scope().uploadFile('UploadApplicationCopy', this)" ng-required="isChallanCopyMandatory" />
                                                         </label>
@@ -789,7 +782,7 @@
                                                 </th>
                                                 <th>
                                                     <div id="LMchallanCopy" ng-disabled="{{IsValid}}">
-                                                        <label class="vdoc" ng-hide="LMLStatus==2||LMLStatus==4">
+                                                        <label class="vdoc" ng-hide="LMLStatus==2||LMLStatus==4||{{loginType}}==4">
                                                             Browse&nbsp;
                                                             <input id="LMchallanCopy" type="file" style="display:none" ng-model="LMchallanCopy" onchange="angular.element(this).scope().uploadFile('UploadChallanCopy', this)" ng-required="isChallanCopyMandatory" />
                                                         </label>
@@ -800,7 +793,7 @@
                                                 </th>
                                                 <th>
                                                     <div id="LMFeeCopy" ng-disabled="{{IsValid}}">
-                                                        <label class="vdoc" ng-hide="LMLStatus==2||LMLStatus==4">
+                                                        <label class="vdoc" ng-hide="LMLStatus==2||LMLStatus==4||{{loginType}}==4">
                                                             Browse&nbsp;
                                                             <input id="LMFeeCopy" type="file" style="display:none" ng-model="LMFeeCopy" onchange="angular.element(this).scope().uploadFile('UploadFeesCopy', this)" />
                                                         </label>
@@ -841,7 +834,7 @@
                                                 <th>
                                                     <div id="LMLicenseCopy" ng-disabled="{{IsValid}}">
 
-                                                        <label class="vdoc" ng-hide="LMLStatus==2||LMLStatus==4">
+                                                        <label class="vdoc" ng-hide="LMLStatus==2||LMLStatus==4||{{loginType}}==4">
                                                             Browse&nbsp;
                                                             <input id="LMLicenseCopy" type="file" style="display:none" ng-model="LMLicenseCopy" onchange="angular.element(this).scope().uploadFile('UploadLicenseCopy', this)" />
                                                         </label>
@@ -932,8 +925,7 @@
 
                                                 <th>
                                                     <div id="LMUploadRenewedCopy" ng-disabled="{{IsValid}}">
-                                                        <label class="vdoc" @*ng-if="loginType==1"*@ 
-                                                               ng-show="LMLStatus==4||LMLStatus==3">
+                                                        <label class="vdoc" ng-if="loginType==1" ng-show="LMLStatus==4||LMLStatus==3">
                                                             Browse&nbsp;
                                                             <input id="LMUploadRenewedCopy" type="file" style="display:none" ng-model="LMUploadRenewedCopy" onchange="angular.element(this).scope().uploadFile('UploadRenewedCopy', this)" />
                                                         </label>
@@ -944,7 +936,7 @@
                                                 </th>
 
                                                 <th colspan="4">
-                                                    <a class="btn btn-warning" ng-click="LSave();ManageLog('Submit License Licence Name : '+license.LicenseName + ' &amp; StoreName '+license.StoreCode)" ng-hide="LMLStatus==2||LMLStatus==4" style="WIDTH: 21%;">Save</a>
+                                                    <a class="btn btn-warning" ng-click="LSave();ManageLog('Submit License Licence Name : '+license.LicenseName + ' &amp; StoreName '+license.StoreCode)" ng-hide="LMLStatus==2||LMLStatus==4||loginType==4" style="WIDTH: 21%;">Save</a>
                                                 </th>
                                             </tr>
 

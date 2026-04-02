@@ -145,7 +145,7 @@
 									<div ng-show="{{InvoiceDetail[$index].Ishide}}==false">{{InvoiceDetail[$index].InvDate}}</div>
 								</td>
 								<td>
-									<input id="VendorInvNum{{$index}}" type="text" ng-model="InvoiceDetail[$index].VendorInvNum" class="form-control clear validate" onkeyup="nospaces(this)" maxlength="50"/>
+									<input id="VendorInvNum{{$index}}" type="text" ng-model="InvoiceDetail[$index].VendorInvNum" class="form-control clear validate" onkeyup="nospaces(this)" maxlength="16"/>
 								</td>
 								<td style="display:none">
 									<select id="ddlstate{{$index}}" autocomplete='address-level2' class="form-control  clear" ng-bind="InvoiceDetail[$index].StateId={{StateId}}"  ng-model="InvoiceDetail[$index].StateId">

@@ -8,7 +8,7 @@
 <script src="~/scripts/RetailJsLib/Commondashboardcontroller.js"></script>
  
 <!-- Bootstrap JS -->
-<div class="dashboard px-2 py-2">
+<div class="dashboard px-2 py-2" >
     <!-- ====== CONTAINER 1 ====== -->
     <div class="container-fluid mt-1" id="container1">
         <div class="container1 p-2" style="height: 497px; background-color: #FFFFFF;">
@@ -19,7 +19,7 @@
                     <div class="row g-3 flex-grow-1 mb-1" style="height: 50%;">
                         <!-- Compliance Card -->
                         <div class="col-md-7 h-100">
-                            <div class="custom-card h-100 d-flex flex-column p-4" ng-init="BindTiles();BindLabourCompliance();Bindcompliance();">
+                            <div class="custom-card h-100 d-flex flex-column p-4" ng-init="BindTiles();BindLabourCompliance();Bindcompliance()">
                                 <h2 class="fw-medium mb-3" style="color: #E43A29; font-size: 1.2rem;">Compliance Overview</h2>
                                 <div class="row g-2 flex-grow-1">
                                     <div class="col-6">
@@ -147,7 +147,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
+                                        
                                         <tr ng-repeat="x in FilteredCompliance"
                                             title="Compliance: {{x.ComplianceName}} | Act: {{x.Act}} | State: {{x.STATE_NM}}">
                                             <td>{{x.Act}}</td>
@@ -180,18 +180,18 @@
 
                         <!-- Filters (Fixed for all) -->
                         @*<div class="rc-filterbar d-flex align-items-center justify-content-between mb-2">
-                                <select ng-model="selectedState" ng-change="getFilteredLabourRows()"
-                                        ng-options="state for state in availableStates"
-                                        class="form-select form-select-sm w-50 me-2">
-                                    <option value="">All States</option>
-                                </select>
+                            <select ng-model="selectedState" ng-change="getFilteredLabourRows()"
+                                    ng-options="state for state in availableStates"
+                                    class="form-select form-select-sm w-50 me-2">
+                                <option value="">All States</option>
+                            </select>
 
-                                <select ng-model="selectedReg"
-                                        ng-options="reg for reg in availableRegs"
-                                        class="form-select form-select-sm w-50">
-                                    <option value="">All Registrations</option>
-                                </select>
-                            </div>*@
+                            <select ng-model="selectedReg"
+                                    ng-options="reg for reg in availableRegs"
+                                    class="form-select form-select-sm w-50">
+                                <option value="">All Registrations</option>
+                            </select>
+                        </div>*@
 
                         <!-- Table -->
                         <div class="rc-table-wrapper">
@@ -205,7 +205,7 @@
                                 </thead>
                                 <tbody id="complianceTbody">
                                     <tr ng-repeat="row in getFilteredLabourRows()">
-
+                                 
                                         <td ng-repeat="col in row">{{col}}</td>
                                     </tr>
                                 </tbody>
@@ -235,7 +235,7 @@
                 <!-- RIGHT: LICENSE APPLICABILITY -->
                 <div class="col-md-5 d-flex flex-column ps-3 position-relative">
                     <!-- Arrow Button -->
-                    <a href="../RetailSection/LicenceStatusDashboard?Licence%20Status%20Dashboard" class="position-absolute top-0 end-0 m-2 text-orange arrow-btn">
+                    <a href="#" class="position-absolute top-0 end-0 m-2 text-orange arrow-btn">
                         <i class="bi bi-arrow-up-right-circle"></i>
                     </a>
 
@@ -253,11 +253,11 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item"
+                                        <a class="dropdown-item" 
                                            ng-click="selectFilter('state', '')">All</a>
                                     </li>
                                     <li ng-repeat="state in uniqueStatesl">
-                                        <a class="dropdown-item"
+                                        <a class="dropdown-item"  
                                            ng-click="selectFilter('state', state)">{{state}}</a>
                                     </li>
                                 </ul>
@@ -271,11 +271,11 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item"
+                                        <a class="dropdown-item" 
                                            ng-click="selectFilter('license', '')">All</a>
                                     </li>
                                     <li ng-repeat="license in uniqueLicensesl">
-                                        <a class="dropdown-item"
+                                        <a class="dropdown-item"  
                                            ng-click="selectFilter('license', license)">{{license}}</a>
                                     </li>
                                 </ul>
@@ -292,7 +292,7 @@
                                         <a class="dropdown-item"
                                            ng-click="selectFilter('location', '')">All</a>
                                     </li>
-
+                                  
                                     <li ng-repeat="location in uniqueLocationsl">
                                         <a class="dropdown-item"
                                            ng-click="selectFilter('location', location)">{{location}}</a>
@@ -303,7 +303,7 @@
                         </div>
                         <!-- Go & Download Buttons -->
                         @*<button class="btn btn-sm btn-orange">Go</button>
-                            <button class="btn btn-sm btn-orange ms-auto px-3">Download</button>*@
+                        <button class="btn btn-sm btn-orange ms-auto px-3">Download</button>*@
                     </div>
 
                     <!-- Table -->
@@ -311,21 +311,21 @@
                         <table class="table table-sm mb-0 text-center align-middle">
                             <thead class="container2-thead sticky-top">
                                 <tr>
-
+                                    
                                     <th>License</th>
                                     <th>State</th>
                                     <th>Location</th>
-
+                                  
                                 </tr>
                             </thead>
                             <tbody class="container2-tbody" ng-repeat="x in filteredLicenses">
                                 <tr>
-                                    <td>{{x.LicenseName}}</td>
+                                    <td>{{x.LicenseName}}</td> 
                                     <td>{{x.STATE_NAME}}</td>
                                     <td>{{x.RefStoreCode}}</td>
-
+                                   
                                 </tr>
-
+                              
                             </tbody>
                         </table>
                     </div>
@@ -349,7 +349,7 @@
                 <div class="col-md-4 d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="fw-medium text-orange mb-0">Location Overview</h5>
-                        <a href="../RetailSection/StoreDashboard?Location%20Dashboard" class="text-orange arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
+                        <a href="#" class="text-orange arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
                     </div>
 
                     <div class="row g-2 flex-grow-1">
@@ -391,8 +391,8 @@
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="fw-medium text-orange mb-0">Applicable Act</h5>
                         <div class="d-flex align-items-center gap-2">
-                            <input type="text" class="form-control form-control-sm search-input bg-transparent" ng-model="searchText" placeholder="Search">
-                            <a href="../Retail/ComplianceDashboard?Compliance%20Dashboard" class="text-orange arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
+                            <input type="text" class="form-control form-control-sm search-input bg-transparent"   ng-model="searchText"  placeholder="Search">
+                            <a href="#" class="text-orange arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
                         </div>
                     </div>
 
@@ -403,7 +403,7 @@
                                     <th>Applicable Act</th>
                                     <th>State Name</th>
                                     <th>Overview</th>
-
+                                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -428,11 +428,11 @@
                 <div class="col-md-4 d-flex flex-column">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="fw-medium text-orange mb-0">Document Expiry</h5>
-                        <a href="../RetailSection/StoreDashboard?Location%20Dashboard" class="text-orange arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
+                        <a href="#" class="text-orange arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
                     </div>
 
                     <div class="table-wrapper flex-grow-1 overflow-auto rounded-3 shadow-sm">
-                        <table id="" class="new table table-sm mb-0 text-center align-middle">
+                        <table  id ="" class="new table table-sm mb-0 text-center align-middle">
                             <thead class="thead-orange sticky-top">
                                 <tr>
                                     <th>Store Code</th>
@@ -442,7 +442,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                              
                                 <tr ng-repeat="xx in DocumentExpireList">
                                     <td>
                                         {{xx.StoreCode}}
@@ -482,7 +482,7 @@
                         <div class="col-left card flex-fill d-flex flex-column p-3">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h5 class="fw-medium text-orange mb-0">Notices & Inspections</h5>
-                                <a href="../RetailSection/Dashboard?Dashboard" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
+                                <a href="#" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
                             </div>
 
                             <div class="table-wrapper flex-grow-1 overflow-auto rounded-3">
@@ -505,7 +505,7 @@
                                             <td>
                                                 {{x.Submitions}}
                                             </td>
-                                        </tr>
+                                        </tr>                                                                              
                                     </tbody>
                                 </table>
                             </div>
@@ -519,14 +519,14 @@
                                         class="form-select form-select-sm w-50 mb-3"
                                         ng-model="Risk"
                                         ng-change="getriskmatrix(Risk)">
-
+                                   
                                     <option value="0">Litigation</option>
                                     <option value="1">Notice</option>
                                 </select>
-                                <a href="../RetailSection/LitigationMaster?Litigation%20Master" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
+                                <a href="#" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
                             </div>
 
-                            <div class="d-flex align-items-center flex-grow-1 gap-3" style="min-height:0;">
+                            <div class="d-flex align-items-center flex-grow-1 gap-3" style="min-height:0;" >
                                 <!-- donut canvas -->
                                 <div class="donut-wrap d-flex align-items-center justify-content-center" style="width:100%; min-height:0; height:100%;">
                                     <canvas id="riskMatrixChart" style="width:100%; height:100%;"></canvas>
@@ -534,10 +534,10 @@
 
                                 <!-- legend side-by-side -->
                                 @*<div class="legend-wrap text-orange small fw-semibold" style="width:40%;">
-                                        <div class="d-flex align-items-center mb-2"><span class="legend-dot me-2" style="background:#E45D27"></span> Less than 50%</div>
-                                        <div class="d-flex align-items-center mb-2"><span class="legend-dot me-2" style="background:#8BC34A"></span> 51% – 75%</div>
-                                        <div class="d-flex align-items-center"><span class="legend-dot me-2" style="background:#FFC107"></span> Above 75%</div>
-                                    </div>*@
+                                    <div class="d-flex align-items-center mb-2"><span class="legend-dot me-2" style="background:#E45D27"></span> Less than 50%</div>
+                                    <div class="d-flex align-items-center mb-2"><span class="legend-dot me-2" style="background:#8BC34A"></span> 51% – 75%</div>
+                                    <div class="d-flex align-items-center"><span class="legend-dot me-2" style="background:#FFC107"></span> Above 75%</div>
+                                </div>*@
                             </div>
                         </div>
                     </div>
@@ -548,9 +548,9 @@
                         <div class="card flex-fill d-flex flex-column p-3" style="flex:1 1 0;">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h5 class="fw-medium text-orange mb-0">Litigation Overview</h5>
-                                <a href="../RetailSection/LitigationManagement?Litigation%20Management" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
+                                <a href="#" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
                             </div>
-
+                             	 	 	 	  
                             <div class="mini-grid flex-grow-1">
                                 <div class="mini-card text-center p-2 bg-light-yellow">
                                     <div class="small">Case Filing</div><div class="fw-bold">{{CaseFiling}}</div>
@@ -578,36 +578,36 @@
                         <div class="card flex-fill d-flex flex-column p-3" style="flex:1 1 0;">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h5 class="fw-medium text-orange mb-0">Case Status</h5>
-                                <a href="../RetailSection/LitigationManagement?Litigation%20Management" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
+                                <a href="#" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
                             </div>
 
                             <div class="case-status-wrapper flex-grow-1 overflow-auto">
                                 <table class="table table-sm mb-0 align-middle">
                                     <tbody>
                                         <tr ng-repeat="x in CaseStatusList">
-                                            <!-- Case Status Name -->
-                                            <td class="small text-muted">
-                                                {{x.CaseStatus}}
-                                            </td>
+                                        <!-- Case Status Name -->
+                                    <td class="small text-muted">
+                                        {{x.CaseStatus}}
+                                    </td>
 
-                                            <!-- Progress Bar -->
-                                            <td style="width:70%;">
-                                                <div class="progress" style="height:6px; background-color:#f1f1f1;">
-                                                    <div class="progress-bar bg-orange"
-                                                         role="progressbar"
-                                                         style="width:{{x.TotalCases}}%;"
-                                                         aria-valuenow="{{x.TotalCases}}"
-                                                         aria-valuemin="0"
-                                                         aria-valuemax="100">
-                                                    </div>
-                                                </div>
-                                            </td>
+                                    <!-- Progress Bar -->
+                                    <td style="width:70%;">
+                                        <div class="progress" style="height:6px; background-color:#f1f1f1;">
+                                            <div class="progress-bar bg-orange"
+                                                 role="progressbar"
+                                                 style="width:{{x.TotalCases}}%;"
+                                                 aria-valuenow="{{x.TotalCases}}"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                    </td>
 
-                                            <!-- Numeric Value -->
-                                            <td class="small fw-semibold text-end">
-                                                {{x.TotalCases}}%
-                                            </td>
-                                        </tr>
+                                    <!-- Numeric Value -->
+                                    <td class="small fw-semibold text-end">
+                                        {{x.TotalCases}}%
+                                    </td>
+                                    </tr> 
                                     </tbody>
                                 </table>
                             </div>
@@ -622,13 +622,13 @@
                     <div class="container4-right flex-grow-1 d-flex flex-column p-3 rounded-3" style="background-color:#fbfbfb;">
                         <div class="d-flex justify-content-between align-items-center mb-2" ng-init="getfinancialchart(0)">
                             <h5 class="fw-medium text-orange mb-0">Financial Impact</h5>
-                            <a href="../RetailSection/LitigationManagement?Litigation%20Management" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
+                            <a href="#" class="arrow-btn"><i class="bi bi-arrow-up-right-circle"></i></a>
                         </div>
 
                         <select id="ddlrisk"
                                 class="form-select form-select-sm w-50 mb-3"
                                 ng-model="financial"
-                                ng-change="getfinancialchart(financial)">
+                                ng-change="getfinancialchart(financial)"> 
                             <option value="0">Litigation</option>
                             <option value="1">Notice</option>
                         </select>
@@ -643,11 +643,11 @@
         </div>
     </div>
 
-  
 
 
 
 
 
 
-    </div>
+
+</div>

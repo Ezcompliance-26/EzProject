@@ -180,8 +180,7 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                 return window.location.href = d.Path;
             }
 
-            if (d.Module_Name === 'Both')
-            {
+            if (d.Module_Name === 'Both') {
                 var sel = $("#ddlModule option:selected").text();
                 if (sel === 'Supplier')
                 {
@@ -200,13 +199,8 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                         }, 0);
                         $scope.Captcha = ''; $scope.GetCaptchaImage();
                         return window.location.href = '../Dashboard/VBoard';
-                    } else {
-                        $scope.DashboardSwitch = 'Supplier';
-                        sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                        return window.location.href = '../Dashboard/Dashboard';
-                      
-                    }
-                }
+                    } else { return window.location.href = '../Dashboard/Dashboard'; sessionStorage.setItem("DashboardSwitch", "Supplier"); }
+                } 
                 if (sel === 'Retail')
                 {
                     if (d.LoginType == '5') {
@@ -237,16 +231,6 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                 }
                 showMsg("Please select module!", "red"); resetBtn();
                 return;
-            }
-            if ([6].includes(d.LoginType)) {
-                startLoginMessages();
-
-                $scope.DashboardSwitch = 'Supplier';
-                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                setTimeout(() => {
-                    $scope.ManageLog(d.LoginId, 'Login Supplier Section');
-                }, 0);
-                return window.location.href = d.Path;
             }
 
             if (d.LoginType == '2' && $scope.Username == 'UserAA') {

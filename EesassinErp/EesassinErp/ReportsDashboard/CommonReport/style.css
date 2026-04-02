@@ -1,45 +1,50 @@
 ﻿* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Inter", sans-serif;
+    --primary: #E45D27; /* theme accent */
+    --primary-dark: #c44b1d;
+    --card-bg: #FEF3EC;
 }
 
 /* =================== REPORT PAGE 1: COMPLIANCE OVERVIEW ===================*/
 .container-report1 {
-    font-family: 'Poppins', sans-serif;
-    background-color: #FDF2E0;
+    font-family: "Inter", sans-serif;
+    background-color: #FFF1EB;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
     /* Header & Footer */
-    .container-report1 .report-header,
-    .container-report1 .report-footer {
-        background-color: #E45D27;
+     .report-header,
+     .report-footer {
+        background-color: #FFF1EB;
         color: #fff;
         padding: 10px 24px;
     }
 
-        .container-report1 .report-header button {
-            background-color: #fff;
-            color: #E45D27;
-            border: none;
-            transition: all 0.2s ease-in-out;
+         .report-header .download-btn {
+            border-radius: 999px;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border: 1px solid var(--primary);
+            background: #fff;
+            color: var(--primary);
         }
 
-            .container-report1 .report-header button:hover {
-                background-color: #f8e5da;
+             .report-header .download-btn:hover {
+                background: var(--primary);
+                color: #fff;
+                border-color: var(--primary);
             }
 
     /* Body */
-    .container-report1 .report-body {
-        background-color: #FDF2E0;
-        flex: 1;
-        padding: 32px;
-        border-radius: 0 0 8px 8px;
-    }
+.container-report1 .report-body {
+    flex: 1;
+    padding: 32px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
 
     /* Overview Box */
     .container-report1 .overview-box {
@@ -49,7 +54,35 @@
     }
 
     /* Summary Cards */
-    .container-report1 .summary-card.total {
+.container-report1 .summary-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border-left: 5px solid #E45D27;
+    transition: 0.2s ease;
+    align-items: center;
+    justify-content: space-between;
+}
+    .container-report1 .summary-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+
+    .container-report1 .summary-card h4 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-top: 4px;
+        color: #E45D27;
+    }
+
+    .container-report1 .summary-card p {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #555;
+    }
+
+    /*.container-report1 .summary-card.total {
         background-color: #E45D27;
     }
 
@@ -64,45 +97,49 @@
     .container-report1 .summary-card {
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-
+*/
 
     /* Table Styling */
     .container-report1 table {
         width: 100%;
-        border: 1.5px solid #E45D27 !important;
         border-collapse: collapse !important;
         border-radius: 6px;
         overflow: hidden;
     }
 
         /* Header */
-        .container-report1 table thead tr {
-            background-color: #E45D27 !important;
-        }
-
         .container-report1 table thead th {
-            color: #fff !important;
-            font-weight: 600 !important;
-            text-align: center !important;
-            vertical-align: middle !important;
-            border: 1px solid #fff !important;
-            background-color: #E45D27 !important;
-            padding: 10px !important;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background-color: #F37437;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+            padding: 8px 10px;
         }
 
         /* Body Cells */
         .container-report1 table tbody td {
-            font-size: 14px !important;
-            text-align: center !important;
-            border: 1px solid #E45D27 !important;
-            padding: 8px !important;
-            vertical-align: middle !important;
+            background-color: var(--card-bg);
+            font-size: 0.78rem;
+            vertical-align: middle;
+            text-align: center;
+            padding: 8px 10px;
+            white-space: nowrap;
         }
 
-        /* Zebra striping */
-        .container-report1 table tbody tr:nth-child(even) {
-            background-color: #FFF7EF !important;
+        .container-report1 table tbody tr:hover td {
+            background-color: #FFE8D9;
         }
+
+.container-report1 .small-table tbody td .store-code-link,
+.container-report1 .small-table tbody td .event-link {
+    text-decoration: none;
+}
 
     /* Responsive Fix */
     .container-report1 .table-responsive {
@@ -115,156 +152,111 @@ html, body {
     overflow-x: hidden;
 }
 
-
-
-    /* Insight Box */
-    .container-report1 .insight-box {
-        background-color: #EAF7EA;
-        border-left: 6px solid #22B573;
-        border-radius: 4px;
-        padding: 12px;
-    }
-
-    /* Chart Section */
-    /* Compact chart cards */
-    .container-report1 .chart-card {
-        height: 230px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    /* chart layout */
-    .container-report1 .chart-content {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-    }
-
-    /* donut left */
-    .container-report1 .chart-left {
-        width: 120px;
-        height: 120px;
-    }
-
-    /* legend right */
-    .container-report1 .chart-right {
-        color: #E45D27;
-    }
-
-    /* colored dot */
-    .container-report1 .legend-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        display: inline-block;
-    }
-
-    /* canvas sizing */
-    .container-report1 canvas {
-        width: 100% !important;
-        height: 100% !important;
-        display: block;
-    }
-
-    /* adjust spacing for smaller width */
-    .container-report1 .col-lg-4 {
-        max-width: 32%;
-    }
-
-
-    /* Footer */
-    .container-report1 .report-footer p {
-        margin: 0;
-    }
-
-
-
-
-
-/* =================== Container-Report2 (Scoped) =================== */
-.container-report2 {
-    font-family: 'Poppins', sans-serif;
-    background-color: #FDF2E0;
-    border-radius: 12px;
-    color: #333;
+/* Table Selects*/
+.container-report1 .form-select, .form-control {
+    font-size: .78rem;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid #dcdcdc;
+    outline: none;
+    width: 120px;
 }
 
-    /* Header */
-    .container-report2 .report-header {
-        background-color: #E45D27;
+/* 2nd and 3rd Col wrap*/
+/* Keep headers unchanged (no wrapping) */
+.container-report1 .small-table thead th:nth-child(2),
+.container-report1 .small-table thead th:nth-child(3) {
+    white-space: nowrap; /* important: headers must stay single-line */
+}
+
+/* Allow body cells to wrap and limit their width */
+.container-report1 .small-table tbody td:nth-child(2),
+.container-report1 .small-table tbody td:nth-child(3) {
+    white-space: normal !important;
+    min-width: 260px; /* change this value to taste */
+    overflow-wrap: anywhere; /* better wrap for long words/links */
+    word-break: break-word; /* fallback for older browsers */
+    text-align: left; /* keep multi-line content readable */
+    vertical-align: middle;
+    padding-right: 12px; /* small breathing room for wrapped lines */
+}
+
+    /* Ensure any anchor/link inside the compliance column wraps nicely */
+    .container-report1 .small-table tbody td:nth-child(3) .store-code-link {
+        display: inline-block; /* lets the link wrap within its cell */
+        max-width: 100%;
+        text-decoration: none;
+        color: inherit;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+/*shorter width for Act Name if you want them different sizes */
+.container-report1 .small-table tbody td:nth-child(2) {
+    min-width: 150px; /* tweak separately if desired */
+}
+
+
+
+
+/* filter button */
+.container-report1 .filter-btn {
+    border-radius: 999px;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+    padding: 4px 8px;
+    font-weight: 400;
+    font-size: 0.85rem;
+}
+
+    .container-report1 .filter-btn.active,
+    .container-report1 .filter-btn:hover {
+        background: var(--primary);
         color: #fff;
-        padding: 10px 24px;
-        border-radius: 10px 10px 0 0;
     }
 
-    /* Body */
-    .container-report2 .report-body2 {
-        background-color: #FDF2E0;
-        padding: 32px;
-        border-radius: 0 0 8px 8px;
+/* small inputs */
+.container-report1 .table-toolbar .form-control-sm {
+    height: 30px;
+    border-radius: 999px;
+    border-color: var(--primary);
+}
+
+/* Export button (rounded) */
+.container-report1 .export-btn {
+    border-radius: 999px;
+    color: #fff;
+    background: var(--primary);
+    padding: 4px 8px;
+    font-weight: 400;
+    font-size: 0.85rem;
+    -webkit-tap-highlight-color: transparent;
+}
+
+    .container-report1 .export-btn:hover {
+        background: var(--primary-dark);
     }
 
-    /* Title Box */
-    .container-report2 .report-title-box {
-        border: 1.8px solid #E45D27;
-        background: #fff;
-        border-radius: 8px;
+    /* remove default dark flash on click for export and other action buttons while keeping subtle ring on focus */
+    .container-report1 .export-btn:focus,
+    .container-report1 .export-btn:active {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(228,93,39,0.12);
     }
 
-    /* Table */
-    .container-report2 table {
-        border: 1.5px solid #E45D27;
-        border-radius: 8px;
-        overflow: hidden;
-        font-size: 14px;
-        background: #fff;
-        width: 100%;
-        border-collapse: collapse;
-    }
 
-        .container-report2 table thead tr th {
-            background-color: #E45D27 !important; /* Force header bg */
-            color: #fff !important;
-            font-weight: 600;
-            text-align: center;
-            border: 1px solid #E45D27 !important;
-        }
 
-        .container-report2 table tbody tr th {
-            background-color: #FFF2EA !important;
-            font-weight: 600;
-        }
+/* =================== Labour Report changes =================== */
 
-        .container-report2 table th,
-        .container-report2 table td {
-            border: 1px solid #E45D27;
-            vertical-align: middle;
-            padding: 8px;
-        }
 
-    /* Footer */
-    .container-report2 .report-footer {
-        background-color: #E45D27;
-        color: #fff;
-        border-radius: 0 0 10px 10px;
-    }
-
-/* Responsive */
-@media (max-width: 768px) {
-    .container-report2 {
-        padding: 20px;
-    }
-
-        .container-report2 table {
-            font-size: 13px;
-        }
-
-        .container-report2 .report-header {
-            text-align: center;
-            justify-content: center !important;
-        }
+.container-report1 table tbody tr th {
+    background-color: var(--card-bg);
+    font-size: 0.78rem;
+    vertical-align: middle;
+    text-align: center;
+    padding: 8px 10px;
+    white-space: nowrap;
 }
 
 

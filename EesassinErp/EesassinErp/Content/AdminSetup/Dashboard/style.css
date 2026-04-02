@@ -471,16 +471,30 @@ body::-webkit-scrollbar {
     width: 100%;
 }
 
-.adminSetup .userProfile-user-card table th {
-    font-weight: 400;
-    color: #333;
-    border-bottom: 2px solid #f0f0f0;
-}
+    .adminSetup .userProfile-user-card table th {
+        color: #fff;
+        background: var(--primary);
+        border-bottom: 2px solid #f0f0f0;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        font-weight: 600;
+        font-size: 0.78rem;
+        text-align: left;
+        vertical-align: middle;
+        padding: 8px 10px;
+    }
 
 .adminSetup .userProfile-user-card td {
     vertical-align: middle;
-    padding: 12px 10px;
     border-top: 1px solid #f5f5f5;
+    background-color: var(--card-bg);
+    text-align: left;
+    padding: 8px 10px;
+}
+
+.adminSetup .userProfile-user-card tbody tr:hover td {
+    background-color: #FFE8D9;
 }
 
 /* Avatar */

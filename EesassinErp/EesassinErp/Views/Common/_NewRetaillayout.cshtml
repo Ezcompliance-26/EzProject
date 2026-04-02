@@ -5,7 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EZCompliance</title>
+    <title>EZ Report Dashboard</title>
+    <!-- Bootstrap CSS -->
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -63,36 +64,20 @@
     <!-- CSS Files -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
-    @*<script src="~/scripts/Rootfile/bootstrap.bundle.min.js"></script>
-    <link href="~/scripts/Rootfile/bootstrap-icons.css" rel="stylesheet" />*@
-
-
-
     <link rel="stylesheet" href="~/CommonDashboard/Style.css">
-    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">*@
-<link href="~/scripts/Rootfile/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+    <!-- For PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <link href="~/Content/plugins/vendors/bower_components/sweetalert/dist/sweetalert.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        function toggleNotification() {
-            var panel = document.getElementById("notificationPanel");
-
-            if (panel.style.right === "0px") {
-                panel.style.right = "-360px";
-                panel.style.top = "60px";
-            } else {
-                panel.style.right = "0px";
-                panel.style.top = "50px";
-            }
-        }
-
-    </script>
-
-
     <style>
-        button.swal2-confirm.swal2-styled {
-            background-color: #fd670b !important;
+        body {
+            font-family: "Inter", sans-serif;
+            --primary: #E45D27; /* theme accent */
+            --primary-dark: #c44b1d;
+            --card-bg: #FEF3EC;
         }
 
         .loader-overlay {
@@ -126,96 +111,323 @@
                 animation: spin 1s linear infinite;
             }
 
-        .red-validation {
-            border: none !important;
-            border-bottom: 2px solid #e74c3c !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
+        /* ================= NOTIFICATION DROPDOWN (Scoped) ================= */
+        .navbar {
+            overflow: visible !important;
         }
 
-        /* select2 */
-        .select2-container .select2-selection.red-validation {
-            border: none !important;
-            border-bottom: 2px solid #e74c3c !important;
-            border-radius: 0 !important;
+        .notifBell img {
+            pointer-events: none;
+        }
+
+        .notifWrap {
+            position: relative;
+        }
+
+        .notifBell {
+            position: relative;
+        }
+
+        /* Notification hover – same as search icon */
+        .notifBell {
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+            .notifBell:hover {
+                transform: scale(1.08);
+                opacity: 0.85;
+            }
+
+
+        .notifBadge {
+            position: absolute;
+            top: -4px;
+            right: -8px;
+            background: #E45D27;
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 1px 6px;
+            border-radius: 999px;
+            font-weight: 400;
+        }
+
+        /* Panel */
+        .notifPanel {
+            position: absolute;
+            top: 140%;
+            right: 0;
+            width: 360px;
+            background: var(--card-bg);
+            color: var(--primary);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        /* Header */
+        .notifHeader {
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            font-weight: 400;
+            background: transparent;
+        }
+
+            .notifHeader button {
+                border: 1px solid #E45D27;
+                padding: 2px 8px;
+                border-radius: 10px;
+                background: none;
+                color: var(--primary);
+                font-size: 12px;
+                cursor: pointer;
+            }
+            .notifHeader button:hover{
+                background: var(--primary);
+                color: #fff;
+            }
+
+        /* Search */
+        .notifSearch {
+            padding: 10px 14px;
+            border-bottom: 1px solid #eee;
+        }
+
+            .notifSearch input {
+                width: 100%;
+                padding: 6px 10px;
+                border-radius: 6px;
+                border: 1px solid #E45D27;
+                font-size: 13px;
+            }
+
+        /* Tabs */
+        .notifTabs {
+            display: flex;
+            gap: 6px;
+            padding: 10px 10px;
+            overflow-x: auto;
+            border-bottom: 1px solid #eee;
+        }
+
+            .notifTabs button {
+                border: 1px solid #E45D27;
+                background: transparent;
+                color: var(--primary);
+                padding: 2px 8px;
+                border-radius: 20px;
+                font-size: 12px;
+                white-space: nowrap;
+                cursor: pointer;
+            }
+
+                .notifTabs button.active {
+                    background: var(--primary);
+                    color: #fff;
+                }
+
+        /* List */
+        .notifList {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Item */
+        .notifItem {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f1f1f1;
+            cursor: pointer;
+        }
+
+            .notifItem.unread {
+                background: #FFF0E6;
+            }
+
+            .notifItem:hover {
+                background: #FFE8D9;
+            }
+
+        .notifTitle {
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .notifMsg {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .notifMeta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+
+        .notifTime {
+            font-size: 11px;
+            color: #999;
+        }
+
+        /* Badge */
+        .notifType {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        .type-compliance {
+            background: #0d6efd;
+        }
+
+        .type-license {
+            background: #6f42c1;
+        }
+
+        .type-location {
+            background: #20c997;
+        }
+
+        .type-expired {
+            background: #dc3545;
+        }
+
+        /* Footer */
+        .notifFooter {
+            padding: 10px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+
+            .notifFooter a {
+                font-size: 13px;
+                font-weight: 400;
+                text-decoration: none;
+                color: var(--primary);
+            }
+
+        /* Responsive */
+        @@media (max-width: 576px) {
+            .notifPanel {
+                right: -20px;
+                width: calc(100vw - 20px);
+            }
         }
     </style>
-
-    <style>
-      #cover-spin {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255,255,255,0.7);
-    z-index: 9999;
-    display: none;
-}
-
-#cover-spin::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 40px;
-    height: 40px;
-    margin: -20px 0 0 -20px;
-    border: 4px solid #ddd;
-    border-top: 4px solid #F37437;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
- 
-    </style> 
 </head>
 <body>
-    <div id="cover-spin"></div>
+
     <!-- FULL PAGE PROCESS OVERLAY -->
     <div ng-show="showLogoutProcess"
          style="position:fixed; top:0; left:0; width:100%; height:100%;
             background:rgba(0,0,0,0.6); z-index:99999;
             display:flex; align-items:center; justify-content:center;">
 
-        <div style="background:#fff; width:420px; padding:25px; border-radius:8px;
-                text-align:center; box-shadow:0 0 20px rgba(0,0,0,0.3);">
+            let activeCategory = 'all';
 
-            <h3 style="margin-bottom:15px;">Please wait...</h3>
+            function updateBadge() {
+                const unread = notifications.filter(n => !n.read).length;
+                badge.textContent = unread > 9 ? '9+' : unread;
+                badge.classList.toggle('d-none', unread === 0);
+            }
 
-            <div style="text-align:left; font-size:14px; line-height:26px;">
+            function render() {
+                list.innerHTML = '';
+                const term = searchInput.value.toLowerCase();
 
-                <div>
-                    <b>1.</b> Securing and saving your data...
-                    <span ng-show="logoutStep >= 1" style="color:green;">✔</span>
-                </div>
+                notifications
+                    .filter(n => activeCategory === 'all' || n.type === activeCategory)
+                    .filter(n => n.title.toLowerCase().includes(term) || n.msg.toLowerCase().includes(term))
+                    .forEach(n => {
+                        const div = document.createElement('div');
+                        div.className = `notifItem ${n.read ? '' : 'unread'}`;
+                        div.innerHTML = `
+                        <div class="notifTitle">${n.title}</div>
+                        <div class="notifMsg">${n.msg}</div>
+                        <div class="notifMeta">
+                            <span class="notifType type-${n.type}">${n.type}</span>
+                            <span class="notifTime">${n.time}</span>
+                        </div>
+                    `;
+                        div.addEventListener('click', function () {
+                            n.read = true;
+                            updateBadge();
+                            render();
+                            window.location.href = n.url;
+                        });
+                        list.appendChild(div);
+                    });
+            }
 
-                <div>
-                    <b>2.</b> Updating system preferences and settings...
-                    <span ng-show="logoutStep >= 2" style="color:green;">✔</span>
-                </div>
+            //  TOGGLE
+            bell.addEventListener('click', function (e) {
+                e.stopPropagation();
 
-                <div>
-                    <b>3.</b> Recording activity logs for audit...
-                    <span ng-show="logoutStep >= 3" style="color:green;">✔</span>
-                </div>
+                const isOpen = panel.style.display === 'flex';
 
-                <div ng-show="logoutStep >= 4" style="margin-top:10px; font-weight:bold; color:#d9534f;">
-                    Finalizing session and logging out securely...
-                </div>
+                if (!isOpen) {
+                    closeAllBootstrapDropdowns(); 
+                    panel.style.display = 'flex';
+                } else {
+                    panel.style.display = 'none';
+                }
+            });
 
-            </div>
 
-            <div style="margin-top:20px;">
-                <span style="font-size:12px; color:#777;">
-                    Please do not refresh or close the browser.
-                </span>
-            </div>
-        </div>
-    </div>
+            //  OUTSIDE CLICK CLOSE (USE MOUSEDOWN – BOOTSTRAP SAFE)
+            document.addEventListener('mousedown', function (e) {
+                if (!panel.contains(e.target) && !bell.contains(e.target)) {
+                    panel.style.display = 'none';
+                }
+            });
 
+            function closeAllBootstrapDropdowns() {
+                document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                    const toggle = menu.previousElementSibling;
+                    if (toggle) {
+                        const instance = bootstrap.Dropdown.getOrCreateInstance(toggle);
+                        instance.hide();
+                    }
+                });
+            }
+
+
+
+
+            //  CATEGORY TABS
+            tabs.forEach(t => {
+                t.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    tabs.forEach(x => x.classList.remove('active'));
+                    this.classList.add('active');
+                    activeCategory = this.dataset.category;
+                    render();
+                });
+            });
+
+            //  SEARCH
+            searchInput.addEventListener('input', render);
+
+            //  MARK ALL READ
+            document.getElementById('markAllReadBtn')
+                .addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    notifications.forEach(n => n.read = true);
+                    updateBadge();
+                    render();
+                });
+
+            updateBadge();
+            render();
+        });
+    </script>
+
+
+</head>
+<body>
     <div id="file-validation-loader" style="display: none;">
         <div class="loader-overlay">
             <div class="loader-message">
@@ -224,13 +436,13 @@
             </div>
         </div>
     </div>
-    <nav class="navbar px-4" ng-init="BindDashboard();BindMenus()">
+    <nav class="navbar px-4" ng-init="BindDashboard()">
         <!-- Left logo -->
         <div class="nav-left">
             <img src="~/CommonDashboard/assets/icons/logo.svg" alt="Logo" class="logo" />
         </div>
-      
-        <!-- Center nav items -->
+
+        <!-- Center nav items -->   
         <div class="nav-center d-flex gap-3">
             <!-- Dashboard dropdown -->
             <div class="dropdown">
@@ -239,12 +451,9 @@
                     <img src="~/CommonDashboard/assets/icons/DropArrow.svg" class="arrow ms-1" alt="Arrow">
                 </button>
                 <ul class="dropdown-menu">
-                    <li ng-if="isDashboardLoading">
-                        <i class="fa fa-spinner fa-spin"></i> Loading...
-                    </li>
-                    <li ng-if="!isDashboardLoading" ng-repeat="x in DahboardList | filter: { PageName : 'Dashboard' }">
+                    <li ng-repeat="x in DahboardList | filter: { PageName : 'Dashboard' }">
 
-                        <a ng-click="loadPage(x.Url);ManageLog('Click on '+ x.SectionName)" class="dropdown-item">{{ x.SectionName }}</a>
+                        <a href="{{x.Url}}" class="dropdown-item">{{ x.SectionName }}</a>
                     </li>
                 </ul>
             </div>
@@ -256,29 +465,23 @@
                     <img src="~/CommonDashboard/assets/icons/DropArrow.svg" class="arrow ms-1" alt="Arrow">
                 </button>
                 <ul class="dropdown-menu">
-                    <li ng-if="isDashboardLoading">
-                        <i class="fa fa-spinner fa-spin"></i> Loading...
-                    </li>
-                    <li ng-if="!isDashboardLoading" ng-repeat="x in DahboardList | filter: { PageName : 'Master' }">
+                    <li ng-repeat="x in DahboardList | filter: { PageName : 'Master' }">
 
-                        <a class="dropdown-item" ng-click="loadPage(x.Url);ManageLog('Click on '+ x.SectionName)">{{ x.SectionName }}</a>
+                        <a class="dropdown-item" href="{{x.Url}}">{{ x.SectionName }}</a>
                     </li>
                 </ul>
             </div>
 
             <!-- Report dropdown -->
-            <div class="dropdown" ng-if="(DahboardList | filter:{ PageName:'Report' }).length > 0">
+            <div class="dropdown">
                 <button class="dropbtn d-flex align-items-center" type="button" data-bs-toggle="dropdown">
                     Report
                     <img src="~/CommonDashboard/assets/icons/DropArrow.svg" class="arrow ms-1" alt="Arrow">
                 </button>
                 <ul class="dropdown-menu">
-                    <li ng-if="isDashboardLoading">
-                        <i class="fa fa-spinner fa-spin"></i> Loading...
-                    </li>
-                    <li ng-if="!isDashboardLoading" ng-repeat="x in DahboardList | filter: { PageName : 'Report' }">
+                    <li ng-repeat="x in DahboardList | filter: { PageName : 'Report' }">
 
-                        <a class="dropdown-item" ng-click="loadPage(x.Url);ManageLog('Click on '+ x.SectionName)">{{ x.SectionName }}</a>
+                        <a class="dropdown-item" href="{{x.Url}}">{{ x.SectionName }}</a>
                     </li>
 
                 </ul>
@@ -288,56 +491,82 @@
         <!-- Right icons & profile -->
         <div class="nav-right d-flex align-items-center gap-3">
 
+            <!-- SEARCH WRAPPER -->
+            <div class="search-wrapper position-relative">
+                <img src="~/CommonDashboard/assets/icons/search.svg"
+                     alt="Search" id="search-icon" class="icon cursor-pointer">
+                <input type="text" id="search-field" placeholder="Search..." class="search-input">
+            </div>
 
-            <img src="~/CommonDashboard/assets/icons/notify.svg" style="display:none" onclick="toggleNotification()"
-                 alt="Notify" class="icon cursor-pointer">
+            <!-- ================= NOTIFICATION DROPDOWN (Scoped) ================= -->
+            <div class="notifWrap position-relative">
 
-            <div id="notificationPanel" style="position:fixed;
-        top:60px;
-        right:-360px;
-        width:350px;
-        height:80vh;
-        background:#fff;
-        box-shadow:-4px 0 15px rgba(0,0,0,0.15);
-        transition:all 0.4s ease;
-        z-index:9999;
-        border-radius:10px 0 0 10px;
-     " ng-init="BindNotification()">
-
-                <!-- Header -->
-                <div style="
-        padding:12px 16px;
-        font-weight:600;
-        border-bottom:1px solid #eee;
-        display:flex;
-        justify-content:space-between;
-        align-items:center; BACKGROUND-COLOR: #fd670b;
-     ">
-                    Notifications
-                    <span onclick="toggleNotification()"
-                          style="cursor:pointer;font-size:18px;">✕</span>
+                <!-- Bell Icon -->
+                <div id="notifBell" class="notifBell position-relative cursor-pointer">
+                    <img src="~/CommonDashboard/assets/icons/notify.svg" alt="Notify" class="icon">
+                    <span id="notifBadge" class="notifBadge d-none">0</span>
                 </div>
 
-                <!-- Notification List -->
-                <div style="padding:10px;overflow-y:auto;height:calc(80vh - 50px);">
+                <!-- Dropdown Panel -->
+                <div id="notifPanel" class="notifPanel">
 
-                    <div style="padding:10px;border-bottom:1px solid #f1f1f1;" ng-repeat="x in AllNotification" ng-model="Notification">
-                        🔔 {{x.Conversation}} {{x.CreatedOn}}
+                    <!-- Header -->
+                    <div class="notifHeader">
+                        <span>Notifications</span>
+                        <button id="markAllReadBtn" type="button">Mark all as read</button>
                     </div>
 
+                    <!-- Search -->
+                    <div class="notifSearch">
+                        <input type="text" id="notifSearchInput" placeholder="Search notifications...">
+                    </div>
 
+                    <!-- Categories -->
+                    <div class="notifTabs">
+                        <button class="active" data-category="all">All</button>
+                        <button data-category="compliance">Compliance</button>
+                        <button data-category="license">License</button>
+                        <button data-category="location">Location</button>
+                        <button data-category="expired">Expired</button>
+                    </div>
+
+                    <!-- List -->
+                    <div id="notifList" class="notifList"></div>
+
+                    <!-- Footer -->
+                    <div class="notifFooter">
+                        <a href="/notifications">View All Notifications</a>
+                    </div>
 
                 </div>
             </div>
 
+
+            @*<img src="~/CommonDashboard/assets/icons/notify.svg"
+        alt="Notify" class="icon cursor-pointer">*@
+
+            <!-- USER SWITCH DROPDOWN -->
+            @*<div class="dropdown position-relative">
+            <img src="~/PayrollDashboard/assets/icons/user-switch.svg"
+                 alt="UserSwitch"
+                 class="icon cursor-pointer dropdown-toggle"
+                 id="userSwitchDropdown"
+                 data-bs-toggle="dropdown"
+                 title="Change Profile">
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#">Profile 1</a></li>
+                <li><a class="dropdown-item" href="#">Profile 2</a></li>
+                <li><a class="dropdown-item" href="#">Profile 3</a></li>
+            </ul>
+        </div>*@
+
             <div class="dropdown">
                 <button class="profile-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    <img ng-src="{{Photo || '../content/profile.png'}}" alt="Profile">
+                    <img src="{{Photo}}" alt="Profile">
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="/RetailSection/Userprofile" ng-click="ManageLog('open Profile page')">Profile</a></li>
-                    <li><a class="dropdown-item" ng-show="loginType==5" ng-click="switchtoRetailadmin();ManageLog('open Switch to  Retail Admin page')">Switch to Admin</a></li>
-                    <li><a class="dropdown-item" ng-show="loginType==6" ng-click="switchtovendoradmin();ManageLog('open Switch to vendor Admin page')">Switch to Admin</a></li>
+                    <li><a class="dropdown-item" ng-show="loginType==5" ng-click="switchtoadmin();ManageLog('open Switch to Admin page')">Switch to Admin</a></li>
                     <li><a class="dropdown-item" ng-click="Logout();ManageLog('Logout from Retail Section')">Logout</a></li>
                 </ul>
             </div>
@@ -349,64 +578,63 @@
         <div class="status-left d-flex align-items-center gap-2">
             <span class="status-dot"></span>
 
-            User Name:<span>{{UserName}} [ {{MapUser}} ] </span>
-            @*Industry: <span>{{Industry}}</span>*@
+            User Name:<span>{{UserName}}</span>
+            Industry: <span>{{Industry}}</span>
         </div>
         <div class="status-right d-flex align-items-center gap-3">
             <span>Last Updated: {{LastLogin}}</span>
             <div class="dropdown">
-                {{logintype}}
-                <div ng-if="loginType==4" style="background:#fff; padding:5px; border:1px solid #ccc; width:max-content; border-radius:5px; color:orange; font-weight:bold">
-                    Login as: <span id="selected-role">User</span>
-                </div>
-                <div ng-if="loginType==5" style="background:#fff; padding:5px; border:1px solid #ccc; width:max-content; border-radius:5px; color:orange; font-weight:bold">
-                    Login as: <span id="selected-role">Admin</span>
+                <div style="background:#fff; padding:5px; border:1px solid #ccc; width:max-content; border-radius:5px; color:orange; font-weight:bold">
+                    Login as: <span id="selected-role">{{LoginType}}</span>
                 </div>
 
 
+                @*<ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item role-option" href="#">{{.}}</a></li>
+
+                    </ul>*@
             </div>
         </div>
     </div>
 
+
+    <!-- DASHBOARD -->
     @RenderBody()
 
 
-    <!-- Email Sending Modal -->
-    <div class="modal fade" id="emailSendingModal"
-         data-bs-backdrop="static"
-         data-bs-keyboard="false"
-         tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content text-center p-4 position-relative">
+    <!-- Bootstrap JS -->
+    @*<script type="text/javascript" src="~/compliance/js/bootstrap.js"></script>
+        <script type="text/javascript" src="~/compliance/js/jquery.nanoscroller.min.js"></script>
+        <script type="text/javascript" src="~/compliance/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="~/compliance/js/dataTables.bootstrap5.min.js"></script>
+        <script type="text/javascript" src="~/compliance/js/datepicker.js"></script>
+        <script type="text/javascript" src="~/compliance/js/datepicker.en.js"></script>
+        <script type="text/javascript" src="~/compliance/js/builder.js"></script>
+        <script type="text/javascript" src="~/compliance/js/beautifyhtml.js"></script>
+        <script type="text/javascript" src="~/compliance/js/dragble.js"></script>
+        <script type="text/javascript" src="~/compliance/js/jquery.dropdown.js"></script>
+        <script type="text/javascript" src="~/compliance/js/theme-script.js"></script>
+        <script type="text/javascript" src="~/compliance/js/jquery-ui.js"></script>
+        <script type="text/javascript" src="~/compliance/js/datepicker.js"></script>
+        <script type="text/javascript" src="~/compliance/js/chart.bundle.js"></script>
+        <script type="text/javascript" src="~/compliance/js/chartjs-gauge.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+        <script src="~/Content/plugins/vendors/bower_components/sweetalert/dist/sweetalert.js"></script>
 
-                <!-- Close Button -->
-                <button type="button"
-                        class="btn-close position-absolute top-0 end-0 m-2"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"></button>
+        <script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
 
-                <div class="modal-body">
-                    <i class="fa fa-spinner fa-spin fa-2x mb-3"></i>
-                    <h6 class="mb-0">
-                        Your emails are in the process of being sent.<br>
-                        Thank you for your patience.
-                    </h6>
-                </div>
-            </div>
-        </div>
-    </div>
+        <script src="~/scripts/myjslib/customDirectives.js"></script>
 
-
-
-    @*<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-        <script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>*@
-
-
-    <script src="~/scripts/Rootfile/bootstrap.bundle.min.js"></script>
-    <script src="~/scripts/Rootfile/pdf.min.js"></script>
-    <script src="~/scripts/Rootfile/tesseract.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
     <script src="~/Content/plugins/vendors/bower_components/sweetalert/dist/sweetalert.js"></script>
     <script src="~/CommonDashboard/script.js"></script>
 </body>

@@ -15,3 +15,14 @@ document.addEventListener("click", function (e) {
         modal.show();
     }
 });
+
+
+// Event Modal Trigger 
+document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("event-link")) {
+        e.preventDefault();
+
+        const modal = new bootstrap.Modal(document.getElementById("eventModal"));
+        modal.show();
+    }
+});

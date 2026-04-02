@@ -1,11 +1,9 @@
 ﻿using BAL;
 using DAL;
-using Hangfire;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -15,10 +13,9 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
-
     public class SendEmailController : Controller
     {
-        
+        // GET: SendEmail
         public ActionResult Index()
         {
             return View();
@@ -96,19 +93,8 @@ namespace EesassinErp.Controllers
                     ClientId = obj.ClientId
                 };
 
-                SqlParameter[] param =
-                {  new SqlParameter("@Action", emailDAL.Action),
-                   new SqlParameter("@ClientId", emailDAL.ClientId)
-};
+                DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteSelectCommand("[dbo].[USP_GetNewsletterForSearch]", CommandType.StoredProcedure));
 
-                DataTable dt = await Task.Run(() =>
-                    SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand(
-                        "[dbo].[USP_GetNewsletterForSearch]",
-                        CommandType.StoredProcedure,
-                        param
-                    )
-                );
-                // DataTable dt =  DLL.dll.GetNewsletterForSearch(emailDAL) ;
                 var results = (from myRow in dt.AsEnumerable()
                                where myRow.Field<int>("Id") == Convert.ToInt32(obj.Id)
                                select myRow).FirstOrDefault();
@@ -154,15 +140,9 @@ namespace EesassinErp.Controllers
                 //  EmailMsg.To.Add(new MailAddress(ToEmail));
 
                 // Add each recipient individually
-                //foreach (var recipient in recipients)
-                //{
-                //    EmailMsg.To.Add(recipient);
-                //    //message.To.Add(new MailAddress(recipient));
-                //}
-                EmailMsg.To.Add(SMTPUser);
                 foreach (var recipient in recipients)
                 {
-                    EmailMsg.Bcc.Add(recipient);
+                    EmailMsg.To.Add(recipient);
                     //message.To.Add(new MailAddress(recipient));
                 }
 

@@ -1,12 +1,12 @@
 ﻿
 @{
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
-    ViewBag.Title = "Location Master";
+    ViewBag.Title = "Store Master";
     Layout = "~/Views/Common/_RetailLayoutSeprate.cshtml";
 }
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script> 
 <script>
     $(document).ready(function () {
         document.addEventListener('wheel', function (event) {
@@ -21,7 +21,7 @@
         color: #149358;
     }
 </style>
-<div class="pagecontentbody themed-element">
+<div class="pagecontentbody themed-element"  >
     <div class="pagebody">
         <div class="col-md-12 pageheader" ng-init="GetLoad()">
             <div class="row">
@@ -32,7 +32,7 @@
                     <h4 class="mb-0">
                     </h4>
                     <h4 class="mb-0">
-                        Location Master
+                        Store Master
                     </h4>
                 </div>
                 <div class="col-sm-4 text-end" ng-if="Isvalid==1">
@@ -50,7 +50,7 @@
                     <label>License Name : {{LicenseName}} </label>
                 </div>
                 <div class="col-md-4">
-                    <label>Location Code:{{SCode}}</label><label>   Location Address : {{SAddress}} </label>
+                    <label>StoreCode:{{SCode}}</label><label>   Store Address : {{SAddress}} </label>
                 </div>
             </div>
         </div>
@@ -61,8 +61,8 @@
                 </div>
 
                 <div class="col-md-4">-->
-        @*<label>StoreCode:{{SCode}}</label><label>  License Name : {{LicenseName}}</label>*@
-        <!--</div>
+                    @*<label>StoreCode:{{SCode}}</label><label>  License Name : {{LicenseName}}</label>*@
+                <!--</div>
             </div>
         </div>-->
         <div class="col-md-4" style=" font-weight: 800; font-size: 16px; padding: 10px; margin-bottom: 0; color: #19508e;">
@@ -232,46 +232,14 @@
         </div>
     </div>
 </div>
-<style>
-    /* Page ko pehle hide karna */
-    #mainPage {
-        display: none;
-    }
-</style>
-
-<div class="modal fade show" id="emailModal" style="display:block; background:rgba(0,0,0,0.6)">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Access Required</h5>
-            </div>
-            <div class="modal-body">
-                <label>Email Address</label>
-                <input type="email" id="userEmail" class="form-control validate" ng-model="Athoriseemail"   placeholder="Enter your email" />
-                <span id="errEmail" style="color:red;display:none;">Please enter valid email</span>
-            </div>
-            <div class="modal-footer" ng-show="permissgrant">
-                <button class="btn btn-primary"
-                        ng-click="submitEmail()"
-                        ng-disabled="isSubmitting">
-                    {{ isSubmitting ? 'Please wait...' : 'Continue' }}
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-    window.onload = function () {
-        document.getElementById("emailModal").style.display = "block";
-    };
-
-  
-</script>
 
 
+ 
+ 
+ 
 
 
-
+ 
 
 
 <script src="~/scripts/RetailJsLib/StoreMastersepController.js?Ver=@ViewBag.Version"></script>

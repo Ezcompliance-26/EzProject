@@ -6,7 +6,6 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
     public class ReportController : Controller
     {
         // GET: Report

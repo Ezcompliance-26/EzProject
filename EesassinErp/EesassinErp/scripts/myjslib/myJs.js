@@ -248,7 +248,6 @@ function CloseTab(iframid, tabid) {
 //---End Close Tab---//
 
 function showMsgBox(response, title, text, type, ButtonClass) {
-    debugger;
     var msgbox_class = "";
     var msgbox_icon_class = "";
     var returnflag = true;

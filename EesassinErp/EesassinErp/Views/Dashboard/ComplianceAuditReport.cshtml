@@ -36,11 +36,27 @@
             min-height: 320px;
         }
 
+    #complianceAuditReport #downloadReportBtn {
+        border-radius: 999px;
+        color: #fff;
+        background: var(--primary);
+        padding: 4px 8px;
+        font-weight: 400;
+        font-size: 0.85rem;
+    }
+
+    #complianceAuditReport #downloadReportBtn:hover{
+        color:#fff;
+        background: var(--primary-dark);
+    }
+
+
 #complianceAuditReport .audit-info-row {
     display: flex;
     align-items: center;
     gap: 18px;
     font-size: 0.82rem;
+    flex-wrap:wrap;
 }
 
 #complianceAuditReport .audit-info-item {
@@ -122,7 +138,7 @@
         color: #fff;
         font-weight: 600;
         font-size: 0.78rem;
-        text-align: center;
+        text-align: left;
         vertical-align: middle;
         white-space: nowrap;
         padding: 8px 10px;
@@ -133,7 +149,7 @@
         background-color: var(--card-bg);
         font-size: 0.78rem;
         vertical-align: middle;
-        text-align: center;
+        text-align: left;
         padding: 8px 10px;
         white-space: nowrap;
     }
@@ -233,28 +249,72 @@
 </style>
 <div id="complianceAuditReport" class="px-4 py-2">
     <div class="card section-card">
-        <h4 class="mt-3" style="color: #E45D27">Compliance Audit Report</h4>
+
+        <div class="d-flex vertical-align-middle justify-content-between mb-3 top-bar">
+            <h4 style="color: #E45D27">Compliance Audit Report</h4>
+
+            <div>
+                <button class="btn btn-sm " id="downloadReportBtn" type="button">Download Report</button>
+            </div>
+        </div>
 
         <!-- Audit Details  -->
-        <div class="audit-info-row">
+        <div class="audit-info-row ">
             <div class="audit-info-item">
-                <span class="audit-label">Audit Score</span>
-                <span class="audit-value">Score Obtained: 49</span>
+                <span class="audit-label">Compliance Percentage :</span>
+                <span class="audit-value">49%</span>
             </div>
 
             <div class="audit-info-divider"></div>
 
-            <div class="audit-info-item">
-                <span class="audit-label">Compliance Score</span>
+            @*<div class="audit-info-item">
+                <span class="audit-label">Compliance Score :</span>
                 <span class="audit-value">44.55%</span>
             </div>
 
+            <div class="audit-info-divider"></div>*@
+
+            <div class="audit-info-item">
+                <span class="audit-label">Date of Audit :</span>
+                <span class="audit-value">2025-11-21</span>
+            </div>
+
             <div class="audit-info-divider"></div>
 
             <div class="audit-info-item">
-                <span class="audit-label">Date of Audit Report</span>
+                <span class="audit-label">Vendor Name :</span>
+                <span class="audit-value">Vendor1</span>
+            </div>
+
+            <div class="audit-info-divider"></div>
+
+            <div class="audit-info-item">
+                <span class="audit-label">Site Name :</span>
+                <span class="audit-value">Site1</span>
+            </div>
+
+            <div class="audit-info-divider"></div>
+
+            <div class="audit-info-item">
+                <span class="audit-label">Document No. :</span>
+                <span class="audit-value">doc01/2025</span>
+            </div>
+
+            <div class="audit-info-divider"></div>
+
+            <div class="audit-info-item">
+                <span class="audit-label">Document Date :</span>
                 <span class="audit-value">2025-11-21</span>
             </div>
+
+            <div class="audit-info-divider"></div>
+
+            <div class="audit-info-item">
+                <span class="audit-label">Uploaded Date :</span>
+                <span class="audit-value">2025-11-21</span>
+            </div>
+
+
         </div>
 
         <!-- KPI Bar  -->
@@ -315,15 +375,16 @@
 
                     <div class="dropdown">
                         <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Filter2
+                            Risk
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Option1</a></li>
-                            <li><a class="dropdown-item" href="#">Option2</a></li>
+                            <li><a class="dropdown-item" href="#">High</a></li>
+                            <li><a class="dropdown-item" href="#">Medium</a></li>
+                            <li><a class="dropdown-item" href="#">Low</a></li>
                         </ul>
                     </div>
 
-                    <button class="btn btn-sm filter-btn active">Go</button>
+                    @*<button class="btn btn-sm filter-btn active">Go</button>*@
                 </div>
 
                 <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
@@ -358,6 +419,7 @@
                                 <th>Act</th>
                                 <th>Forms/Description </th>
                                 <th>Nature of Compliance</th>
+                                <th>Risk</th>
                                 <th>Compliance Score</th>
                                 <th>Compliance Score achieved</th>
                                 <th>Compliance Status</th>
@@ -368,191 +430,170 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             <tr>
                                 <td>1</td>
                                 <td><a href="#" class="text-success text-decoration-none">The Employees' State Insurance Act - 1948</a></td>
                                 <td>Half yearly return</td>
                                 <td>Return</td>
+                                <td>High</td>
                                 <td>1</td>
                                 <td>0.5</td>
                                 <td>Partially Complied</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
                                 <td>
-                                    <label class="btn btn-sm btn-upload px-3" style="white-space:nowrap; cursor:pointer;">
-                                        Choose File <input type="file" hidden>
+                                    <button class="btn btn-sm btn-view">Fix</button>
+                                </td>
+                                <td>
+                                    <label class="btn btn-sm btn-upload" style="white-space:nowrap; cursor:pointer;">
+                                        <i class="bi bi-upload"></i>
+                                        <input type="file" hidden>
                                     </label>
                                 </td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
+                                <td>
+                                    <button class="btn btn-sm btn-submit"><i class="bi bi-download"></i></button>
+                                </td>
                                 <td><input type="text" class="form-control form-control-sm"></td>
                             </tr>
-
                             <tr>
                                 <td>2</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Register of Attendance / Muster Roll as per prescribed format</td>
+                                <td><a href="#" class="text-success text-decoration-none">Shops and Establishment Act</a></td>
+                                <td>Half yearly return</td>
                                 <td>Nature</td>
-                                <td>3</td>
-                                <td>1.5</td>
+                                <td>Medium</td>
+                                <td>1</td>
+                                <td>0.5</td>
                                 <td>Partially Complied</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
+                                <td>
+                                    <button class="btn btn-sm btn-view">Fix</button>
+                                </td>
+                                <td>
+                                    <label class="btn btn-sm btn-upload" style="white-space:nowrap; cursor:pointer;">
+                                        <i class="bi bi-upload"></i>
+                                        <input type="file" hidden>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-submit"><i class="bi bi-download"></i></button>
+                                </td>
                                 <td><input type="text" class="form-control form-control-sm"></td>
                             </tr>
-
                             <tr>
                                 <td>3</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Register of Wages as per prescribed format</td>
+                                <td><a href="#" class="text-success text-decoration-none">Payemnt of Wages Act - 1936</a></td>
+                                <td>Half yearly return</td>
                                 <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Non-Complied</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
+                                <td>Low</td>
+                                <td>1</td>
+                                <td>0.5</td>
+                                <td>Partially Complied</td>
+                                <td>
+                                    <button class="btn btn-sm btn-view">Fix</button>
+                                </td>
+                                <td>
+                                    <label class="btn btn-sm btn-upload" style="white-space:nowrap; cursor:pointer;">
+                                        <i class="bi bi-upload"></i>
+                                        <input type="file" hidden>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-submit"><i class="bi bi-download"></i></button>
+                                </td>
                                 <td><input type="text" class="form-control form-control-sm"></td>
                             </tr>
-
                             <tr>
                                 <td>4</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Register of Employment as per prescribed format</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>3</td>
-                                <td>Complied</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
+                                <td><a href="#" class="text-success text-decoration-none">The Employees' State Insurance Act - 1948</a></td>
+                                <td>Half yearly return</td>
+                                <td>Return</td>
+                                <td>High</td>
+                                <td>1</td>
+                                <td>0.5</td>
+                                <td>Partially Complied</td>
+                                <td>
+                                    <button class="btn btn-sm btn-view">Fix</button>
+                                </td>
+                                <td>
+                                    <label class="btn btn-sm btn-upload" style="white-space:nowrap; cursor:pointer;">
+                                        <i class="bi bi-upload"></i>
+                                        <input type="file" hidden>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-submit"><i class="bi bi-download"></i></button>
+                                </td>
                                 <td><input type="text" class="form-control form-control-sm"></td>
                             </tr>
-
                             <tr>
                                 <td>5</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Register of Advance, Deduction, Damage or Losses</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
+                                <td><a href="#" class="text-success text-decoration-none">The Employees' State Insurance Act - 1948</a></td>
+                                <td>Half yearly return</td>
+                                <td>Return</td>
+                                <td>High</td>
+                                <td>1</td>
+                                <td>0.5</td>
+                                <td>Partially Complied</td>
+                                <td>
+                                    <button class="btn btn-sm btn-view">Fix</button>
+                                </td>
+                                <td>
+                                    <label class="btn btn-sm btn-upload" style="white-space:nowrap; cursor:pointer;">
+                                        <i class="bi bi-upload"></i>
+                                        <input type="file" hidden>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-submit"><i class="bi bi-download"></i></button>
+                                </td>
                                 <td><input type="text" class="form-control form-control-sm"></td>
                             </tr>
-
                             <tr>
                                 <td>6</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Wage Slip issued as per prescribed format</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
+                                <td><a href="#" class="text-success text-decoration-none">The Employees' State Insurance Act - 1948</a></td>
+                                <td>Half yearly return</td>
+                                <td>Return</td>
+                                <td>High</td>
+                                <td>1</td>
+                                <td>0.5</td>
+                                <td>Partially Complied</td>
+                                <td>
+                                    <button class="btn btn-sm btn-view">Fix</button>
+                                </td>
+                                <td>
+                                    <label class="btn btn-sm btn-upload" style="white-space:nowrap; cursor:pointer;">
+                                        <i class="bi bi-upload"></i>
+                                        <input type="file" hidden>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-submit"><i class="bi bi-download"></i></button>
+                                </td>
                                 <td><input type="text" class="form-control form-control-sm"></td>
                             </tr>
-
                             <tr>
                                 <td>7</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Obtained Registration Certificate</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
+                                <td><a href="#" class="text-success text-decoration-none">The Employees' State Insurance Act - 1948</a></td>
+                                <td>Half yearly return</td>
+                                <td>Return</td>
+                                <td>High</td>
+                                <td>1</td>
+                                <td>0.5</td>
+                                <td>Partially Complied</td>
+                                <td>
+                                    <button class="btn btn-sm btn-view">Fix</button>
+                                </td>
+                                <td>
+                                    <label class="btn btn-sm btn-upload" style="white-space:nowrap; cursor:pointer;">
+                                        <i class="bi bi-upload"></i>
+                                        <input type="file" hidden>
+                                    </label>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-submit"><i class="bi bi-download"></i></button>
+                                </td>
                                 <td><input type="text" class="form-control form-control-sm"></td>
                             </tr>
 
-                            <tr>
-                                <td>8</td>
-                                <td>Payment of Wages Act, 1936</td>
-                                <td>Whether wages paid before 7th every month</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>9</td>
-                                <td>Employees State Insurance Act, 1948</td>
-                                <td>Coverage of eligible employees under ESI</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>10</td>
-                                <td>Employees State Insurance Act, 1948</td>
-                                <td>Issued insurance card for all employees covered</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>11</td>
-                                <td>Employees State Insurance Act, 1948</td>
-                                <td>ESI Contribution remitted by 15th of every month</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>12</td>
-                                <td>Employees Provident Funds & Miscellaneous Provisions Act</td>
-                                <td>Coverage of all employees under PF Act</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>13</td>
-                                <td>Employees Provident Funds & Miscellaneous Provisions Act</td>
-                                <td>Remittance of PF contribution before 15th of every month</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></l
-
-</table>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

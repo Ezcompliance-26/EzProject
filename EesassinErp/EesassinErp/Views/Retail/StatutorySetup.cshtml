@@ -30,7 +30,169 @@
 
 </script>
 
-<div class="table-responsive" style="position:relative">
+        <!-- Header -->
+        <div class="page-header d-flex justify-content-between align-items-center mb-3">
+            <h4 style="color: var(--primary)">Secretarial Setup</h4>
+
+            <div class="d-flex gap-2">
+
+                <button class="btn header-btn"
+                        ng-click="switchView()">
+                    {{ showEntryForm ? 'Back to Dashboard' : 'Add Statutory Setup' }}
+                </button>
+
+                <button class="btn header-btn"
+                        ng-show="showEntryForm"
+                        ng-click="ResetForm()">
+                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                </button>
+
+                <button class="btn header-btn"
+                        ng-show="showEntryForm"
+                        ng-click="SaveAfterValidate();ManageLog('Save Statutory Setup')">
+                    <i class="bi bi-check-circle"></i> Save
+                </button>
+
+            </div>
+        </div>
+
+        <!-- Content here -->
+        <div class="small-table-wrapper" ng-show="showEntryForm">
+
+            <div class="table-responsive rounded-3">
+                <table class="table small-table" ng-init="AddListSet()" >
+                    <thead>
+                        <tr>
+                            <th>Sr.No.</th> 
+                            <th>State</th>
+                            <th>Act</th>
+                            <th>Compliance Name</th>
+                            <th>Registration Type</th>
+                            <th>Upload</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="obj in ListSet track by $index">
+                            <td>{{$index + 1}}</td>
+                            <td>
+                                <select class="form-control validate" ng-model="obj.State" ng-init="AllState()" ng-change="BindAct(obj.State, $index)">
+                                    <option value="">Select State</option>
+                                    <option ng-repeat="x in AllStateList" value="{{x.SATE_CODE}}">{{x.STATE_NM}}</option>
+                                </select>
+                            </td>
+                            
+                            <td>
+                                <select class="form-control validate" ng-model="obj.Act" ng-change="BindCompliance(obj.Act,obj.State, $index)">
+                                    <option value="">Select Act</option>
+                                    <option ng-repeat="x in AllActList[$index]" value="{{x.ActId}}">{{x.Act}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control validate" ng-model="obj.ComplianceName">
+                                    <option value="">Select Compliance</option>
+                                    <option ng-repeat="x in AllComlist[$index]" value="{{x.CName}}">{{x.CName}}</option>
+                                </select>
+                            </td>
+                             
+                            <td>
+
+                                <select class="form-control validate" ng-model="obj.RegistrationType">
+                                    <option value="">Select</option>
+                                    <option value="Central">Central</option>
+                                    <option value="State">State</option>
+                                </select>
+
+                            </td>
+
+                            <td>
+
+                                <input type="file"
+                                       class="form-control-file"
+                                       accept=".pdf,.doc,.jpg,.jpeg,.png"
+                                       data-index="{{$index}}"
+                                       onchange="angular.element(this).scope().handleFileUpload(this,'#file')"
+                                       ng-model="obj.Upload">
+                            </td>
+
+                            <td class="text-center">
+                                <button type="button"
+                                        class="btn btn-sm btn-add-row"
+                                        ng-click="AddListSet()"
+                                        ng-if="$last">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                                <button type="button"
+                                        class="btn btn-sm btn-remove-row"
+                                        ng-click="RemoveListSet($index)"
+                                        ng-if="ListSet.length > 1">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="small-table-wrapper" ng-show="showEntryForm==false">
+
+            <div class="table-responsive rounded-3">
+                <table class="table small-table" ng-init="Binddasboard()" >
+                    <thead>
+                        <tr>
+                            <th>State</th>
+                            <th>Act</th>
+                            <th>ComplianceName</th> 
+                            <th>RegistrationType</th>
+                            <th>Upload</th>
+                            <th>CreatedOn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+
+                        <tr ng-repeat="obj in dashboardlist">
+                            <td>{{ obj.STATE_NM }}</td>
+                            <td>
+                                {{ obj.actname  }}
+                            </td>
+                            <td>{{obj.ComplianceName}}</td> 
+                            <td>{{ obj.RegistrationType }}</td>
+                            <td>
+                                <span ng-if="obj.Upoad">
+                                    <a href="#" ng-click="viewFile(obj.Upoad)">
+                                        Download
+                                    </a>
+                                </span>
+                                <span ng-if="!obj.Upoad">No File</span>
+                            </td>
+                            <td>{{ obj.CreatedOn | date:'yyyy-MM-dd' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div class="table-responsive" style="position:relative">
     <button class="btn btn-primary mb-6" ng-click="switchView()">
         {{ showEntryForm ? 'Back to Dashboard' : 'Add Statutory Setup' }}
     </button>

@@ -1160,6 +1160,7 @@
     <Content Include="scripts\RetailJsLib\DepartmentMasterController.js" />
     <Content Include="scripts\RetailJsLib\EnitfyController.js" />
     <Content Include="scripts\RetailJsLib\ExpectationController.js" />
+    <Content Include="scripts\RetailJsLib\FactoryComplianceController.js" />
     <Content Include="scripts\RetailJsLib\LabourCodeController.js" />
     <Content Include="scripts\RetailJsLib\FileRetailMatchingController.js" />
     <Content Include="scripts\RetailJsLib\GradeMasterController.js" />
@@ -1178,6 +1179,7 @@
     <Content Include="scripts\RetailJsLib\Mailingcontroller.js" />
     <Content Include="scripts\RetailJsLib\MainDashboardController.js" />
     <Content Include="scripts\RetailJsLib\ManualBulkPaymetController.js" />
+    <Content Include="scripts\RetailJsLib\NewEmployeeMasterController.js" />
     <Content Include="scripts\RetailJsLib\NewletterDetail.js" />
     <Content Include="scripts\RetailJsLib\NewletterDetailAll.js" />
     <Content Include="scripts\RetailJsLib\NewVendorRegistrationController.js" />
@@ -3674,7 +3676,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63292</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:8880/</IISUrl>
+          <IISUrl>http://localhost:8882/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

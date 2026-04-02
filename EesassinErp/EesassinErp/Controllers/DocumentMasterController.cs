@@ -8,7 +8,6 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
     public class DocumentMasterController : Controller
     {
         // GET: Get Auditor Compliance 

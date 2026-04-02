@@ -269,21 +269,21 @@ function printDiv() {
                             <input type="text" class="form-control validate" id="txtEmployeeName" ng-model="EmployeeName" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Employee Designation </label>
-                            <input type="text" class="form-control" id="txtEmployeeDesignation" ng-model="EmployeeDesignation" />
+                            <label class="form-label">Employee Designation  <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtEmployeeDesignation" ng-model="EmployeeDesignation" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Employee Department</label>
                             <input type="text" class="form-control" id="txtEmployeeDepartment" ng-model="EmployeeDepartment" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Father/Husband Name</label>
-                            <input type="text" class="form-control" id="txtFatherHusbandName" ng-model="FatherHusbandName" />
+                            <label class="form-label">Father/Husband Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtFatherHusbandName" ng-model="FatherHusbandName" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Gender</label>
+                            <label class="form-label">Gender <span class="text-danger">*</span></label>
                             <div class="input-box" ng-init="BindGenderList()">
-                                <select class="form-select form-control" id="ddlGender" ng-model="Gender">
+                                <select class="form-select form-control validate" id="ddlGender" ng-model="Gender">
                                     <option value="">Select</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -306,24 +306,24 @@ function printDiv() {
                             <input type="date" class="form-control validate" id="txtDateofBirth" ng-model="DateofBirth" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Present Address </label>
-                            <input type="text" class="form-control " id="txtPresentAddress" ng-model="PresentAddress" />
+                            <label class="form-label">Present Address <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtPresentAddress" ng-model="PresentAddress" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Permanent Address </label>
-                            <input type="text" class="form-control " id="txtPermanentAddress" ng-model="PermanentAddress" />
+                            <label class="form-label">Permanent Address <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtPermanentAddress" ng-model="PermanentAddress" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Adhar Card Number  </label>
-                            <input type="text" class="form-control  " id="txtAdharCardNumber" ng-model="AdharCardNumber" numeric-only dynamic-length maxlength="12" minlength="12" />
+                            <label class="form-label">Adhar Card Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtAdharCardNumber" ng-model="AdharCardNumber" numeric-only dynamic-length maxlength="12" minlength="12" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">PAN Number  </label>
-                            <input type="text" class="form-control  " id="txtPANNumber" ng-model="PANNumber" dynamic-length maxlength="10" minlength="10" />
+                            <label class="form-label">PAN Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtPANNumber" ng-model="PANNumber" dynamic-length maxlength="10" minlength="10" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Mobile Number </label>
-                            <input type="text" class="form-control  " id="txtMobileNumber" ng-model="MobileNumber" onblur="validatePhoneNo('#txtMobileNumber')" numeric-only dynamic-length maxlength="10" minlength="10" />
+                            <label class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtMobileNumber" ng-model="MobileNumber" onblur="validatePhoneNo('#txtMobileNumber')" numeric-only dynamic-length maxlength="10" minlength="10" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Alternative Mobile Number </label>
@@ -335,44 +335,44 @@ function printDiv() {
 
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Bank Account Number  </label>
-                            <input type="text" class="form-control  " id="txtBankAccountNumber" ng-model="BankAccountNumber" numeric-only />
+                            <label class="form-label">Bank Account Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtBankAccountNumber" ng-model="BankAccountNumber" numeric-only />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Bank IFSC Code </label>
-                            <input type="text" class="form-control  " id="txtBankIFSCCode" ng-model="BankIFSCCode" />
+                            <label class="form-label">Bank IFSC Code <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtBankIFSCCode" ng-model="BankIFSCCode" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">UAN No<span class="text-danger">*</span></label>
-                            <input type="text" class="form-control validate" id="txtPreviousUAN" ng-model="PreviousUAN" />
+                            <label class="form-label">UAN No</label>
+                            <input type="text" class="form-control" id="txtPreviousUAN" ng-model="PreviousUAN" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Previous ESI  </label>
-                            <input type="text" class="form-control" id="txtPreviousESI" ng-model="PreviousESI" />
+                            <label class="form-label">Previous ESI <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtPreviousESI" ng-model="PreviousESI" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Gross Salary </label>
-                            <input type="text" class="form-control " id="txtGrossSalary" ng-model="GrossSalary" numeric-only />
+                            <label class="form-label">Gross Salary <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtGrossSalary" ng-model="GrossSalary" numeric-only />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">DOJ  </label>
-                            <input type="date" class="form-control" id="txtDOJ" ng-model="DOJ" />
+                            <label class="form-label">DOJ <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control validate" id="txtDOJ" ng-model="DOJ" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Name of Nominee </label>
-                            <input type="text" class="form-control" id="txtNameofNominee" ng-model="NameofNominee" />
+                            <label class="form-label">Name of Nominee <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtNameofNominee" ng-model="NameofNominee" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Address of Nominee </label>
-                            <input type="text" class="form-control" id="txtAddressofNominee" ng-model="AddressofNominee" />
+                            <label class="form-label">Address of Nominee <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtAddressofNominee" ng-model="AddressofNominee" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Relation of Nominee  </label>
-                            <input type="text" class="form-control" id="txtRelationofNominee" ng-model="RelationofNominee" />
+                            <label class="form-label">Relation of Nominee <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control validate" id="txtRelationofNominee" ng-model="RelationofNominee" />
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">DOB of Nominee  </label>
-                            <input type="date" class="form-control" id="txtDOBofNominee" ng-model="DOBofNominee" />
+                            <label class="form-label">DOB of Nominee <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control validate" id="txtDOBofNominee" ng-model="DOBofNominee" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Store Code <span class="text-danger">*</span></label>
@@ -384,8 +384,8 @@ function printDiv() {
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Date of leaving </label>
-                            <input type="date" class="form-control" id="txtleavingDate" ng-model="LeavingDate" />
+                            <label class="form-label">Date of leaving<span class="text-danger">*</span></label>
+                            <input type="date" class="form-control validate" id="txtleavingDate" ng-model="LeavingDate" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">PF Account No.<span class="text-danger">*</span></label>

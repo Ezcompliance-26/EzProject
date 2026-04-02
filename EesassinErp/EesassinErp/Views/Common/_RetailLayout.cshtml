@@ -1,7 +1,7 @@
 ﻿
 @{
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
-  
+    ViewBag.Title = "Retail";
     Layout = null;
 }
 
@@ -10,7 +10,7 @@
 <!-- InstanceBegin template="/Templates/template.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
     <!-- InstanceBeginEditable name="doctitle" -->
-    
+    <title>Retail</title>
     <!-- InstanceEndEditable -->
     <meta charset="utf-8" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -61,13 +61,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
     <style>
-        .themed-element.addcss {
-            color: #000;
-            text-decoration: none;
-            padding: 5px 0px !important;
-            transition: all 0.3s ease-in-out;
-        }
-      
+
         .red-validation {
             border: 1px solid red;
             background-color: #ffe6e6;
@@ -345,15 +339,15 @@
             alert("Right-click is disabled!");
         });
         (function () {
-            //setInterval(function () {
-            //    var before = new Date();
+            setInterval(function () {
+                var before = new Date();
 
-            //    var after = new Date();
-            //    if (after - before > 100) {
-            //        alert("Developer tools detected! Blocking access.");
-            //        Clear();
-            //    }
-            //}, 500);
+                var after = new Date();
+                if (after - before > 100) {
+                    alert("Developer tools detected! Blocking access.");
+                    Clear();
+                }
+            }, 500);
         })();
 
         function Clear() {
@@ -499,69 +493,58 @@
                                                         <b style="font-size: 1rem;">{{Name}}</b> <br />
                                                         <b>{{UserName}}</b> <br />
                                                         Last Login Time : <span class="last-login-time" ng-model="LastLogin" ng-bind="LastLogin"></span>
-                                                        <br /> Login As: <span ng-if="loginType==4">{{IsExecuter}}</span>  <span ng-if="loginType==5">Admin</span>
+                                                        <br /> Login As: <span>{{IsExecuter}}</span>
                                                         <br /> Industry: <span>{{Industry}}</span>
                                                     </label>
 
                                                     <ul class="navsidebar">
-                                                    
-                                                        <li class="nav-item" id="Dashboard-menu" ng-init="BindMenus()">
+                                                        <li class="nav-item" id="Dashboard-menu">
                                                             <a href="javascript:void(0);" class="themed-element addcss" id="Dashboard-menu-link">
                                                                 <span class="icons icon-globe"></span>Dashboard
                                                                 <span class="toggle-icon" id="toggle-Dashboard"><i class="fas fa-plus"></i></span>
                                                             </a>
                                                             <ul class="submenu" id="dashboard-submenu">
-                                                                <li class="nav-item"
-                                                                    ng-repeat="x in MenuAddDynamic | filter:{ PageName: 'Dashboard' }"
-                                                                    ng-class="{ 'active': SectionMenuName === x.SectionName }">
-                                                                    <a href="{{x.url}}"
-                                                                       class="themed-element addcss"
-                                                                       ng-click="updateMenu(x.SectionName); ManageLog(x.SectionName)">
-                                                                        <span class="icons icon-docs"></span>
-                                                                        {{x.SectionName}}
+                                                                @*<li class="nav-item" ng-class="{ 'active': SectionMenuName === 'Main Dashboard' }">
+                                                                    <a href="#" class="themed-element addcss" ng-click="backtodashboard();ManageLog('Open Licence Status Dashboard')">
+                                                                        <span class="icons icon-docs"></span>Main Dashboard
+                                                                    </a>
+                                                                </li>*@
+                                                                <li ng-show="LD_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Licence Status Dashboard' }">
+                                                                    <a href="../RetailSection/LicenceStatusDashboard?Licence Status Dashboard" class="themed-element addcss" ng-click="updateMenu('Licence Status Dashboard');ManageLog('Open Licence Status Dashboard')">
+                                                                        <span class="icons icon-grid"></span>Licence Dashboard
                                                                     </a>
                                                                 </li>
-                                                                @*<li class="nav-item" ng-class="{ 'active': SectionMenuName === 'Main Dashboard' }">
-                    <a href="#" class="themed-element addcss" ng-click="backtodashboard();ManageLog('Open Licence Status Dashboard')">
-                        <span class="icons icon-docs"></span>Main Dashboard
-                    </a>
-                </li>*@
-                                                                @*<li class="nav-item" ng-class="{ 'active': SectionMenuName === {{x.SectionName}}">
-                    <a href="{{x.url}}" class="themed-element addcss" ng-click="updateMenu({{x.SectionName}});ManageLog({{x.SectionName}})">
-                        <span class="icons icon-grid"></span>{{x.SectionName}}
-                    </a>
-                </li>
-                <li ng-show="CommonDashboard==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Common Dashboard' }">
-                    <a href="../Dashboard/CommonDashboard" class="themed-element addcss" ng-click="updateMenu('Common Dashboard');ManageLog('Open Common Dashboard')">
-                        <span class="icons icon-grid"></span>Common Dash.
-                    </a>
-                </li>
-
-                <li ng-show="COMD_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Compliance Dashboard' }">
-                    <a href="../Retail/ComplianceDashboard?Compliance Dashboard" class="themed-element addcss" ng-click="updateMenu('Compliance Dashboard');ManageLog('Open Compliance Dashboard')">
-                        <span class="icons icon-docs"></span>Comp. Dashboard
-                    </a>
-                </li>
-                <li ng-show="COMD_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Compliance Calendar' }">
-                    <a href="../Retail/Ncalenderdashboard?Statutory" class="themed-element addcss" ng-click="updateMenu('Compliance Calendar');ManageLog('Open Compliance Calendar')">
-                        <span class="icons icon-docs"></span>Comp. Calendar
-                    </a>
-                </li>
-                <li ng-show="SMD_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Store Dashboard' }">
-                    <a href="../RetailSection/StoreDashboard?Location Dashboard" class="themed-element addcss" ng-click="updateMenu('Store Dashboard');ManageLog('Open Store Dashboard')">
-                        <span class="icons icon-docs"></span>Location Dashboard
-                    </a>
-                </li>
-                <li class="nav-item" ng-class="{ 'active': SectionMenuName === 'Dashboard' }">
-                    <a href="../RetailSection/Dashboard?Dashboard" class="themed-element addcss" ng-click="updateMenu('Dashboard')">
-                        <span class="icons icon-docs"></span>Dashboard
-                    </a>
-                </li>
-                <li class="nav-item" ng-show="LITM_Flag==1" ng-class="{ 'active': SectionMenuName === 'Litigation Management' }">
-                    <a href="../RetailSection/LitigationManagement?Litigation Management" class="themed-element addcss" ng-click="updateMenu('Litigation Management')">
-                        <span class="icons icon-docs"></span>Litigation Dash.
-                    </a>
-                </li>*@
+                                                                <li ng-show="CommonDashboard==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Common Dashboard' }">
+                                                                    <a href="../Dashboard/CommonDashboard" class="themed-element addcss" ng-click="updateMenu('Common Dashboard');ManageLog('Open Common Dashboard')">
+                                                                        <span class="icons icon-grid"></span>Common Dash.
+                                                                    </a>
+                                                                </li>
+                                                                
+                                                                <li ng-show="COMD_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Compliance Dashboard' }">
+                                                                    <a href="../Retail/ComplianceDashboard?Compliance Dashboard" class="themed-element addcss" ng-click="updateMenu('Compliance Dashboard');ManageLog('Open Compliance Dashboard')">
+                                                                        <span class="icons icon-docs"></span>Comp. Dashboard
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="COMD_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Compliance Calendar' }">
+                                                                    <a href="../Retail/Ncalenderdashboard?Statutory" class="themed-element addcss" ng-click="updateMenu('Compliance Calendar');ManageLog('Open Compliance Calendar')">
+                                                                        <span class="icons icon-docs"></span>Comp. Calendar
+                                                                    </a>
+                                                                </li>
+                                                                <li ng-show="SMD_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Store Dashboard' }">
+                                                                    <a href="../RetailSection/StoreDashboard?Location Dashboard" class="themed-element addcss" ng-click="updateMenu('Store Dashboard');ManageLog('Open Store Dashboard')">
+                                                                        <span class="icons icon-docs"></span>Location Dashboard
+                                                                    </a>
+                                                                </li>
+                                                                <li class="nav-item" ng-class="{ 'active': SectionMenuName === 'Dashboard' }">
+                                                                    <a href="../RetailSection/Dashboard?Dashboard" class="themed-element addcss" ng-click="updateMenu('Dashboard')">
+                                                                        <span class="icons icon-docs"></span>Dashboard
+                                                                    </a>
+                                                                </li>
+                                                                <li class="nav-item" ng-show="LITM_Flag==1" ng-class="{ 'active': SectionMenuName === 'Litigation Management' }">
+                                                                    <a href="../RetailSection/LitigationManagement?Litigation Management" class="themed-element addcss" ng-click="updateMenu('Litigation Management')">
+                                                                        <span class="icons icon-docs"></span>Litigation Dash.
+                                                                    </a>
+                                                                </li>
 
                                                             </ul>
                                                         </li>
@@ -572,23 +555,7 @@
                                                                 <span class="toggle-icon" id="toggle-master"><i class="fas fa-plus"></i></span>
                                                             </a>
                                                             <ul class="submenu" id="master-submenu">
-                                                                <li class="nav-item"
-                                                                    ng-repeat="x in MenuAddDynamic | filter:{ PageName: 'Master' }"
-                                                                    ng-class="{ 'active': SectionMenuName === x.SectionName }">
-                                                                    <a href="{{x.url}}"
-                                                                       class="themed-element addcss"
-                                                                       ng-click="updateMenu(x.SectionName); ManageLog(x.SectionName)">
-                                                                        <span class="icons icon-docs"></span>
-                                                                        {{x.SectionName}}
-                                                                    </a>
-                                                                </li>
-
-
-
-
-
-
-                                                                @*<li id="listoremater" ng-show="SM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Location Master' }">
+                                                                <li id="listoremater" ng-show="SM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Location Master' }">
                                                                     <a href="../RetailSection/StoreMaster?Location Master" class="themed-element addcss" ng-click="updateMenu('Location Master');ManageLog('Open Location Master')">
                                                                         <span class="icons icon-docs"></span>Location Master
                                                                     </a>
@@ -672,16 +639,11 @@
                                                                         <span class="icons icon-docs"></span>Factory Compliance
                                                                     </a>
                                                                 </li>
-                                                                <li ng-show="contractror==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'contractror Master' }">
+                                                                <li ng-show="contractror==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Litigation Master' }">
                                                                     <a href="../Retail/addcontractorcompliance?Contractor Compliance" class="themed-element addcss" ng-click="updateMenu('Litigation Master');ManageLog('Open Litigation Master')">
                                                                         <span class="icons icon-docs"></span>Contractor Compliance
                                                                     </a>
                                                                 </li>
-                                                                <li ng-show="labourcode==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'labour code' }">
-                                                                    <a href="../Retail/RetailLabourCode?Labour Code" class="themed-element addcss" ng-click="updateMenu('labour code');ManageLog('Open labour code')">
-                                                                        <span class="icons icon-docs"></span>Labour Code
-                                                                    </a>
-                                                                </li>*@
 
 
 
@@ -695,18 +657,7 @@
                                                             </a>
                                                             <ul class="submenu" id="report-submenu">
 
-                                                                <li class="nav-item"
-                                                                    ng-repeat="x in MenuAddDynamic | filter:{ PageName: 'Report' }"
-                                                                    ng-class="{ 'active': SectionMenuName === x.SectionName }">
-                                                                    <a href="{{x.url}}"
-                                                                       class="themed-element addcss"
-                                                                       ng-click="updateMenu(x.SectionName); ManageLog(x.SectionName)">
-                                                                        <span class="icons icon-docs"></span>
-                                                                        {{x.SectionName}}
-                                                                    </a>
-                                                                </li>
-
-                                                                <!--<li ng-show="LM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'License Report' }">
+                                                                <li ng-show="LM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'License Report' }">
                                                                     <a href="../Report/ReportLicenseMaster?License Master Report" class="themed-element addcss" ng-click="updateMenu('License Master Report');ManageLog('Open License Master Report')">
                                                                         <span class="icons icon-docs"></span>License Report
                                                                     </a>
@@ -726,101 +677,16 @@
                                                                         <span class="icons icon-docs"></span>Exception Report
                                                                     </a>
                                                                 </li>
-                                                                <li ng-show="contractror==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Contractor Master' }">
+                                                                <li ng-show="contractror==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Litigation Master' }">
                                                                     <a href="../Retail/contractorReportCompliance?Contractor Compliance Report" class="themed-element addcss" ng-click="updateMenu('Litigation Master');ManageLog('Open Litigation Master')">
                                                                         <span class="icons icon-docs"></span>Contractor Compliance Report
                                                                     </a>
-                                                                </li>-->
+                                                                </li>
                                                                 @*<li ng-show="CD_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Compliance Report' }">
             <a href="../Retail/reportcompliance?Compliance Report" class="themed-element addcss" ng-click="updateMenu('Excel Compliance Report');ManageLog('Open Excel Compliance Report Master')">
                 <span class="icons icon-docs"></span>Compliance Report
             </a>
         </li>*@
-                                                                <!-------- Start Common Report --------->
-                                                                <!-------- Common Dashboard Compliance Report --------->
-                                                                <!--<li ng-show="CommonDashboard==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Common Dashboard Compliance' }">
-                                                                    <a href="../Dashboard/CommonDashboardCompliance?Common Dashboard Compliance " class="themed-element addcss" ng-click="updateMenu('Common Dashboard Compliance');ManageLog('Open Common Dashboard Compliance')">
-                                                                        <span class="icons icon-docs"></span>Common Dashboard Compliance
-                                                                    </a>
-                                                                </li>-->
-
-
-
-                                                                <!-------- Labour Common Compliance Report --------->
-                                                                <!--<li ng-show="STAT_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Labour Common Compliance' }">
-                                                                    <a href="../Dashboard/LabourCommonCompliance?Labour Common Compliance " class="themed-element addcss" ng-click="updateMenu('Labour Common Compliance');ManageLog('Open Labour Common Compliance')">
-                                                                        <span class="icons icon-docs"></span>Labour Common Compliance
-                                                                    </a>
-                                                                </li>-->
-
-                                                                <!-------- Factory Common Compliance Report --------->
-                                                                <!--<li ng-show="Factory_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'factory Common Compliance' }">
-                                                                    <a href="../Dashboard/factoryCommonCompliance?factoryCommonCompliance " class="themed-element addcss" ng-click="updateMenu('factory Common Compliance');ManageLog('Open factory Common Compliance')">
-                                                                        <span class="icons icon-docs"></span>Factory Common Compliance
-                                                                    </a>
-                                                                </li>-->
-
-                                                                <!-------- Payroll Common Compliance Report --------->
-                                                                @*<li ng-show="Payroll==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Payroll Common Compliance  ' }">
-            <a href="../Dashboard/payrollCommonCompliance?Payroll Common Compliance " class="themed-element addcss" ng-click="updateMenu('Payroll Common Compliance  ');ManageLog('Open Payroll Common Compliance  ')">
-                <span class="icons icon-docs"></span>Payroll Common Compliance
-            </a>
-        </li>*@
-
-                                                                <!-------- Establishment Common Compliance Report --------->
-                                                                <!--<li ng-show="ESCOMPLI_FLAG==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Establishment Common Compliance  ' }">
-                                                                    <a href="../Dashboard/EstablishmentCommonCompliance?Establishment Common Compliance " class="themed-element addcss" ng-click="updateMenu('Establishment Common Compliance  ');ManageLog('Open Establishment Common Compliance  ')">
-                                                                        <span class="icons icon-docs"></span>Establishment Common Compliance
-                                                                    </a>
-                                                                </li>-->
-
-
-                                                                <!-------- license Common Compliance Report --------->
-                                                                <!--<li ng-show="LM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'license Common Compliance  ' }">
-                                                                    <a href="../Dashboard/licenseCommonCompliance?license Common Compliance " class="themed-element addcss" ng-click="updateMenu('license Common Compliance  ');ManageLog('Open license Common Compliance  ')">
-                                                                        <span class="icons icon-docs"></span>license Common Compliance
-                                                                    </a>
-                                                                </li>-->
-
-                                                                <!-------- location Common Compliance Report --------->
-                                                                <!--<li ng-show="SM_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'location Common Compliance  ' }">
-                                                                    <a href="../Dashboard/locationCommonCompliance?location Common Compliance " class="themed-element addcss" ng-click="updateMenu('location Common Compliance  ');ManageLog('Open location Common Compliance  ')">
-                                                                        <span class="icons icon-docs"></span>location Common Compliance
-                                                                    </a>
-                                                                </li>-->
-
-
-                                                                <!-------- Secretarial Common Compliance Report --------->
-                                                                <!--<li ng-show="SECC_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Secretarial Common Compliance  ' }">
-                                                                    <a href="../Dashboard/SecretarialCommonCompliance?Secretarial Common Compliance " class="themed-element addcss" ng-click="updateMenu('Secretarial Common Compliance  ');ManageLog('Open Secretarial Common Compliance  ')">
-                                                                        <span class="icons icon-docs"></span>Secretarial Common Compliance
-                                                                    </a>
-                                                                </li>-->
-
-
-                                                                <!-------- Finance Common Compliance Report --------->
-                                                                <!--<li ng-show="FINC_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Finance Common Compliance  ' }">
-                                                                    <a href="../Dashboard/FinanceCommonCompliance?Finance Common Compliance " class="themed-element addcss" ng-click="updateMenu('Finance Common Compliance  ');ManageLog('Open Finance Common Compliance  ')">
-                                                                        <span class="icons icon-docs"></span>Finance Common Compliance
-                                                                    </a>
-                                                                </li>-->
-
-                                                                <!-------- Notice Common Compliance Report --------->
-                                                                <!--<li ng-show="NI_ViewFlag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Notice Common Compliance  ' }">
-                                                                    <a href="../Dashboard/NoticeCommonCompliance?Notice Common Compliance " class="themed-element addcss" ng-click="updateMenu('Notice Common Compliance  ');ManageLog('Open Notice Common Compliance  ')">
-                                                                        <span class="icons icon-docs"></span>Notice Common Compliance
-                                                                    </a>
-                                                                </li>
-                                                                <li ng-show="LITM_Flag==1" class="nav-item" ng-class="{ 'active': SectionMenuName === 'Litigation Common Compliance  ' }">
-                                                                    <a href="../Dashboard/LitigationCommonCompliance?Litigation Common Compliance" class="themed-element addcss" ng-click="updateMenu('Litigation Common Compliance  ');ManageLog('Open Litigation Common Compliance  ')">
-                                                                        <span class="icons icon-docs"></span>Litigation Common Compliance
-                                                                    </a>
-                                                                </li>-->
-
-
-
-
-                                                                <!-------- End  Common Repor --------->
                                                             </ul>
                                                         </li>
 
@@ -839,8 +705,7 @@
                             </div>
                             <div class="col col-md-auto">
                                 <div class="upload-btn-wrapper me-5">
-                              
-                                    <button ng-if="loginType==1 || loginType==5" class="btn btn-success" ng-click="GoToSupplier();ManageLog('Go To Supplier')">Go To Supplier</button>
+                                    <button ng-if="LoginId==1" class="btn btn-success" ng-click="GoToSupplier();ManageLog('Go To Supplier')">Go To Supplier</button>
                                 </div>
                                 <div class="nav-item dropdown d-inline me-3" ng-init="getRetailNotification()">
                                     <a href="#" class="micon dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-target="#notificationModal">

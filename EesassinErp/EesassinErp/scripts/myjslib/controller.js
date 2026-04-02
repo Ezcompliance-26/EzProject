@@ -2584,18 +2584,17 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
        
         var collectionobj = {};
         collectionobj.Id = LoginId;
-        collectionobj.Action = 5;
+        collectionobj.Action = 5
+       
+        var getDetails = myService.methode('POST', ("../RetailSection/RetailRolePermisssion"), JSON.stringify(collectionobj));
+        getDetails.then(function (response)
+        {
+            angular.forEach(response.data.Result, function (menu)
+            {
 
-        var getDetails = myService.methode(
-            'POST',
-            "../RetailSection/RetailRolePermisssion",
-            JSON.stringify(collectionobj)
-        );
-
-        getDetails.then(function (response) {
-
-            angular.forEach(response.data.Result, function (menu) {
+                // original URL ko token me convert kar do
                 menu.OriginalUrl = menu.MenuUrl;
+
                 menu.MenuUrl = "/p/" + btoa(menu.MenuUrl);
             });
 
@@ -2655,27 +2654,32 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
             $scope.CD_VerifyFlag = row4.VerifyFlag;
         }
 
-        if (row5) {
-            $scope.MP_ViewFlag = row5.ViewFlag;
-        }
+            }
+            if (row5) {
+                $scope.MP_ViewFlag = row5.ViewFlag;
+            }
+            if (row6) {
+                $scope.Licenseurl = row6.url;
+                $scope.LR_ViewFlag = row6.ViewFlag;
+                $scope.LM_ViewFlag = row6.ViewFlag;
+                $scope.LM_EditFlag = row6.EditFlag;
+                $scope.LM_DeleteFlag = row6.DeleteFlag;
+                $scope.LM_UploadFlag = row6.UploadFlag;
+                $scope.LM_DownloadFlag = row6.DownloadFlag;
+                $scope.LM_VerifyFlag = row6.VerifyFlag;
+            }
+            if (row7) {
+                $scope.PFUpload = row7.UploadFlag;
+                $scope.PFVerify = row7.VerifyFlag;
+                
+            }
+            else {
+                console.log("Row not found");
+            }
 
-        if (row6) {
-            $scope.Licenseurl = row6.url;
-            $scope.LR_ViewFlag = row6.ViewFlag;
-            $scope.LM_ViewFlag = row6.ViewFlag;
-            $scope.LM_EditFlag = row6.EditFlag;
-            $scope.LM_DeleteFlag = row6.DeleteFlag;
-            $scope.LM_UploadFlag = row6.UploadFlag;
-            $scope.LM_DownloadFlag = row6.DownloadFlag;
-            $scope.LM_VerifyFlag = row6.VerifyFlag;
-        }
 
-        if (row7) {
-            $scope.PFUpload = row7.UploadFlag;
-            $scope.PFVerify = row7.VerifyFlag;
-        }
+        })
     }
-   
     $scope.VerifyPassword = function () {
         var collectionobj = {};
         collectionobj.BranchCode = '001';
@@ -3814,20 +3818,8 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     if (IsFunctionDefined('app.Sacretrialcompliancecontroller')) {
         app.Sacretrialcompliancecontroller($scope, $element, $filter, myService, $http, $sce);
     }
-    if (IsFunctionDefined('app.WithoutInvoiceController')) {
-        app.WithoutInvoiceController($scope, $element, $filter, myService);
-    }
-    if (IsFunctionDefined('app.NewEmployeeController')) {
-        app.NewEmployeeController($scope, $element, $filter, myService, $http,$timeout);
-    }
-
-    if (IsFunctionDefined('app.NewVendorRegistrationController')) {
-        app.NewVendorRegistrationController($scope, $element, $filter, myService, $http);
-    }
-    if (IsFunctionDefined('app.DeclarationController')) {
-        app.DeclarationController($scope, $element, $filter, $sce, myService);
-    }
     
+     
 })
 
 function IsFunctionDefined(functionName) {
