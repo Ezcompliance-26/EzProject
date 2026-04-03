@@ -261,10 +261,21 @@ namespace EesassinErp.Controllers
             return result;
         }
 
-
+        public async Task<string> GetempRegistration(BCommon obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.GetempRegistration(obj)));
+            return result;
+        }
+        
         public async Task<string> IUDUserRegistration(BCommon obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.IUDUserRegistration(obj)));
+            return result;
+        }
+
+        public async Task<string> IUDEmployeeDoc(BCommon obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.IUDEmployeeDoc(obj)));
             return result;
         }
 
@@ -340,6 +351,10 @@ namespace EesassinErp.Controllers
         //----------------------------
         
         public ActionResult VBoard()
+        {
+            return View();
+        }
+        public ActionResult VBoard1()
         {
             return View();
         }

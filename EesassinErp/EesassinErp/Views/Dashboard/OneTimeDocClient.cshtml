@@ -184,7 +184,7 @@
             box-shadow: 0 0 0 3px rgba(228,93,39,0.12);
         }
 
-/*Fix Search bar and button in toolbar*/
+    /*Fix Search bar and button in toolbar*/
     #oneTimeDocClient .table-toolbar .input-group .form-control {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
@@ -195,9 +195,8 @@
         border-bottom-left-radius: 0;
         border-color: var(--primary);
     }
-
-
 </style>
+<script src="~/scripts/myjslib/OneTimeDocumentController.js"></script>
 <div id="oneTimeDocClient" class="px-4 py-2">
     <div class="card section-card">
         <h4 class="my-4" style="color: #E45D27">One Time Document</h4>
@@ -206,24 +205,33 @@
             <!-- Toolbar -->
             <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
                 <div class="d-flex align-items-center gap-2">
-                    <div class="dropdown">
-                        <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Vendor
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Vendor 1</a></li>
-                        </ul>
+                    <div class="dropdown" ng-init="BindVendor()">
+                        @*<button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Vendor
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Vendor 1</a></li>
+                            </ul>*@
+                        <select autocomplete='address-level2' class="btn btn-sm filter-btn" id="ddlVendorId" ng-model="VendorId" ng-change="AllUserListsLoad(VendorId)">
+                            <option value="">Select</option>
+                            <option ng-repeat="x in VendorList" value="{{x.PartyId}}">{{x.PartyName}}</option>
+                        </select>
                     </div>
 
                     <div class="dropdown">
-                        <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @*<button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             User
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">User1</a></li>
                             <li><a class="dropdown-item" href="#">User2</a></li>
                             <li><a class="dropdown-item" href="#">User3</a></li>
-                        </ul>
+                        </ul>*@
+                        <select autocomplete='address-level2' class="btn btn-sm filter-btn " id="ddlUserList" ng-model="UserId" ng-change="BindDocument(UserId);">
+                            <option value="">Select</option>
+                            <option ng-repeat="x in AllUserList" value="{{x.LoginId}}">{{x.Name}}</option>
+                        </select>
+
                     </div>
 
                     <button class="btn btn-sm filter-btn active">Go</button>
@@ -241,9 +249,9 @@
                         <div class="dropdown">
                             <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">CSV</a></li>
-                                <li><a class="dropdown-item" href="#">PDF</a></li>
-                                <li><a class="dropdown-item" href="#">Print</a></li>
+                                @*<li><a class="dropdown-item" href="#">CSV</a></li>
+                                <li><a class="dropdown-item" href="#">PDF</a></li>*@
+                                <li><a class="dropdown-item" ng-click="PrintRecord()" >Print</a></li>
                             </ul>
                         </div>
                     </div>
@@ -253,7 +261,7 @@
             <!-- Table wrapper -->
             <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3">
                 <div class="table-responsive">
-                    <table class="table table-sm mb-0 small-table">
+                    <table class="table table-sm mb-0 small-table"  ng-init="BindDocument()">
                         <thead>
                             <tr>
                                 <th>S.No</th>

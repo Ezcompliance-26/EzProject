@@ -193,6 +193,7 @@ namespace DAL
             var param = new List<SqlParameter>
             {
               new SqlParameter("@Action", obj.ActionType),
+              new SqlParameter("@UserId",obj.UserId),
                 new SqlParameter("@Id",obj.Id),
             };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.Usp_StoreMaster", CommandType.StoredProcedure, param.ToArray()));

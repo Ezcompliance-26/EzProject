@@ -4,9 +4,26 @@ namespace BAL
 {
     public class RetialEmployeeManager
     {
+        //---------------------Action--------------------------
+        public string MinimumWageCategory { get; set; }
+        public string WageType { get; set; }
+        public string WageDisbursementMode { get; set; }
+        public string PPE { get; set; }
+        public string PPEType { get; set; }
+        public string SafetyTrainingStatus { get; set; }
+        public string SiteInductionStatus { get; set; }
+        public string PoliceVerificationStatus { get; set; }
+        public string TempIDStatus { get; set; }
+        public string TempIDNumber { get; set; }
+        public string TempIDDate { get; set; }
+        public string PermanentIDStatus { get; set; }
+        public string PermanentIDNumber { get; set; }
+        public string  PermanentIDDate { get; set; }
+
+        //-----------------------------------------------
         public string ActionType { get; set; }
         public string UserId { get; set; }
-
+        public string SiteId { get; set; }
         public DateTime? LeavingDate { get; set; }
         public string PFAccount { get; set; }
         public string SuperVisior1 { get; set; }

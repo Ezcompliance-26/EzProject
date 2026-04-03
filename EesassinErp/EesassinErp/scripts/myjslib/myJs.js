@@ -1,5 +1,7 @@
 ﻿
 
+ 
+
 $(document).ready(function () {
     $(document).bind("contextmenu", function (e) {
         return false;
@@ -137,6 +139,9 @@ function ConverttoDate(date) {
 };
 
 var comp = "";
+
+
+ 
 
 function SortByNumber(a, b) {
     var value1 = a[comp];

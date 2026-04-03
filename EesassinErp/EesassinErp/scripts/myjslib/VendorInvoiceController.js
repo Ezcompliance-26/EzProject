@@ -1,4 +1,4 @@
-﻿/// <reference path="C:\Users\admin\Desktop\EesassinErp\EesassinErp\EesassinErp\Views/Communication/VCommunication.cshtml" />
+﻿ 
 app.VendorInvoiceController = function ($scope, $element, $filter, myService) {
     $scope.SetFocus('#txtVendorInvNum');
     $('#ddlfyid').attr('style', 'display:block');

@@ -1,12 +1,12 @@
 ﻿
 @{
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
-    ViewBag.Title = "Communication Client";
+    ViewBag.Title = "Communication Vendor";
     Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
-
+<script src="~/Scripts/myjslib/WithoutInvoiceController.js?Ver=@ViewBag.Version"></script>
 <style>
-    #communicationClientPage {
+    #communicationVendorPage {
         font-family: "Inter", sans-serif;
         --primary: #E45D27; /* theme accent */
         --primary-dark: #c44b1d;
@@ -23,7 +23,7 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.12);
     }
 
-    #communicationClientPage #createComplDoc {
+    #communicationVendorPage #createComplDoc {
         background: var(--primary);
         color: #fff;
         border: none;
@@ -36,18 +36,18 @@
         -webkit-tap-highlight-color: transparent;
     }
 
-        #communicationClientPage #createComplDoc:hover {
+        #communicationVendorPage #createComplDoc:hover {
             background: var(--primary-dark);
         }
 
 
     /* Section cards */
-    #communicationClientPage .section-card {
+    #communicationVendorPage .section-card {
         background: transparent;
         border: none;
     }
 
-        #communicationClientPage .section-card .card-body {
+        #communicationVendorPage .section-card .card-body {
             background: var(--card-bg);
             border-radius: 12px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.06);
@@ -55,7 +55,7 @@
         }
 
     /* Table wrapper and hide scrollbar visually */
-    #communicationClientPage .small-table-wrapper .table-responsive {
+    #communicationVendorPage .small-table-wrapper .table-responsive {
         max-height: 75vh;
         overflow-y: auto;
         scrollbar-width: none; /* Firefox */
@@ -64,12 +64,12 @@
         position: relative;
     }
 
-        #communicationClientPage .small-table-wrapper .table-responsive::-webkit-scrollbar {
+        #communicationVendorPage .small-table-wrapper .table-responsive::-webkit-scrollbar {
             display: none;
         }
 
     /* table header sticky */
-    #communicationClientPage .small-table thead th {
+    #communicationVendorPage .small-table thead th {
         position: sticky;
         top: 0;
         z-index: 1;
@@ -84,7 +84,7 @@
     }
 
     /* table body */
-    #communicationClientPage .small-table tbody td {
+    #communicationVendorPage .small-table tbody td {
         background-color: var(--card-bg);
         font-size: 0.78rem;
         vertical-align: middle;
@@ -94,28 +94,28 @@
     }
 
     /* hover */
-    #communicationClientPage .small-table tbody tr:hover td {
+    #communicationVendorPage .small-table tbody tr:hover td {
         background-color: #FFE8D9;
     }
 
-    #communicationClientPage .small-table tbody td .store-code-link,
-    #communicationClientPage .small-table tbody td .event-link {
+    #communicationVendorPage .small-table tbody td .store-code-link,
+    #communicationVendorPage .small-table tbody td .event-link {
         text-decoration: none;
     }
 
     /* action menu */
-    #communicationClientPage .action-menu {
+    #communicationVendorPage .action-menu {
         position: relative;
         width: 48px;
         text-align: right;
         background-color: var(--card-bg);
     }
 
-        #communicationClientPage .action-menu .btn {
+        #communicationVendorPage .action-menu .btn {
             color: var(--primary);
         }
 
-        #communicationClientPage .action-menu .dropdown-menu {
+        #communicationVendorPage .action-menu .dropdown-menu {
             min-width: 120px;
             font-size: 0.85rem;
             border-radius: 6px;
@@ -123,7 +123,7 @@
         }
 
     /* filter button */
-    #communicationClientPage .filter-btn {
+    #communicationVendorPage .filter-btn {
         border-radius: 999px;
         border: 1px solid var(--primary);
         color: var(--primary);
@@ -133,21 +133,21 @@
         font-size: 0.85rem;
     }
 
-        #communicationClientPage .filter-btn.active,
-        #communicationClientPage .filter-btn:hover {
+        #communicationVendorPage .filter-btn.active,
+        #communicationVendorPage .filter-btn:hover {
             background: var(--primary);
             color: #fff;
         }
 
     /* small inputs */
-    #communicationClientPage .table-toolbar .form-control-sm {
+    #communicationVendorPage .table-toolbar .form-control-sm {
         height: 36px;
         border-radius: 999px;
         border-color: var(--primary);
     }
 
     /* Export button (rounded) */
-    #communicationClientPage .export-btn {
+    #communicationVendorPage .export-btn {
         border-radius: 999px;
         color: #fff;
         background: var(--primary);
@@ -157,37 +157,37 @@
         -webkit-tap-highlight-color: transparent;
     }
 
-        #communicationClientPage .export-btn:hover {
+        #communicationVendorPage .export-btn:hover {
             background: var(--primary-dark);
         }
 
         /* remove default dark flash on click for export and other action buttons while keeping subtle ring on focus */
-        #communicationClientPage .export-btn:focus,
-        #communicationClientPage .export-btn:active {
+        #communicationVendorPage .export-btn:focus,
+        #communicationVendorPage .export-btn:active {
             outline: none;
             box-shadow: 0 0 0 3px rgba(228,93,39,0.12);
         }
 
     /*Fix Search bar and button in toolbar*/
-    #communicationClientPage .table-toolbar .input-group .form-control {
+    #communicationVendorPage .table-toolbar .input-group .form-control {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }
 
-    #communicationClientPage .table-toolbar .input-group .btn {
+    #communicationVendorPage .table-toolbar .input-group .btn {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
         border-color: var(--primary);
     }
 
     /* Pagination area */
-    #communicationClientPage .table-pagination {
+    #communicationVendorPage .table-pagination {
         border-top: 1px solid rgba(0,0,0,0.04);
         padding-top: 8px;
         margin-top: 8px;
     }
 
-        #communicationClientPage .table-pagination .btn {
+        #communicationVendorPage .table-pagination .btn {
             border-radius: 999px;
             font-size: 0.85rem;
             padding: 6px 12px;
@@ -196,64 +196,64 @@
             color: var(--primary);
         }
 
-            #communicationClientPage .table-pagination .btn:hover {
+            #communicationVendorPage .table-pagination .btn:hover {
                 background: var(--primary);
                 color: #fff;
                 border-color: var(--primary);
             }
 
-    #communicationClientPage #viewAllRows {
+    #communicationVendorPage #viewAllRows {
         background-color: var(--primary);
         color: #fff;
         border: none;
     }
 
-        #communicationClientPage #viewAllRows:hover {
+        #communicationVendorPage #viewAllRows:hover {
             background-color: var(--primary-dark);
         }
 
 
     /* statuses */
-    #communicationClientPage .badge {
+    #communicationVendorPage .badge {
         padding: 6px 10px;
         border-radius: 999px;
         font-size: 0.75rem;
     }
 
-    #communicationClientPage .status-active {
+    #communicationVendorPage .status-active {
         background: #dff6e9;
         color: #197a3a;
     }
 
-    #communicationClientPage .status-upcoming {
+    #communicationVendorPage .status-upcoming {
         background: #ffeedf;
         color: #d06a1e;
     }
 
-    #communicationClientPage .status-disabled {
+    #communicationVendorPage .status-disabled {
         background: #ffe9ee;
         color: #c43a5b;
     }
 
     /* Responsive tweaks */
     @@media (max-width: 767px) {
-        #communicationClientPage .table-toolbar {
+        #communicationVendorPage .table-toolbar {
             flex-direction: column;
             gap: 8px;
             align-items: stretch;
         }
 
-        #communicationClientPage .top-bar {
+        #communicationVendorPage .top-bar {
             flex-direction: column;
             gap: 8px;
             align-items: flex-start;
         }
 
-        #communicationClientPage .limit-instruction {
+        #communicationVendorPage .limit-instruction {
             font-size: 0.85rem;
         }
 
-        #communicationClientPage .toggle-pill .btn-pill {
+        #communicationVendorPage .toggle-pill .btn-pill {
             padding: 8px 12px;
             min-width: 64px;
         }
@@ -278,58 +278,58 @@
 
     /* Communication Vendor Modal*/
 
-    #communicationClientPage .cv-header {
+    #communicationVendorPage .cv-header {
         background: var(--primary);
         color: #fff;
         padding: 12px 16px;
         border-bottom: none;
     }
 
-        #communicationClientPage .cv-header h6 {
+        #communicationVendorPage .cv-header h6 {
             font-size: 0.95rem;
             font-weight: 500;
         }
 
-    #communicationClientPage .cv-close {
+    #communicationVendorPage .cv-close {
         filter: invert(1);
         opacity: 0.9;
     }
 
-        #communicationClientPage .cv-close:hover {
+        #communicationVendorPage .cv-close:hover {
             opacity: 1;
         }
 
-    #communicationClientPage .cv-body {
+    #communicationVendorPage .cv-body {
         background: var(--card-bg);
         padding: 16px;
     }
 
-        #communicationClientPage .cv-body .form-label {
+        #communicationVendorPage .cv-body .form-label {
             font-size: 0.75rem;
             font-weight: 500;
             margin-bottom: 4px;
         }
 
-        #communicationClientPage .cv-body .form-select {
+        #communicationVendorPage .cv-body .form-select {
             height: 34px;
             font-size: 0.8rem;
             border-radius: 6px;
             border-color: #dcdcdc;
         }
 
-            #communicationClientPage .cv-body .form-select:focus {
+            #communicationVendorPage .cv-body .form-select:focus {
                 border-color: var(--primary);
                 box-shadow: none;
             }
 
-    #communicationClientPage .cv-footer {
+    #communicationVendorPage .cv-footer {
         background: var(--card-bg);
         border-top: none;
         justify-content: flex-end;
         padding: 12px 16px;
     }
 
-    #communicationClientPage .cv-btn-outline {
+    #communicationVendorPage .cv-btn-outline {
         border-radius: 999px;
         border: 1px solid var(--primary);
         background: transparent;
@@ -338,12 +338,12 @@
         font-size: 0.8rem;
     }
 
-        #communicationClientPage .cv-btn-outline:hover {
+        #communicationVendorPage .cv-btn-outline:hover {
             background: var(--primary);
             color: #fff;
         }
 
-    #communicationClientPage .cv-btn-primary {
+    #communicationVendorPage .cv-btn-primary {
         border-radius: 999px;
         background: var(--primary);
         color: #fff;
@@ -352,114 +352,16 @@
         font-size: 0.8rem;
     }
 
-        #communicationClientPage .cv-btn-primary:hover {
+        #communicationVendorPage .cv-btn-primary:hover {
             background: var(--primary-dark);
         }
 </style>
 
 
-<div id="communicationClientPage" class="px-4 py-2">
+<div id="communicationVendorPage" class="px-4 py-2">
 
-    <!-- Top bar: Heading left + Create Compliance Document button right -->
-    <div class="d-flex align-items-center justify-content-between mb-3 top-bar">
-        <h4 style="color: #E45D27">Communication Page</h4>
-
-        <!--<div class="d-flex align-items-center gap-2">-->
-            <!-- Create Compliance Document (rounded pill) -->
-            <!--<button class="btn btn-sm " id="createComplDoc" type="button" data-bs-toggle="modal" data-bs-target="#createComplianceDocModal">
-                <i class="bi bi-plus-lg" aria-hidden="true"></i>
-                <span>Create Compliance Doc</span>
-            </button>
-        </div>-->
-    </div>
-
-    <!-- Create Compliance Doc Modal -->
-    <div class="modal fade" id="createComplianceDocModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-md modal-dialog-centered">
-            <div class="modal-content">
-
-                <!-- Header -->
-                <div class="modal-header cv-header">
-                    <h6 class="mb-0">Create Compliance Document</h6>
-
-                    <!-- CLOSE BUTTON -->
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" style="color:#fff"></button>
-                </div>
-
-                <!-- --Body-- -->
-                <div class="modal-body cv-body">
-                    <div class="row g-3">
-
-                        <div class="col-md-6">
-                            <label class="form-label">Client</label>
-                            <select class="form-select form-select-sm">
-                                <option>Select</option>
-                                <option>Client A</option>
-                                <option>Client B</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">State</label>
-                            <select class="form-select form-select-sm">
-                                <option>Select</option>
-                                <option>Maharashtra</option>
-                                <option>Delhi</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Financial Year</label>
-                            <select class="form-select form-select-sm">
-                                <option>Select</option>
-                                <option>2024–25</option>
-                                <option>2025–26</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Month</label>
-                            <select class="form-select form-select-sm">
-                                <option>Select</option>
-                                <option>January</option>
-                                <option>February</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Site</label>
-                            <select class="form-select form-select-sm">
-                                <option>Select</option>
-                                <option>Site 1</option>
-                                <option>Site 2</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Location</label>
-                            <select class="form-select form-select-sm">
-                                <option>Select</option>
-                                <option>Location A</option>
-                                <option>Location B</option>
-                            </select>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <div class="modal-footer cv-footer">
-                    <button class="btn btn-sm cv-btn-outline" data-bs-dismiss="modal">
-                        Cancel
-                    </button>
-                    <button class="btn btn-sm cv-btn-primary">
-                        Create
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
+   
+    
 
 
 
@@ -470,56 +372,37 @@
             <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
                 <div class="d-flex align-items-center gap-2">
 
+                    <!-- STATUS -->
+
+
                     <div class="dropdown">
-                        <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Status
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Draft</a></li>
-                            <li><a class="dropdown-item" href="#">Pending</a></li>
-                            <li><a class="dropdown-item" href="#">Complied</a></li>
-                        </ul>
+                        <select class="btn btn-sm filter-btn dropdown-toggle" ng-model="Controlbyuser" ng-change="BindControl()">
+                            <option value="">Select</option>
+                            <option value="0">Pending</option>
+                            <option value="1">Complete</option>
+                        </select>
                     </div>
 
                     <div class="dropdown">
-                        <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            State
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Delhi</a></li>
-                            <li><a class="dropdown-item" href="#">Uttar Pradesh</a></li>
-                        </ul>
-                    </div>
+                        <select ng-change="BindControl()" class="btn btn-sm filter-btn dropdown-toggle" ng-model="VendorId" ng-init="BindVendor();BindControl()">
+                            <option value="" style="font-size: 12px;">All Vendor</option>
+                            <option ng-repeat="x in VendorList" value="{{x.PartyId}}">{{x.PartyName}}</option>
+                        </select>
+                    </div> 
+                 
+                    
 
-                    <div class="dropdown">
-                        <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Month
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">January</a></li>
-                            <li><a class="dropdown-item" href="#">February</a></li>
-                            <li><a class="dropdown-item" href="#">March</a></li>
-                            <!-- ... -->
-                        </ul>
-                    </div>
-
-                    <div class="dropdown">
-                        <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Year
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">2024-25</a></li>
-                            <li><a class="dropdown-item" href="#">2023-24</a></li>
-                        </ul>
-                    </div>
-
-                    <button class="btn btn-sm filter-btn active">Go</button>
                 </div>
 
                 <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
                     <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
                         <div class="input-group input-group-sm">
-                            <input id="scSearch" type="text" class="form-control form-control-sm" placeholder="Search..." />
+                            <input id="scSearch"
+                                   type="text"
+                                   ng-model="Searchbox"
+                                   class="form-control form-control-sm"
+                                   placeholder="Search..." />
+                            <button class="btn btn-outline-secondary" ng-click="Searchbox=''">✖</button>
                             <button class="btn btn-sm" id="scSearchBtn" style="border-color: #E45D27" type="button"><i class="bi bi-search"></i></button>
                         </div>
                     </div>
@@ -528,9 +411,8 @@
                         <div class="dropdown">
                             <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">CSV</a></li>
-                                <li><a class="dropdown-item" href="#">PDF</a></li>
-                                <li><a class="dropdown-item" href="#">Print</a></li>
+                                <li><a class="dropdown-item" href="" ng-click="exportCSV()">CSV</a></li>
+                                <li><a class="dropdown-item" href="" ng-click="printData()">Print</a></li>
                             </ul>
                         </div>
                     </div>
@@ -538,73 +420,48 @@
             </div>
 
             <!-- Table wrapper -->
-            <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3">
+            <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3"  >
                 <div class="table-responsive">
                     <table class="table table-sm mb-0 small-table">
                         <thead>
                             <tr>
                                 <th>S.No</th>
-                                <th>Vendor</th>
+                                <th>Client</th>
                                 <th>State</th>
                                 <th>Financial Year</th>
                                 <th>Month</th>
-                                <th>Location</th>
                                 <th>Site</th>
+                                <th>Location</th>
                                 <th>Status</th>
                                 <th>Unique No.</th>
                                 <th>Creation Date</th>
                                 <th>Submission Updated</th>
                                 <th>Days Left</th>
-                                <th>Action</th>
+                                <th></th>
                             </tr>
                         </thead>
-                        <tbody id="communicationTableBody">
-                            <tr>
-                                <td>1</td>
-                                <td>Vendor Demo</td>
-                                <td>Delhi</td>
-                                <td>2024-25</td>
-                                <td>January</td>
-                                <td>Location1</td>
-                                <td>Site1</td>
-                                <td>Draft</td>
-                                <td>UN00496</td>
-                                <td>01/01/26</td>
-                                <td>01/01/26</td>
-                                <td>50</td>
-                                <!--View column-->
-                                @*<td>
-                <button class="btn btn-sm btn-view">View</button>
-            </td>*@
-                                <!--Action column-->
-                                <td>
-                                    <button class="btn btn-sm btn-submit px-3" data-bs-toggle="modal" data-bs-target="#submitComplianceModal">View</button>
+                        <tbody>
+                            <tr ng-repeat="x in  InvoiceList | filter:Searchbox track by $index">
+                                <td>{{$index+1}}</td>
+                                <td>{{x.VName}}</td>
+                                <td>{{x.StateName}}</td>
+                                <td>{{x.FYID}}</td>
+                                <td>{{x.InMonthName}}</td>
+                                <td>{{x.SiteName}}</td>
+                                <td>{{x.Location}}</td>
+                                <td>{{ x.Status === 1 ? 'Complete' :     (x.Status === 0 ? 'Pending' :       (x.Status == null || x.Status === '' ? 'Draft' : 'Draft')) }}
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>Vendor Demo</td>
-                                <td>Delhi</td>
-                                <td>2024-25</td>
-                                <td>January</td>
-                                <td>Location1</td>
-                                <td>Site2</td>
-                                <td>Draft</td>
-                                <td>UN00496</td>
-                                <td>01/01/26</td>
-                                <td>01/01/26</td>
-                                <td>50</td>
-                                <!--View column-->
-                                @*<td>
-                <button class="btn btn-sm btn-view">View</button>
-            </td>*@
-                                <!--Action column-->
+                                <td>{{x.InvoiceNo}}</td>
+                                <td>{{x.CreatedOn}}</td>
+                                <td>{{x.UpdatedON}}</td>
+                                <td>{{x.DayLeft}}</td> 
                                 <td>
-                                    <button class="btn btn-sm btn-submit px-3" data-bs-toggle="modal" data-bs-target="#submitComplianceModal">View</button>
+                                    <button class="btn btn-sm btn-submit px-3" data-bs-toggle="modal" data-bs-target="#submitComplianceModal" ng-click="GetClientDocument(x.RegInvoiceNo,x.ConversationId)">View Document</button>
                                 </td>
                             </tr>
 
                         </tbody>
+
                     </table>
                 </div>
             </div>
@@ -622,20 +479,21 @@
 
                     <!-- HEADER -->
                     <div class="modal-header" style="background: var(--primary); color: #fff">
-                        <h5 class="modal-title">Submit Compliance Documents</h5>
+                        <h5 class="modal-title">Submit Documents</h5>
 
                         <!-- DEFAULT BOOTSTRAP CLOSE -->
-                        <button type="button"
+                        <button type="button" ng-click="BindControl()"
                                 class="btn-close"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                     </div>
 
                     <!-- BODY -->
-                    <div class="modal-body p-4" style="background: var(--card-bg)">
-                        <!-- Download All button row -->
+                    <div class="modal-body p-8" style="background: var(--card-bg)">
+
                         <div class="d-flex justify-content-end mb-2">
-                            <button class="btn btn-sm export-btn">
+                           
+                            <button class="btn btn-sm export-btn" ng-click="downloadAll()">
                                 <i class="bi bi-download me-1"></i>
                                 Download All
                             </button>
@@ -650,8 +508,7 @@
                                             <th style="width:40px;">
                                                 <input type="checkbox" />
                                             </th>
-                                            <th>S. No</th>
-                                            <th>Default</th>
+                                            <th>S. No</th> 
                                             <th>Document Name</th>
                                             <th>Type</th>
                                             <th>Frequency</th>
@@ -663,72 +520,44 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><input type="checkbox" /></td>
-                                            <td>1</td>
-                                            <td>Yes</td>
-                                            <td>PF Challan</td>
-                                            <td>Statutory</td>
-                                            <td>Monthly</td>
-                                            <td>Yes</td>
-                                            <td>PDF</td>
-                                            <td><input type="text" class="form-control form-control-sm"></td>
 
-                                            <!-- VIEW COLUMN -->
+                                        <tr ng-repeat="xx in InDocList">
                                             <td>
-                                                <div class="d-flex  align-items-center">
-                                                    <label class="btn btn-sm btn-upload px-3" style="white-space:nowrap; cursor:pointer;">
-                                                        Choose File
-                                                        <input type="file" hidden>
-                                                    </label>
-
-                                                    <button class="btn btn-sm ">
-                                                        <i class="bi bi-eye"></i>
-                                                    </button>
-
-                                                    <button class="btn btn-sm ">
-                                                        <i class="bi bi-download"></i>
-                                                    </button>
-                                                </div>
+                                                <input type="checkbox" ng-checked="{{xx.IsDefault}}" />
                                             </td>
+                                            <td>{{xx.SRNO}} </td>
+                                            <td>{{xx.DocumentName}}</td>
+                                            <td>{{xx.DocumentType}}</td>
+                                            <td>{{xx.Frequency}}</td>
+                                            <td>{{xx.Mandatory}}</td>
+                                            <td>{{xx.FormatType}}</td>
+                                            <td>{{xx.Note}}</td> 
+                                            <td>
+                                                <button ng-if="xx.DocumentFile" class="btn btn-sm"
+                                                        ng-click="ViewFileC(xx.DocumentFile)">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
 
-                                            <td><span class="badge status-active">Validated</span></td>
+                                                <button ng-if="xx.DocumentFile" class="btn btn-sm"
+                                                        ng-click="DownloadFileC(xx.DocumentFile, xx.DocumentName)">
+                                                    <i class="bi bi-download"></i>
+                                                </button>
+                                            </td>
+                                            <td> 
+                                                {{xx.Status}}
+                                            </td>
+                                          
                                         </tr>
 
-                                        <!-- dummy row -->
-                                        <tr>
-                                            <td><input type="checkbox" /></td>
-                                            <td>2</td>
-                                            <td>No</td>
-                                            <td>ESI Challan</td>
-                                            <td>Statutory</td>
-                                            <td>Monthly</td>
-                                            <td>Yes</td>
-                                            <td>PDF</td>
-                                            <td><input type="text" class="form-control form-control-sm"></td>
 
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <label class="btn btn-sm btn-upload px-3" style="white-space:nowrap; cursor:pointer;">
-                                                        Choose File
-                                                        <input type="file" hidden>
-                                                    </label>
-
-                                                    <button class="btn btn-sm ">
-                                                        <i class="bi bi-eye"></i>
-                                                    </button>
-
-                                                    <button class="btn btn-sm ">
-                                                        <i class="bi bi-download"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge status-disabled">Error</span></td>
-
-                                        </tr>
 
                                     </tbody>
+
                                 </table>
+
+
+
+
                             </div>
                         </div>
 
@@ -736,18 +565,18 @@
 
                     <!-- FOOTER -->
                     <div class="modal-footer justify-content-end" style="background: var(--card-bg)">
-                        <button class="btn btn-sm cv-btn-outline"
+                        <button class="btn btn-sm cv-btn-outline" id="btnCancel" ng-click="BindControl()"
                                 data-bs-dismiss="modal">
                             Cancel
                         </button>
 
-                        <button class="btn btn-sm cv-btn-outline">
-                            Save Draft
-                        </button>
+                        @*<button class="btn btn-sm cv-btn-outline">
+                                Save Draft
+                            </button>
 
-                        <button class="btn btn-sm cv-btn-primary">
-                            Send to Auditor
-                        </button>
+                            <button class="btn btn-sm cv-btn-primary">
+                                Submit
+                            </button>*@
                     </div>
 
                 </div>

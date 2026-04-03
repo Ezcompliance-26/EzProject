@@ -19,6 +19,11 @@
         public string Address { get; set; }
         public string License { get; set; }
 
+        public string PageSize { get; set; }
+        public string  PageNumber  { get; set; }
+
+
+
         public string LicenceApplicable { get; set; }
     }
 }

@@ -305,7 +305,7 @@
    
    var licCommonChart = null;
     $scope.FilterGraph = function () {
-      
+        $scope.showLoader();
         var collectionobj = {
             Action: 1,
             RegionId: $scope.RegionId,
@@ -336,7 +336,8 @@
             var labels = [];
             var chartData = [];
 
-            angular.forEach(result, function (obj) {
+            angular.forEach(result, function (obj)
+            {
                 function uniqueArray(arr) {
                     const map = new Map();
 
@@ -376,7 +377,7 @@
             $scope.RenderLicenseChart(labels, chartData);
             $scope.RenderLicenseCategoryChart(labels, chartData);
 
-            
+            $scope.hideLoader();
         });
     };
 
@@ -571,29 +572,60 @@
     };
 
     //-------------------------Part Second
+    //$scope.BindSecondPart = function () {
+    //    $scope.currentDateTime = new Date();
+    //    $scope.showLoader();
+    //    var collectionobj = {};
+    //    collectionobj.Action = 13;
+    //    collectionobj.loginType = loginType;
+    //    collectionobj.UserId = LoginId;
+    //    var getData = myService.methode('POST', ("../RetailSection/GetLDashboard"), JSON.stringify(collectionobj));
+    //    getData.then(function (response) {
+    //        $scope.SActive = response.data.Result[0].Active;
+    //        $scope.SExpiringSoon = response.data.Result[0].ExpiringSoon;
+    //        $scope.SExpired = response.data.Result[0].Expired;
+    //        $scope.SPendingApproval = response.data.Result[0].PendingApproval;
+    //        $scope.STotalLicense = response.data.Result[0].TotalLicense;
+    //        //$scope.bindLicStatusDonut();
+    //        //$scope.bindRiskDonut();
+    //        //$scope.bindDocStatusBar();
+    //       // $scope.prepareExpiryTimelineData();
+    //        $scope.hideLoader();
+    //    });
+       
+    //}
+
     $scope.BindSecondPart = function () {
-        $scope.currentDateTime = new Date();
         $scope.showLoader();
         var collectionobj = {};
-        collectionobj.Action = 13;
+        collectionobj.Action = 14;
         collectionobj.loginType = loginType;
         collectionobj.UserId = LoginId;
+        collectionobj.PageNumber = 1;
+        collectionobj.PageSize = 10000;
         var getData = myService.methode('POST', ("../RetailSection/GetLDashboard"), JSON.stringify(collectionobj));
         getData.then(function (response) {
-            $scope.SActive = response.data.Result[0].Active;
-            $scope.SExpiringSoon = response.data.Result[0].ExpiringSoon;
-            $scope.SExpired = response.data.Result[0].Expired;
-            $scope.SPendingApproval = response.data.Result[0].PendingApproval;
-            $scope.STotalLicense = response.data.Result[0].TotalLicense;
-            $scope.bindLicStatusDonut();
-            $scope.bindRiskDonut();
-            $scope.bindDocStatusBar();
-            $scope.prepareExpiryTimelineData();
-            $scope.hideLoader();
-        });
-      
+            $scope.LoadMasterListSpeed = response.data.Result; 
 
+            $scope.SActive = $scope.LoadMasterListSpeed.filter(x => x.ExpiryStatus === 'Active').length;
+
+            $scope.SExpiringSoon = $scope.LoadMasterListSpeed.filter(x => x.ExpiryStatus === 'Expiring Soon').length;
+
+            $scope.SExpired = $scope.LoadMasterListSpeed.filter(x => x.ExpiryStatus === 'Expired').length;
+
+            // ✅ TOTAL COUNT
+            $scope.STotalLicense = $scope.LoadMasterListSpeed.length;
+        });
+
+        //-------------------------
     }
+
+
+
+
+
+
+
     $scope.bindLicStatusDonut = function () {
 
         var ctx = document.getElementById("licStatusDonut");
@@ -708,27 +740,48 @@
             }
         });
     };
-    $scope.LoadLicenseReg = function () {
 
+
+    $scope.nextPage = function () {
+        if ($scope.currentPage * $scope.pageSize < $scope.totalCount) {
+            $scope.currentPage++;
+            $scope.LoadLicenseReg();
+        }
+    };
+
+    $scope.prevPage = function () {
+        if ($scope.currentPage > 1) {
+            $scope.currentPage--;
+            $scope.LoadLicenseReg();
+        }
+    };
+    $scope.currentPage = 1;
+    $scope.pageSize = 10;
+    $scope.totalCount = 0;
+    $scope.LoadLicenseReg = function (cpage, psize) {
+        $scope.showLoader();
         var collectionobj = {}; 
         collectionobj.Action = 14;
         collectionobj.loginType = loginType;
         collectionobj.UserId = LoginId;
+        collectionobj.PageNumber = cpage | $scope.currentPage;
+        collectionobj.PageSize = psize| $scope.pageSize;
         var getData = myService.methode('POST', ("../RetailSection/GetLDashboard"), JSON.stringify(collectionobj));
-        getData.then(function (response) { 
+        getData.then(function (response)
+        {
             $scope.LoadMasterList = response.data.Result;
-            $scope.prepareExpiryTimelineData();
-            // DISTINCT LICENSE NAME
+            $scope.totalCount = response.data.Result[0].TotalCount;
+            $scope.isLoading = false;
             $scope.licenseList = [...new Set(
                 $scope.LoadMasterList.map(x => x.LicenseName)
             )];
-
-            // DISTINCT LOCATION CODE
+             
             $scope.locationList = [...new Set(
                 $scope.LoadMasterList.map(x => x.StoreCode)
             )];
             $scope.hideLoader();
 
+           
         });
 
         //-------------------------
@@ -873,15 +926,17 @@
             }
         });
     };
-    $scope.rowLimit = 10;       // default
+    $scope.rowLimit = 10000;       // default
     $scope.showAll = false;
     $scope.toggleRows = function () {
 
+        $scope.isLoading = true; // 🔥 loader ON
+
         if ($scope.showAll) {
-            $scope.rowLimit = 10;
+            $scope.LoadLicenseReg(1, 10);
             $scope.showAll = false;
         } else {
-            $scope.rowLimit = $scope.LoadMasterList.length;
+            $scope.LoadLicenseReg(1, 99999);
             $scope.showAll = true;
         }
     };
@@ -937,6 +992,21 @@
             return;
         }
 
+        // ✅ Date Format Function
+        function formatDate(dateStr) {
+            if (!dateStr) return "";
+
+            var d = new Date(dateStr);
+
+            if (isNaN(d)) return dateStr; // agar already formatted ho
+
+            var day = ('0' + d.getDate()).slice(-2);
+            var month = ('0' + (d.getMonth() + 1)).slice(-2);
+            var year = d.getFullYear();
+
+            return day + '/' + month + '/' + year;
+        }
+
         // headers
         var headers = [
             "Location Code",
@@ -951,7 +1021,7 @@
         var csvRows = [];
         csvRows.push(headers.join(","));
 
-        // 🔹 Apply same filters as table
+        // filters
         var filteredData = $scope.LoadMasterList
             .filter($scope.licenseFilter)
             .filter(function (item) {
@@ -964,18 +1034,17 @@
                 });
 
             })
-            .slice(0, $scope.rowLimit); // same as limitTo
-
+            .slice(0, $scope.rowLimit);
 
         angular.forEach(filteredData, function (row) {
 
             csvRows.push([
                 row.StoreCode || "",
                 row.LicenseName || "",
-                row.LicenseNumber || "",
+                '="' + (row.LicenseNumber || "") + '"', // ✅ number fix
                 row.ExpiryStatus || "",
-                row.ValidityStartDate || "",
-                row.ValidityEndDate || "",
+                '="' + formatDate(row.ValidityStartDate) + '"', // ✅ date fix
+                '="' + formatDate(row.ValidityEndDate) + '"',   // ✅ date fix
                 row.DaysOfExpire || ""
             ].join(","));
 
@@ -1230,8 +1299,29 @@
             $scope.LoadLicenseReg();
         });
     };
+
+
+    $scope.pno = 1;      // current page
+    $scope.psize = 10;   // page size (change as needed)
+    $scope.totalC = 0;
+
+
+    $scope.nextPageR = function () {
+        if ($scope.pno * $scope.psize < $scope.totalC) {
+            $scope.pno++;
+            $scope.started();
+        }
+    };
+
+    $scope.prevPageR = function () {
+        if ($scope.pno > 1) {
+            $scope.pno--;
+            $scope.started();
+        }
+    };
  
-    $scope.started = function () {
+    $scope.started = function (p,s) {
+        debugger;
         $scope.showLoader();
         document.title = "Licence Master Report";
         var collectionobj = {
@@ -1240,12 +1330,19 @@
             StoreCode: $scope.StoreCode,
             ApplicationStatus: $scope.ApplicationStatus,
             LicenseStatus: $scope.LicenseStatus,
-            RenewalStatus: $scope.RenewalStatus
+            RenewalStatus: $scope.RenewalStatus,
+            PageNo: p| $scope.pno,
+            PageSize: s|$scope.psize,
+
 
         };
+        $scope.showLoader();
         var getData = myService.methode('POST', ("../RetailSection/ReportLicenseRequestData"), JSON.stringify(collectionobj));
         getData.then(function (response) { 
             debugger;
+
+            $scope.totalC = response.data.Result[0].TotalCount;
+            $scope.showLoader();
             var tblheader =
                 [
                     { "HeaderText": "Sr.No.", "Value": "SrNo", "HeaderValue": "SrNo", "Width": "50px", "ShowColumn": "Yes", "ImageColumn": "No", "CssClass": "srno" },
@@ -1271,6 +1368,7 @@
                     { "HeaderText": "Proposed Date", "HeaderValue": "ProposedDate", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                     { "HeaderText": "License Name", "HeaderValue": "LicenseName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No", "FixedColumn": true},
                     { "HeaderText": "License Type", "HeaderValue": "LicenseType", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
+                    { "HeaderText": "License Category", "HeaderValue": "LicenseCategory", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
 
                     { "HeaderText": "Requested Date", "HeaderValue": "RequestedDate", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                     { "HeaderText": "Document Date", "HeaderValue": "DocumentDate", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
@@ -1281,8 +1379,10 @@
                     { "HeaderText": "Challan Copy", "HeaderValue": "UploadChallanCopy", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                     { "HeaderText": "Renewed Copy", "HeaderValue": "UploadRenewedCopy", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
 
+                     
 
-                    { "HeaderText": "License Status", "HeaderValue": "LicenseStatus", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+
+                   
 
                     { "HeaderText": "License Date", "HeaderValue": "IssuedDate", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "License Copy", "HeaderValue": "UploadLicenseCopy", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
@@ -1319,22 +1419,19 @@
                         "HeaderText": "Amendment Copy", "HeaderValue": "AmendmentCopy", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     {
                         "HeaderText": "Machine Number", "HeaderValue": "machinenumber", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
-                    {
-                        "HeaderText": "Renewal Copy", "HeaderValue": "RenewalCopy", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    
                     {
                         "HeaderText": "Compliance Category", "HeaderValue": "compliancecategory", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     {
                         "HeaderText": "OperationModel", "HeaderValue": "OperationModel", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No"
                     },
 
-                    {
-                        "HeaderText": "Country", "HeaderValue": "Country", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No"
-                    },
+                   
 
                     { "HeaderText": "Remark", "HeaderValue": "Remark", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                 ];
             
-
+            loadDataUsingPreDefinedColumn(tblheader, response.data.Result);
 
 
 
@@ -1366,9 +1463,12 @@
 
             $scope.RenewalStatusList = [...new Set(filtered.map(x => x.RenewalStatus))]
                 .map(x => ({ AttributeValue: x }));
-            loadDataUsingPreDefinedColumn(tblheader, response.data.Result);
+          
             $scope.isResetting = false;
+            $scope.hideLoader();
         });
+
+      
     }
 
 

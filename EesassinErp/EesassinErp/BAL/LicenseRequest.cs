@@ -3,6 +3,7 @@
     public class LicenseRequest
     {
         public int UserId { get; set; }
+    
         public int Action { get; set; }
         public long LicenceRequestId { get; set; }
         public string ApplicationStatus { get; set; }

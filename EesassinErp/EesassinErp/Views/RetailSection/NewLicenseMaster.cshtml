@@ -26,9 +26,12 @@
     .srno-text {
         line-height: 1;
     }
-    
+    .dropdown-menu {
+        max-height: 150px !important;
+        overflow-y: auto !important;
+    }
 </style>
-<div class="licenseMasterPage px-4 py-2" ng-init="GetLicenseRequestData();CountTiles()" ng-cloak>
+<div class="licenseMasterPage px-4 py-2" ng-init="FilterResetFile();CountTiles()" ng-cloak>
     <!-- Main CARD -->
     <div id="mainCard" class="card section-card active">
         <h3 class="mt-2 px-4" style="color: #E45D27">License Master </h3>
@@ -39,44 +42,39 @@
                 <!-- Doc Pending -->
                 <div class="licMaster-kpi-card" ng-init="bindtiles()">
                     <div>
-                        <div class="licMaster-kpi-title">Document Pending</div>
-                        @*<button class="kpi-view-btn" data-bs-toggle="modal" data-bs-target="#docPendingModal">View more</button>*@
+                        <div class="licMaster-kpi-title">Document Pending</div> 
                     </div>
-                    <div class="licMaster-kpi-value">{{DocumentPending}}</div>
+                    <div class="licMaster-kpi-value">{{DocumentPending || 0}}</div>
                 </div>
 
                 <!-- Application Pending -->
-                <div class="licMaster-kpi-card" ng-init="ViewAllLicense()">
+                <div class="licMaster-kpi-card" >
                     <div>
-                        <div class="licMaster-kpi-title">Application Pending</div>
-                        @*<button class="kpi-view-btn" data-bs-toggle="modal" data-bs-target="#appPendingModal">View more</button>*@
+                        <div class="licMaster-kpi-title">Application Pending</div> 
                     </div>
-                    <div class="licMaster-kpi-value">{{NotApplied}}</div>
+                    <div class="licMaster-kpi-value">{{NotApplied || 0}}</div>
                 </div>
 
                 <!-- Approval Pending -->
                 <div class="licMaster-kpi-card">
                     <div>
-                        <div class="licMaster-kpi-title">License Pending</div>
-                        @*<button class="kpi-view-btn" data-bs-toggle="modal" data-bs-target="#approvalPendingModal">View more</button>*@
+                        <div class="licMaster-kpi-title">License Pending</div> 
                     </div>
-                    <div class="licMaster-kpi-value">{{NotIssued}}</div>
+                    <div class="licMaster-kpi-value">{{NotIssued || 0}}</div>
                 </div>
                 <div class="licMaster-kpi-card">
                     <div>
-                        <div class="licMaster-kpi-title">License Issued</div>
-                        @*<button class="kpi-view-btn" data-bs-toggle="modal" data-bs-target="#approvalPendingModal">View more</button>*@
+                        <div class="licMaster-kpi-title">License Issued</div> 
                     </div>
-                    <div class="licMaster-kpi-value">{{Issued}}</div>
+                    <div class="licMaster-kpi-value">{{Issued || 0}}</div>
                 </div>
 
                 <!-- Renewal Pending -->
                 <div class="licMaster-kpi-card">
                     <div>
-                        <div class="licMaster-kpi-title">Renewal Pending</div>
-                        @*<button class="kpi-view-btn" data-bs-toggle="modal" data-bs-target="#renewalPendingModal">View more</button>*@
+                        <div class="licMaster-kpi-title">Renewal Pending</div> 
                     </div>
-                    <div class="licMaster-kpi-value">{{RenewalPending}}</div>
+                    <div class="licMaster-kpi-value">{{RenewalPending || 0}}</div>
                 </div>
 
 
@@ -89,27 +87,46 @@
 
             <!-- Toolbar -->
             <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-2" ng-init="AllLicense()">
+
+                    <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        License
+                    </button>
+                    <ul class="dropdown-menu"
+                        id="licenseDropdown"
+                        style="max-height:300px; overflow:auto;">
+
+                        <li ng-repeat="lic in LicenseListForNAme track by $index">
+                            <a class="dropdown-item" href="#" ng-click="FilterFileSta(lic);FilterFile(lic)">
+                                {{lic}}
+                            </a>
+                        </li>
+
+                        <li ng-if="isLoadingMore">
+                            <a class="dropdown-item text-center">Please wait...</a>
+                        </li>
+
+                        <li ng-if="!isAllLoaded && !isLoadingMore">
+                            <a class="dropdown-item text-center">Scroll to load more...</a>
+                        </li>
+
+                    </ul>
                     <div class="dropdown">
                         <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Status
                         </button>
                         <ul class="dropdown-menu">
-                            @*
-                            <li><a class="dropdown-item" ng-click="FilterFile('Document Pending')" href="#">Document Pending</a></li>*@
-                            <li><a class="dropdown-item" ng-click="FilterFile('Not Applied')" href="#">Application Pending</a></li>
-                            <li><a class="dropdown-item" ng-click="FilterFile('Issued')" href="#">License Issued</a></li>
-                            <li><a class="dropdown-item" ng-click="FilterFile('Not Issued')" href="#">License Pending</a></li>
-                            @*
-                            <li><a class="dropdown-item" ng-click="FilterFile(1)" href="#">Renewal Pending</a></li>*@
-                            @*
-                            <li><a class="dropdown-item" href="#">Amendment Pending</a></li>*@
+                            <li ng-repeat="st in StatusList  | orderBy">
+                                <a class="dropdown-item" href="#" ng-click="NewFilterByStatus(st.trim())">
+                                    {{st}}
+                                </a>
+                            </li>
                         </ul>
-                        <button class="btn btn-sm filter-btn" type="button"   ng-click="FilterResetFile(1)">
+                        <button class="btn btn-sm filter-btn" type="button" ng-click="FilterResetFile(1)">
                             Reset
                         </button>
                     </div>
- 
+
 
                 </div>
 
@@ -147,6 +164,7 @@
             <!-- Table wrapper -->
             <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3">
                 <div class="table-responsive">
+                
                     <table class="table table-sm mb-0 small-table" id="licMasterTable">
                         <thead>
                             <tr>
@@ -164,12 +182,13 @@
                                 <th>State</th>
                                 <th>License Name</th>
                                 <th>License Type</th>
-                                @*<th>License Category</th>*@
+                              
                                 <th>License Status</th>
                                 <th>Application Status</th>
                                 <th>Expiry Status</th>
                                 <th>Expiry Date</th>
                                 <th>Category</th>
+                                <th>View License</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -197,16 +216,28 @@
                                 <td>{{license.STATE_NAME}}</td>
                                 <td>{{license.LicenseName}}</td>
                                 <td>{{license.LicenseType}}</td>
-                                @*<td>{{license.LicenseCategory}}</td>*@
+                               
                                 <td>{{license.LicenseStatus}}</td>
                                 <td>{{license.ApplicationStatus}} </td>
                                 <td>
                                     {{license.ExpiryStatus}}
                                 </td>
                                 <td>
-                                    {{ (license.ValidityEndDate  | date:'MM/dd/yyyy') | date:'dd-MM-yyyy' }}
+                                    {{license.ValidityEndDate}}
                                 </td>
                                 <td>{{license.CategoryName}}</td>
+                                <td>
+                                    <a ng-if="license.UploadLicenseCopy" href="#" ng-click="ViewFileC(license.UploadLicenseCopy);ManageLog('View License Copy Licence Name : '+ LMLicenseName + ' & Location '+ license.RefStoreCode)" >
+                                        <i class="bi bi-eye" style="color: #f37437;"></i>
+                                    </a>
+
+                                    
+                                    <a href="#" ng-if="license.UploadLicenseCopy" ng-click="DownloadFileC(license.UploadLicenseCopy,license.LicenseName);ManageLog('Download License Copy Licence Name : '+ LMLicenseName + ' & Location '+ license.RefStoreCode)">
+                                        <i class="bi bi-download" style="color: #f37437;">
+                                        </i>
+                                    </a>
+
+                                </td>
 
                                 <td class="action-menu">
                                     <button class="btn btn-sm" data-bs-toggle="dropdown">
@@ -298,11 +329,11 @@
                                 <div class="lic-upload-field">
                                     <input id="LMLicenseCopy" class="form-control form-control-sm" type="file" ng-model="LMLicenseCopy" onchange="angular.element(this).scope().uploadFile('UploadLicenseCopy', this)" />
                                     <div class="lic-upload-actions" ng-show="LMLicenseCopy">
-                                        <a href="{{LMLicenseCopy}}" target="_blank">
+                                        <a href="#" ng-click="ViewFileC(LMLicenseCopy)"  >
                                             <i class="bi bi-eye">
                                             </i>
                                         </a>
-                                        <i class="bi bi-download" ng-click="viewDocument(LMLicenseCopy,'LicenseCopy_'+LMLicenseNamee);ManageLog('View License Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
+                                        <i class="bi bi-download" ng-click="DownloadFileC(LMLicenseCopy,'LicenseCopy_'+LMLicenseNamee);ManageLog('View License Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
                                         </i>
                                     </div>
                                 </div>
@@ -312,11 +343,11 @@
                                 <div class="lic-upload-field">
                                     <input id="LMLicenseCopy" class="form-control form-control-sm" type="file" ng-model="LMAmendmentCopy" onchange="angular.element(this).scope().uploadFile('UploadAmendmentCopy', this)" />
                                     <div class="lic-upload-actions" ng-show="LMAmendmentCopy">
-                                        <a href="{{LMAmendmentCopy}}" target="_blank">
+                                        <a href="#" ng-click="ViewFileC(LMAmendmentCopy)">
                                             <i class="bi bi-eye">
                                             </i>
-                                        </a>
-                                        <i class="bi bi-download" ng-click="viewDocument(LMAmendmentCopy,'AmendmentCopy_'+LMLicenseNamee);ManageLog('View Amendment Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
+                                        </a> 
+                                        <i class="bi bi-download" ng-click="DownloadFileC(LMAmendmentCopy,'AmendmentCopy_'+LMLicenseNamee);ManageLog('View Amendment Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
                                         </i>
                                     </div>
                                 </div>
@@ -421,11 +452,11 @@
                                 <div class="lic-upload-field">
                                     <input id="LMAppcopy" class="form-control form-control-sm" type="file" ng-model="LMAppcopy" onchange="angular.element(this).scope().uploadFile('UploadApplicationCopy', this)" ng-required="isChallanCopyMandatory" />
                                     <div class="lic-upload-actions" ng-show="LMAppcopy">
-                                        <a href="{{LMAppcopy}}" target="_blank">
+                                        <a href="#" ng-Click="ViewFileC(LMAppcopy)" >
                                             <i class="bi bi-eye"></i>
-                                        </a>
+                                        </a>  
 
-                                        <i ng-click="viewDocument(LMAppcopy,'ApplicationCopy_'+LMLicenseNamee);ManageLog('View Application Copy Licence Name : '+ LMAppcopy + ' & StoreName '+ LMStoreCode)" class="bi bi-download"></i>
+                                        <i ng-click="DownloadFileC(LMAppcopy,'ApplicationCopy_'+LMLicenseNamee);ManageLog('View Application Copy Licence Name : '+ LMAppcopy + ' & StoreName '+ LMStoreCode)" class="bi bi-download"></i>
                                     </div>
 
                                 </div>
@@ -442,10 +473,10 @@
                                         <input id="LMchallanCopy" type="file" class="form-control form-control-sm" ng-model="LMchallanCopy" onchange="angular.element(this).scope().uploadFile('UploadChallanCopy', this)" ng-required="isChallanCopyMandatory" />
 
                                         <div class="lic-upload-actions" ng-show="LMchallanCopy">
-                                            <a href="{{LMchallanCopy}}" target="_blank">
+                                            <a href="#" ng-Click="ViewFileC(LMchallanCopy)">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <i class="bi bi-download" ng-click="viewDocument(LMchallanCopy,'ChallanCopy_'+LMLicenseNamee);ManageLog('View Challan Copy Licence Name : '+ LMLicenseName + ' & StoreName '+LMStoreCode)"></i>
+                                            <i class="bi bi-download" ng-click="DownloadFileC(LMchallanCopy,'ChallanCopy_'+LMLicenseNamee);ManageLog('View Challan Copy Licence Name : '+ LMLicenseName + ' & StoreName '+LMStoreCode)"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -456,10 +487,10 @@
                                         <input id="LMFeeCopy" type="file" class="form-control form-control-sm" ng-model="LMFeeCopy" onchange="angular.element(this).scope().uploadFile('UploadFeesCopy', this)" />
 
                                         <div class="lic-upload-actions" ng-show="LMFeeCopy">
-                                            <a href="{{LMFeeCopy}}" target="_blank">
+                                            <a href="#" ng-Click="ViewFileC(LMFeeCopy)">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <i ng-click="viewDocument(LMFeeCopy,'FeesCopy_'+LMLicenseNamee);ManageLog('View Fees Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)" class="bi bi-download"></i>
+                                            <i ng-click="DownloadFileC(LMFeeCopy,'FeesCopy_'+LMLicenseNamee);ManageLog('View Fees Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)" class="bi bi-download"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -536,14 +567,15 @@
                                     <input id="LMUploadRenewedCopy" class="form-control form-control-sm" type="file" ng-model="LMUploadRenewedCopy" onchange="angular.element(this).scope().uploadFile('UploadRenewedCopy', this)" />
 
                                     <div class="lic-upload-actions" ng-show="LMUploadRenewedCopy && LMUploadRenewedCopy.trim() !== ''">
-                                        <a href="{{LMUploadRenewedCopy}}" target="_blank">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
+                                     
+                                            <a href="#" ng-Click="ViewFileC(LMUploadRenewedCopy)">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
 
-                                        <a ng-click="viewDocument(LMUploadRenewedCopy,'RenewalCopy_'+LMLicenseNamee);ManageLog('View Renewed Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
-                                            <i class="bi bi-download"></i>
-                                        </a>
-                                    </div>
+                                            <a ng-click="DownloadFileC(LMUploadRenewedCopy,'RenewalCopy_'+LMLicenseNamee);ManageLog('View Renewed Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
+                                                <i class="bi bi-download"></i>
+                                            </a>
+</div>
                                 </div>
                             </div>
                         </div>
