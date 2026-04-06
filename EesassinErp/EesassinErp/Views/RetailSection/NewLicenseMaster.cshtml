@@ -3,15 +3,19 @@
     ViewBag.Title = "New License Master";
     Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
- 
+
 
 <!-- Export dependencies -->
-@*<script src="~/Scripts/jszip.min.js"></script>
+@*
+<script src="~/Scripts/jszip.min.js"></script>
 <script src="~/Scripts/pdfmake.min.js"></script>
 <script src="~/Scripts/vfs_fonts.js"></script>*@
 <link href="~/Masters/NewLicenseMaster/style.css" rel="stylesheet" />
 <script src="~/Masters/NewLicenseMaster/script.js"></script>
-
+ 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <style>
     .checkbox-cell {
         display: flex;
@@ -26,11 +30,37 @@
     .srno-text {
         line-height: 1;
     }
+
     .dropdown-menu {
         max-height: 150px !important;
         overflow-y: auto !important;
     }
 </style>
+<script>
+    $(document).on('focus', '.custom-date', function () {
+
+        if (!$(this).data('datepicker')) {
+            $(this).datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true,
+                todayHighlight: true,
+                orientation: "bottom auto"
+            }).on('changeDate', function (e) {
+
+                // AngularJS model sync
+                var scope = angular.element(this).scope();
+                var model = $(this).attr('ng-model');
+
+                if (scope && model) {
+                    scope.$applyAsync(function () {
+                        scope.$eval(model + "='" + e.format('dd/mm/yyyy') + "'");
+                    });
+                }
+            });
+        }
+
+    });
+</script>
 <div class="licenseMasterPage px-4 py-2" ng-init="FilterResetFile();CountTiles()" ng-cloak>
     <!-- Main CARD -->
     <div id="mainCard" class="card section-card active">
@@ -42,15 +72,15 @@
                 <!-- Doc Pending -->
                 <div class="licMaster-kpi-card" ng-init="bindtiles()">
                     <div>
-                        <div class="licMaster-kpi-title">Document Pending</div> 
+                        <div class="licMaster-kpi-title">Document Pending</div>
                     </div>
                     <div class="licMaster-kpi-value">{{DocumentPending || 0}}</div>
                 </div>
 
                 <!-- Application Pending -->
-                <div class="licMaster-kpi-card" >
+                <div class="licMaster-kpi-card">
                     <div>
-                        <div class="licMaster-kpi-title">Application Pending</div> 
+                        <div class="licMaster-kpi-title">Application Pending</div>
                     </div>
                     <div class="licMaster-kpi-value">{{NotApplied || 0}}</div>
                 </div>
@@ -58,13 +88,13 @@
                 <!-- Approval Pending -->
                 <div class="licMaster-kpi-card">
                     <div>
-                        <div class="licMaster-kpi-title">License Pending</div> 
+                        <div class="licMaster-kpi-title">License Pending</div>
                     </div>
                     <div class="licMaster-kpi-value">{{NotIssued || 0}}</div>
                 </div>
                 <div class="licMaster-kpi-card">
                     <div>
-                        <div class="licMaster-kpi-title">License Issued</div> 
+                        <div class="licMaster-kpi-title">License Issued</div>
                     </div>
                     <div class="licMaster-kpi-value">{{Issued || 0}}</div>
                 </div>
@@ -72,7 +102,7 @@
                 <!-- Renewal Pending -->
                 <div class="licMaster-kpi-card">
                     <div>
-                        <div class="licMaster-kpi-title">Renewal Pending</div> 
+                        <div class="licMaster-kpi-title">Renewal Pending</div>
                     </div>
                     <div class="licMaster-kpi-value">{{RenewalPending || 0}}</div>
                 </div>
@@ -133,7 +163,7 @@
                 <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
                     <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
                         <div class="input-group input-group-sm">
-                            <input id="scSearch" ng-model="scSearch"   type="text" class="form-control form-control-sm" placeholder="Search..." />
+                            <input id="scSearch" ng-model="scSearch" type="text" class="form-control form-control-sm" placeholder="Search..." />
                             <button ng-click="GetLicenseRequestData(1)" class="btn btn-sm" id="scSearchBtn" style="border-color: #E45D27" type="button"><i class="bi bi-search"></i></button>
                         </div>
                     </div>
@@ -164,7 +194,7 @@
             <!-- Table wrapper -->
             <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3">
                 <div class="table-responsive">
-                
+
                     <table class="table table-sm mb-0 small-table" id="licMasterTable">
                         <thead>
                             <tr>
@@ -182,7 +212,7 @@
                                 <th>State</th>
                                 <th>License Name</th>
                                 <th>License Type</th>
-                              
+
                                 <th>License Status</th>
                                 <th>Application Status</th>
                                 <th>Expiry Status</th>
@@ -216,7 +246,7 @@
                                 <td>{{license.STATE_NAME}}</td>
                                 <td>{{license.LicenseName}}</td>
                                 <td>{{license.LicenseType}}</td>
-                               
+
                                 <td>{{license.LicenseStatus}}</td>
                                 <td>{{license.ApplicationStatus}} </td>
                                 <td>
@@ -227,11 +257,11 @@
                                 </td>
                                 <td>{{license.CategoryName}}</td>
                                 <td>
-                                    <a ng-if="license.UploadLicenseCopy" href="#" ng-click="ViewFileC(license.UploadLicenseCopy);ManageLog('View License Copy Licence Name : '+ LMLicenseName + ' & Location '+ license.RefStoreCode)" >
+                                    <a ng-if="license.UploadLicenseCopy" href="#" ng-click="ViewFileC(license.UploadLicenseCopy);ManageLog('View License Copy Licence Name : '+ LMLicenseName + ' & Location '+ license.RefStoreCode)">
                                         <i class="bi bi-eye" style="color: #f37437;"></i>
                                     </a>
 
-                                    
+
                                     <a href="#" ng-if="license.UploadLicenseCopy" ng-click="DownloadFileC(license.UploadLicenseCopy,license.LicenseName);ManageLog('Download License Copy Licence Name : '+ LMLicenseName + ' & Location '+ license.RefStoreCode)">
                                         <i class="bi bi-download" style="color: #f37437;">
                                         </i>
@@ -317,7 +347,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">License Date</label>
-                                <input date-input type="date" class="form-control form-control-sm" id="LMLicensDate" ng-model="LMLicensDate" ng-disabled="{{IsValid}}" ng-change="LDate($index)" />
+                                <input date-input type="text" class="form-control form-control-sm custom-date" id="LMLicensDate" ng-model="LMLicensDate" ng-disabled="{{IsValid}}" ng-change="LDate($index)" />
 
                             </div>
 
@@ -329,7 +359,7 @@
                                 <div class="lic-upload-field">
                                     <input id="LMLicenseCopy" class="form-control form-control-sm" type="file" ng-model="LMLicenseCopy" onchange="angular.element(this).scope().uploadFile('UploadLicenseCopy', this)" />
                                     <div class="lic-upload-actions" ng-show="LMLicenseCopy">
-                                        <a href="#" ng-click="ViewFileC(LMLicenseCopy)"  >
+                                        <a href="#" ng-click="ViewFileC(LMLicenseCopy)">
                                             <i class="bi bi-eye">
                                             </i>
                                         </a>
@@ -346,7 +376,7 @@
                                         <a href="#" ng-click="ViewFileC(LMAmendmentCopy)">
                                             <i class="bi bi-eye">
                                             </i>
-                                        </a> 
+                                        </a>
                                         <i class="bi bi-download" ng-click="DownloadFileC(LMAmendmentCopy,'AmendmentCopy_'+LMLicenseNamee);ManageLog('View Amendment Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
                                         </i>
                                     </div>
@@ -362,21 +392,21 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Validity Start Date</label>
-                                <input date-input type="date" class="form-control form-control-sm" ng-model="LMValidityStartDate" id="LMValidityStartDate" ng-disabled="{{IsValid}}" />
+                                <input date-input type="text" class="form-control form-control-sm custom-date" ng-model="LMValidityStartDate" id="LMValidityStartDate" ng-disabled="{{IsValid}}" />
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Validity End Date</label>
-                                <input date-input type="date" class="form-control form-control-sm" ng-model="LMValidityEndDate" id="LMValidityEndDate" ng-disabled="{{IsValid}}" ng-change="SetDate($index)" />
+                                <input date-input type="text" class="form-control form-control-sm custom-date" ng-model="LMValidityEndDate" id="LMValidityEndDate" ng-disabled="{{IsValid}}"  ng-change="SetDate($index)" />
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">License Category</label>
-                                <input class="form-control form-control-sm" ng-model="LMLicenseCategory"  />
+                                <input class="form-control form-control-sm" ng-model="LMLicenseCategory" />
                             </div>
-                            
+
                             <div class="col-md-4">
                                 <label class="form-label">Tentative Date</label>
 
-                                <input type="date" ng-model="LMTentativeDateofComp" class="form-control form-control-sm">
+                                <input type="text" ng-model="LMTentativeDateofComp" class="form-control form-control-sm custom-date">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">License Cost</label>
@@ -414,17 +444,17 @@
                         <div class="row g-3 mt-1">
                             <div class="col-md-4">
                                 <label class="form-label">Proposed Date</label>
-                                <input type='text' class="form-control form-control-sm validate" ng-model="LMProposedDate" ng-disabled="true">
+                                <input type='text' class="form-control form-control-sm validate custom-date" ng-model="LMProposedDate" ng-disabled="true">
 
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Requested Date</label>
-                                <input type='text' class="form-control form-control-sm validate" ng-model="LMRequestedDate" ng-disabled="true">
+                                <input type='text' class="form-control form-control-sm validate custom-date" ng-model="LMRequestedDate" ng-disabled="true">
 
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Document Date</label>
-                                <input type='text' class="form-control form-control-sm validate" ng-model="LMDocDate" ng-disabled="true">
+                                <input type='text' class="form-control form-control-sm validate custom-date" ng-model="LMDocDate" ng-disabled="true">
 
                             </div>
                         </div>
@@ -444,7 +474,7 @@
                             <div class="col-md-4">
                                 <label class="form-label">Application Date</label>
 
-                                <input date-input type="date" class="form-control form-control-sm" id="AppDate" ng-model="AppDate" ng-class="{'validate': AppDate}" ng-disabled="{{IsValid}}" />
+                                <input date-input type="text" class="form-control form-control-sm custom-date" id="AppDate" ng-model="AppDate" ng-class="{'validate': AppDate}" ng-disabled="{{IsValid}}" />
 
                             </div>
                             <div class="col-md-4">
@@ -452,9 +482,9 @@
                                 <div class="lic-upload-field">
                                     <input id="LMAppcopy" class="form-control form-control-sm" type="file" ng-model="LMAppcopy" onchange="angular.element(this).scope().uploadFile('UploadApplicationCopy', this)" ng-required="isChallanCopyMandatory" />
                                     <div class="lic-upload-actions" ng-show="LMAppcopy">
-                                        <a href="#" ng-Click="ViewFileC(LMAppcopy)" >
+                                        <a href="#" ng-Click="ViewFileC(LMAppcopy)">
                                             <i class="bi bi-eye"></i>
-                                        </a>  
+                                        </a>
 
                                         <i ng-click="DownloadFileC(LMAppcopy,'ApplicationCopy_'+LMLicenseNamee);ManageLog('View Application Copy Licence Name : '+ LMAppcopy + ' & StoreName '+ LMStoreCode)" class="bi bi-download"></i>
                                     </div>
@@ -539,18 +569,18 @@
                             <div class="col-md-4">
                                 <label class="form-label">Renewal Request Date</label>
 
-                                <input type="text" class="form-control" ng-model="LMRenewalRequestDate" ng-disabled="true" />
+                                <input type="text" class="form-control custom-date" ng-model="LMRenewalRequestDate" ng-disabled="true" />
 
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Renewal Start Date</label>
 
-                                <input type="date" class="form-control" ng-model="LMRenewalStartDate" />
+                                <input type="text" class="form-control custom-date" ng-model="LMRenewalStartDate" />
 
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Renewal End Date</label>
-                                <input date-input type="date" class="form-control" ng-model="LMRenewalEnddate" />
+                                <input date-input type="text" class="form-control custom-date" ng-model="LMRenewalEnddate" />
 
                             </div>
                             <div class="col-md-4">
@@ -567,15 +597,15 @@
                                     <input id="LMUploadRenewedCopy" class="form-control form-control-sm" type="file" ng-model="LMUploadRenewedCopy" onchange="angular.element(this).scope().uploadFile('UploadRenewedCopy', this)" />
 
                                     <div class="lic-upload-actions" ng-show="LMUploadRenewedCopy && LMUploadRenewedCopy.trim() !== ''">
-                                     
-                                            <a href="#" ng-Click="ViewFileC(LMUploadRenewedCopy)">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
 
-                                            <a ng-click="DownloadFileC(LMUploadRenewedCopy,'RenewalCopy_'+LMLicenseNamee);ManageLog('View Renewed Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
-                                                <i class="bi bi-download"></i>
-                                            </a>
-</div>
+                                        <a href="#" ng-Click="ViewFileC(LMUploadRenewedCopy)">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
+                                        <a ng-click="DownloadFileC(LMUploadRenewedCopy,'RenewalCopy_'+LMLicenseNamee);ManageLog('View Renewed Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
+                                            <i class="bi bi-download"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -583,7 +613,7 @@
 
 
 
-                    </div>  
+                    </div>
                     <!-- USER DETAILS -->
                     <!-- Save button -->
                     <div class="d-flex justify-content-end mt-4" ng-show="LM_EditFlag==1">
@@ -595,301 +625,295 @@
                     </div>
                 </div>
 
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ================= License Master View More Modal ================= -->
+<!--<div class="modal fade" id="licenseMasterViewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 14px; background: #FEF3EC; overflow: hidden; ">-->
+<!-- Header -->
+<!--<div class="licMaster-header d-flex align-items-center">
+    <button type="button" class="btn licMaster-back-btn" data-bs-dismiss="modal">
+        <i class="bi bi-arrow-left"></i>
+    </button>
+
+    <h3 class="modal-title text-center flex-grow-1" style="color:#fff">License Master</h3>
+</div>-->
+<!-- Body -->
+<!--<div class="modal-body" style="background: #FEF3EC; font-size: 0.9rem;">
+    <div class="lic-section">
+        <div class="lic-section-title">License Details</div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">License Name</label>
+                <input type='text' class="form-control form-control-sm validate" ng-model="LMLicenseNamee" ng-disabled="true">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">License Status</label>
+                <select ng-model="LMLicenseStatus" id="LMLicenseStatus" class="form-select form-control validate" ng-disabled="{{IsValid}}" ng-change="chkissuestatus($index)">
+                    <option value="">Select</option>
+                    <option ng-repeat="item in LicenseStatusList" value="{{item.AttributeValue}}">{{item.AttributeValue}}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">License Date</label>
+                <input date-input type="date" class="form-control" id="LMLicensDate" ng-model="LMLicensDate" ng-disabled="{{IsValid}}" ng-change="LDate($index)" />
+
+            </div>
+
+        </div>
+
+        <div class="row g-3 mt-1">
+            <div class="col-md-4">
+                <label class="form-label">License Copy</label>
+                <div class="lic-upload-field">
+                    <input id="LMLicenseCopy" class="form-control form-control-sm" type="file" ng-model="LMLicenseCopy" onchange="angular.element(this).scope().uploadFile('UploadLicenseCopy', this)" />
+                    <div class="lic-upload-actions" ng-show="LMLicenseCopy">
+                        <i class="bi bi-eye" ng-click="viewDocument(LMLicenseCopy);ManageLog('View License Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
+
+                        </i>
+                        <i class="bi bi-download" ng-click="viewDocument(LMLicenseCopy);ManageLog('View License Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
+
+                        </i>
+                    </div>
                 </div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">License Number</label>
+                <input type="text" class="form-control" ng-model="LMLicenseNumber" id="LMLicenseNumber" ng-disabled="{{IsValid}}">
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Machine Number</label>
+                <input type="text" class="form-control" ng-model="LMMachineNumber" id="LMMachineNumber" ng-disabled="{{IsValid}}">
+            </div>
+
+
+
+            <div class="col-md-4">
+                <label class="form-label">Validity Start Date</label>
+                <input date-input type="date" class="form-control" ng-model="LMValidityStartDate" id="LMValidityStartDate" ng-disabled="{{IsValid}}" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Validity End Date</label>
+                <input date-input type="date" class="form-control" ng-model="LMValidityEndDate" id="LMValidityEndDate" ng-disabled="{{IsValid}}" ng-change="SetDate($index)" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Tentative Date</label>
+                <input type="date" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">License Cost</label>
+                <input type="number" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Govt Fees</label>
+                <input type="text" class="form-control" ng-model="LMGovtFees" />
+            </div>
+        </div>
+    </div>
+
+    <div class="lic-section">
+        <div class="lic-section-title">Location Details</div>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Location Code</label>
+                <input type='text' class="form-control form-control-sm validate" ng-model="LMStoreCode" ng-disabled="true">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Ref Location Code</label>
+
+                <input type='text' class="form-control form-control-sm validate" ng-model="LMRefStoreCode" ng-disabled="true">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Location Address</label>
+                <input type='text' class="form-control form-control-sm validate" ng-model="LMRefStoreAddress" ng-disabled="true">
+
+            </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+            <div class="col-md-4">
+                <label class="form-label">Proposed Date</label>
+                <input type='text' class="form-control form-control-sm validate" ng-model="LMProposedDate" ng-disabled="true">
+
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Requested Date</label>
+                <input type='text' class="form-control form-control-sm validate" ng-model="LMRequestedDate" ng-disabled="true">
+
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Document Date</label>
+                <input type='text' class="form-control form-control-sm validate" ng-model="LMDocDate" ng-disabled="true">
 
             </div>
         </div>
     </div>
 
-    <!-- ================= License Master View More Modal ================= -->
-    <!--<div class="modal fade" id="licenseMasterViewModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content" style="border-radius: 14px; background: #FEF3EC; overflow: hidden; ">-->
+    <div class="lic-section">
+        <div class="lic-section-title">Application Details</div>
 
-                <!-- Header -->
-                <!--<div class="licMaster-header d-flex align-items-center">
-                    <button type="button" class="btn licMaster-back-btn" data-bs-dismiss="modal">
-                        <i class="bi bi-arrow-left"></i>
-                    </button>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Application Status</label>
+                <select class="form-select form-control validate" id="LMAppStatus" ng-model="LMAppStatus" ng-change="onStatusChange(license);ManageLog('change Status Licence Name. : '+license.LicenseName + ' & StoreName '+ LMStoreCode)" ng-disabled="{{IsValid}}">
+                    <option value="">Select</option>
+                    <option ng-repeat="item in ApplicationStatusList" value="{{item.AttributeValue}}">{{item.AttributeValue}}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Application Date</label>
+                <input date-input type="date" class="form-control" id="AppDate" ng-model="AppDate" ng-class="{'validate': AppDate}" ng-disabled="{{IsValid}}" />
 
-                    <h3 class="modal-title text-center flex-grow-1" style="color:#fff">License Master</h3>
-                </div>-->
-
-                <!-- Body -->
-                <!--<div class="modal-body" style="background: #FEF3EC; font-size: 0.9rem;">
-                    <div class="lic-section">
-                        <div class="lic-section-title">License Details</div>
-
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label">License Name</label>
-                                <input type='text' class="form-control form-control-sm validate" ng-model="LMLicenseNamee" ng-disabled="true">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">License Status</label>
-                                <select ng-model="LMLicenseStatus" id="LMLicenseStatus" class="form-select form-control validate" ng-disabled="{{IsValid}}" ng-change="chkissuestatus($index)">
-                                    <option value="">Select</option>
-                                    <option ng-repeat="item in LicenseStatusList" value="{{item.AttributeValue}}">{{item.AttributeValue}}</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">License Date</label>
-                                <input date-input type="date" class="form-control" id="LMLicensDate" ng-model="LMLicensDate" ng-disabled="{{IsValid}}" ng-change="LDate($index)" />
-
-                            </div>
-
-                        </div>
-
-                        <div class="row g-3 mt-1">
-                            <div class="col-md-4">
-                                <label class="form-label">License Copy</label>
-                                <div class="lic-upload-field">
-                                    <input id="LMLicenseCopy" class="form-control form-control-sm" type="file" ng-model="LMLicenseCopy" onchange="angular.element(this).scope().uploadFile('UploadLicenseCopy', this)" />
-                                    <div class="lic-upload-actions" ng-show="LMLicenseCopy">
-                                        <i class="bi bi-eye" ng-click="viewDocument(LMLicenseCopy);ManageLog('View License Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
-
-                                        </i>
-                                        <i class="bi bi-download" ng-click="viewDocument(LMLicenseCopy);ManageLog('View License Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
-
-                                        </i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">License Number</label>
-                                <input type="text" class="form-control" ng-model="LMLicenseNumber" id="LMLicenseNumber" ng-disabled="{{IsValid}}">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Machine Number</label>
-                                <input type="text" class="form-control" ng-model="LMMachineNumber" id="LMMachineNumber" ng-disabled="{{IsValid}}">
-                            </div>
-                            
-
-
-                            <div class="col-md-4">
-                                <label class="form-label">Validity Start Date</label>
-                                <input date-input type="date" class="form-control" ng-model="LMValidityStartDate" id="LMValidityStartDate" ng-disabled="{{IsValid}}" />
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Validity End Date</label>
-                                <input date-input type="date" class="form-control" ng-model="LMValidityEndDate" id="LMValidityEndDate" ng-disabled="{{IsValid}}" ng-change="SetDate($index)" />
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Tentative Date</label>
-                                <input type="date" class="form-control form-control-sm">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">License Cost</label>
-                                <input type="number" class="form-control form-control-sm">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Govt Fees</label>
-                                <input type="text" class="form-control" ng-model="LMGovtFees" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="lic-section">
-                        <div class="lic-section-title">Location Details</div>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label">Location Code</label>
-                                <input type='text' class="form-control form-control-sm validate" ng-model="LMStoreCode" ng-disabled="true">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Ref Location Code</label>
-
-                                <input type='text' class="form-control form-control-sm validate" ng-model="LMRefStoreCode" ng-disabled="true">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Location Address</label>
-                                <input type='text' class="form-control form-control-sm validate" ng-model="LMRefStoreAddress" ng-disabled="true">
-
-                            </div>
-                        </div>
-
-                        <div class="row g-3 mt-1">
-                            <div class="col-md-4">
-                                <label class="form-label">Proposed Date</label>
-                                <input type='text' class="form-control form-control-sm validate" ng-model="LMProposedDate" ng-disabled="true">
-
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Requested Date</label>
-                                <input type='text' class="form-control form-control-sm validate" ng-model="LMRequestedDate" ng-disabled="true">
-
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Document Date</label>
-                                <input type='text' class="form-control form-control-sm validate" ng-model="LMDocDate" ng-disabled="true">
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="lic-section">
-                        <div class="lic-section-title">Application Details</div>
-
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label">Application Status</label>
-                                <select class="form-select form-control validate" id="LMAppStatus" ng-model="LMAppStatus" ng-change="onStatusChange(license);ManageLog('change Status Licence Name. : '+license.LicenseName + ' & StoreName '+ LMStoreCode)" ng-disabled="{{IsValid}}">
-                                    <option value="">Select</option>
-                                    <option ng-repeat="item in ApplicationStatusList" value="{{item.AttributeValue}}">{{item.AttributeValue}}</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Application Date</label>
-                                <input date-input type="date" class="form-control" id="AppDate" ng-model="AppDate" ng-class="{'validate': AppDate}" ng-disabled="{{IsValid}}" />
-
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Application Copy</label>
-                                <div class="lic-upload-field">
-                                    <input type="file" class="form-control form-control-sm">
-                                    <div class="lic-upload-actions">
-                                        <i class="bi bi-eye"></i>
-                                        <i class="bi bi-download"></i>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="row g-3">
-                            <div class="row g-3 mb-4 align-items-end">
-
-
-                                <div class="col-md-4">
-                                    <label class="form-label">Challan Copy</label>
-                                    <div class="lic-upload-field">
-                                        <input type="file" class="form-control form-control-sm">
-                                        <div class="lic-upload-actions">
-                                            <i class="bi bi-eye"></i>
-                                            <i class="bi bi-download"></i>
-                                        </div>
-                                    </div>
-                                </div>-->
-                                <!-- Fees Copy -->
-                                <!--<div class="col-md-4">
-                                    <label class="form-label">Fees Copy</label>
-                                    <div class="lic-upload-field">
-                                        <input type="file" class="form-control form-control-sm">
-                                        <div class="lic-upload-actions">
-                                            <i class="bi bi-eye"></i>
-                                            <i class="bi bi-download"></i>
-                                        </div>
-                                    </div>
-                                </div>-->
-
-                                <!-- Renewal Copy -->
-                                <!--<div class="col-md-4">
-                                    <label class="form-label">Renewal Copy</label>
-                                    <div class="lic-upload-field">
-                                        <input type="file" class="form-control form-control-sm">
-                                        <div class="lic-upload-actions">
-                                            <i class="bi bi-eye"></i>
-                                            <i class="bi bi-download"></i>
-                                        </div>
-                                    </div>
-                                </div>-->
-
-                                <!-- Amendment Copy -->
-                                <!--@*<div class="col-md-4">
-                                    <label class="form-label">Amendment Copy</label>
-                                    <div class="lic-upload-field">
-                                        <input type="file" class="form-control form-control-sm">
-                                        <div class="lic-upload-actions">
-                                            <i class="bi bi-eye"></i>
-                                            <i class="bi bi-download"></i>
-                                        </div>
-                                    </div>
-                                </div>*@
-
-                            </div>
-                        </div>-->
-                        <!-- LICENSE DETAILS -->
-
-                        <!--<div class="lic-section">
-                            <div class="lic-section-title">User Details</div>
-
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <label class="form-label">Username</label>
-                                    <input type="text" class="form-control" ng-model="LMUserName" ng-disabled="{{IsValid}}">
-
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">User Password</label>
-                                    <input type="text" class="form-control" ng-model="LMUserPassword" ng-disabled="{{IsValid}}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Mobile Number</label>
-                                    <input id="MobileNumber" type="text" class="form-control" ng-model="LMMobileNumber" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" numeric-only dynamic-length maxlength="10" minlength="10" ng-disabled="{{IsValid}}">
-                                </div>
-                            </div>
-
-                            <div class="row g-3 mt-1">
-                                <div class="col-md-4">
-                                    <label class="form-label">Email</label>
-                                    <input type="text" id="LMEmailId" class="form-control form-control-sm" ng-model="LMEmailId" ng-disabled="{{IsValid}}">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">Remark</label>
-                                    <input type="text" class="form-control form-control-sm" ng-model="LMRemark">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row g-3 mt-1">
-                            <div class="lic-section-title">Renewal Detail</div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">Renewal Request Date</label>
-                                <input type="text" class="form-control" ng-model="LMRenewalRequestDate" ng-disabled="true" ng-show="LMLStatus==4||LMLStatus==3" />
-
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Renewal Start Date</label>
-                                <input type="date" class="form-control" ng-model="LMRenewalStartDate" ng-disabled="{{IsValid}}" ng-show="LMLStatus==4||LMLStatus==3" />
-
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Renewal End Date</label>
-                                <input date-input type="date" class="form-control" ng-model="LMRenewalEnddate" ng-show="LMLStatus==4||LMLStatus==3" ng-disabled="{{IsValid}}" />
-
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Renewal Status</label>
-                                <select ng-model="LMRenewalStatus" class="form-select form-control validate" ng-disabled="{{IsValid}}" ng-show="LMLStatus==3">
-                                    <option value="">Select</option>
-                                    <option value="Renew">Renew</option>
-                                    <option value="NonRenew">Non Renew</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-
-
-                    </div>-->
-
-                    <!-- USER DETAILS -->
-                    <!-- Save button -->
-                    <!--<div class="d-flex justify-content-end mt-4">
-                        <button class="btn px-4" id="saveBtn" style="background:var(--primary); color:#fff;"
-                                ng-click="LSave();ManageLog('Submit License Licence Name : '+license.LicenseName + ' &amp; StoreName '+license.StoreCode)" ng-hide="LMLStatus==2||LMLStatus==4">
-                            Save
-                        </button>
-
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Application Copy</label>
+                <div class="lic-upload-field">
+                    <input type="file" class="form-control form-control-sm">
+                    <div class="lic-upload-actions">
+                        <i class="bi bi-eye"></i>
+                        <i class="bi bi-download"></i>
                     </div>
                 </div>
 
             </div>
 
         </div>
-    </div>-->
+
+        <div class="row g-3">
+            <div class="row g-3 mb-4 align-items-end">
+
+
+                <div class="col-md-4">
+                    <label class="form-label">Challan Copy</label>
+                    <div class="lic-upload-field">
+                        <input type="file" class="form-control form-control-sm">
+                        <div class="lic-upload-actions">
+                            <i class="bi bi-eye"></i>
+                            <i class="bi bi-download"></i>
+                        </div>
+                    </div>
+                </div>-->
+<!-- Fees Copy -->
+<!--<div class="col-md-4">
+    <label class="form-label">Fees Copy</label>
+    <div class="lic-upload-field">
+        <input type="file" class="form-control form-control-sm">
+        <div class="lic-upload-actions">
+            <i class="bi bi-eye"></i>
+            <i class="bi bi-download"></i>
+        </div>
+    </div>
+</div>-->
+<!-- Renewal Copy -->
+<!--<div class="col-md-4">
+    <label class="form-label">Renewal Copy</label>
+    <div class="lic-upload-field">
+        <input type="file" class="form-control form-control-sm">
+        <div class="lic-upload-actions">
+            <i class="bi bi-eye"></i>
+            <i class="bi bi-download"></i>
+        </div>
+    </div>
+</div>-->
+<!-- Amendment Copy -->
+<!--@*<div class="col-md-4">
+            <label class="form-label">Amendment Copy</label>
+            <div class="lic-upload-field">
+                <input type="file" class="form-control form-control-sm">
+                <div class="lic-upload-actions">
+                    <i class="bi bi-eye"></i>
+                    <i class="bi bi-download"></i>
+                </div>
+            </div>
+        </div>*@
+
+    </div>
+</div>-->
+<!-- LICENSE DETAILS -->
+<!--<div class="lic-section">
+        <div class="lic-section-title">User Details</div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" ng-model="LMUserName" ng-disabled="{{IsValid}}">
+
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">User Password</label>
+                <input type="text" class="form-control" ng-model="LMUserPassword" ng-disabled="{{IsValid}}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Mobile Number</label>
+                <input id="MobileNumber" type="text" class="form-control" ng-model="LMMobileNumber" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" numeric-only dynamic-length maxlength="10" minlength="10" ng-disabled="{{IsValid}}">
+            </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+            <div class="col-md-4">
+                <label class="form-label">Email</label>
+                <input type="text" id="LMEmailId" class="form-control form-control-sm" ng-model="LMEmailId" ng-disabled="{{IsValid}}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Remark</label>
+                <input type="text" class="form-control form-control-sm" ng-model="LMRemark">
+            </div>
+        </div>
+    </div>
+    <div class="row g-3 mt-1">
+        <div class="lic-section-title">Renewal Detail</div>
+
+        <div class="col-md-4">
+            <label class="form-label">Renewal Request Date</label>
+            <input type="text" class="form-control" ng-model="LMRenewalRequestDate" ng-disabled="true" ng-show="LMLStatus==4||LMLStatus==3" />
+
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Renewal Start Date</label>
+            <input type="date" class="form-control" ng-model="LMRenewalStartDate" ng-disabled="{{IsValid}}" ng-show="LMLStatus==4||LMLStatus==3" />
+
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Renewal End Date</label>
+            <input date-input type="date" class="form-control" ng-model="LMRenewalEnddate" ng-show="LMLStatus==4||LMLStatus==3" ng-disabled="{{IsValid}}" />
+
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Renewal Status</label>
+            <select ng-model="LMRenewalStatus" class="form-select form-control validate" ng-disabled="{{IsValid}}" ng-show="LMLStatus==3">
+                <option value="">Select</option>
+                <option value="Renew">Renew</option>
+                <option value="NonRenew">Non Renew</option>
+            </select>
+        </div>
+    </div>
+
+
+
+
+</div>-->
+<!-- USER DETAILS -->
+<!-- Save button -->
+<!--<div class="d-flex justify-content-end mt-4">
+                    <button class="btn px-4" id="saveBtn" style="background:var(--primary); color:#fff;"
+                            ng-click="LSave();ManageLog('Submit License Licence Name : '+license.LicenseName + ' &amp; StoreName '+license.StoreCode)" ng-hide="LMLStatus==2||LMLStatus==4">
+                        Save
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>-->
 </div>
 
 

@@ -56,7 +56,7 @@
             <div class="limit-instruction">Created: <strong>250</strong></div>
             <div class="limit-instruction">Left: <strong>350</strong></div>*@
         </div>
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2" ng-hide="loginType === 5">
             <!-- New Employee (rounded pill) -->
             <button class="btn btn-sm btn-newEmployee" id="btnNewEmployee" type="button" data-bs-toggle="modal" data-bs-target="#newEmployeeModal" ng-click="GenerateEmployeeCode();ManageLog('click on New Employee button')">
                 <i class="bi bi-plus-lg" aria-hidden="true"></i>
@@ -70,7 +70,7 @@
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content employee-modal">
                 <!-- Header -->
-                <div class="modal-header employee-modal-header">
+                <div class="modal-header employee-modal-header" >
                     <h6 class="modal-title">Add New Employee</h6>
                     <button type="button" class="btn-close btn-close-white" ng-click="opensomething()" data-bs-dismiss="modal"></button>
                 </div>
@@ -569,7 +569,7 @@
 
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Permanent Gate Pass Date</label>
-                                <input type="date" class="form-control form-control-sm"
+                                <input type="date"  id="txtPermanentIDDate" class="form-control form-control-sm"
                                        ng-model="PermanentIDDate">
                             </div>
 
@@ -577,7 +577,7 @@
                     </form>
                 </div>
                 <!-- Footer -->
-                <div class="modal-footer employee-modal-footer">
+                <div class="modal-footer employee-modal-footer" ng-hide="loginType === 5">
                     <button class="btn cancel-btn" data-bs-dismiss="modal">Cancel</button>
                     <button class="btn import-save-btn"  
                             ng-show="act==1" 
@@ -585,7 +585,7 @@
                         Submit
                     </button>
 
-                    <button class="btn import-save-btn" data-bs-dismiss="modal"
+                    <button class="btn import-save-btn" data-bs-dismiss="modal" 
                             ng-show="act==2"
                             ng-click="SaveEmployee();ManageLog('Update in Employee Master ')">
                         Update
@@ -609,19 +609,22 @@
             <div class="card-body p-3 h-100 d-flex flex-column">
                 <!-- Toolbar -->
                 <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
-                    <!--<div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center gap-2">
                         <div class="dropdown">
-                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Month
+                            <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                {{ SelectedPartyName || 'Select Party' }}
                             </button>
+
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">January</a></li>
-                                <li><a class="dropdown-item" href="#">February</a></li>
-                                <li><a class="dropdown-item" href="#">March</a></li>-->
-                                <!-- ... -->
-                            <!--</ul>
+                                <li ng-repeat="p in PartyList">
+                                    <a class="dropdown-item" href="javascript:void(0)"
+                                       ng-click="filterByParty(p.PartyName)">
+                                        {{ p.PartyName }}
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="dropdown">
+                        @*<div class="dropdown">
                             <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Year
                             </button>
@@ -629,9 +632,9 @@
                                 <li><a class="dropdown-item" href="#">2025</a></li>
                                 <li><a class="dropdown-item" href="#">2024</a></li>
                             </ul>
-                        </div>
-                        <button class="btn btn-sm filter-btn active">Go</button>
-                    </div>-->
+                        </div>*@
+                        @*<button class="btn btn-sm filter-btn active">Go</button>*@
+                    </div>
 
                     <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
                         <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
@@ -692,7 +695,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="employee in EmployeeList | filter: SearchEmp">
+                                <tr ng-repeat="employee in EmployeeList | filter: SearchEmp | filter: { PartyName: SelectedPartyName }">
                                     <td>{{$index + 1}}</td>
                                     <td>{{ employee.EmployeeCode }}</td>
                                     <td>{{ employee.RefEmployeeCode }}</td>
@@ -720,7 +723,7 @@
                                                 <a class="dropdown-item"
                                                    href="#"
                                                    data-bs-toggle="modal"
-                                                   data-bs-target="#complianceDocumentsModal"    ng-click="opencom(employee.EmployeeCode)">
+                                                   data-bs-target="#complianceDocumentsModal" ng-click="opencom(employee.EmployeeCode)">
                                                     Compliance Documents
                                                 </a>
                                             </li>
@@ -980,7 +983,7 @@
 
                     <!-- FOOTER -->
                     <div class="modal-footer ev-footer">
-                        <button class="btn ev-footer-btn secondary"
+                        <button class="btn ev-footer-btn secondary" ng-hide="loginType === 5"
                                 data-bs-toggle="modal"
                                 data-bs-target="#transferEmployeeModal">
                             Transfer
@@ -1013,10 +1016,11 @@
                         </p>
                         <div class="te-search-wrapper">
                             <input type="text" class="form-control te-search-input" ng-model="Searctrasnsfer" placeholder="Type Site" />
-                           
+
                         </div>
                         <hr />
                         <div class="te-units-title">Sites</div>
+                        
                         <div class="te-unit-row" ng-repeat="x in TransferStoreList | filter : Searctrasnsfer" ng-if="x.SiteId != employee.SiteId">
                             <div class="te-unit-left">
                                 <div class="te-unit-code">{{x.SiteName}}</div>
@@ -1064,7 +1068,7 @@
                                 </div>
                                 <div class="doc-actions">
                                  
-                                    <i class="bi bi-upload action-icon" ng-click="UploadDoc(x.DocumentId)"></i>
+                                    <i class="bi bi-upload action-icon" ng-click="UploadDoc(x.DocumentId)"  ng-hide="loginType === 5" ></i>
                                     <i class="bi bi-eye action-icon"  ng-if="x.Filepath" ng-click="ViewFileC(x.Filepath)"></i>
                                     <i class="bi bi-download action-icon"  ng-if="x.Filepath"  ng-click="DownloadFileC(x.Filepath,x.DocumentName)"></i>
                                     <i class="bi bi-chevron-down toggle-history"  ng-if="x.Filepath"

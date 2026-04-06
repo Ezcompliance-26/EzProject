@@ -19,7 +19,7 @@ var SessionId = user.SessionId;
 var REmailId = user.EmailId;
 var Loadonce = user.Loadonce;
 var PartyEMail = user.PartyEMail;
-var DashboardSwitch = sessionStorage.getItem("DashboardSwitch");
+var DashboardSwitch= sessionStorage.getItem("DashboardSwitch");
 
 var AuditorId = '';
 var VendorId = '';
@@ -2716,11 +2716,24 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
 
     $scope.switchtoRetailadmin = function () {
-        window.top.location.href = '../Dashboard/Board';
+
+        if (DashboardSwitch == 'AdminSupplier' || DashboardSwitch == 'Supplier') {
+            window.top.location.href = '../Dashboard/VBoard';
+        }
+        else {
+            window.top.location.href = '../Dashboard/Board';
+        }
+     
     }
 
     $scope.switchtovendoradmin = function () {
-        window.top.location.href = '../Dashboard/VBoard';
+        if (DashboardSwitch == 'Supplier' || DashboardSwitch == 'AdminSupplier' ) {
+            window.top.location.href = '../Dashboard/VBoard';
+        }
+        else {
+            window.top.location.href = '../Dashboard/Board';
+        }
+        
     }
 
      

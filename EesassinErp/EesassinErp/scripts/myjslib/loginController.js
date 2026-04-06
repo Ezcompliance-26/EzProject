@@ -166,18 +166,34 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                 $scope.DashboardSwitch = 'Supplier';
                 sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
                 return window.location.href = '../Dashboard/Dashboard';
-            } 
+            }
+           
 
-            if (d.Module_Name === 'Retail') { 
-                startLoginMessages();
-                
-                $scope.DashboardSwitch = 'AdminRetail';
-                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                $scope.ManageLog('Login Retail Section'); 
-                setTimeout(() => {
-                    $scope.ManageLog(d.LoginId, 'Login Retail Section');
-                }, 0);
-                return window.location.href = d.Path;
+            if (d.Module_Name === 'Retail')
+            {
+
+
+                if (d.LoginType == '2') {
+                    startLoginMessages();
+
+                    $scope.DashboardSwitch = 'Supplier';
+                    sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                    setTimeout(() => {
+                        $scope.ManageLog(d.LoginId, 'Login Supplier Section');
+                    }, 0);
+                    return window.location.href = d.Path;
+                }
+                else {
+                    startLoginMessages();
+
+                    $scope.DashboardSwitch = 'AdminRetail';
+                    sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                    $scope.ManageLog('Login Retail Section');
+                    setTimeout(() => {
+                        $scope.ManageLog(d.LoginId, 'Login Retail Section');
+                    }, 0);
+                    return window.location.href = d.Path;
+                }
             }
 
             if (d.Module_Name === 'Both')
@@ -200,7 +216,8 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                         }, 0);
                         $scope.Captcha = ''; $scope.GetCaptchaImage();
                         return window.location.href = '../Dashboard/VBoard';
-                    } else {
+                    }
+                    else {
                         $scope.DashboardSwitch = 'Supplier';
                         sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
                         return window.location.href = '../Dashboard/Dashboard';
@@ -219,6 +236,16 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                         }, 0);
                         $scope.Captcha = ''; $scope.GetCaptchaImage();
                         return window.location.href = '../RetailSection/NewLocationDashboard';
+                    }
+                    if (d.LoginType == '2') {
+                        startLoginMessages();
+
+                        $scope.DashboardSwitch = 'Supplier';
+                        sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                        setTimeout(() => {
+                            $scope.ManageLog(d.LoginId, 'Login Supplier Section');
+                        }, 0);
+                        return window.location.href = '../Dashboard/NewVendorDashboard';
                     }
                     else {
 

@@ -70,6 +70,26 @@ namespace DAL
                   new SqlParameter("@LeavingDate", obj.LeavingDate),
                   new SqlParameter("@SiteId",obj.SiteId),
 
+                  new SqlParameter("@MinimumWageCategory", obj.MinimumWageCategory),
+new SqlParameter("@WageType", obj.WageType),
+new SqlParameter("@WageDisbursementMode", obj.WageDisbursementMode),
+
+new SqlParameter("@PPE", obj.PPE),
+new SqlParameter("@PPEType", obj.PPEType),
+new SqlParameter("@SafetyTrainingStatus", obj.SafetyTrainingStatus),
+new SqlParameter("@SiteInductionStatus", obj.SiteInductionStatus),
+new SqlParameter("@PoliceVerificationStatus", obj.PoliceVerificationStatus),
+
+new SqlParameter("@TempIDStatus", obj.TempIDStatus),
+new SqlParameter("@TempIDNumber", obj.TempIDNumber),
+new SqlParameter("@TempIDDate", obj.TempIDDate),
+
+new SqlParameter("@PermanentIDStatus", obj.PermanentIDStatus),
+new SqlParameter("@PermanentIDNumber", obj.PermanentIDNumber),
+new SqlParameter("@PermanentIDDate", obj.PermanentIDDate),
+
+
+
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("RTL.USP_EmployeeMaster", CommandType.StoredProcedure, param.ToArray()));

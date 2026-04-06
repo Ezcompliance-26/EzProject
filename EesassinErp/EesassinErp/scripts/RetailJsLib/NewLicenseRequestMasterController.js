@@ -5,6 +5,9 @@
     $scope.pageNumbers = [];
     $scope.selectAll = false;
 
+
+  
+
     $scope.SetDate = function (Id)
     {
         var Sdate = $('#ValidityStartDate' + Id).val();
@@ -944,7 +947,10 @@
         };
         myService.methode('POST', ("../RetailSection/LicenseRequestData"), JSON.stringify(collectionobj))
             .then(function (response) {
-                if (response.data && response.data.Result) {
+                if (response.data && response.data.Result)
+
+
+                {
                     $scope.LicenseList = response.data.Result; // Store data for export
 
                     $scope.LMStoreCode = license.StoreCode;
@@ -963,18 +969,62 @@
                     $scope.LMDocDate = license.DocumentDate
 
                     $scope.LMAppStatus = license.ApplicationStatus;
-                    $scope.AppDate = license.ApplicationDate ? moment(license.ApplicationDate, "DD-MM-YYYY").toDate() : null;
+                    //$scope.AppDate = license.ApplicationDate ? moment(license.ApplicationDate, "DD-MM-YYYY").toDate() : null;
+
+                    if (license.ApplicationDate) {
+
+                        if (moment(license.ApplicationDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.AppDate = license.ApplicationDate;
+                        }
+                        else {
+                            $scope.AppDate = moment(license.ApplicationDate).format("DD/MM/YYYY");
+                        }
+                    }
+
                     $scope.LMAppcopy = license.UploadApplicationCopy;
                     $scope.LMchallanCopy = license.UploadChallanCopy;
                     $scope.LMFeeCopy = license.UploadFeesCopy;
                     $scope.LMLicenseStatus = license.LicenseStatus;
-                    $scope.LMLicensDate = license.IssuedDate ? moment(license.IssuedDate, "DD-MM-YYYY").toDate() : null;
+                  //  $scope.LMLicensDate = license.IssuedDate ? moment(license.IssuedDate, "DD-MM-YYYY").toDate() : null;
+
+                    if (license.IssuedDate) {
+
+                        if (moment(license.IssuedDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMLicensDate = license.ApplicationDate;
+                        }
+                        else {
+                            $scope.LMLicensDate = moment(license.IssuedDate).format("DD/MM/YYYY");
+                        }
+                    }
+
                     $scope.LMLicenseNumber = license.LicenseNumber;
 
                     $scope.LMMachineNumber = license.MachineNumber;
-                    $scope.LMValidityStartDate = license.ValidityStartDate ? moment(license.ValidityStartDate, "DD-MM-YYYY").toDate() : null;
+                //    $scope.LMValidityStartDate = license.ValidityStartDate //? moment(license.ValidityStartDate, "DD-MM-YYYY").toDate() : null;
 
-                    $scope.LMValidityEndDate = license.ValidityEndDate ? moment(license.ValidityEndDate, "DD-MM-YYYY").toDate() : null;
+                 
+
+                 //   $scope.LMValidityEndDate = license.ValidityEndDate // ? moment(license.ValidityEndDate, "DD-MM-YYYY").toDate() : null;  
+                    /*    $scope.LMValidityEndDate = license.ValidityEndDate ? moment(license.ValidityEndDate, "DD-MM-YYYY").toDate() : null;*/
+                    if (license.ValidityStartDate) {
+
+                        if (moment(license.ValidityStartDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMValidityStartDate = license.ValidityStartDate;
+                        }
+                        else {
+                            $scope.LMValidityStartDate = moment(license.ValidityStartDate).format("DD/MM/YYYY");
+                        }
+                    }
+                    if (license.ValidityEndDate) {
+
+                        if (moment(license.ValidityEndDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMValidityEndDate = license.ValidityEndDate;
+                        }
+                        else {
+                            $scope.LMValidityEndDate = moment(license.ValidityEndDate).format("DD/MM/YYYY");
+                        }
+                    }
+
                     $scope.LMLicenseCategory = license.LicenseCategory;
                     $scope.LMLicenseCopy = license.UploadLicenseCopy;
                     $scope.LMAmendmentCopy = license.UploadAmendmentCopy;
@@ -985,18 +1035,68 @@
                     $scope.LMMobileNumber = license.MobileNumber;
                     $scope.LMEmailId = license.EmailId;
                     debugger;
-                    $scope.LMTentativeDateofComp = license.TentativeDateofComp
-                        ? new Date(license.TentativeDateofComp + 'T00:00:00')
-                        : null;
+
+                    //$scope.LMTentativeDateofComp = license.TentativeDateofComp ? moment(license.TentativeDateofComp, "DD-MM-YYYY").toDate() : null;
+                      //  ? new Date(license.TentativeDateofComp + 'T00:00:00')
+                      //  : null;
+
+
+                    if (license.TentativeDateofComp) {
+                         
+                        if (moment(license.TentativeDateofComp, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMTentativeDateofComp = license.TentativeDateofComp;
+                        }
+                        else { 
+                            $scope.LMTentativeDateofComp = moment(license.TentativeDateofComp).format("DD/MM/YYYY");
+                        }
+                    }
+
+
+                    if (license.RenewalRequestDate) {
+
+                        if (moment(license.RenewalRequestDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMRenewalRequestDate = license.RenewalRequestDate;
+                        }
+                        else {
+                            $scope.LMRenewalRequestDate = moment(license.RenewalRequestDate).format("DD/MM/YYYY");
+                        }
+                    }
+
+
+
                     $scope.LMoverday = license.PaymentOverDueDate;
                     $scope.LMActualCost = license.ActualCost;
                     $scope.LMGovtFees = license.GovtFees;
                     //$scope.LMRenewalRequestDate = moment(license.RenewalRequestDate
                     //    ? moment(license.RenewalRequestDate, ["lDD/MM/YYYY", "DD/MM/YY"]).toDate()
                     //    : null).format('DD-MM-YYYY');
-                    $scope.LMRenewalRequestDate = license.RenewalRequestDate ? moment(license.RenewalRequestDate, "DD-MM-YYYY").toDate() : null;
-                    $scope.LMRenewalStartDate = license.RenewalStartDate ? moment(license.RenewalStartDate, "DD-MM-YYYY").toDate() : null;
-                    $scope.LMRenewalEnddate = license.RenewalEndDate ? moment(license.RenewalEndDate, "DD-MM-YYYY").toDate() : null;
+                  //  $scope.LMRenewalRequestDate = license.RenewalRequestDate;//  ? moment(license.RenewalRequestDate, "DD-MM-YYYY").toDate() : null;
+
+                    if (license.RenewalStartDate) {
+
+                        if (moment(license.RenewalStartDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMRenewalStartDate = license.RenewalStartDate;
+                        }
+                        else {
+                            $scope.LMRenewalStartDate = moment(license.RenewalStartDate).format("DD/MM/YYYY");
+                        }
+                    }
+
+
+                    if (license.RenewalEndDate) {
+
+                        if (moment(license.RenewalEndDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMRenewalEnddate = license.RenewalEndDate;
+                        }
+                        else {
+                            $scope.LMRenewalEnddate = moment(license.RenewalEndDate).format("DD/MM/YYYY");
+                        }
+                    }
+
+
+                  
+                    //$scope.LMRenewalStartDate = license.RenewalStartDate ? moment(license.RenewalStartDate, "DD-MM-YYYY").toDate() : null;
+                    //$scope.LMRenewalEnddate = license.RenewalEndDate ? moment(license.RenewalEndDate, "DD-MM-YYYY").toDate() : null;
                     $scope.LMRenewalStatus = license.RenewalStatus;
                     $scope.LMUploadRenewedCopy = (license.UploadRenewedCopy !== 'undefined' && license.UploadRenewedCopy !== null) ? license.UploadRenewedCopy : "";
                     $scope.LMLStatus = license.LStatus;
@@ -1039,18 +1139,59 @@
                     $scope.LMDocDate = license.DocumentDate
 
                     $scope.LMAppStatus = license.ApplicationStatus;
-                    $scope.AppDate = license.ApplicationDate ? moment(license.ApplicationDate, "MM/DD/YYYY").toDate() : null;
+                    //$scope.AppDate = license.ApplicationDate ? moment(license.ApplicationDate, "DD/MM/YYYY").toDate() : null;
+                    if (license.ApplicationDate) {
+
+                        if (moment(license.ApplicationDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.AppDate = license.ApplicationDate;
+                        }
+                        else {
+                            $scope.AppDate = moment(license.ApplicationDate).format("DD/MM/YYYY");
+                        }
+                    }
                     $scope.LMAppcopy = license.UploadApplicationCopy;
                     $scope.LMchallanCopy = license.UploadChallanCopy;
                     $scope.LMFeeCopy = license.UploadFeesCopy;
                     $scope.LMLicenseStatus = license.LicenseStatus;
-                    $scope.LMLicensDate = license.IssuedDate ? moment(license.IssuedDate, "MM/DD/YYYY").toDate() : null;
+                    //$scope.LMLicensDate = license.IssuedDate ? moment(license.IssuedDate, "DD/MM/YYYY").toDate() : null;
+                    if (license.IssuedDate) {
+
+                        if (moment(license.IssuedDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMLicensDate = license.ApplicationDate;
+                        }
+                        else {
+                            $scope.LMLicensDate = moment(license.IssuedDate).format("DD/MM/YYYY");
+                        }
+                    }
+
                     $scope.LMLicenseNumber = license.LicenseNumber;
 
                     $scope.LMMachineNumber = license.MachineNumber ;
-                    $scope.LMValidityStartDate = license.ValidityStartDate ? moment(license.ValidityStartDate, "MM/DD/YYYY").toDate() : null;
+   
 
-                    $scope.LMValidityEndDate = license.ValidityEndDate ? moment(license.ValidityEndDate, "MM/DD/YYYY").toDate() : null;
+                  //  $scope.LMValidityStartDate = license.LMValidityStartDate // ? moment(license.LMValidityStartDate, "DD/MM/YYYY").toDate() : null;
+
+                  //  $scope.LMValidityEndDate = license.ValidityEndDate // ? moment(license.ValidityEndDate, "DD/MM/YYYY").toDate() : null;
+
+                    if (license.ValidityStartDate) {
+
+                        if (moment(license.ValidityStartDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMValidityStartDate = license.ValidityStartDate;
+                        }
+                        else {
+                            $scope.LMValidityStartDate = moment(license.ValidityStartDate).format("DD/MM/YYYY");
+                        }
+                    }
+                    if (license.ValidityEndDate) {
+
+                        if (moment(license.ValidityEndDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMValidityEndDate = license.ValidityEndDate;
+                        }
+                        else {
+                            $scope.LMValidityEndDate = moment(license.ValidityEndDate).format("DD/MM/YYYY");
+                        }
+                    }
+
                     $scope.LMLicenseCategory = license.LMLicenseCategory;
                     $scope.LMLicenseCopy = license.UploadLicenseCopy;
                     $scope.LMAmendmentCopy = license.UploadAmendmentCopy ;
@@ -1061,18 +1202,57 @@
                     $scope.LMMobileNumber = license.MobileNumber;
                     $scope.LMEmailId = license.EmailId;
                     debugger;
-                    $scope.LMTentativeDateofComp = license.TentativeDateofComp
-                        ? new Date(license.TentativeDateofComp + 'T00:00:00')
-                        : null;
+                  //  $scope.LMTentativeDateofComp = license.TentativeDateofComp;       //      ? new Date(license.TentativeDateofComp + 'T00:00:00')                   : null;
+
+
+                    if (license.TentativeDateofComp) {
+
+                        if (moment(license.TentativeDateofComp, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMTentativeDateofComp = license.TentativeDateofComp;
+                        }
+                        else {
+                            $scope.LMTentativeDateofComp = moment(license.TentativeDateofComp).format("DD/MM/YYYY");
+                        }
+                    }
                     $scope.LMoverday = license.PaymentOverDueDate;
                     $scope.LMActualCost = license.ActualCost;
                     $scope.LMGovtFees = license.GovtFees;
-                    $scope.LMRenewalRequestDate = moment(license.RenewalRequestDate
-                        ? moment(license.RenewalRequestDate, ["DD/MM/YYYY", "DD/MM/YY"]).toDate()
-                        : null).format('DD-MM-YYYY');
+                 //   $scope.LMRenewalRequestDate = // moment(license.RenewalRequestDate                ? moment(license.RenewalRequestDate, ["DD/MM/YYYY", "DD/MM/YY"]).toDate()
+                       // : null).format('DD-MM-YYYY');
                    
-                    $scope.LMRenewalStartDate = license.RenewalStartDate ? moment(license.RenewalStartDate, "MM/DD/YYYY").toDate() : null;
-                    $scope.LMRenewalEnddate = license.RenewalEndDate ? moment(license.RenewalEndDate, "MM/DD/YYYY").toDate() : null;
+                 //   $scope.LMRenewalStartDate = license.RenewalStartDate ? moment(license.RenewalStartDate, "DD/MM/YYYY").toDate() : null;
+                  //  $scope.LMRenewalEnddate = license.RenewalEndDate ? moment(license.RenewalEndDate, "DD/MM/YYYY").toDate() : null;
+                    if (license.RenewalRequestDate) {
+
+                        if (moment(license.RenewalRequestDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMRenewalRequestDate = license.RenewalRequestDate;
+                        }
+                        else {
+                            $scope.LMRenewalRequestDate = moment(license.RenewalRequestDate).format("DD/MM/YYYY");
+                        }
+                    }
+
+
+                       if (license.RenewalStartDate) {
+
+                        if (moment(license.RenewalStartDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMRenewalStartDate = license.RenewalStartDate;
+                        }
+                        else {
+                            $scope.LMRenewalStartDate = moment(license.RenewalStartDate).format("DD/MM/YYYY");
+                        }
+                    }
+
+
+                    if (license.RenewalEndDate) {
+
+                        if (moment(license.RenewalEndDate, "DD/MM/YYYY", true).isValid()) {
+                            $scope.LMRenewalEnddate = license.RenewalEndDate;
+                        }
+                        else {
+                            $scope.LMRenewalEnddate = moment(license.RenewalEndDate).format("DD/MM/YYYY");
+                        }
+                    }
                     $scope.LMRenewalStatus = license.RenewalStatus;
                     $scope.LMUploadRenewedCopy = (license.UploadRenewedCopy !== 'undefined' && license.UploadRenewedCopy !== null) ? license.UploadRenewedCopy : "";
                     $scope.LMLStatus = license.LStatus;
@@ -1119,12 +1299,18 @@
             }
 
             // Validate Validity End Date
-            if (!$scope.LMValidityEndDate || isNaN(new Date($scope.LMValidityEndDate).getTime())) {
+            //if (!$scope.LMValidityEndDate || isNaN(new Date($scope.LMValidityEndDate).getTime())) {
+            //    $('#LMValidityEndDate').focus().addClass("red-validation");
+            //    showMsgBox('999', 'Mandatory', 'Validity End Date is Required', 'warning', 'btn-warning');
+            //    return;
+            //}
+
+
+            if (!$scope.LMValidityEndDate || !$scope.LMValidityEndDate.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
                 $('#LMValidityEndDate').focus().addClass("red-validation");
                 showMsgBox('999', 'Mandatory', 'Validity End Date is Required', 'warning', 'btn-warning');
                 return;
-            }
-
+            } 
             // Ensure Validity End Date is after Validity Start Date
             var Sdate = new Date($('#LMValidityStartDate').val());
             var Edate = new Date($('#LMValidityEndDate').val());
@@ -1200,7 +1386,7 @@
 
         formData.append('UserId', LoginId);
         formData.append('Action', 2) 
-        const FORMAT = "MM/DD/YYYY";
+        var FORMAT = "YYYY-MM-DD";
         formData.append('AUploadApplicationCopy', $scope.AUploadApplicationCopy);
         formData.append('AUploadChallanCopy', $scope.AUploadChallanCopy);
         formData.append('AUploadFeesCopy', $scope.AUploadFeesCopy);
@@ -1227,7 +1413,10 @@
         
         formData.append('ValidityStartDate', moment($scope.LMValidityStartDate).format(FORMAT));
 
-        formData.append('ValidityEndDate', moment($scope.LMValidityEndDate).format(FORMAT));
+       
+
+        formData.append('ValidityEndDate',   moment($scope.LMValidityEndDate, "DD/MM/YYYY").format(FORMAT));
+  /*      formData.append('ValidityEndDate', moment($scope.LMValidityEndDate).format(FORMAT));*/
 
         
         formData.append('LicenseCategory', $scope.LMLicenseCategory);
@@ -1638,7 +1827,7 @@
 
         formData.append('UserId', LoginId);
         formData.append('Action', 2);
-        const FORMAT = "MM/DD/YYYY";
+        const FORMAT = "DD/MM/YYYY";
         formData.append('AUploadApplicationCopy', $scope.AUploadApplicationCopy);
         formData.append('AUploadChallanCopy', $scope.AUploadChallanCopy);
         formData.append('AUploadFeesCopy', $scope.AUploadFeesCopy);

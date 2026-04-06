@@ -229,7 +229,24 @@ namespace EesassinErp.Controllers
                     Photos_4_FilePath = photos4FilePath,
                     LeavingDate = LeavingDate,
                     PFAccount = PFAccount,
-                    SiteId = SiteId
+                    SiteId = SiteId,
+                MinimumWageCategory = MinimumWageCategory,
+                  WageType = WageType,
+                  WageDisbursementMode = WageDisbursementMode,
+
+                // Safety & Security
+                      PPE = PPE,
+                     PPEType = PPEType,
+                     SafetyTrainingStatus = SafetyTrainingStatus,
+                     SiteInductionStatus = SiteInductionStatus,
+                     PoliceVerificationStatus = PoliceVerificationStatus,
+                      
+                     TempIDStatus = TempIDStatus,
+                     TempIDNumber = TempIDNumber,
+                     TempIDDate = TempIDDate, 
+                     PermanentIDStatus = PermanentIDStatus,
+                     PermanentIDNumber = PermanentIDNumber,
+                     PermanentIDDate = PermanentIDDate
                 };
                 result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertUpdateDelEmployeeMaster(employeeData)));
             }

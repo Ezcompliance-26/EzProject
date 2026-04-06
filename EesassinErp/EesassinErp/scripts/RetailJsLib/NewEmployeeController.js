@@ -279,7 +279,11 @@
             $scope.AllempComplianceDocList = response.data.Result;
         });
     }
+    $scope.SelectedPartyName = "";
 
+    $scope.filterByParty = function (partyName) {
+        $scope.SelectedPartyName = partyName;
+    };
 
     $scope.GetEmployeeMaster = function () {
 
@@ -290,8 +294,19 @@
 
         myService.methode('POST', "../RetailSection/GetEmployeeMaster", JSON.stringify(collectionobj))
             .then(function (response) {
+
                 $scope.EmployeeList = response.data.Result || [];
-                
+                 
+                $scope.PartyList = [];
+                let unique = {};
+
+                angular.forEach($scope.EmployeeList, function (item) {
+                    if (item.PartyName && !unique[item.PartyName]) {
+                        unique[item.PartyName] = true;
+                        $scope.PartyList.push({ PartyName: item.PartyName });
+                    }
+                });
+
             });
     };
 
@@ -364,6 +379,32 @@
         $scope.Photos_2_FilePath_Preview = '';
         $scope.Photos_3_FilePath_Preview = '';
         $scope.Photos_4_FilePath_Preview = '';
+
+
+        $scope.MinimumWageCategory = '';
+        $scope.WageType = '';
+        $scope.WageDisbursementMode = '';
+
+        // Safety & Security
+        $scope.PPE = '';
+        $scope.PPEType = '';
+        $scope.SafetyTrainingStatus = '';
+        $scope.SiteInductionStatus = '';
+        $scope.PoliceVerificationStatus = '';
+
+        // Temporary ID
+        $scope.TempIDStatus = '';
+        $scope.TempIDNumber = '';
+        $scope.TempIDDate = '';
+
+        // Permanent ID
+        $scope.PermanentIDStatus = '';
+        $scope.PermanentIDNumber = '';
+        $scope.PermanentIDDate = '';
+
+        // 🔥 jQuery date fields bhi reset karo (important)
+        $('#txtTempIDDate').val('');
+        $('#PermanentIDDate').val('');
 
         // Optional: clear file inputs (important 🔥)
         $('input[type="file"]').val(null);
@@ -441,6 +482,29 @@
                 formData.append("Photos_2_FilePath", $scope.Photos_2_FilePath_Preview);
                 formData.append("Photos_3_FilePath", $scope.Photos_3_FilePath_Preview);
                 formData.append("Photos_4_FilePath", $scope.Photos_4_FilePath_Preview);
+
+
+                formData.append("MinimumWageCategory", $scope.MinimumWageCategory);
+                formData.append("WageType", $scope.WageType);
+                formData.append("WageDisbursementMode", $scope.WageDisbursementMode);
+
+                // Safety & Security
+                formData.append("PPE", $scope.PPE);
+                formData.append("PPEType", $scope.PPEType);
+                formData.append("SafetyTrainingStatus", $scope.SafetyTrainingStatus);
+                formData.append("SiteInductionStatus", $scope.SiteInductionStatus);
+                formData.append("PoliceVerificationStatus", $scope.PoliceVerificationStatus);
+
+                // Temporary ID
+                formData.append("TempIDStatus", $scope.TempIDStatus);
+                formData.append("TempIDNumber", $scope.TempIDNumber);
+                formData.append("TempIDDate", $('#txtTempIDDate').val());
+
+                // Permanent ID
+                formData.append("PermanentIDStatus", $scope.PermanentIDStatus);
+                formData.append("PermanentIDNumber", $scope.PermanentIDNumber);
+                formData.append("PermanentIDDate", $('#txtPermanentIDDate').val());
+
                 formData.append("ActionType", $scope.IsActionType);
                 $.ajax({
                     url: "../RetailSection/InsertUpdateDelEmployeeMaster",
@@ -727,7 +791,32 @@
         $scope.Photos_1_FilePath = selectedEmployee.Photos_1_FilePath;
         $scope.Photos_2_FilePath = selectedEmployee.Photos_2_FilePath;
         $scope.Photos_3_FilePath = selectedEmployee.Photos_3_FilePath;
-        $scope.Photos_4_FilePath = selectedEmployee.Photos_4_FilePath; 
+        $scope.Photos_4_FilePath = selectedEmployee.Photos_4_FilePath;
+
+        // Wage & Compliance
+        $scope.MinimumWageCategory = selectedEmployee.MinimumWageCategory;
+        $scope.WageType = selectedEmployee.WageType;
+        $scope.WageDisbursementMode = selectedEmployee.WageDisbursementMode;
+
+        // Safety & Security
+        $scope.PPE = selectedEmployee.PPE;
+        $scope.PPEType = selectedEmployee.PPEType;
+        $scope.SafetyTrainingStatus = selectedEmployee.SafetyTrainingStatus;
+        $scope.SiteInductionStatus = selectedEmployee.SiteInductionStatus;
+        $scope.PoliceVerificationStatus = selectedEmployee.PoliceVerificationStatus;
+
+        // Temporary ID
+        $scope.TempIDStatus = selectedEmployee.TempIDStatus;
+        $scope.TempIDNumber = selectedEmployee.TempIDNumber;
+       
+          $('#txtTempIDDate').val(selectedEmployee.TempIDDate);
+        // Permanent ID
+        $scope.PermanentIDStatus = selectedEmployee.PermanentIDStatus;
+        $scope.PermanentIDNumber = selectedEmployee.PermanentIDNumber;
+        $('#txtPermanentIDDate').val(selectedEmployee.PermanentIDDate);
+
+
+
         $scope.IsActionType = 2; 
         setTimeout(function () {
             try {

@@ -285,7 +285,8 @@
 
     $scope.VerifyPassword = function () {
          
-            $scope.showLoader();
+        $scope.showLoader();
+        $scope.VendorType = 2;
             var collectionobj = {};
         collectionobj.MapId = $scope.PPId;
             collectionobj.UserName = $scope.UserNames;
@@ -375,13 +376,13 @@
             }, 200);
             return;
         }
-        if ($scope.VendorType == '' || $scope.VendorType == undefined) {
-            showMsgBox('999', 'Alert', 'Vendor Type  Should be Required', 'warning', 'btn-warning')
-            setTimeout(function () {
-                document.getElementById("VendorType").focus();
-            }, 200);
-            return;
-        }
+        //if ($scope.VendorType == '' || $scope.VendorType == undefined) {
+        //    showMsgBox('999', 'Alert', 'Vendor Type  Should be Required', 'warning', 'btn-warning')
+        //    setTimeout(function () {
+        //        document.getElementById("VendorType").focus();
+        //    }, 200);
+        //    return;
+        //}
         var upper = 0,
             lower = 0,
             number = 0,
@@ -1045,13 +1046,8 @@
             BOCWRCCopy: $scope.BOCWRCCopy,
 
             RenewalBOCWRCCopy: $scope.RenewalBOCWRCCopy,
-            VendorType: $scope.VendorType,
-            BOCWRCCopy: $scope.BOCWRCCopy,
-            BOCWRCCopy: $scope.BOCWRCCopy,
-            BOCWRCCopy: $scope.BOCWRCCopy,
-            BOCWRCCopy: $scope.BOCWRCCopy,
-            BOCWRCCopy: $scope.BOCWRCCopy,
-            BOCWRCCopy: $scope.BOCWRCCopy,
+            VendorType: 2,
+            BOCWRCCopy: $scope.BOCWRCCopy, 
 
             ActionType: 9
         };

@@ -551,14 +551,14 @@
                                     <label class="form-label">Email ID</label>
                                     <input ng-model="UserEmail" id="txtUserEmail" class="form-control">
                                 </div>
-                                <div class="col-lg-3 col-md-4 col-sm-6">
+                                @*<div class="col-lg-3 col-md-4 col-sm-6">
                                     <label class="form-label">User Type</label>
                                     <select ng-model="VendorType" id="ddlUser" class="form-control">
                                         <option value="">Select</option>
                                         <option value="6">Vendor Admin</option>
                                         <option value="2">Vendor User</option>
                                     </select>
-                                </div>
+                                </div>*@
 
 
                                 
@@ -659,12 +659,12 @@
                                     <th>Email Id</th>
                                     <th>Contact No</th>
                                     <th>Address</th>
-                                    <th>Action</th>
-                                    <th></th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="x in VendorSiteList  | filter:SiteSearch"> 
+                                <tr ng-repeat="x in VendorSiteList  | filter:SiteSearch">
                                     <td>
                                         {{x.SNo}}
                                     </td>
@@ -678,18 +678,24 @@
                                     <td>
                                         {{x.EmailId}}
                                     </td>
-                                   
+
                                     <td>
                                         {{x.ContactNo}}
                                     </td>
                                     <td>
                                         {{x.Address}}
                                     </td>
-                                    <td class="action-menu"> 
+                                    <td class="action-menu">
+                                        <button class="btn btn-danger btn-sm"
+                                                ng-click="EditSite(x)">
+                                            Edit
+                                        </button>
+                                    </td>
+                                    <td class="action-menu">
                                         <button class="btn btn-danger btn-sm"
                                                 ng-click="DeleteVendorSite(x.deleteid)">
                                             Delete
-                                        </button> 
+                                        </button>
                                     </td>
                                 </tr>
 
@@ -1099,7 +1105,7 @@
             <div id="empCompDocs" class="card section-card d-none">
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <h4 class="mb-0">Employee Management</h4>
-                    <button type="button" class="btn btn-sm add-btn" data-bs-toggle="modal" data-bs-target="#addDocumentempModal" ng-show="loginType==4">
+                    <button type="button" class="btn btn-sm add-btn" data-bs-toggle="modal" data-bs-target="#addDocumentempModal" ng-show="loginType==5">
                         <i class="bi bi-plus me-1"></i> Add Document
                     </button>
                 </div>
