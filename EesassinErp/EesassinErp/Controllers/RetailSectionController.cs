@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -10,7 +11,6 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -88,44 +88,6 @@ namespace EesassinErp.Controllers
             DateTime dobofNominee = Convert.ToDateTime(form["DOBofNominee"]);
             string storeCode = form["StoreCode"];
             string Status = form["Status"];
-            string SiteId = form["SiteId"];
-
-            DateTime IssueDate = Convert.ToDateTime(form["IssueDate"]);
-            DateTime ValidTill = Convert.ToDateTime(form["ValidTill"]);
-            string BloodGroup = form["BloodGroup"];
-
-
-
-            string Transport = form["Transport"];
-            string RouteId = form["RouteId"];
-
-
-            // Wage & Compliance
-            string MinimumWageCategory = form["MinimumWageCategory"];
-            string WageType = form["WageType"];
-            string WageDisbursementMode = form["WageDisbursementMode"];
-
-            // Safety & Security
-            string PPE = form["PPE"];
-            string PPEType = form["PPEType"];
-            string SafetyTrainingStatus = form["SafetyTrainingStatus"];
-            string SiteInductionStatus = form["SiteInductionStatus"];
-            string PoliceVerificationStatus = form["PoliceVerificationStatus"];
-
-            // Temporary Gate Pass
-            string TempIDStatus = form["TempIDStatus"];
-            string TempIDNumber = form["TempIDNumber"];
-            string TempIDDate = form["TempIDDate"];
-
-            // Permanent Gate Pass
-            string PermanentIDStatus = form["PermanentIDStatus"];
-            string PermanentIDNumber = form["PermanentIDNumber"];
-            string PermanentIDDate = form["PermanentIDDate"];
-
-
-
-
-
 
             string panCardFilePath = null;
             string chequePassbookFilePath = null;
@@ -139,18 +101,9 @@ namespace EesassinErp.Controllers
             string photos2FilePath = null;
             string photos3FilePath = null;
             string photos4FilePath = null;
-
-
-
-
-            string EmployeePhotos = null;
-            //if (Convert.ToInt32(Id) == 0)
-            //{
-            if (!string.IsNullOrEmpty(form["EmployeePhotos"]))
+            if (Convert.ToInt32(Id) == 0)
             {
-                EmployeePhotos = SaveFile(form["EmployeePhotos"], "EmployeePhotos");
-            }
-            if (!string.IsNullOrEmpty(form["PANCardFilePath"]))
+                if (!string.IsNullOrEmpty(form["PANCardFilePath"]))
                 {
                     panCardFilePath = SaveFile(form["PANCardFilePath"], "Employee");
                 }
@@ -257,30 +210,8 @@ namespace EesassinErp.Controllers
                     Photos_3_FilePath = photos3FilePath,
                     Photos_4_FilePath = photos4FilePath,
                     LeavingDate = LeavingDate,
-                    PFAccount = PFAccount,
-                    SiteId = SiteId,
-                MinimumWageCategory = MinimumWageCategory,
-                  WageType = WageType,
-                  WageDisbursementMode = WageDisbursementMode,
-
-                // Safety & Security
-                      PPE = PPE,
-                     PPEType = PPEType,
-                     SafetyTrainingStatus = SafetyTrainingStatus,
-                     SiteInductionStatus = SiteInductionStatus,
-                     PoliceVerificationStatus = PoliceVerificationStatus,
-                      
-                     TempIDStatus = TempIDStatus,
-                     TempIDNumber = TempIDNumber,
-                     TempIDDate = TempIDDate, 
-                     PermanentIDStatus = PermanentIDStatus,
-                     PermanentIDNumber = PermanentIDNumber,
-                     PermanentIDDate = PermanentIDDate,
-
-                    Transport = Transport,
-                    RouteId = RouteId,
-                     
-            };
+                    PFAccount = PFAccount
+                };
                 result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertUpdateDelEmployeeMaster(employeeData)));
             }
             catch (Exception ex)
@@ -510,9 +441,7 @@ namespace EesassinErp.Controllers
             string completeAddress = Request.Form["CompleteAddress"];
             DateTime proposedDate = DateTime.Parse(Request.Form["ProposedDate"]);
             string storeLocation = Request.Form["StoreLocation"];
-            string cityId = Request.Form["CityId"];
-            string Country = Request.Form["Country"];
-            //  float cityId = float.Parse(Request.Form["CityId"]);
+            float cityId = float.Parse(Request.Form["CityId"]);
             float circleId = float.Parse(Request.Form["CircleId"]);
             float regionId = float.Parse(Request.Form["RegionId"]);
             string zipCode = Request.Form["ZipCode"];
@@ -575,19 +504,11 @@ namespace EesassinErp.Controllers
         string sqftStoreArea = Request.Form["SQFTStoreArea"];
             string isActive = Request.Form["IsActive"];
             int loginId = int.Parse(Request.Form["LoginId"]);
-            int DaysOfExpire = 0;
-            var value = Request.Form["DaysOfExpire"];
-
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                int.TryParse(value, out DaysOfExpire);
-            }
-            //int DaysOfExpire = int.Parse(Request.Form["DaysOfExpire"]);
-            int LED = int.TryParse(Request.Form["LED"], out var val) ? val : 0;
+            int DaysOfExpire = int.Parse(Request.Form["DaysOfExpire"]);
+            int LED = int.Parse(Request.Form["LED"]);
 
             string ElectricityBillFilePath = null;
             string RentAgreementFilePath = null;
-          
             string propertyTaxPaidReceiptFilePath = null;
             string buildingPlanFilePath = null;
             string stabilityStructureCertificateFilePath = null;
@@ -749,9 +670,7 @@ namespace EesassinErp.Controllers
                 CompleteAddress = completeAddress,
                 ProposedDate = proposedDate,
                 StoreLocation = storeLocation,
-                CityId = cityId,
-                CountryId = Country,
-                
+              //  CityId = cityId,
                 CircleId = circleId,
                 RegionId = regionId,
                 ZipCode = zipCode,
@@ -1124,7 +1043,6 @@ namespace EesassinErp.Controllers
                     UFile = fileUrl,
                     ActionType = Convert.ToInt32(Request.Form["ActionType"]),
                     StoreId = Convert.ToInt32(Request.Form["StoreId"]),
-                    LicenseId = Convert.ToInt32(Request.Form["LicenseId"]),
                     Id = Convert.ToInt32(Request.Form["Id"])
                 };
 
@@ -1374,7 +1292,219 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.StoreComplianceStatusMaster(obj)));
             return result;
         }
- 
+
+
+        //public async Task<string> InsertUpdateDelLicenseRequest()
+        //{
+
+        //    try
+        //    {
+        //        // Your existing logic here...
+
+
+        //    var form = Request.Form;
+        //    int UserId = int.Parse(Request.Form["UserId"]);
+        //    int Action = int.Parse(Request.Form["Action"]);
+        //    long LicenceRequestId = long.Parse(Request.Form["LicenceRequestId"]);
+        //    string ApplicationStatus = Request.Form["ApplicationStatus"];
+        //    string ApplicationDate = Request.Form["ApplicationDate"];
+        //    string ActualCost = Request.Form["ActualCost"];
+        //    string GovtFees = Request.Form["GovtFees"];
+        //    if (ApplicationDate == "Invalid date")
+        //    {
+        //        ApplicationDate = null;
+        //    }
+        //    string UploadApplicationCopy = Request.Form["UploadApplicationCopy"];
+        //    string UploadChallanCopy = Request.Form["UploadChallanCopy"];
+        //    string UploadFeesCopy = Request.Form["UploadFeesCopy"];
+        //    string LicenseStatus = Request.Form["LicenseStatus"];
+        //    string LicenseDate = Request.Form["IssuedDate"];
+        //    if (LicenseDate == "Invalid date")
+        //    {
+        //        LicenseDate = null;
+        //    }
+        //    string LicenseNumber = Request.Form["LicenseNumber"];
+        //    string ValidityStartDate = Request.Form["ValidityStartDate"];
+        //    if (ValidityStartDate == "Invalid date")
+        //    {
+        //        ValidityStartDate = null;
+        //    }
+        //    string ValidityEndDate = Request.Form["ValidityEndDate"];
+        //    if (ValidityEndDate == "Invalid date")
+        //    {
+        //        ValidityEndDate = null;
+        //    }
+        //    string UploadLicenseCopy = Request.Form["UploadLicenseCopy"];
+        //    string UserName = Request.Form["UserName"];
+        //    string UserPassword = Request.Form["UserPassword"];
+        //    string MobileNumber = Request.Form["MobileNumber"];
+        //    string EmailId = Request.Form["EmailId"];
+        //    string TentativeDateofComp = Request.Form["TentativeDateofComp"];
+        //    if (TentativeDateofComp == "Invalid date")
+        //    {
+        //        TentativeDateofComp = null;
+        //    }
+        //    string NatureofBusiness = Request.Form["NatureofBusiness"];
+        //    string InvoiceStatus = Request.Form["InvoiceStatus"];
+        //    string InvoiceDate = Request.Form["InvoiceDate"];
+        //    if (InvoiceDate == "Invalid date")
+        //    {
+        //        InvoiceDate = null;
+        //    }
+        //    string InvoiceNo = Request.Form["InvoiceNo"];
+        //    string InvoiceAmount = Request.Form["InvoiceAmount"];
+        //    string UploadInvoice = Request.Form["UploadInvoice"];
+        //    string PaymentStatus = Request.Form["PaymentStatus"];
+        //    string PaymentTAT = Request.Form["PaymentTAT"];
+        //    if (PaymentTAT == null)
+        //    {
+        //        PaymentTAT = "0";
+        //    }
+        //    string RenewalStatus = Request.Form["RenewalStatus"];
+        //    string UploadRenewedCopy = Request.Form["UploadRenewedCopy"];
+
+        //    string RenewalStartDate = Request.Form["RenewalStartDate"];
+        //    if (RenewalStartDate == "Invalid date")
+        //    {
+        //        RenewalStartDate = null;
+        //    }
+
+        //    string RenewalEndDate = Request.Form["RenewalEndDate"];
+        //    if (RenewalEndDate == "Invalid date")
+        //    {
+        //        RenewalEndDate = null;
+        //    }
+
+        //    string AUploadApplicationCopy = Request.Form["AUploadApplicationCopy"];
+        //    string AUploadChallanCopy = Request.Form["AUploadChallanCopy"];
+        //    string AUploadFeesCopy = Request.Form["AUploadFeesCopy"];
+        //    string AUploadLicenseCopy = Request.Form["AUploadLicenseCopy"];
+        //    string AUploadRenewedCopy = Request.Form["AUploadRenewedCopy"];
+        //    string AUploadInvoice = Request.Form["AUploadInvoice"];
+
+        //    string UploadApplicationCopyPath = null;
+        //    string UploadChallanCopyPath = null;
+        //    string UploadFeesCopyPath = null;
+        //    string UploadLicenseCopyPath = null;
+        //    string UploadRenewedCopyPath = null;
+        //    string UploadInvoicePath = null;
+        //    if (!string.IsNullOrEmpty(form["UploadApplicationCopy"]))
+        //    {
+        //        if (AUploadApplicationCopy == "1")
+        //        {
+        //            UploadApplicationCopyPath = UploadApplicationCopy;
+        //        }
+        //        else
+        //        {
+        //            UploadApplicationCopyPath = SaveFile(form["UploadApplicationCopy"], "LicenseRequest");
+        //        }
+
+        //    }
+        //    if (!string.IsNullOrEmpty(form["UploadChallanCopy"]))
+        //    {
+        //        if (AUploadChallanCopy == "1")
+        //        {
+        //            UploadChallanCopyPath = UploadChallanCopy;
+        //        }
+        //        else
+        //        {
+        //            UploadChallanCopyPath = SaveFile(form["UploadChallanCopy"], "LicenseRequest");
+        //        }
+        //    }
+        //    if (!string.IsNullOrEmpty(form["UploadFeesCopy"]))
+        //    {
+        //        if (AUploadFeesCopy == "1")
+        //        {
+        //            UploadFeesCopyPath = UploadFeesCopy;
+        //        }
+        //        else
+        //        {
+        //            UploadFeesCopyPath = SaveFile(form["UploadFeesCopy"], "LicenseRequest");
+        //        }
+        //    }
+        //    if (!string.IsNullOrEmpty(form["UploadLicenseCopy"]))
+        //    {
+        //        if (AUploadLicenseCopy == "1")
+        //        {
+        //            UploadLicenseCopyPath = UploadLicenseCopy;
+        //        }
+        //        else
+        //        {
+        //            UploadLicenseCopyPath = SaveFile(form["UploadLicenseCopy"], "LicenseRequest");
+        //        }
+        //    }
+
+        //    if (!string.IsNullOrEmpty(form["UploadRenewedCopy"]))
+        //    {
+        //        if (AUploadRenewedCopy == "1")
+        //        {
+        //            UploadRenewedCopyPath = UploadRenewedCopy;
+        //        }
+        //        else
+        //        {
+        //            UploadRenewedCopyPath = SaveFile(form["UploadRenewedCopy"], "LicenseRequest");
+        //        }
+        //    }
+
+        //    if (!string.IsNullOrEmpty(form["UploadInvoice"]))
+        //    {
+        //        if (AUploadInvoice == "1")
+        //        {
+        //            UploadInvoicePath = UploadInvoice;
+        //        }
+        //        else
+        //        {
+        //            UploadInvoicePath = SaveFile(form["UploadInvoice"], "LicenseRequest");
+        //        }
+        //    }
+
+        //    var License = new LicenseRequest
+        //    {
+        //        UserId = UserId,
+        //        Action = Action,
+        //        LicenceRequestId = LicenceRequestId,
+        //        ApplicationStatus = ApplicationStatus,
+        //        ApplicationDate = ApplicationDate,
+        //        UploadApplicationCopy = UploadApplicationCopyPath,
+        //        UploadChallanCopy = UploadChallanCopyPath,
+        //        UploadFeesCopy = UploadFeesCopyPath,
+        //        LicenseStatus = LicenseStatus,
+        //        LicenseDate = LicenseDate,
+        //        LicenseNumber = LicenseNumber,
+        //        ValidityStartDate = ValidityStartDate,
+        //        ValidityEndDate = ValidityEndDate,
+        //        UploadLicenseCopy = UploadLicenseCopyPath,
+        //        UploadRenewedCopy = UploadRenewedCopyPath,
+        //        UserName = UserName,
+        //        UserPassword = UserPassword,
+        //        MobileNumber = MobileNumber,
+        //        EmailId = EmailId,
+        //        TentativeDateofComp = TentativeDateofComp,
+        //        InvoiceStatus = InvoiceStatus,
+        //        InvoiceDate = InvoiceDate,
+        //        InvoiceNo = InvoiceNo,
+        //        InvoiceAmount = InvoiceAmount,
+        //        UploadInvoice = UploadInvoicePath,
+        //        PaymentStatus = PaymentStatus,
+        //        PaymentTAT = PaymentTAT,
+        //        RenewalStatus = RenewalStatus,
+        //        RenewalStartDate = RenewalStartDate,
+        //        RenewalEndDate = RenewalEndDate,
+        //        ActualCost= ActualCost,
+        //        GovtFees = GovtFees 
+        //    };
+        //    string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertUpdateDelLicenseRequest(License)));
+        //    return result;
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return ex.Message;
+        //    }
+        //}
+
+
         public async Task<string> InsertUpdateDelLicenseRequest()
         {
             try
@@ -1398,10 +1528,10 @@ namespace EesassinErp.Controllers
                 string licenseDate = GetValidDate(form["IssuedDate"]);
                 string licenseNumber = form["LicenseNumber"];
                 string MachineNumber = form["MachineNumber"];
-                string validityStartDate = form["ValidityStartDate"];
-                string validityEndDate = form["ValidityEndDate"];
+                string validityStartDate = GetValidDate(form["ValidityStartDate"]);
+                string validityEndDate = GetValidDate(form["ValidityEndDate"]);
                 string uploadLicenseCopy = form["UploadLicenseCopy"];
-                string Remark = form["Remark"];
+
                 string userName = form["UserName"];
                 string userPassword = form["UserPassword"];
                 string mobileNumber = form["MobileNumber"];
@@ -1414,7 +1544,6 @@ namespace EesassinErp.Controllers
                 string invoiceAmount = form["InvoiceAmount"];
                 string uploadInvoice = form["UploadInvoice"];
                 string paymentStatus = form["PaymentStatus"];
-                string LicenseCategory = form["LicenseCategory"];
                 string paymentTAT = string.IsNullOrEmpty(form["PaymentTAT"]) ? "0" : form["PaymentTAT"];
                 string renewalStatus = form["RenewalStatus"];
                 string uploadRenewedCopy = form["UploadRenewedCopy"];
@@ -1426,7 +1555,6 @@ namespace EesassinErp.Controllers
                 string uploadChallanCopyPath = GetFilePath(form["UploadChallanCopy"], form["AUploadChallanCopy"], "LicenseRequest");
                 string uploadFeesCopyPath = GetFilePath(form["UploadFeesCopy"], form["AUploadFeesCopy"], "LicenseRequest");
                 string uploadLicenseCopyPath = GetFilePath(form["UploadLicenseCopy"], form["AUploadLicenseCopy"], "LicenseRequest");
-                string UploadAmendmentCopyPath = GetFilePath(form["UploadAmendmentCopy"], form["UploadAmendmentCopy"], "LicenseRequest");
                 string uploadRenewedCopyPath = GetFilePath(form["UploadRenewedCopy"], form["AUploadRenewedCopy"], "LicenseRequest");
                 string uploadInvoicePath = GetFilePath(form["UploadInvoice"], form["AUploadInvoice"], "LicenseRequest");
 
@@ -1444,15 +1572,11 @@ namespace EesassinErp.Controllers
                     LicenseStatus = licenseStatus,
                     LicenseDate = licenseDate,
                     LicenseNumber = licenseNumber,
-                    MachineNumber = MachineNumber,
                     ValidityStartDate = validityStartDate,
                     ValidityEndDate = validityEndDate,
-                    LicenseCategory = LicenseCategory,
                     UploadLicenseCopy = uploadLicenseCopyPath,
-                    UploadAmendmentCopy  = UploadAmendmentCopyPath, 
                     UploadRenewedCopy = uploadRenewedCopyPath,
                     UserName = userName,
-                    Remark = Remark,
                     UserPassword = userPassword,
                     MobileNumber = mobileNumber,
                     EmailId = emailId,
@@ -1566,11 +1690,6 @@ namespace EesassinErp.Controllers
         public async Task<string> SearchCompliance(RetialStoreManager obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchCompliance(obj)));
-            return result;
-        }
-        public async Task<string> CrossCheck(StoreLicesensDocument obj)
-        {
-            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.CrossCheck(obj)));
             return result;
         }
         public async Task<string> SearchStoreCompliance(RetialStoreManager obj)
@@ -1902,11 +2021,6 @@ namespace EesassinErp.Controllers
         public async Task<string> GetLSDashboard(LSDBAL obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.GetLSDashboard(obj)));
-            return result;
-        }
-        public async Task<string> GetLDashboard(LSDBAL obj)
-        {
-            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.GetLDashboard(obj)));
             return result;
         }
         public ActionResult LicenceStatusDashboardReport()
@@ -2839,11 +2953,70 @@ namespace EesassinErp.Controllers
             return result;
         }
 
-        [Route("location")]
         public ActionResult LocationMaster()
         {
             return View();
         }
+
+        public ActionResult userProfile()
+        {
+            return View();
+        }
+
+        public ActionResult NewLicenseMaster()
+        {
+            return View();
+        }
+
+        public ActionResult OldLicenseCommonCompliance()
+        {
+            return View();
+        }
+        public ActionResult LicenseCommonCompliance()
+        {
+            return View();
+        }
+
+        public ActionResult NoticeManagement()
+        {
+            return View();
+        }
+
+        public ActionResult NewEmployeeMaster()
+        {
+            return View();
+        }
+
+        public ActionResult PFDash()
+        {
+            return View();
+        }
+        public ActionResult ESICDash()
+        {
+            return View();
+        }
+
+        public ActionResult PTDash()
+        {
+            return View();
+        }
+
+        public ActionResult LWFDash()
+        {
+            return View();
+        }
+
+        public ActionResult PayrollComponentsDash()
+        {
+            return View();
+        }
+
+        public ActionResult NewLitigationMaster()
+        {
+            return View();
+        }
+
+
         public async Task<string> IUDDiligenceCheckList(RetailUploadModelBAL obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.IUDDiligenceCheckList(obj)));
@@ -3156,21 +3329,6 @@ namespace EesassinErp.Controllers
                     );
                 }
 
-                return JsonConvert.SerializeObject(new
-                {
-                    IsSuccess = true,
-                    Message = "All compliance records saved successfully!"
-                });
-            }
-            catch (Exception ex)
-            {
-                return JsonConvert.SerializeObject(new
-                {
-                    IsSuccess = false,
-                    Message = ex.Message
-                });
-            }
-        }
 
         public ActionResult userProfile()
         {
@@ -3180,8 +3338,12 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
-        
-          
+
+        public ActionResult NewEmployeeMaster1()
+        {
+            return View();
+        }
+
         public ActionResult DownloadFile(string filePath, string fileName)
         {
             if (string.IsNullOrEmpty(filePath))
@@ -3273,228 +3435,6 @@ namespace EesassinErp.Controllers
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchRegistration(obj)));
             return result;
-        }
-
-        public ActionResult TransportMaster()
-        {
-            return View();
-        }
-
-
-
-        public async Task<string> SearchRoute(RetailBAL obj)
-        {
-            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchRoute(obj)));
-            return result;
-        }
-        public string SavePostedFile(HttpPostedFileBase file, string folderName)
-        {
-            try
-            {
-                if (file != null && file.ContentLength > 0)
-                {
-                     
-                    string folderPath = System.Web.HttpContext.Current.Server.MapPath("~/DownloadMat/" + folderName);
-
-                    // Folder create if not exists
-                    if (!Directory.Exists(folderPath))
-                    {
-                        Directory.CreateDirectory(folderPath);
-                    }
-
-                    // ✅ Unique file name
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-
-                    string fullPath = Path.Combine(folderPath, fileName);
-
-                    // ✅ Save file
-                    file.SaveAs(fullPath);
-
-                    // ✅ Return relative path (DB me store karne ke liye)
-                    return "../DownloadMat/" + folderName + "/" + fileName;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return null;
-        }
-        public async Task<string> InsertUpdateRouteMaster()
-        {
-            string result = "";
-            var form = Request.Form;
-
-            
-            string ActionType = form["ActionType"];
-            string UserId = form["UserId"];
-            string PartyId = form["PartyId"];
-
-            // Route Details
-            string RouteID = form["RouteID"];
-
-            string RouteName = form["RouteName"];
-            string CompanyName = form["CompanyName"];
-            string Location = form["Location"];
-            string RouteStartLocation = form["RouteStartLocation"];
-            string RouteEndLocation = form["RouteEndLocation"];
-            string Status = form["Status"];
-
-            // Bus Details
-            string BusNumber = form["BusNumber"];
-            string RCNO = form["RCNO"];
-            string SeatingCapacity = form["SeatingCapacity"];
-            string BusType = form["BusType"];
-
-            // Driver Details
-            string DriverName = form["DriverName"];
-            string DriverContactNumber = form["DriverContactNumber"];
-            string DriverAddress = form["DriverAddress"];
-            string LicenseNumber = form["LicenseNumber"];
-
-            // Conductor Details
-            string ConductorName = form["ConductorName"];
-            string ConductorContact = form["ConductorContact"];
-            string ConductorAddress = form["ConductorAddress"];
-
-            // FILE PATH VARIABLES
-            string LicenseCopyPath = null;
-            string AadharCardCopyPath = null;
-            string ConductorAadhaarCardPath = null;
-            string BusRCPath = null;
-            string PollutionCertificatePath = null;
-            string FitnessCertificatePath = null;
-            string InsuranceCopyPath = null;
-
-          
-
-
-            var file = Request.Files["LicenseCopy"];
-
-            if (file != null && file.ContentLength > 0)
-            {
-                  LicenseCopyPath = SavePostedFile(file, "Transport");
-            }
-
-            var fileAadharCardCopy = Request.Files["AadharCardCopy"];
-
-            if (fileAadharCardCopy != null && fileAadharCardCopy.ContentLength > 0)
-            {
-                  AadharCardCopyPath = SavePostedFile(fileAadharCardCopy, "Transport");
-            }
-
-            var FileConductorAadhaarCard = Request.Files["ConductorAadhaarCard"];
-
-            if (FileConductorAadhaarCard != null && FileConductorAadhaarCard.ContentLength > 0)
-            {
-                  ConductorAadhaarCardPath = SavePostedFile(FileConductorAadhaarCard, "Transport");
-            }
-
-            var FileBusRC = Request.Files["BusRC"];
-
-            if (FileBusRC != null && FileBusRC.ContentLength > 0)
-            {
-                  BusRCPath = SavePostedFile(FileBusRC, "Transport");
-            }
-            var filePollutionCertificate = Request.Files["PollutionCertificate"];
-
-            if (filePollutionCertificate != null && filePollutionCertificate.ContentLength > 0)
-            {
-                PollutionCertificatePath = SavePostedFile(filePollutionCertificate, "Transport");
-            }
-            var fileFitnessCertificate = Request.Files["FitnessCertificate"];
-
-            if (fileFitnessCertificate != null && fileFitnessCertificate.ContentLength > 0)
-            {
-                FitnessCertificatePath = SavePostedFile(fileFitnessCertificate, "Transport");
-            }
-
-
-            var fileInsurance = Request.Files["FitnessCertificate"];
-
-            if (fileInsurance != null && fileInsurance.ContentLength > 0)
-            {
-                InsuranceCopyPath = SavePostedFile(fileInsurance, "Transport");
-            }
-
-             
-
-            try
-            {
-                var routeData = new RouteMasterModel
-                {
-                   
-                    ActionType = ActionType,
-                    UserId = UserId,
-                    PartyId = PartyId, 
-                    RouteName = RouteName,
-                    RouteID = RouteID,
-                    CompanyName = CompanyName,
-                    Location = Location,
-                    RouteStartLocation = RouteStartLocation,
-                    RouteEndLocation = RouteEndLocation,
-                    Status = Status,
-
-                    // Bus
-                    BusNumber = BusNumber,
-                    RCNO = RCNO,
-                    SeatingCapacity = SeatingCapacity,
-                    BusType = BusType,
-
-                    // Driver
-                    DriverName = DriverName,
-                    DriverContactNumber = DriverContactNumber,
-                    DriverAddress = DriverAddress,
-                    LicenseNumber = LicenseNumber,
-
-                    // Conductor
-                    ConductorName = ConductorName,
-                    ConductorContact = ConductorContact,
-                    ConductorAddress = ConductorAddress,
-
-                    // Files
-                    LicenseCopy = LicenseCopyPath,
-                    AadharCardCopy = AadharCardCopyPath,
-                    ConductorAadhaarCard = ConductorAadhaarCardPath,
-                    BusRC = BusRCPath,
-                    PollutionCertificate = PollutionCertificatePath,
-                    FitnessCertificate = FitnessCertificatePath,
-                    InsuranceCopy = InsuranceCopyPath
-                };
-
-                result = await Task.Factory.StartNew(() =>
-                    JsonConvert.SerializeObject(
-                        DAL.DLL.InsertUpdateRouteMaster(routeData)
-                    )
-                );
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                throw;
-            }
-
-            return result;
-        }
-
-
-
-        public ActionResult ContractorCompliance()
-        {
-            return View();
-        }
-        public ActionResult ContractorComplianceVendor()
-        {
-            return View();
-        }
-        public ActionResult ContractorReport()
-        {
-            return View();
-        }
-        public ActionResult ContractorReportVendor()
-        {
-            return View();
         }
     }
 }

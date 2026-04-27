@@ -5,6 +5,33 @@ namespace BAL
     public partial class TblSiteManager
     {
 
+
+
+
+
+        public string RCCopy { get; set; }
+        public string NLabourOffice { get; set; }
+        public string Nature { get; set; }
+        public string PrincipalRegistration { get; set; }
+        public string IssuingAuthority { get; set; }
+        public string CLRA_MaxWorkers { get; set; }
+        public string CLRA_Validity { get; set; }
+        public string RenewalRCCopy { get; set; }
+        public string BOCW_Reg { get; set; }
+        public string BOCW_IssuingAuth { get; set; }
+        public string BOCW_MaxWorkers { get; set; }
+        public string BOCW_Validity { get; set; }
+        public string BOCWRCCopy { get; set; }
+        public string RenewalBOCWRCCopy { get; set; }
+        public string VendorType { get; set; }
+        public string MaxContractors { get; set; }
+        public string MaxWorkersSite { get; set; }
+        public string PPEMandatory { get; set; }
+        public string PPEType { get; set; }
+        public string SafetyTraining { get; set; }
+        public string SiteInduction { get; set; }
+        public string PoliceVerification { get; set; }
+        public string IDCardRequired { get; set; }
         public string AssignColor { get; set; }
         public string ClientId { get; set; }
         public string ActionType { get; set; }

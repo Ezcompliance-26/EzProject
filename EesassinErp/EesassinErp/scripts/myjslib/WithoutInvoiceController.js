@@ -189,7 +189,7 @@ app.WithoutInvoiceController = function ($scope, $element, $filter, myService, $
         if ($scope.InvoiceDetail && $scope.InvoiceDetail.length > 0) {
 
             angular.forEach($scope.InvoiceDetail, function (item) {
-
+   
                 item.Srno = '';
                 item.InvDate = '';
                 item.VendorInvNum = '';
@@ -204,14 +204,14 @@ app.WithoutInvoiceController = function ($scope, $element, $filter, myService, $
                 item.IGST = '';
                 item.GrossAmount = '';
                 item.Status = '';
-
+   
                 item.file = null;
                 item.fileupload = '';
                 item.IsFile = '';
                 item.loading = false;
             });
         }
-
+ 
         $scope.InvoiceDetail = [{
             Srno: 1,
             InvDate: '',

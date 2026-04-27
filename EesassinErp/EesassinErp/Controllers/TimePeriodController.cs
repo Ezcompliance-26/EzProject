@@ -5,7 +5,6 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
     public class TimePeriodController : Controller
     {
         // GET: TimePeriod

@@ -196,8 +196,7 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                 }
             }
 
-            if (d.Module_Name === 'Both')
-            {
+            if (d.Module_Name === 'Both') {
                 var sel = $("#ddlModule option:selected").text();
                 if (sel === 'Supplier')
                 {

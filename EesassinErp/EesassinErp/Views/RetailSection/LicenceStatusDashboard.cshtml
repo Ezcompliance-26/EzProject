@@ -116,7 +116,8 @@
 
 
 
-</script> 
+</script>
+<!-- InstanceBeginEditable name="Content Area" -->
 
 <div  class="pagecontentbody">
     <div>
@@ -151,14 +152,6 @@
                                 <div class="col-6 mnh px-1"><span class="badge bg-lsuccess1 LicenceStatus" ng-click="SetLicenceStatus('Applied')">Applied</span></div>
                                 <div class="col-6 mnh px-1"><span class="badge bg-lsuccess1 LicenceStatus" ng-click="SetLicenceStatus('Not Applied')">Not Applied</span></div>
                                 <div class="col-6 mnh px-1"><span class="badge bg-lsuccess1 LicenceStatus" ng-click="SetLicenceStatus('Issued')">Issued</span></div>
-                            </div>
-                        </div>
-                        <div class="grbox box curved-div margin3" ng-init="BindLicenceStatus()">
-                            <div class="bhed"><b>Licence Applicable</b></div>
-                            <div class="row m-0 bscroll" style="max-height: 85px">
-                                
-                                <div class="col-6 mnh px-1"><span class="badge bg-lsuccess1 LicenceStatus" ng-click="SetLicenceApplicable(0)"> Applicable</span></div>
-                                <div class="col-6 mnh px-1"><span class="badge bg-lsuccess1 LicenceStatus" ng-click="SetLicenceApplicable(1)">Not Applicable</span></div>
                             </div>
                         </div>
                         <div class="grbox box curved-div margin3">
@@ -239,7 +232,6 @@
                                 <div ng-if="dvRegion==1" class="col-6 mnh px-1"><span class="badge bg-light text-dark">Region</span></div>
                                 <div ng-if="dvStatus==1" class="col-6 mnh px-1"><span class="badge bg-light text-dark">Status</span></div>
                                 <div ng-if="dvLicenceStatus==1" class="col-6 mnh px-1"><span class="badge bg-light text-dark">Licence Status</span></div>
-                                <div ng-if="dvLicenceApplicable==1" class="col-6 mnh px-1"><span class="badge bg-light text-dark">Licence Applicable</span></div>
                                 <div ng-if="dvExpiryStatus==1" class="col-6 mnh px-1"><span class="badge bg-light text-dark">Expiry Status</span></div>
                                 <div ng-if="dvFreshRenewal==1" class="col-6 mnh px-1"><span class="badge bg-light text-dark">Fresh/Renewal</span></div>
                                 <div ng-if="dvClient==1" class="col-6 mnh px-1"><span class="badge bg-light text-dark">Client Name</span></div>
@@ -281,7 +273,64 @@
 <script type="text/javascript" src="../licenseStatusDasboard/js/dragble.js"></script>
 <script type="text/javascript" src="../licenseStatusDasboard/js/sweetalert2.js"></script>
 <script type="text/javascript" src="../licenseStatusDasboard/js/theme-script.js"></script>
-<script type="text/javascript" src="../licenseStatusDasboard/js/datepicker.js"></script> 
-<script type="text/javascript" src="../licenseStatusDasboard/js/echarts.min.js"></script> 
+<script type="text/javascript" src="../licenseStatusDasboard/js/datepicker.js"></script>
+
+<!-- InstanceBeginEditable name="for-javascript" -->
+<script type="text/javascript" src="../licenseStatusDasboard/js/echarts.min.js"></script>
+
 <script src="~/scripts/RetailJsLib/LCDashboard.js"></script>
- 
+@*<script>
+
+        var chartDom = document.getElementById('main');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        option = {
+            title: {
+                text: 'Number of Licenses',
+                x: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                axisTick: {
+                    alignWithLabel: true
+                },
+                axisLabel: {
+                    rotate: 60
+                },
+                data: ['Advertisement/Signage License', 'BOCW', 'Central CLRA', 'Central FSSAI']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name: 'Value',
+                    type: 'bar',
+                    stack: 'Total',
+                    label: {
+                        show: true,
+                        position: 'top'
+                    },
+                    data: [1,2,3,4]
+                }
+            ]
+        };
+
+        option && myChart.setOption(option);
+
+
+    </script>*@
+<!-- InstanceEndEditable -->

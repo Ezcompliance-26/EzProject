@@ -1,4 +1,4 @@
-﻿    using BAL;
+﻿using BAL;
 using DAL;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
@@ -6,7 +6,6 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
     public class DashboardController : Controller
     {
         #region Akhand
@@ -339,18 +338,17 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
-        public ActionResult Dash()
+        public ActionResult NewVendorDashboard()
         {
             return View();
         }
 
-        public ActionResult Board()
+        public ActionResult InvoiceRegistration()
         {
             return View();
         }
-        //----------------------------
-        
-        public ActionResult VBoard()
+
+        public ActionResult OneTimeDocVendor()
         {
             return View();
         }
@@ -362,27 +360,94 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
-        public ActionResult CommunicationVendor()
+        public ActionResult NewLocationDashboard()
         {
             return View();
         }
+
+        public ActionResult NewLocationDashboardBackUp()
+        {
+            return View();
+        }
+
+        public ActionResult AdminSetup()
+        {
+            return View();
+        }
+
+        public ActionResult Subscription()
+        {
+            return View();
+        }
+        public ActionResult Dash()
+        {
+            return View();
+        }
+        public ActionResult Notifications()
+        {
+            return View();
+        }
+
+        public ActionResult NotificationDetails()
+        {
+            return View();
+        }
+
         public ActionResult CommunicationClient()
         {
             return View();
         }
-        public ActionResult OneTimeDocVendor()
+        public ActionResult OneTimeDocClient()
         {
             return View();
         }
-        public ActionResult oneTimeDocClient()
+
+        public ActionResult SupplierAdmin()
         {
             return View();
         }
+
         public ActionResult ComplianceAuditReport()
         {
             return View();
         }
-        public ActionResult ComplianceReport()
+
+        public ActionResult ComplianceAuditFinalReport()
+        {
+            return View();
+        }
+
+        public ActionResult NewAuditorDashboard()
+        {
+            return View();
+        }
+
+        public ActionResult CommunicationAuditor()
+        {
+            return View();
+        }
+
+        public ActionResult AuditComplianceReport()
+        {
+            return View();
+        }
+
+        public ActionResult VendorAdmin()
+        {
+            return View();
+        }
+
+        public ActionResult VendorAdminCommunication()
+        {
+            return View();
+        }
+
+        public ActionResult VendorAdminDashboard()
+        {
+            return View();
+        }
+
+        public ActionResult Board()
         {
             return View();
         }

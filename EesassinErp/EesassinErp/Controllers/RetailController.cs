@@ -13,7 +13,6 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
     public class RetailController : Controller
     {
         public ActionResult Retail()
@@ -151,12 +150,7 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertUpdateDelStoreMapping(obj)));
             return result;
         }
-        public async Task<string> InsertUpdateDelIndustryMapping(RetailLicenseDocuementMaster obj)
-        {
-            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertUpdateDelIndustryMapping(obj)));
-            return result;
-        }
-        
+
 
         public async Task<string> SearchStoreMapping(TblPartyMaster obj)
         {
@@ -348,10 +342,7 @@ namespace EesassinErp.Controllers
                     selectedSubcategory = Request.Form["selectedSubcategory"],
                     DueDay = Request.Form["DueDay"],
                     Expire = Request.Form["Expire"],
-                    ComplianceLevel = Request.Form["ComplianceLevel"],
-                    FormNo = Request.Form["FormNo"],
-                    Section = Request.Form["Section"],
-                    Rule = Request.Form["Rule"]
+                    ComplianceLevel = Request.Form["ComplianceLevel"]
                 };
                 obj.ActOverview = HttpUtility.UrlDecode(Request.Form["ActOverview"]);
                 // Handle Excel File Upload
@@ -674,12 +665,6 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchSecretarialStatutory(obj)));
             return result;
         }
-        public async Task<string> CategoryStatutory(RetailBAL obj)
-        {
-            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.CategoryStatutory(obj)));
-            return result;
-        }
-        
         public async Task<string> IUDStatutory()
         {
             RetailBAL obj = new RetailBAL();
@@ -718,9 +703,9 @@ namespace EesassinErp.Controllers
             obj.Action = Request.Form["Action"]; // Get additional form data
             obj.Createdby = Request.Form["Createdby"];
             obj.RegNo= Request.Form["RegNo"];
-            obj.CSIID = Request.Form["CSIID"];
+
             obj.Status = Request.Form["Status"];
-            obj.VRemark = Request.Unvalidated["VRemark"];
+            obj.VRemark = Request.Form["VRemark"];
             obj.CRemark = Request.Form["CRemark"];
             obj.IsVerified = Request.Form["IsVerified"];
  
@@ -768,11 +753,11 @@ namespace EesassinErp.Controllers
             obj.CACId = Request.Form["CACId"]; // Get additional form data
             obj.Action = Request.Form["Action"]; // Get additional form data
             obj.Createdby = Request.Form["Createdby"];
-            obj.CSIID = Request.Form["CSIID"];
             obj.RegNo = Request.Form["RegNo"];
+
             obj.Status = Request.Form["Status"];
-            obj.VRemark = Request.Unvalidated["VRemark"];
-            obj.CRemark = Request.Unvalidated["CRemark"];
+            obj.VRemark = Request.Form["VRemark"];
+            obj.CRemark = Request.Form["CRemark"];
             obj.IsVerified = Request.Form["IsVerified"];
 
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.IUDSecretarialStatutory(obj)));
@@ -1760,6 +1745,61 @@ namespace EesassinErp.Controllers
             return View();
         }
 
+        public ActionResult SecretarialCompliance()
+        {
+            return View();
+        }
+
+        public ActionResult FactoryComp()
+        {
+            return View();
+        }
+
+        public ActionResult FinanceCompliance()
+        {
+            return View();
+        }
+
+        public ActionResult LabourCompliance()
+        {
+            return View();
+        }
+
+        public ActionResult EstablishmentCompliance()
+        {
+            return View();
+        }
+
+        public ActionResult EstablishmentReport()
+        {
+            return View();
+        }
+
+        public ActionResult ContractorCompliance()
+        {
+            return View();
+        }
+
+        public ActionResult ContractorReport()
+        {
+            return View();
+        }
+
+        public ActionResult ContractorComplianceVendor()
+        {
+            return View();
+        }
+
+        public ActionResult ContractorReportVendor()
+        {
+            return View();
+        }
+
+        public ActionResult SecretarialSetup()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<string> IUDLabourCodeStatutory()
         {
@@ -1809,16 +1849,6 @@ namespace EesassinErp.Controllers
             return result;
         }
 
-        public ActionResult ClientStoreMapping()
-        {
-            return View();
-        }
-
-        public ActionResult IndustryLicenseMapping()
-        {
-            return View();
-        }
- 
 
         public async Task<string> InsertUpdateDelIndustryLicenseMapping(RetailLicenseDocuementMaster obj)
         {

@@ -25,8 +25,8 @@ namespace DAL
                 new SqlParameter("@UserId",obj.UserId),
                 new SqlParameter("@SuperVisior1",obj.SuperVisior1),
                 new SqlParameter("@SuperVisior2",obj.SuperVisior2),
-                           new SqlParameter("@RefEmployeeCode",obj.RefEmployeeCode),
-                      new SqlParameter("@EmployeeCode",obj.EmployeeCode),
+                new SqlParameter("@RefEmployeeCode",obj.RefEmployeeCode),
+                new SqlParameter("@EmployeeCode",obj.EmployeeCode),
                 new SqlParameter("@EmployeeName",obj.EmployeeName),
                 new SqlParameter("@EmployeeDesignation",obj.EmployeeDesignation),
                 new SqlParameter("@EmployeeDepartment",obj.EmployeeDepartment),
@@ -3318,18 +3318,8 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
         new SqlParameter("@ConductorContact", obj.ConductorContact ?? (object)DBNull.Value),
         new SqlParameter("@ConductorAddress", obj.ConductorAddress ?? (object)DBNull.Value),
 
-        // FILES
-        new SqlParameter("@LicenseCopy", obj.LicenseCopy ?? (object)DBNull.Value),
-        new SqlParameter("@AadharCardCopy", obj.AadharCardCopy ?? (object)DBNull.Value),
-        new SqlParameter("@ConductorAadhaarCard", obj.ConductorAadhaarCard ?? (object)DBNull.Value),
 
-        new SqlParameter("@BusRC", obj.BusRC ?? (object)DBNull.Value),
-        new SqlParameter("@PollutionCertificate", obj.PollutionCertificate ?? (object)DBNull.Value),
-        new SqlParameter("@FitnessCertificate", obj.FitnessCertificate ?? (object)DBNull.Value),
-        new SqlParameter("@InsuranceCopy", obj.InsuranceCopy ?? (object)DBNull.Value),
 
-        new SqlParameter("@RESULT", "")
-    };
 
             return await Task.Factory.StartNew(() =>
                 SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar(

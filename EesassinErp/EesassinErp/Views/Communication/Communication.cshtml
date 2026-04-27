@@ -9,7 +9,7 @@
 
 
 @*<script src="http://91.234.35.26/iwiki-admin/v1.0.0/admin/js/jquery.nicescroll.min.js"></script>*@
-<script src="~/scripts/myjslib/CommunicationController.js?Ver=@ViewBag.Version"></script>
+<script src="~/scripts/myjslib/CommunicationController.js"></script>
 <script src="~/scripts/jszip-utils.js"></script>
 <div class="container-fluid">
     <div class="chat">
@@ -67,9 +67,9 @@
                                     <div class="doc-head">Documents </div>
                                     <div class="btns">
                                         <a class="btn btn-green btn-sm" ng-show="IsSumitted==1 && InvoiceType=='Regular'"
-                                           ng-click="SelectIframoutiframe('AuditorComplianceReport','ComplianceReport',InvoiceNo+'|'+ClientId+'|'+VendorId,'ComplianceReport')">Compliance Report</a>
+                                           ng-click="SelectIframoutiframe('AuditorComplianceReport','ComplianceReport',InvoiceNo+'|'+ClientId,'ComplianceReport')">Compliance Report</a>
                                         <a class="btn btn-green btn-sm" ng-show="IsSumitted==1 && TypeInvoice=='WithoutInvoice'"
-                                           ng-click="SelectIframoutiframe('AuditorComplianceReport','ComplianceReport',InvoiceNo+'|'+ClientId+'|'+VendorId,'ComplianceReport')">Compliance Report</a>
+                                           ng-click="SelectIframoutiframe('AuditorComplianceReport','ComplianceReport',InvoiceNo+'|'+ClientId,'ComplianceReport')">Compliance Report</a>
                                         <div class="btn btn-green btn-sm" ng-show="IsSumitted==0" ng-click="FinalSubmittion()">Final Submittion</div>
                                         <input id="download_all" type='button' ng-click="downloadAll()" value="Download All Doc" />
 

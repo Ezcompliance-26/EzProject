@@ -1,5 +1,25 @@
 ﻿var user = JSON.parse(sessionStorage.getItem("userSession")) || {};
  
+var LoginId = sessionStorage.getItem("LoginId");
+debugger;
+var MapId = sessionStorage.getItem("MapId");
+var MapUser = sessionStorage.getItem("MapUser");
+var BranchCode = sessionStorage.getItem("BranchCode");
+var loginType = sessionStorage.getItem("loginType") || sessionStorage.getItem("LoginType");
+var LastLogin = sessionStorage.getItem("LastLogin");
+var Desig = sessionStorage.getItem("Desig");
+var Name = sessionStorage.getItem("Name");
+var BranchName = sessionStorage.getItem("BranchName");
+var ContactNo = sessionStorage.getItem("ContactNo");
+var CreatedOn = sessionStorage.getItem("CreatedOn");
+var Photo = sessionStorage.getItem("Photo");
+var UserName = sessionStorage.getItem("UserName");
+var BranchAddress = sessionStorage.getItem("BranchAddress"); 
+var SessionId = sessionStorage.getItem("SessionId");
+var REmailId = sessionStorage.getItem("EmailId");
+var Loadonce = sessionStorage.getItem("Loadonce"); 
+var PartyEMail = sessionStorage.getItem("PartyEMail");
+var DashboardSwitch = sessionStorage.getItem("DashboardSwitch");
 
 var LoginId = user.LoginId;
 var MapId = user.MapId;

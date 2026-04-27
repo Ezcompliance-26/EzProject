@@ -9,7 +9,6 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
-    [ValidateSession]
     public class VenInvoiceController : Controller
     {
         public ActionResult VendorInvoice()

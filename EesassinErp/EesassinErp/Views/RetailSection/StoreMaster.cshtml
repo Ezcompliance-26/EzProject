@@ -5,7 +5,8 @@
     Layout = "~/Views/Common/_RetailLayout.cshtml";
 }
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <style>
     .column-content {
         column-width: 300px; /* Maximum column width */
@@ -16,35 +17,6 @@
         word-break: break-word;
     }
 
-    .disabled-row {
-        opacity: 0.5;
-        pointer-events: none; /* disables clicks on buttons and links */
-        background-color: #f5f5f5;
-    }
-
-    .btn-notapplicable {
-        background-color: rgb(162, 8, 103);
-        color: white;
-        border: none;
-        border-radius: 6px;
-        padding: 6px 14px;
-        font-size: 11px;
-        font-weight: 600;
-        transition: all 0.25s ease-in-out;
-    }
-
-        .btn-notapplicable:hover {
-            background-color: #d63384; /* 💡 Smooth magenta-pink hover */
-            transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(214, 51, 132, 0.4);
-        }
-
-        .btn-notapplicable:disabled {
-            background-color: #b6b6b6;
-            color: #f0f0f0;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
 </style>
 <style>
 
@@ -82,10 +54,10 @@
         border-bottom: 1px solid #f3e3ec !important;
     }
 </style>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.1/xlsx.full.min.js"></script>*@
+<!-- For Excel Export -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
 
 <!-- For PDF Export -->
@@ -124,7 +96,7 @@
         <div class="col-md-12 pageheader">
             <div class="row">
                 <div class="col-md-9">
-                    {{SCS_ViewFlag}}{{SMF_EditFlag}}
+                  
                     <div class="col-sm-4 text-end" ng-if="SM_NewStoreFlag==1">
                         <a class="btn btn-warning" href="#"><span class="fas fa-asterisk"></span>&nbsp;&nbsp Location Limit Left :  {{LeftStore}}</a>
                     </div>
@@ -147,7 +119,7 @@
                                         <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1" aria-selected="true">View</button>
                                     </li>
                                     <li ng-if="SCS_DeleteFlag==1" class="nav-item" role="presentation">
-                                        <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab" aria-controls="tab2" aria-selected="false">Import</button>
+                                        <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2"   type="button" role="tab" aria-controls="tab2" aria-selected="false">Import</button>
                                     </li>
                                 </ul>
                             </div>
@@ -177,13 +149,14 @@
                                             </li>
                                         </ul>
                                     </div>
-
+                                   
                                 </div>
                                 <div class="nosearch themed-element">
                                     <table id="example" style="width:100% !important" class="display nowrap table table-bordred table-hover tableFixHead unittbl datatable themed-element">
+                             
                                     </table>
                                 </div>
-
+                              
                             </div>
                             <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
                                 <div class="py-5 mt-3 text-center">
@@ -320,7 +293,26 @@
                                 <label class="form-label">Location <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control validate" id="txtStoreLocation" ng-model="StoreLocation" />
                             </div>
-                          
+                            @*<div class="col-md-3">
+                                <label class="form-label"> Execution Level 1</label>
+                                <input type="text" class="form-control" id="txtExecutionLevel1" ng-model="ExecutionLevel1" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label"> Execution Level 2</label>
+                                <input type="text" class="form-control" id="txtExecutionLevel2" ng-model="ExecutionLevel2" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label"> Execution Level 3</label>
+                                <input type="text" class="form-control" id="txtExecutionLevel3" ng-model="ExecutionLevel3" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label"> Execution Level 4</label>
+                                <input type="text" class="form-control" id="txtExecutionLevel4" ng-model="ExecutionLevel4" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Execution Level 5</label>
+                                <input type="text" class="form-control" id="txtExecutionLevel5" ng-model="ExecutionLevel5" />
+                            </div>*@
 
                             <div class="col-md-3" ng-init="AllState();BindMasters(1,0)">
                                 <label class="control-label">State<span class="vd_red">*</span></label>
@@ -456,13 +448,28 @@
 
                                     <select class="form-control validate" ng-model="IsActive">
                                         <option value="">Select</option>
-                                        <option value="0">InActive</option>
+                                        <option value="0">Deactive</option>
                                         <option value="1">Active</option>
                                         <option value="2">Upcoming</option>
                                     </select>
 
                                 </div>
-                            </div> 
+                            </div>
+                            @*<div class="col-md-3 statuscus">
+                                <label for="status" class="form-label">Due date for</label>
+                                <div class="form-control2">
+
+                                    <select class="form-control" ng-model="SelectDuedatefor">
+                                        <option value="">Select</option>
+                                        <option value="License">License</option>
+                                        <option value="Labour">Labour</option>
+                                        <option value="Factory">Factory</option>
+                                        <option value="Finance">Finance</option>
+                                        <option value="Secraterial">Secraterial</option>
+                                    </select>
+
+                                </div>
+                            </div>*@
                             <fieldset class="border p-2 mb-3">
                                 <legend class="float-none w-auto px-2"><h6>Select Due date for</h6></legend>
                                 <div class="row">
@@ -494,7 +501,7 @@
                                     <div class="col-md-4">
                                         <label class="form-label">Labour</label>
                                         <input type="text" class="form-control"
-                                               id="txtLabourD" ng-model="LabourD" ng-disabled="true"
+                                               id="txtLabourD" ng-model="LabourD"  ng-disabled="true"
                                                onblur="validateNumberAndDecimalOnly('#txtLabourD')"
                                                onkeyup="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
                                     </div>
@@ -536,7 +543,7 @@
                                     <div class="col-md-4">
                                         <label class="form-label">Expiry Days</label>
                                         <input type="text" class="form-control"
-                                               id="txtFactoryED" ng-model="FactoryED"
+                                               id="txtFactoryED" ng-model="FactoryED" 
                                                onblur="validateNumberAndDecimalOnly('#txtFactoryED')"
                                                onkeyup="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
                                     </div>
@@ -598,7 +605,7 @@
                                 </div>
                             </fieldset>
 
-
+                          
                             <div class="col-md-12">
                                 <h6 class="subheading m-0">Documents </h6>
                             </div>
@@ -1088,8 +1095,7 @@
                             <table class="table table-hover text-center bgw">
                                 <thead class="">
                                     <tr>
-                                        <th> </th>
-                                        @*<th>IS Applicable</th>*@
+                                        <th>S.No.</th>
                                         <th>Applicable License</th>
                                         <th>Approval</th>
                                         <th>Upload Doc.</th>
@@ -1098,34 +1104,27 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
-                                    <tr ng-repeat="licenseMaster in LicenseMasterList" ng-class="{'disabled-row': licenseMaster.IsAccept == 1}">
-                                        @*<td>{{ licenseMaster.SrNo }} </td>
-                                            <td style="text-align:center;">
-                                                <button class="btn btn-sm btn-notapplicable"
-                                                        ng-if="SMF_EditFlag == 1"
-                                                        ng-disabled="licenseMaster.IsApproved"
-                                                        ng-click="IsApplicable(licenseMaster.LicenseId); logmaintainwithstore('IsApplicable' + licenseMaster.LicenseName)">
-                                                    🚫 Not Applicable
-                                                </button>
-                                            </td>*@
-                                        <td style="text-align:center;">
-                                            <input type="checkbox"
-                                                   ng-if="SMF_EditFlag == 1"
-                                                   ng-disabled="licenseMaster.IsApproved || licenseMaster.IsChecked"
-                                                   ng-model="licenseMaster.IsChecked"
-                                                   ng-change="toggleApplicable(licenseMaster)" />
-
-                                        </td>
+                                 
+                                    <tr ng-repeat="licenseMaster in LicenseMasterList">
+                                        <td>{{ licenseMaster.SrNo }} </td>
                                         <td><a class="text-success" href="#" ng-click="ShowLicenseDetail( licenseMaster.LicenseName, licenseMaster.LicenseId,licenseMaster.StoreId)" data-bs-toggle="modal" data-bs-target="#LicenseFormop">{{ licenseMaster.LicenseName }}</a> </td>
-
-
                                         <td>
                                             <button class="btn btn-default bgr" ng-if="SMF_EditFlag==1" ng-disabled="licenseMaster.IsApproved == true" ng-click="ApproveLicenseMaster(licenseMaster.LicenseId);logmaintainwithstore('Approve '+  licenseMaster.LicenseName )">Approve</button>
                                         </td>
                                         <td>
                                             <button class="btn btn-default" ng-disabled="licenseMaster.Status == 1" ng-if="licenseMaster.IsApproved == true || licenseMaster.IsActive==false" ng-click="ShowStoreMasterDocForm(licenseMaster.Id,licenseMaster.LicenseId,licenseMaster.StoreId);PermissionForSection(licenseMaster.LicenseId);logmaintainwithstore('Click Here '+  licenseMaster.LicenseName )">Click Here</button>
                                         </td>
+                                        @*<td>
+                                            <button class="btn btn-default position-relative"
+                                                    ng-disabled="licenseMaster.Status == 1"
+                                                    ng-if="licenseMaster.IsApproved == true || licenseMaster.IsActive==false"
+                                                    ng-click="generateAndCopyLink($event, licenseMaster)"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    title="Click to Copy">
+                                                {{ licenseMaster.buttonText || 'Generate Link' }}
+                                            </button>
+                                        </td>*@
                                         <td>
                                             <button class="btn btn-default" id="{{licenseMaster.Id}}"
                                                     ng-disabled="licenseMaster.Status == 1"
@@ -1214,13 +1213,13 @@
 <div class="modal fade" id="BulkUpload" tabindex="-1" aria-labelledby="BulkUploadModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content notiModal1">
-            <div class="modal-header">
+            <div class="modal-header" >
                 <h5 class="modal-title" id="BulkUploadModalLabel">Bulk Status Update</h5>
                 <button id="closeId" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ng-click="onCross()">✖</button>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-3" >
                         <div class="form-group" ng-init="GetStoreMaster(1,10);">
                             <label class="control-label"><b>Location Code</b><span class="vd_red">*</span></label>
                             <label class="control-label"><input style="margin-left:10px" type="checkbox" id="allselectStore" ng-model="isChecked" ng-change="toggleSelectAll()" ng-checked="isChecked" />All</label>
