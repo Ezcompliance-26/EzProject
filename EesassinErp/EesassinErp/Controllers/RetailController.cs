@@ -8,11 +8,12 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
- 
+
 using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
+    [ValidateSession]
     public class RetailController : Controller
     {
         public ActionResult Retail()
@@ -52,7 +53,7 @@ namespace EesassinErp.Controllers
         public async Task<string> InsertUpdateDelModuleReg(TblModuleRegMaster obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertUpdateDelModuleRegMaster(obj)));
-           
+
             return result;
         }
 
@@ -148,6 +149,11 @@ namespace EesassinErp.Controllers
         public async Task<string> InsertUpdateDelStoreMapping(RetailLicenseDocuementMaster obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertUpdateDelStoreMapping(obj)));
+            return result;
+        }
+        public async Task<string> InsertUpdateDelIndustryMapping(RetailLicenseDocuementMaster obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertUpdateDelIndustryMapping(obj)));
             return result;
         }
 
@@ -342,7 +348,10 @@ namespace EesassinErp.Controllers
                     selectedSubcategory = Request.Form["selectedSubcategory"],
                     DueDay = Request.Form["DueDay"],
                     Expire = Request.Form["Expire"],
-                    ComplianceLevel = Request.Form["ComplianceLevel"]
+                    ComplianceLevel = Request.Form["ComplianceLevel"],
+                    FormNo = Request.Form["FormNo"],
+                    Section = Request.Form["Section"],
+                    Rule = Request.Form["Rule"]
                 };
                 obj.ActOverview = HttpUtility.UrlDecode(Request.Form["ActOverview"]);
                 // Handle Excel File Upload
@@ -402,7 +411,7 @@ namespace EesassinErp.Controllers
             }
         }
 
-     
+
         public async Task<string> IUDActoverview(RetailBAL obj)
         {
 
@@ -665,6 +674,12 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchSecretarialStatutory(obj)));
             return result;
         }
+        public async Task<string> CategoryStatutory(RetailBAL obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.CategoryStatutory(obj)));
+            return result;
+        }
+
         public async Task<string> IUDStatutory()
         {
             RetailBAL obj = new RetailBAL();
@@ -693,7 +708,7 @@ namespace EesassinErp.Controllers
             }
             else
             {
-                obj.UploadFile = (Request.Form["UploadFile"].Replace(",", "")).Replace("undefined", ""); 
+                obj.UploadFile = (Request.Form["UploadFile"].Replace(",", "")).Replace("undefined", "");
             }
 
             obj.ASD = Request.Form["ASD"]; // Get additional form data
@@ -702,13 +717,13 @@ namespace EesassinErp.Controllers
             obj.CACId = Request.Form["CACId"]; // Get additional form data
             obj.Action = Request.Form["Action"]; // Get additional form data
             obj.Createdby = Request.Form["Createdby"];
-            obj.RegNo= Request.Form["RegNo"];
-
+            obj.RegNo = Request.Form["RegNo"];
+            obj.CSIID = Request.Form["CSIID"];
             obj.Status = Request.Form["Status"];
-            obj.VRemark = Request.Form["VRemark"];
+            obj.VRemark = Request.Unvalidated["VRemark"];
             obj.CRemark = Request.Form["CRemark"];
             obj.IsVerified = Request.Form["IsVerified"];
- 
+
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.IUDStatutory(obj)));
             return result;
         }
@@ -753,11 +768,11 @@ namespace EesassinErp.Controllers
             obj.CACId = Request.Form["CACId"]; // Get additional form data
             obj.Action = Request.Form["Action"]; // Get additional form data
             obj.Createdby = Request.Form["Createdby"];
+            obj.CSIID = Request.Form["CSIID"];
             obj.RegNo = Request.Form["RegNo"];
-
             obj.Status = Request.Form["Status"];
-            obj.VRemark = Request.Form["VRemark"];
-            obj.CRemark = Request.Form["CRemark"];
+            obj.VRemark = Request.Unvalidated["VRemark"];
+            obj.CRemark = Request.Unvalidated["CRemark"];
             obj.IsVerified = Request.Form["IsVerified"];
 
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.IUDSecretarialStatutory(obj)));
@@ -806,11 +821,11 @@ namespace EesassinErp.Controllers
             return View();
         }
 
-        
+
         public async Task<string> IUDDepartmentMaster(TblPartyMaster obj)
         {
-        string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.IUDDepartmentMaster(obj)));
-        return result;
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.IUDDepartmentMaster(obj)));
+            return result;
         }
 
         public async Task<string> SearchDepMaster(TblPartyMaster obj)
@@ -853,7 +868,7 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchCourtMaster(obj)));
             return result;
         }
-         
+
         private string GenerateFileName(string prefix)
         {
             var strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
@@ -897,7 +912,7 @@ namespace EesassinErp.Controllers
             {
                 if (!string.IsNullOrEmpty(obj.Map1ListSet[i].Upload))
                 {
-                    
+
                     if (obj.Map1ListSet[i].Upload.Contains("data:application/"))
                     {
                         obj.Map1ListSet[i].Upload = Regex.Replace(obj.Map1ListSet[i].Upload, @"^data:application\/[a-zA-Z]+;base64,", string.Empty);
@@ -939,12 +954,12 @@ namespace EesassinErp.Controllers
             }
             string result = await Task.Run(() =>
                JsonConvert.SerializeObject(DAL.DLL.dll.IUDStatutorySetup(obj))
-           ); 
+           );
             return result;
         }
 
 
-       
+
 
 
         public async Task<string> SearchStatutorySetup(MappingBAL obj)
@@ -968,17 +983,17 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
-      
+
         public async Task<string> SearchSecretarialCompliance(RetailBAL obj)
         {
 
-        string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchSecretarialCompliance(obj)));
-        return result;
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchSecretarialCompliance(obj)));
+            return result;
         }
 
 
 
-            [HttpPost]
+        [HttpPost]
         public async Task<JsonResult> IUDRetailSecretarialCompliance()
         {
             try
@@ -1010,7 +1025,7 @@ namespace EesassinErp.Controllers
                     DueDay = Request.Form["DueDay"],
                     Expire = Request.Form["Expire"],
                     ComplianceLevel = Request.Form["ComplianceLevel"],
-                     Rule = Request.Form["Rule"],
+                    Rule = Request.Form["Rule"],
 
 
                     Entity = Request.Form["Entity"],
@@ -1029,7 +1044,7 @@ namespace EesassinErp.Controllers
                     EventApplicability = Request.Form["EventApplicability"],
 
                     Section = Request.Form["Section"],
-                      currDate = Request.Form["currDate"],
+                    currDate = Request.Form["currDate"],
                     CompanyCategory = Request.Form["CompanyCategory"],
 
                     EntityType = Request.Form["EntityType"],
@@ -1038,7 +1053,7 @@ namespace EesassinErp.Controllers
                     FundingStatus = Request.Form["FundingStatus"],
                     FundingType = Request.Form["FundingType"]
 
-                    
+
                 };
                 obj.ActOverview = HttpUtility.UrlDecode(Request.Form["ActOverview"]);
                 // Handle Excel File Upload
@@ -1064,7 +1079,7 @@ namespace EesassinErp.Controllers
                     obj.UploadFile = "../DownloadMat/ActFile/" + NewFileName; // Store path in DB
                 }
 
-                
+
                 string result = await Task.Factory.StartNew(() =>
                     JsonConvert.SerializeObject(DAL.DLL.IUDRetailSecretarialCompliance(obj))
                 );
@@ -1194,8 +1209,8 @@ namespace EesassinErp.Controllers
                     Rule = Request.Form["Rule"],
                     Section = Request.Form["Section"],
                     currDate = Request.Form["currDate"],
-                      Applicability = Request.Form["Applicability"],
-                        Forms = Request.Form["Forms"]
+                    Applicability = Request.Form["Applicability"],
+                    Forms = Request.Form["Forms"]
                 };
                 obj.ActOverview = HttpUtility.UrlDecode(Request.Form["ActOverview"]);
                 // Handle Excel File Upload
@@ -1220,7 +1235,7 @@ namespace EesassinErp.Controllers
                     excelFile.SaveAs(filePath);
                     obj.UploadFile = "../DownloadMat/ActFile/" + NewFileName; // Store path in DB
                 }
-                 
+
                 string result = await Task.Factory.StartNew(() =>
                     JsonConvert.SerializeObject(DAL.DLL.IUDRetailFinacialCreateActCalender(obj))
                 );
@@ -1245,7 +1260,7 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchFinancialCreateActCalender(obj)));
             return result;
         }
-        
+
         public async Task<string> SearchFinacialStatutory(RetailBAL obj)
         {
 
@@ -1256,7 +1271,7 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
-        public async Task<string> IUDFinancialStatutory() 
+        public async Task<string> IUDFinancialStatutory()
         {
             RetailBAL obj = new RetailBAL();
             if (Request.Files.Count > 0)
@@ -1402,7 +1417,7 @@ namespace EesassinErp.Controllers
                 // log ex.Message
                 return ex.Message;
             }
-            
+
         }
 
 
@@ -1411,8 +1426,8 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.SearchEntify(obj)));
             return result;
         }
-        
-          // Added by Shipra 15072025///////////////////////////////////////////////
+
+        // Added by Shipra 15072025///////////////////////////////////////////////
         public ActionResult CaseStatusMaster()
         {
             return View();
@@ -1450,7 +1465,7 @@ namespace EesassinErp.Controllers
             return View();
         }
 
-      
+
 
         [HttpPost]
         public async Task<JsonResult> IUDFactoryCompliance()
@@ -1586,9 +1601,9 @@ namespace EesassinErp.Controllers
                     FundingType = Request.Form["FundingType"],
                     FormNo = Request.Form["FormNo"],
                     DetailedCompliance = Request.Form["DetailedCompliance"],
-                    ImpactEmployer = Request.Form["ImpactEmployer"], 
+                    ImpactEmployer = Request.Form["ImpactEmployer"],
 
-            };
+                };
                 obj.ActOverview = HttpUtility.UrlDecode(Request.Form["ActOverview"]);
                 // Handle Excel File Upload
 
@@ -1652,7 +1667,7 @@ namespace EesassinErp.Controllers
             return result;
         }
 
-       
+
 
         /// End by shipra ////
 
@@ -1745,61 +1760,6 @@ namespace EesassinErp.Controllers
             return View();
         }
 
-        public ActionResult SecretarialCompliance()
-        {
-            return View();
-        }
-
-        public ActionResult FactoryComp()
-        {
-            return View();
-        }
-
-        public ActionResult FinanceCompliance()
-        {
-            return View();
-        }
-
-        public ActionResult LabourCompliance()
-        {
-            return View();
-        }
-
-        public ActionResult EstablishmentCompliance()
-        {
-            return View();
-        }
-
-        public ActionResult EstablishmentReport()
-        {
-            return View();
-        }
-
-        public ActionResult ContractorCompliance()
-        {
-            return View();
-        }
-
-        public ActionResult ContractorReport()
-        {
-            return View();
-        }
-
-        public ActionResult ContractorComplianceVendor()
-        {
-            return View();
-        }
-
-        public ActionResult ContractorReportVendor()
-        {
-            return View();
-        }
-
-        public ActionResult SecretarialSetup()
-        {
-            return View();
-        }
-
         [HttpPost]
         public async Task<string> IUDLabourCodeStatutory()
         {
@@ -1847,6 +1807,16 @@ namespace EesassinErp.Controllers
 
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.IUDLabourCodeStatutory(obj)));
             return result;
+        }
+
+        public ActionResult ClientStoreMapping()
+        {
+            return View();
+        }
+
+        public ActionResult IndustryLicenseMapping()
+        {
+            return View();
         }
 
 
@@ -1901,8 +1871,8 @@ namespace EesassinErp.Controllers
         public ActionResult EntitySetup()
         {
             return View();
-        } 
- 
+        }
+
         public async Task<string> SearchFinacialStatutoryEvent(RetailBAL obj)
         {
 

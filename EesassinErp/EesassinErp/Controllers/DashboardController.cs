@@ -356,10 +356,7 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
-        public ActionResult NewVendorDashboard()
-        {
-            return View();
-        }
+        
         public ActionResult NewLocationDashboard()
         {
             return View();
