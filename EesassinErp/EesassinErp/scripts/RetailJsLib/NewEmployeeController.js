@@ -53,6 +53,22 @@
     $scope.Photos_3_FilePath = ""
     $scope.Photos_4_FilePath = ""
 
+    $scope.MinimumWageCategory = "";
+    $scope.WageType = "";
+    $scope.WageDisbursementMode = "";
+    $scope.PPE = "";
+    $scope.PPEType = "";
+    $scope.SafetyTrainingStatus = "";
+    $scope.SiteInductionStatus = "";
+    $scope.PoliceVerificationStatus = "";
+    $scope.TempIDStatus = "";
+    $scope.TempIDNumber = "";
+    $scope.TempIDDate = "";
+    $scope.PermanentIDStatus = "";
+    $scope.PermanentIDNumber = "";
+    $scope.PermanentIDDate = "";
+    $('#txtTempIDDate').val('');
+
 
 
 
@@ -862,7 +878,7 @@
             .then(function (response) {
 
                 $scope.EmployeeList = response.data.Result || [];
-                 
+                
                 $scope.PartyList = [];
                 let unique = {};
 
@@ -1057,7 +1073,7 @@
                 formData.append("Photos_3_FilePath", $scope.Photos_3_FilePath_Preview);
                 formData.append("Photos_4_FilePath", $scope.Photos_4_FilePath_Preview);
                 formData.append("EmployeePhotos", $scope.EmployeePhotos);
-                
+
                 formData.append("MinimumWageCategory", $scope.MinimumWageCategory);
                 formData.append("WageType", $scope.WageType);
                 formData.append("WageDisbursementMode", $scope.WageDisbursementMode);
@@ -1230,7 +1246,7 @@
                 ValidTill: selectedEmployee.ValidTill,
                 BloodGroup: selectedEmployee.BloodGroup,
               
-                
+
                 RefEmployeeCode: selectedEmployee.RefEmployeeCode,
                 UnitCode: selectedEmployee.UnitCode,
                 Email: selectedEmployee.EmployeeEmailID,
@@ -1388,7 +1404,7 @@
         $scope.Photos_1_FilePath = selectedEmployee.Photos_1_FilePath;
         $scope.Photos_2_FilePath = selectedEmployee.Photos_2_FilePath;
         $scope.Photos_3_FilePath = selectedEmployee.Photos_3_FilePath;
-        $scope.Photos_4_FilePath = selectedEmployee.Photos_4_FilePath;
+        $scope.Photos_4_FilePath = selectedEmployee.Photos_4_FilePath; 
 
         // Wage & Compliance
         $scope.MinimumWageCategory = selectedEmployee.MinimumWageCategory;

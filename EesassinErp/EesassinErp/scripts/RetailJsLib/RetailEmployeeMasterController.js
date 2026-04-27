@@ -53,12 +53,12 @@
     $scope.Photos_3_FilePath = ""
     $scope.Photos_4_FilePath = ""
 
-  
-   
-   
+
+
+
     setTimeout(function () {
-        
-        if ($scope.LoginId == 1 && loginType==1) {
+
+        if ($scope.LoginId == 1 && loginType == 1) {
             $("#ddlPartyType").removeAttr("disabled");
             $("#ddlPartyId").removeAttr("disabled");
         }
@@ -71,11 +71,11 @@
             $scope.AllUserListsLoad(MapId);
         }
 
-      
-     
-       
+
+
+
     }, 100);
-   
+
     $scope.BindGenderList = function () {
         var genderList = [
             { "Gender_Type": "Male", "Id": "1" },
@@ -96,7 +96,6 @@
         var getData = myService.methode('POST', "../RetailSection/GenerateEmployeeCode", '{obj:' + JSON.stringify(collectionobj) + '}');
 
         getData.then(function (response) {
-            debugger;
             $scope.EmployeeCode = response.data.Result[0].Column1;
             $scope.isDisabled = true;
         });
@@ -122,7 +121,7 @@
             });
             //$('<thead></thead>').prependTo('table').append($('table tr:first'));
             setTimeout(function () {
-                var    tr = table.find('tr');
+                var tr = table.find('tr');
                 $.each(tr, function (index) {
                     $scope.EmployeeMasterData = { 'EmployeeDesignation': "", 'EmployeeName': "" };
                     var td = $(this).find('td');
@@ -133,10 +132,10 @@
                     $scope.EmployeeMasterData['EmployeeDepartment'] = $(td[3]).text();
                     $scope.EmployeeMasterData['Father_Husband_Name'] = $(td[4]).text();
                     $scope.EmployeeMasterData['Gendar'] = $(td[5]).text();
-                    $scope.EmployeeMasterData['MaritalStatus'] = $(td[6]).text(); 
+                    $scope.EmployeeMasterData['MaritalStatus'] = $(td[6]).text();
                     $scope.EmployeeMasterData['DateOfBirth'] = $(td[7]).text();
-                    $scope.EmployeeMasterData['PresentAddress'] = $(td[8]).text(); 
-                    $scope.EmployeeMasterData['PermanemtAddress'] = $(td[9]).text(); 
+                    $scope.EmployeeMasterData['PresentAddress'] = $(td[8]).text();
+                    $scope.EmployeeMasterData['PermanemtAddress'] = $(td[9]).text();
                     $scope.EmployeeMasterData['AdharCardNumber'] = $(td[10]).text();
                     $scope.EmployeeMasterData['PANNumber'] = $(td[11]).text();
                     $scope.EmployeeMasterData['MobileNumber'] = $(td[12]).text();
@@ -156,7 +155,7 @@
                     $scope.EmployeeMasterData['IsActive'] = $(td[26]).text();
                     $scope.EmployeeMasterData['LeavingDate'] = $(td[27]).text();
                     $scope.EmployeeMasterData['PFAccount'] = $(td[28]).text();
-                    
+
                     $scope.EmployeeeMasterList.push($scope.EmployeeMasterData);
                     $scope.btnValiadte = true;
                 })
@@ -180,11 +179,11 @@
         var getData = myService.methode('POST', "../RetailSection/IUDBulkEmployeee", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             debugger;
-           
+
             showMsgBox('999', 'Alert', 'Save Successfully', 'warning', 'btn-warning');
-           
+
             $scope.GetEmployeeMaster();
-          
+
             $('#tab1-tab').click();
         });
     }
@@ -200,23 +199,20 @@
         $scope.AllPartySiteLoad('4');
     }
 
-  
+
 
     $scope.AllPartySiteLoad = function (PartyTypeId) {
         var collectionobj = {};
-        collectionobj.ActionType = 5; 
+        collectionobj.ActionType = 5;
         $scope.PartyTypeId = PartyTypeId;
-        if(PartyTypeId=='3')
-        {
-            $scope.PartyType='Auditor';
+        if (PartyTypeId == '3') {
+            $scope.PartyType = 'Auditor';
         }
-        else if(PartyTypeId=='4')
-        {
-            $scope.PartyType='Client';
+        else if (PartyTypeId == '4') {
+            $scope.PartyType = 'Client';
         }
-        else
-        {
-            $scope.PartyType='';
+        else {
+            $scope.PartyType = '';
         }
         collectionobj.PartyType = $scope.PartyType;
         collectionobj.Id = LoginId;
@@ -233,13 +229,13 @@
         collectionobj.ActionType = 6;
         collectionobj.Id = PartyId;
         var getData = myService.methode('POST', "../RetailSection/GetEmployeeMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) { 
+        getData.then(function (response) {
             $scope.AllUserList = response.data.Result;
         });
     }
 
     $scope.BindSuperVisior1 = function (PartyId) {
-        var collectionobj = {}; 
+        var collectionobj = {};
         collectionobj.ActionType = 7;
         collectionobj.Id = $scope.PartyId;
         collectionobj.Supervisior2 = $scope.Supervisior2;
@@ -263,14 +259,14 @@
         collectionobj.Id = LoginId;
         collectionobj.ActionType = 17;
         var getData = myService.methode('POST', "../Retail/GetStore", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) { 
+        getData.then(function (response) {
             $scope.AllStoreList = response.data.Result;
         });
     }
 
 
     $scope.GetEmployeeMaster = function () {
-        
+
         var collectionobj = {
             ActionType: 4,
             PartyId: LoginId
@@ -279,13 +275,10 @@
         myService.methode('POST', "../RetailSection/GetEmployeeMaster", JSON.stringify(collectionobj))
             .then(function (response) {
                 $scope.EmployeeList = response.data.Result || [];
-
-                // use $timeout to wait until ng-repeat has rendered rows
                 $timeout(function () {
                     if ($.fn.DataTable.isDataTable('#example')) {
                         $('#example').DataTable().clear().destroy();
                     }
-
                     $('#example').DataTable({
                         dom: 'Bfrtip',
                         buttons: [
@@ -342,34 +335,32 @@
                             }
                         ]
                     });
-                   
+
                 }, 500); // wait 0.5s for ng-repeat render
             });
     };
 
 
-   
+
     $scope.ShowDivEmployeeMasterGrid = function () {
         $scope.SaveEmployee();
     };
-  
-    $scope.SaveEmployee = function () { 
+
+    $scope.SaveEmployee = function () {
+        debugger;
         if (isValidate()) {
             var _isFileValid = true;
             if ($scope.EditId == 0) {
                 _isFileValid = IsFileValidation();
             }
             if (_isFileValid) {
+                debugger;
                 var formData = new FormData();
-                formData.append("Id", $scope.EditId); 
-                //formData.append("PartyId", $scope.PartyId);
-                //formData.append("UserId", $scope.UserId);
+                formData.append("Id", $scope.EditId);
                 formData.append("RefEmployeeCode", $scope.RefEmployeeCode);
                 formData.append("PartyTypeId", 4);
                 formData.append("PartyId", MapId);
                 formData.append("UserId", LoginId);
-                //formData.append("LeavingDate", $scope.LeavingDate.toISOString());
-
                 formData.append(
                     "LeavingDate",
                     ($scope.LeavingDate && $scope.LeavingDate !== ""
@@ -428,13 +419,13 @@
                     processData: false,
                     success: function (response) {
                         var data = JSON.parse(response);
-                      
+
                         if (showMsgBox(data.Result)) {
                             //if (data.Result == 1 || data.Result == 2) {
                             window.top.location.href = '../RetailSection/EmployeeMaster?EmployeesMaster';
                             $scope.EmployeeMasterGrid = true;
                             $scope.EmployeeMasterForm = false;
-                            
+
                         }
                     },
                     error: function (xhr, status, error) {
@@ -448,7 +439,7 @@
         $scope.EmployeeMasterGrid = false;
         $scope.EmployeeMasterForm = true;
         $scope.IsActionType = 1;
-      /*  $scope.GenerateEmployeeCode();*/
+        /*  $scope.GenerateEmployeeCode();*/
     };
     $scope.getFileIconClass = function (fileModel) {
         return fileModel ? 'fa fa-check-square' : 'fa fa-plus';
@@ -505,8 +496,7 @@
         }
         return modelStateIsvalid;
     }
-    $scope.openEmployeeModal = function (_Id)
-    {
+    $scope.openEmployeeModal = function (_Id) {
         $scope.EmpId = _Id;
         $scope.BindTransfer(_Id);
         $scope.BindTransferStore(_Id);
@@ -564,8 +554,14 @@
     $scope.openDocumentFunction = function (documentPath) {
         window.open(documentPath, '_blank');
     };
-
+    //$scope.openModal = function (id) {
+    //    debugger;
+    //    $scope.EditEmployee(id);
+    //    var modal = new bootstrap.Modal(document.getElementById('newEmployeeModal'));
+    //    modal.show();
+    //};
     $scope.EditEmployee = function (Id) {
+        debugger;       
         var selectedEmployee = $scope.EmployeeList.find(function (employee) {
             return employee.Id === Id;
         });
@@ -584,12 +580,12 @@
             $scope.BindSuperVisior1($scope.UserId);
             $scope.SuperVisior1 = selectedEmployee.SuperVisior1;
         }, 300);
-       
+
         setTimeout(function () {
             $scope.BindSuperVisior2($scope.UserId);
             $scope.SuperVisior2 = selectedEmployee.SuperVisior2;
         }, 400);
-       
+
         $scope.EmployeeCode = selectedEmployee.EmployeeCode;
         $scope.RefEmployeeCode = selectedEmployee.RefEmployeeCode;
         $scope.EmployeeName = selectedEmployee.EmployeeName;
@@ -597,9 +593,9 @@
         $scope.EmployeeDepartment = selectedEmployee.EmployeeDepartment;
         $scope.FatherHusbandName = selectedEmployee.Father_Husband_Name;
         $scope.Gender = selectedEmployee.Gendar;
-        $scope.PFAccount =  selectedEmployee.PFAccount,
-            $scope.LeavingDate =  selectedEmployee.LeavingDate,
-        $scope.MaritalStatus = selectedEmployee.MaritalStatus;
+        $scope.PFAccount = selectedEmployee.PFAccount,
+            $scope.LeavingDate = selectedEmployee.LeavingDate,
+            $scope.MaritalStatus = selectedEmployee.MaritalStatus;
         $scope.DateofBirth = new Date(selectedEmployee.DateOfBirth);
         $scope.PresentAddress = selectedEmployee.PresentAddress;
         $scope.PermanentAddress = selectedEmployee.PermanemtAddress;
@@ -621,7 +617,6 @@
         $scope.StoreCode = selectedEmployee.StoreCode;
         $scope.PFAccount = selectedEmployee.PFAccount;
         $scope.LeavingDate = new Date(selectedEmployee.LeavingDate);
-        debugger;
         $scope.IsActive = selectedEmployee.IsActive == true ? '1' : '0';
         $scope.PANCardFilePath = selectedEmployee.PANCardFilePath;
         $scope.Cheque_Passbook_FilePath = selectedEmployee.Cheque_Passbook_FilePath;
@@ -639,37 +634,30 @@
         $('#profileview').modal('hide');
         $scope.IsActionType = 2;
         $scope.EmployeeUploadDocs = false;
-       
-
     };
-
-    $scope.FireDoc = function (Id)
-    {
+    $scope.FireDoc = function (Id) {
         $('#' + Id).click();
     }
-
-  
-    $scope.ChangeStatus = function (Status, Id)
-    { 
-            var collectionobj = {};
-            collectionobj.Action = 5;
-            collectionobj.Id = Id;
-            collectionobj.Status = Status;
-            var getData = myService.methode('POST', "../RetailSection/UpdateEmpStatus", '{obj:' + JSON.stringify(collectionobj) + '}');
-            getData.then(function (response) {
-                $scope.GetEmployeeMaster();
-            });  
+    $scope.ChangeStatus = function (Status, Id) {
+        var collectionobj = {};
+        collectionobj.Action = 5;
+        collectionobj.Id = Id;
+        collectionobj.Status = Status;
+        var getData = myService.methode('POST', "../RetailSection/UpdateEmpStatus", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            $scope.GetEmployeeMaster();
+        });
     }
     $scope.BindTransfer = function (Id) {
         var collectionobj = {};
         collectionobj.ActionType = 11;
-        collectionobj.Id = Id; 
+        collectionobj.Id = Id;
         var getData = myService.methode('POST', "../RetailSection/GetEmployeeMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             $scope.TransferLog = response.data.Result;
         });
     }
-    $scope.BindTransferStore  = function (Id) {
+    $scope.BindTransferStore = function (Id) {
         var collectionobj = {};
         collectionobj.ActionType = 12;
         collectionobj.Id = Id;
@@ -693,18 +681,16 @@
         collectionobj.Id = Id;
         collectionobj.UserId = $scope.EmpId;
         var getData = myService.methode('POST', "../RetailSection/GetEmployeeMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response)
-        {
-            showMsgBox('999', 'Alert', response.data.Result[0].Msg, 'success', 'btn-success'); 
+        getData.then(function (response) {
+            showMsgBox('999', 'Alert', response.data.Result[0].Msg, 'success', 'btn-success');
             $scope.BindTransferStore($scope.EmpId);
             $scope.BindTransfer($scope.EmpId);
         });
     }
-    
-    
 
-    $scope.UpdateDocument = function (fieldName, input)
-    {
+
+
+    $scope.UpdateDocument = function (fieldName, input) {
         debugger;
         if (input.files && input.files[0]) {
             var filerdr = new FileReader();
@@ -726,7 +712,7 @@
                     success: function (response) {
 
                         $scope.employee[fieldName] = response;
-                      
+
                         $scope.GetEmployeeMaster();
                         showMsgBox('2');
                     },
