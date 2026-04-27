@@ -1,17 +1,18 @@
 ﻿var myLoginApp = angular.module('myLoginApp', []);
 
+ 
 myLoginApp.service("myLoginService", function ($http) {
     this.methode = function (methodType, virtualUrl, dataList) {
         return $http({
             method: methodType,
             url: virtualUrl,
-            data: dataList,
-            contentType: 'application/json; charset=utf-8',
-            datatype: 'json'
+            data: dataList, // ✅ object directly
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
     };
 });
- 
 
 myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginService) {
     sessionStorage.clear();
@@ -115,18 +116,18 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
           /*  showMsg("You have logged in successfully.", "green");*/
             startLoginMessages();
             setTimeout(() => {
-                $scope.ManageLog('Login successfully');
+                $scope.ManageLog(d.LoginId,'Login successfully');
             }, 0);
             
           /*  $scope.Captcha = ''; $scope.GetCaptchaImage();*/
             window.location.href = '../Dashboard/Dashboard';
         }).finally(resetBtn);
     };
-    $scope.ManageLog = function (Activity) {
+    $scope.ManageLog = function (Id,Activity) {
 
         var collectionobj = {
             Action: "8",
-            ClientId: $scope.Username,
+            ClientId:   Id  ,
             Activity: Activity
         };
 
@@ -146,13 +147,12 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
         postObj('../Login/GetModulePermission', obj).then(function (res)
         {
             var data = res.data && res.data.Result;
-            if (!data || !data.length) {
+            if (!data || !data.length)
+            {
                 
                 $scope.DashboardSwitch = 'Supplier';
                 sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                setTimeout(() => {
-                    $scope.ManageLog('Login Supplier Section');
-                }, 0);
+               
                 return window.location.href = '../Dashboard/Dashboard';
             }
 
@@ -188,7 +188,7 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
 
                     $scope.DashboardSwitch = 'AdminRetail';
                     sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                    $scope.ManageLog('Login Retail Section');
+                    $scope.ManageLog(d.LoginId,'Login Retail Section');
                     setTimeout(() => {
                         $scope.ManageLog(d.LoginId, 'Login Retail Section');
                     }, 0);
@@ -204,7 +204,7 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                
                     $scope.DashboardSwitch = 'Supplier';
                     sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                    $scope.ManageLog('Login Supplier Section');
+                    $scope.ManageLog(d.LoginId,'Login Supplier Section');
                     if (d.LoginType == '5') {
                        
                         $scope.DashboardSwitch = 'AdminSupplier';
@@ -212,7 +212,7 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                         showMsg("You have logged in successfully.", "green");
                       
                         setTimeout(() => {
-                            $scope.ManageLog(d.LoginId, 'Login');
+                            $scope.ManageLog(d.LoginId, 'Login AS Admin Section');
                         }, 0);
                         $scope.Captcha = ''; $scope.GetCaptchaImage();
                         return window.location.href = '../Dashboard/VBoard';
@@ -252,7 +252,7 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                         
                         $scope.DashboardSwitch = 'Retail';
                         sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                        $scope.ManageLog('Login Retail Section');
+                       
                         setTimeout(() => {
                             $scope.ManageLog(d.LoginId, 'Login in Retail');
                         }, 0);
@@ -364,14 +364,71 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
         }).finally(function () { setBtn('#btnRLogin', 'Send Otp', false); });
     };
 
+    //function sendOtpEmail() {
+    //    setBtn('#btnLogin2', '<i class="fa fa-spinner fa-spin"></i> Please wait', true);
+    //    postObj('../api/SendEmailApi/SendEmail', { Id: $scope.Otp, ClientId: $scope.MobileNo, Action: "19" }).then(function () {
+    //        $('#txtOtp').val('');
+    //        showMsg("Otp sent to your Email Id", "green", 300);
+    //        $scope.IshideOtp = true; $scope.hidemobile = false; $scope.IshideSubmit = false;
+    //    }).finally(function () { setBtn('#btnLogin2', 'Submit', false); });
+    //}
+
     function sendOtpEmail() {
         setBtn('#btnLogin2', '<i class="fa fa-spinner fa-spin"></i> Please wait', true);
-        postObj('../SendEmail/SendEmail', { Id: $scope.Otp, ClientId: $scope.MobileNo, Action: "19" }).then(function () {
+
+        postObj('../Login/SendEmail', {
+            Id: $scope.Otp,
+            ClientId: $scope.MobileNo,
+            Action: "19" 
+        }).then(function (res) {
+
+            console.log(res.data); // ✅ debug
+
             $('#txtOtp').val('');
             showMsg("Otp sent to your Email Id", "green", 300);
-            $scope.IshideOtp = true; $scope.hidemobile = false; $scope.IshideSubmit = false;
-        }).finally(function () { setBtn('#btnLogin2', 'Submit', false); });
+
+            $scope.IshideOtp = true;
+            $scope.hidemobile = false;
+            $scope.IshideSubmit = false;
+
+        }).finally(function () {
+            setBtn('#btnLogin2', 'Submit', false);
+        });
     }
+
+    //function sendOtpEmail() {
+    //    setBtn('#btnLogin2', '<i class="fa fa-spinner fa-spin"></i> Please wait', true);
+       
+    //    var obj = {
+    //        Action: 19,
+    //        ClientId: $scope.MobileNo,
+    //        Id: $scope.Otp
+    //    };
+
+    //    postObj('../api/SendEmailApi/SendEmail', obj).then(function (res) {
+    //        $('#txtOtp').val('');
+    //        showMsg("Otp sent to your Email Id", "green", 300);
+    //        $scope.IshideOtp = true; $scope.hidemobile = false; $scope.IshideSubmit = false;
+    //    }).finally(function () { setBtn('#btnLogin2', 'Submit', false); });
+    //}
+
+
+    //$scope.okemailpass = function () {
+    //    $('#btnLogin2').html('<i class="fa fa-spinner fa-spin"></i>&nbsp; Please wait')
+    //    $('#btnLogin2').prop('disabled', true);
+    //    debugger;
+    //    var collectionobj = {};
+    //    collectionobj.Id = $scope.Otp;
+    //    collectionobj.ClientId = $scope.MobileNo;
+    //    collectionobj.Action = "19";
+    //    var getDetails = myLoginService.methode('POST', '../api/SendEmailApi/SendEmail', '{obj:' + JSON.stringify(collectionobj) + '}');
+    //    getDetails.then(function (response) { 
+    //        $('#txtOtp').val('');
+    //        showMsg("Otp sent to your Email Id", "green", 300);
+    //        $scope.IshideOtp = true; $scope.hidemobile = false; $scope.IshideSubmit = false;
+    //        setBtn('#btnLogin2', 'Submit', false);
+    //    });
+    //};
 
     function sendOtpSMS() {
         setBtn('#btnLogin2', '<i class="fa fa-spinner fa-spin"></i> Please wait', true);
@@ -405,7 +462,9 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
     };
 
     // --------------- Misc small functions ---------------
-    $scope.Redirect = function () { setBtn('#btnWelcome', '<i class="fa fa-spinner fa-spin"></i> Please wait', true); $scope.ManageLog('Welcome Click'); setBtn('#btnWelcome', 'LOG IN', false); window.location.href = '../Login/Login'; };
+    $scope.Redirect = function () {
+        setBtn('#btnWelcome', '<i class="fa fa-spinner fa-spin"></i> Please wait', true); setBtn('#btnWelcome', 'LOG IN', false); window.location.href = '../Login/Login';
+    };
 
     $scope.resetusername = function () { $scope.Step1 = true; $scope.Step2 = $scope.Step3 = false; };
     $scope.forgetpass = function () { $scope.Step1 = $scope.Step2 = false; $scope.Step3 = true; };

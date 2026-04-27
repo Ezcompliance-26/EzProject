@@ -39,6 +39,79 @@ if (loginType == "-1" || loginType == null || loginType == "" || loginType == "n
 
     window.top.location.href = '../Login/Login';
 }
+
+
+//app.directive('fileSizeLimit', function () {
+//    return {
+//        restrict: 'A',
+//        link: function (scope, element, attrs) {
+
+//            var maxSizeMB = parseInt(attrs.fileSizeLimit) || 20;
+
+//            element.on('change', function () {
+//                var file = element[0].files[0];
+
+//                if (file) {
+//                    var maxSize = maxSizeMB * 1024 * 1024;
+
+//                    if (file.size > maxSize) {
+
+//                        Swal.fire({
+//                            title: "File size exceeded",
+//                            text: "File size should not exceed " + maxSizeMB + " MB",
+//                            icon: "warning",
+//                            confirmButtonText: "OK",
+//                            allowOutsideClick: false,
+//                            allowEscapeKey: false
+//                        });
+
+//                        element.val(""); // reset input
+//                        scope.$apply(); // Angular sync
+//                    }
+//                }
+//            });
+//        }
+//    };
+//});
+app.directive('fileSizeLimit', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+
+            var maxSizeMB = parseInt(attrs.fileSizeLimit) || 20;
+
+            element.on('change', function (event) {
+
+                var file = element[0].files[0];
+
+                if (file) {
+                    var maxSize = maxSizeMB * 1024 * 1024;
+
+                    if (file.size > maxSize) {
+
+                        // ❌ STOP everything
+                        event.stopImmediatePropagation();
+                        event.preventDefault();
+
+                        Swal.fire({
+                            title: "File size exceeded",
+                            text: "File size should not exceed " + maxSizeMB + " MB",
+                            icon: "warning",
+                            confirmButtonText: "OK",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        });
+
+                        element.val(""); // reset input
+                        scope.$apply();
+
+                        return false;
+                    }
+                }
+            });
+        }
+    };
+});
 app.directive('fileModel', ['$parse', function ($parse) {
     return {
         restrict: 'A',
@@ -773,24 +846,24 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         $scope.$applyAsync();
     });
 
-    var collectionobj = {};
-    collectionobj.Action = 19;
-    collectionobj.LoginId = LoginId;
-    var getData = myService.methode('POST', ("../Login/GetModulePermission"), JSON.stringify(collectionobj));
-    getData.then(function (response)
-    {
-        if (response.data.Result.length > 0)
-        {
-            if ($scope.SessionId != response.data.Result[0].SessionId) {
-                showMsgBox('999', 'Alert', 'Multiple logins detected, Closing all sessions automatically', 'warning', 'btn-warning');
-                sessionStorage.clear(); 
-                setTimeout(function () {
-                    window.top.location.href = '../Login/Login';
-                }, 3000); 
-            } 
-        }
-        else { window.top.location.href = '../Login/Login';}
-    }); 
+    //var collectionobj = {};
+    //collectionobj.Action = 19;
+    //collectionobj.LoginId = LoginId;
+    //var getData = myService.methode('POST', ("../Login/GetModulePermission"), JSON.stringify(collectionobj));
+    //getData.then(function (response)
+    //{
+    //    if (response.data.Result.length > 0)
+    //    {
+    //        if ($scope.SessionId != response.data.Result[0].SessionId) {
+    //            showMsgBox('999', 'Alert', 'Multiple logins detected, Closing all sessions automatically', 'warning', 'btn-warning');
+    //            sessionStorage.clear(); 
+    //            setTimeout(function () {
+    //                window.top.location.href = '../Login/Login';
+    //            }, 3000); 
+    //        } 
+    //    }
+    //    else { window.top.location.href = '../Login/Login';}
+    //}); 
     
     $scope.BindNotification = function () {
         var collectionobj = {};
@@ -1519,6 +1592,40 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
                 $scope.ListOfInvoice = 'No Record Found';
             }
 
+        });
+    }
+    $scope.selectedInvoiceType = '';
+
+    $scope.filterInvoice = function (type) {
+        $scope.selectedInvoiceType = type;
+
+        if (!type) {
+            $scope.filteredInvoices = angular.copy($scope.VendorInvoiceList);
+        } else {
+            $scope.filteredInvoices = $scope.VendorInvoiceList.filter(x => x.VendorInvNum == type);
+        }
+    };
+
+    $scope.AllVendorCompliance = function () {
+        var collectionobj = {};
+        collectionobj.Action = 52;
+        collectionobj.Updatedby = MapId;
+        collectionobj.Id = $scope.InvoiceNo;
+        collectionobj.AuditorId = $scope.ClientId;
+
+        var getData = myService.methode('POST', "../Communication/GetCommunication", '{obj:' + JSON.stringify(collectionobj) + '}');
+
+        getData.then(function (response) {
+            if (response.data.length > 0) {
+
+                $scope.VendorInvoiceList = response.data;
+
+                // 🔥 IMPORTANT
+                $scope.filteredInvoices = angular.copy($scope.VendorInvoiceList);
+
+                // 🔥 Dynamic dropdown values (unique types)
+                $scope.InvoiceTypes = [...new Set($scope.VendorInvoiceList.map(x => x.VendorInvNum))];
+            }
         });
     }
 
@@ -2691,6 +2798,46 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
             }
         });
     }
+
+
+ 
+    $scope.Clicktocompliance = function (SINVOICENO, ClientId, VendorCId) {
+
+        if (isValidate()) {
+
+            var collectionobj = {
+                Action: 10,
+                InvoiceNo: SINVOICENO,
+                VendorId: VendorCId,
+                Id: ClientId
+            };
+
+            var getData = myService.methode(
+                'POST',
+                "../DocumentMaster/GetAuditorCompliance",
+                { obj: collectionobj }   // ✅ Direct object pass karo
+            );
+
+            getData.then(function (response) {
+
+                if (!response.data || response.data.length === 0) {
+                    showMsgBox('999', 'warning', 'No data found', 'warning', 'btn-warning');
+                    return;
+                }
+
+                if (response.data[0].MSG != '1') {
+                    showMsgBox('999', 'warning', response.data[0].MSG, 'warning', 'btn-warning');
+                }
+                else { 
+                    window.location.href = '../Dashboard/ComplianceAuditReport?'+ SINVOICENO + '|' + ClientId + '|' + VendorCId;
+                }
+
+            }, function (error) {
+                showMsgBox('999', 'error', 'Something went wrong', 'danger', 'btn-danger');
+            });
+        }
+    };
+
     $scope.checkandgetreport = function () {
         if (isValidate()) {
             var collectionobj = {};
@@ -3495,7 +3642,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         app.NavMenuPermissionController($scope, $element, $filter, $sce, myService);
     }
     if (IsFunctionDefined('app.VendorInvoiceController')) {
-        app.VendorInvoiceController($scope, $element, $filter, myService);
+        app.VendorInvoiceController($scope, $element, $filter, myService,$http);
     }
     if (IsFunctionDefined('app.VendorCommunicationController')) {
         app.VendorCommunicationController($scope, $element, $filter, myService);
@@ -3828,7 +3975,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         app.Sacretrialcompliancecontroller($scope, $element, $filter, myService, $http, $sce);
     }
     if (IsFunctionDefined('app.WithoutInvoiceController')) {
-        app.WithoutInvoiceController($scope, $element, $filter, myService);
+        app.WithoutInvoiceController($scope, $element, $filter, myService, $http);
     }
     if (IsFunctionDefined('app.NewEmployeeController')) {
         app.NewEmployeeController($scope, $element, $filter, myService, $http,$timeout);
@@ -3840,6 +3987,15 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     if (IsFunctionDefined('app.DeclarationController')) {
         app.DeclarationController($scope, $element, $filter, $sce, myService);
     }
+
+    if (IsFunctionDefined('app.TransportController')) {
+        app.TransportController($scope, $element, $filter, myService, $http, $timeout);
+    }
+
+    if (IsFunctionDefined('app.AddAuditContractorComplianceController')) {
+        app.AddAuditContractorComplianceController($scope, $element, $filter, myService, $http, $compile, $timeout);
+    }
+
     
 })
 

@@ -5,6 +5,15 @@ namespace BAL
     public class RetialEmployeeManager
     {
         //---------------------Action--------------------------
+
+
+        public string EmployeePhotos { get; set; }
+        public DateTime IssueDate { get; set; }
+        public DateTime ValidTill { get; set; }
+
+        public string BloodGroup { get; set; }
+        public string Transport { get; set; }
+        public string RouteId { get; set; }
         public string MinimumWageCategory { get; set; }
         public string WageType { get; set; }
         public string WageDisbursementMode { get; set; }

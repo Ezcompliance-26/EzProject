@@ -4,6 +4,8 @@
     ViewBag.Title = "Compliance Audit Report";
     Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
+<script src="~/scripts/myjslib/AuditorComplianceController.js"></script>
+
 
 
 <style>
@@ -304,26 +306,26 @@
                 <div class="d-flex align-items-center gap-2">
 
                     <div class="dropdown">
-                        <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Nature
+                        <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            {{selectedInvoiceType || 'Invoice List'}}
                         </button>
+
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Return</a></li>
-                            <li><a class="dropdown-item" href="#">Nature</a></li>
+                            <li>
+                                <a class="dropdown-item" href="" ng-click="filterInvoice('')">All</a>
+                            </li>
+
+                            <li ng-repeat="type in InvoiceTypes">
+                                <a class="dropdown-item" href="" ng-click="filterInvoice(type)">
+                                    {{type}}
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
-                    <div class="dropdown">
-                        <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Filter2
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Option1</a></li>
-                            <li><a class="dropdown-item" href="#">Option2</a></li>
-                        </ul>
-                    </div>
+                     
 
-                    <button class="btn btn-sm filter-btn active">Go</button>
+                   
                 </div>
 
                 <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
@@ -338,9 +340,9 @@
                         <div class="dropdown">
                             <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">CSV</a></li>
-                                <li><a class="dropdown-item" href="#">PDF</a></li>
-                                <li><a class="dropdown-item" href="#">Print</a></li>
+                                <li><a class="dropdown-item" href="#" ng-click="exportCompianceoCSV()">CSV</a></li>
+                              
+                                <li><a class="dropdown-item" href="#" ng-click="printCompianceTable()">Print</a></li>
                             </ul>
                         </div>
                     </div>
@@ -349,143 +351,47 @@
 
 
             <!-- Table wrapper -->
-            <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3">
+            <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3" ng-init="AllVendorCompliance()">
                 <div class="table-responsive">
                     <table class="table table-sm mb-0 small-table">
                         <thead>
                             <tr>
                                 <th>S.No</th>
-                                <th>Select vendor</th>
-                                <th> Select site </th>
+                                <th>Invoice No</th>
+                                <th>Client</th>
+                                <th>Vendor</th>
+                                <th>Auditor</th>
                                 <th>Month</th>
-                                <th>preliminary</th>
+                                <th>Status</th>
                                 <th>Generated on</th>
-                                <th>Submision</th>
                                 <th>Final Report Generated on</th>
                                 <th>View button</th>
                             </tr>
                         </thead>
                         <tbody>
 
-                            <tr>
-                                <td>1</td>
-                                <td><a href="#" class="text-success text-decoration-none">Vendor</a></td>
-                                <td>Vendor Site A</td>
-                                <td>Month</td>
-                                <td>Preliminary</td>
-                                <td>2026-01-01</td>
-                                <td>2026-01-05</td>
-                                <td>2026-01-10</td>
-                                <td><a class="btn btn-sm btn-submit px-3" href="../Dashboard/ComplianceAuditReport">View</a></td>
+                            <tr ng-repeat="x in filteredInvoices">
+                                <td>{{$index +1}}</td>
+                                <td>{{x.VendorInvNum}}</td>
+                                <td>{{x.Client}}</td>
+                                <td>
+                                    {{x.VendorUser}}
+                                </td>
+                                <td>{{x.Auditor}}</td>
+                                <td>
+                                    {{x.MonthName}}
+                                </td>
+                                <td>
+                                    {{x.ComplianceStatus}}
+                                </td>
+                                <td>
+                                    {{x.FinalSubmit}}
+                                </td>
+                                <td>{{x.GeneratedOn}}</td>
+                                <td><a class="btn btn-sm btn-submit px-3" ng-click="Clicktocompliance(x.VendorInvNum,x.ClientId,x.VendorId)">View</a></td>
                             </tr>
 
-                            <tr>
-                                <td>2</td>
-                                <td><a href="#" class="text-success text-decoration-none">Vendor</a></td>
-                                <td>Vendor Site B</td>
-                                <td>Quarter</td>
-                                <td>Final</td>
-                                <td>2026-02-01</td>
-                                <td>2026-02-07</td>
-                                <td>2026-02-15</td>
-                                <td><a class="btn btn-sm btn-submit px-3" href="../Dashboard/ComplianceAuditReport">View</a></td>
-                            </tr>
-
-                            <tr>
-                                <td>3</td>
-                                <td><a href="#" class="text-success text-decoration-none">Vendor</a></td>
-                                <td>Vendor Site C</td>
-                                <td>Month</td>
-                                <td>Preliminary</td>
-                                <td>2026-03-01</td>
-                                <td>2026-03-06</td>
-                                <td>2026-03-12</td>
-                                <td><a class="btn btn-sm btn-submit px-3" href="../Dashboard/ComplianceAuditReport">View</a></td>
-                            </tr>
-
-                            <tr>
-                                <td>4</td>
-                                <td><a href="#" class="text-success text-decoration-none">Vendor</a></td>
-                                <td>Vendor Site D</td>
-                                <td>Year</td>
-                                <td>Final</td>
-                                <td>2026-04-01</td>
-                                <td>2026-04-08</td>
-                                <td>2026-04-20</td>
-                                <td><a class="btn btn-sm btn-submit px-3" href="../Dashboard/ComplianceAuditReport">View</a></td>
-                            </tr>
-
-                            <tr>
-                                <td>5</td>
-                                <td><a href="#" class="text-success text-decoration-none">Vendor</a></td>
-                                <td>Vendor Site E</td>
-                                <td>Month</td>
-                                <td>Preliminary</td>
-                                <td>2026-05-01</td>
-                                <td>2026-05-05</td>
-                                <td>2026-05-09</td>
-                                <td><a class="btn btn-sm btn-submit px-3" href="../Dashboard/ComplianceAuditReport">View</a></td>
-                            </tr>
-
-                            <tr>
-                                <td>6</td>
-                                <td><a href="#" class="text-success text-decoration-none">Vendor</a></td>
-                                <td>Vendor Site F</td>
-                                <td>Quarter</td>
-                                <td>Final</td>
-                                <td>2026-06-01</td>
-                                <td>2026-06-10</td>
-                                <td>2026-06-18</td>
-                                <td><a class="btn btn-sm btn-submit px-3" href="../Dashboard/ComplianceAuditReport">View</a></td>
-                            </tr>
-
-                            <tr>
-                                <td>7</td>
-                                <td><a href="#" class="text-success text-decoration-none">Vendor</a></td>
-                                <td>Vendor Site G</td>
-                                <td>Month</td>
-                                <td>Preliminary</td>
-                                <td>2026-07-01</td>
-                                <td>2026-07-04</td>
-                                <td>2026-07-11</td>
-                                <td><a class="btn btn-sm btn-submit px-3" href="../Dashboard/ComplianceAuditReport">View</a></td>
-                            </tr>
-
-                            <tr>
-                                <td>8</td>
-                                <td><a href="#" class="text-success text-decoration-none">Vendor</a></td>
-                                <td>Vendor Site H</td>
-                                <td>Year</td>
-                                <td>Final</td>
-                                <td>2026-08-01</td>
-                                <td>2026-08-09</td>
-                                <td>2026-08-25</td>
-                                <td><a class="btn btn-sm btn-submit px-3" href="../Dashboard/ComplianceAuditReport">View</a></td>
-                            </tr>
-
-                            <tr>
-                                <td>9</td>
-                                <td><a href="#" class="text-success text-decoration-none">Vendor</a></td>
-                                <td>Vendor Site I</td>
-                                <td>Month</td>
-                                <td>Preliminary</td>
-                                <td>2026-09-01</td>
-                                <td>2026-09-06</td>
-                                <td>2026-09-14</td>
-                                <td><a class="btn btn-sm btn-submit px-3" href="../Dashboard/ComplianceAuditReport">View</a></td>
-                            </tr>
-
-                            <tr>
-                                <td>10</td>
-                                <td><a href="#" class="text-success text-decoration-none">Vendor</a></td>
-                                <td>Vendor Site J</td>
-                                <td>Quarter</td>
-                                <td>Final</td>
-                                <td>2026-10-01</td>
-                                <td>2026-10-08</td>
-                                <td>2026-10-19</td>
-                                <td><a class="btn btn-sm btn-submit px-3" href="../Dashboard/ComplianceAuditReport">View</a></td>
-                            </tr>
+                            	 
 
                         </tbody>
 

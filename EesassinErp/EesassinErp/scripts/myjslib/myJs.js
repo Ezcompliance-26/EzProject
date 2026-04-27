@@ -1256,7 +1256,155 @@ function isValidate(parendiv) {
     return modelStateIsvalid;
 }
 
+function isValidateA(parendiv) {
 
+    var modelStateIsvalid = true;
+    var firstElement = null;
+
+    // 🔹 helper to get field name
+    function getFieldName(el) {
+        return el.attr('placeholder')
+            || el.attr('name')
+            || el.closest('.form-group').find('label').text()
+            || el.prev('label').text()
+            || 'This field';
+    }
+
+    // 🔹 helper to add/remove red border (select2 supported)
+    function addError(el) {
+        el.addClass("red-validation");
+
+        if (el.hasClass('select2-hidden-accessible')) {
+            el.next('.select2').find('.select2-selection')
+                .addClass("red-validation");
+        }
+    }
+
+    function removeError(el) {
+        el.removeClass("red-validation");
+
+        if (el.hasClass('select2-hidden-accessible')) {
+            el.next('.select2').find('.select2-selection')
+                .removeClass("red-validation");
+        }
+    }
+
+    if (parendiv != null) {
+
+        var inputelement = parendiv.find('input.validateA');
+        var textarea = parendiv.find('textarea.validateA');
+        var ddlelement = parendiv.find('select.validateA');
+
+        $.each(inputelement, function () {
+            if ($(this).val() == "") {
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
+            }
+        });
+
+        $.each(textarea, function () {
+            if ($(this).val() == "") {
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
+            }
+        });
+
+        $.each(ddlelement, function () {
+            if ($(this).children('option:selected').index() == 0) {
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
+            }
+        });
+
+    } else {
+
+        $.each($('input.validateA'), function () {
+            if ($(this).val() == "") {
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
+            }
+        });
+
+        $.each($('textarea.validateA'), function () {
+            if ($(this).val() == "") {
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
+            }
+        });
+
+        $.each($('select.validateA'), function () {
+            if ($(this).children('option:selected').index() == 0) {
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
+            }
+        });
+
+        // 🔹 checkbox group validation
+        $.each($('.validateA-chk'), function () {
+            if ($(this).find('input[type="checkbox"]:checked').length == 0) {
+                $(this).addClass("red-validation");
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                $(this).removeClass("red-validation");
+            }
+        });
+
+        // 🔹 email validation
+        var emailelements = $('input[type="email"].validateA');
+        $.each(emailelements, function () {
+            var emailValue = $(this).val();
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (emailValue == "" || !emailPattern.test(emailValue)) {
+                addError($(this));
+                modelStateIsvalid = false;
+                if (firstElement == null) firstElement = $(this);
+            } else {
+                removeError($(this));
+            }
+        });
+    }
+
+    // 🔥 POPUP + AUTO FOCUS
+    if (!modelStateIsvalid && firstElement != null) {
+
+        // focus fix for select2
+        if (firstElement.hasClass('select2-hidden-accessible')) {
+            firstElement.next('.select2')
+                .find('.select2-selection')
+                .focus();
+        } else {
+            firstElement.focus();
+        }
+
+        swal(
+            "Validation Error",
+            getFieldName(firstElement) + " is required or invalid. Please check highlighted fields.",
+            "error"
+        );
+    }
+
+    return modelStateIsvalid;
+}
 
 function checktextbox(txtbox) {
     if (txtbox.val() == "") {

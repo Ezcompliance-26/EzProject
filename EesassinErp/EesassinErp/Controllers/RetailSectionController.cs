@@ -26,6 +26,10 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
+        public ActionResult Icard()
+        {
+            return View();
+        }
         public ActionResult Index()
         {
             return View();
@@ -86,6 +90,15 @@ namespace EesassinErp.Controllers
             string Status = form["Status"];
             string SiteId = form["SiteId"];
 
+            DateTime IssueDate = Convert.ToDateTime(form["IssueDate"]);
+            DateTime ValidTill = Convert.ToDateTime(form["ValidTill"]);
+            string BloodGroup = form["BloodGroup"];
+
+
+
+            string Transport = form["Transport"];
+            string RouteId = form["RouteId"];
+
 
             // Wage & Compliance
             string MinimumWageCategory = form["MinimumWageCategory"];
@@ -112,6 +125,8 @@ namespace EesassinErp.Controllers
 
 
 
+
+
             string panCardFilePath = null;
             string chequePassbookFilePath = null;
             string educationCertificateFilePath = null;
@@ -124,9 +139,18 @@ namespace EesassinErp.Controllers
             string photos2FilePath = null;
             string photos3FilePath = null;
             string photos4FilePath = null;
+
+
+
+
+            string EmployeePhotos = null;
             //if (Convert.ToInt32(Id) == 0)
             //{
-                if (!string.IsNullOrEmpty(form["PANCardFilePath"]))
+            if (!string.IsNullOrEmpty(form["EmployeePhotos"]))
+            {
+                EmployeePhotos = SaveFile(form["EmployeePhotos"], "EmployeePhotos");
+            }
+            if (!string.IsNullOrEmpty(form["PANCardFilePath"]))
                 {
                     panCardFilePath = SaveFile(form["PANCardFilePath"], "Employee");
                 }
@@ -186,6 +210,7 @@ namespace EesassinErp.Controllers
                     PartyId = PartyId,
                     UserId = UserId,
                     Status = Status,
+                    EmployeePhotos = EmployeePhotos,
                     SuperVisior1 = SuperVisior1,
                     SuperVisior2 = SuperVisior2,
                     EmployeeCode = employeeCode,
@@ -210,7 +235,11 @@ namespace EesassinErp.Controllers
                     PreviousESI = previousESI,
                     GrossSalary = grossSalary,
                     DOJ = doj,
-                    NomineeName = nameofNominee,
+                    IssueDate = IssueDate,
+                    ValidTill = ValidTill,
+                BloodGroup= BloodGroup,
+
+                NomineeName = nameofNominee,
                     NomineeAddress = addressofNominee,
                     NomineeRelation = relationofNominee,
                     NomineeDOB = dobofNominee,
@@ -246,8 +275,12 @@ namespace EesassinErp.Controllers
                      TempIDDate = TempIDDate, 
                      PermanentIDStatus = PermanentIDStatus,
                      PermanentIDNumber = PermanentIDNumber,
-                     PermanentIDDate = PermanentIDDate
-                };
+                     PermanentIDDate = PermanentIDDate,
+
+                    Transport = Transport,
+                    RouteId = RouteId,
+                     
+            };
                 result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertUpdateDelEmployeeMaster(employeeData)));
             }
             catch (Exception ex)
@@ -1365,8 +1398,8 @@ namespace EesassinErp.Controllers
                 string licenseDate = GetValidDate(form["IssuedDate"]);
                 string licenseNumber = form["LicenseNumber"];
                 string MachineNumber = form["MachineNumber"];
-                string validityStartDate = GetValidDate(form["ValidityStartDate"]);
-                string validityEndDate = GetValidDate(form["ValidityEndDate"]);
+                string validityStartDate = form["ValidityStartDate"];
+                string validityEndDate = form["ValidityEndDate"];
                 string uploadLicenseCopy = form["UploadLicenseCopy"];
                 string Remark = form["Remark"];
                 string userName = form["UserName"];
@@ -1746,6 +1779,13 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.IUDBulkEmployeee(obj)));
             return result;
         }
+
+        public async Task<string> NewIUDBulkEmployeee(RetialStoreManager obj)
+        {
+            return await DAL.DLL.NewIUDBulkEmployeee(obj);
+        }
+
+
         #endregion
 
         public async Task<string> SearchEscalation(RetialEmployeeManager obj)
@@ -2769,6 +2809,16 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.GetContractorComlist(obj)));
             return result;
         }
+
+
+        public async Task<string> AuditGetContractorComlist(ContractorAttendance obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.AuditGetContractorComlist(obj)));
+            return result;
+        }
+
+
+        
         public async Task<string> ContractorGetReportlist(RetailLicenseDocuementMaster obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.ContractorGetReportlist(obj)));
@@ -3016,6 +3066,7 @@ namespace EesassinErp.Controllers
                 obj.Remark = Request.Form["Remark"] ?? "";
                 obj.validFrom = Request.Form["validFrom"] ?? "";
                 obj.validTo = Request.Form["validTo"] ?? "";
+                obj.IsDefault = Request.Form["IsDefault"] ?? "";
                 obj.status = Request.Form["status"] ?? "";
 
                 if (int.TryParse(Request.Form["Id"], out int loginId))
@@ -3222,6 +3273,228 @@ namespace EesassinErp.Controllers
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchRegistration(obj)));
             return result;
+        }
+
+        public ActionResult TransportMaster()
+        {
+            return View();
+        }
+
+
+
+        public async Task<string> SearchRoute(RetailBAL obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchRoute(obj)));
+            return result;
+        }
+        public string SavePostedFile(HttpPostedFileBase file, string folderName)
+        {
+            try
+            {
+                if (file != null && file.ContentLength > 0)
+                {
+                     
+                    string folderPath = System.Web.HttpContext.Current.Server.MapPath("~/DownloadMat/" + folderName);
+
+                    // Folder create if not exists
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+
+                    // ✅ Unique file name
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+
+                    string fullPath = Path.Combine(folderPath, fileName);
+
+                    // ✅ Save file
+                    file.SaveAs(fullPath);
+
+                    // ✅ Return relative path (DB me store karne ke liye)
+                    return "../DownloadMat/" + folderName + "/" + fileName;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return null;
+        }
+        public async Task<string> InsertUpdateRouteMaster()
+        {
+            string result = "";
+            var form = Request.Form;
+
+            
+            string ActionType = form["ActionType"];
+            string UserId = form["UserId"];
+            string PartyId = form["PartyId"];
+
+            // Route Details
+            string RouteID = form["RouteID"];
+
+            string RouteName = form["RouteName"];
+            string CompanyName = form["CompanyName"];
+            string Location = form["Location"];
+            string RouteStartLocation = form["RouteStartLocation"];
+            string RouteEndLocation = form["RouteEndLocation"];
+            string Status = form["Status"];
+
+            // Bus Details
+            string BusNumber = form["BusNumber"];
+            string RCNO = form["RCNO"];
+            string SeatingCapacity = form["SeatingCapacity"];
+            string BusType = form["BusType"];
+
+            // Driver Details
+            string DriverName = form["DriverName"];
+            string DriverContactNumber = form["DriverContactNumber"];
+            string DriverAddress = form["DriverAddress"];
+            string LicenseNumber = form["LicenseNumber"];
+
+            // Conductor Details
+            string ConductorName = form["ConductorName"];
+            string ConductorContact = form["ConductorContact"];
+            string ConductorAddress = form["ConductorAddress"];
+
+            // FILE PATH VARIABLES
+            string LicenseCopyPath = null;
+            string AadharCardCopyPath = null;
+            string ConductorAadhaarCardPath = null;
+            string BusRCPath = null;
+            string PollutionCertificatePath = null;
+            string FitnessCertificatePath = null;
+            string InsuranceCopyPath = null;
+
+          
+
+
+            var file = Request.Files["LicenseCopy"];
+
+            if (file != null && file.ContentLength > 0)
+            {
+                  LicenseCopyPath = SavePostedFile(file, "Transport");
+            }
+
+            var fileAadharCardCopy = Request.Files["AadharCardCopy"];
+
+            if (fileAadharCardCopy != null && fileAadharCardCopy.ContentLength > 0)
+            {
+                  AadharCardCopyPath = SavePostedFile(fileAadharCardCopy, "Transport");
+            }
+
+            var FileConductorAadhaarCard = Request.Files["ConductorAadhaarCard"];
+
+            if (FileConductorAadhaarCard != null && FileConductorAadhaarCard.ContentLength > 0)
+            {
+                  ConductorAadhaarCardPath = SavePostedFile(FileConductorAadhaarCard, "Transport");
+            }
+
+            var FileBusRC = Request.Files["BusRC"];
+
+            if (FileBusRC != null && FileBusRC.ContentLength > 0)
+            {
+                  BusRCPath = SavePostedFile(FileBusRC, "Transport");
+            }
+            var filePollutionCertificate = Request.Files["PollutionCertificate"];
+
+            if (filePollutionCertificate != null && filePollutionCertificate.ContentLength > 0)
+            {
+                PollutionCertificatePath = SavePostedFile(filePollutionCertificate, "Transport");
+            }
+            var fileFitnessCertificate = Request.Files["FitnessCertificate"];
+
+            if (fileFitnessCertificate != null && fileFitnessCertificate.ContentLength > 0)
+            {
+                FitnessCertificatePath = SavePostedFile(fileFitnessCertificate, "Transport");
+            }
+
+
+            var fileInsurance = Request.Files["FitnessCertificate"];
+
+            if (fileInsurance != null && fileInsurance.ContentLength > 0)
+            {
+                InsuranceCopyPath = SavePostedFile(fileInsurance, "Transport");
+            }
+
+             
+
+            try
+            {
+                var routeData = new RouteMasterModel
+                {
+                   
+                    ActionType = ActionType,
+                    UserId = UserId,
+                    PartyId = PartyId, 
+                    RouteName = RouteName,
+                    RouteID = RouteID,
+                    CompanyName = CompanyName,
+                    Location = Location,
+                    RouteStartLocation = RouteStartLocation,
+                    RouteEndLocation = RouteEndLocation,
+                    Status = Status,
+
+                    // Bus
+                    BusNumber = BusNumber,
+                    RCNO = RCNO,
+                    SeatingCapacity = SeatingCapacity,
+                    BusType = BusType,
+
+                    // Driver
+                    DriverName = DriverName,
+                    DriverContactNumber = DriverContactNumber,
+                    DriverAddress = DriverAddress,
+                    LicenseNumber = LicenseNumber,
+
+                    // Conductor
+                    ConductorName = ConductorName,
+                    ConductorContact = ConductorContact,
+                    ConductorAddress = ConductorAddress,
+
+                    // Files
+                    LicenseCopy = LicenseCopyPath,
+                    AadharCardCopy = AadharCardCopyPath,
+                    ConductorAadhaarCard = ConductorAadhaarCardPath,
+                    BusRC = BusRCPath,
+                    PollutionCertificate = PollutionCertificatePath,
+                    FitnessCertificate = FitnessCertificatePath,
+                    InsuranceCopy = InsuranceCopyPath
+                };
+
+                result = await Task.Factory.StartNew(() =>
+                    JsonConvert.SerializeObject(
+                        DAL.DLL.InsertUpdateRouteMaster(routeData)
+                    )
+                );
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+            return result;
+        }
+
+
+
+        public ActionResult ContractorCompliance()
+        {
+            return View();
+        }
+        public ActionResult ContractorComplianceVendor()
+        {
+            return View();
+        }
+        public ActionResult ContractorReport()
+        {
+            return View();
+        }
+        public ActionResult ContractorReportVendor()
+        {
+            return View();
         }
     }
 }

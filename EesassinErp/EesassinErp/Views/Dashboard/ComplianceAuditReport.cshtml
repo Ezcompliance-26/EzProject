@@ -5,11 +5,13 @@
     Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
 
-
+<script src="~/scripts/myjslib/AuditorComplianceController.js"></script>
 <style>
+    
+     
     #complianceAuditReport {
         font-family: "Inter", sans-serif;
-        --primary: #E45D27; 
+        --primary: #E45D27;
         --primary-dark: #c44b1d;
         --card-bg: #FEF3EC;
         background: #FFF1EB;
@@ -143,7 +145,7 @@
         background-color: #FFE8D9;
     }
 
-    
+
     /* filter button */
     #complianceAuditReport .filter-btn {
         border-radius: 999px;
@@ -201,7 +203,7 @@
         border-bottom-left-radius: 0;
         border-color: var(--primary);
     }
-        
+
 
     /* Table Buttons*/
 
@@ -233,27 +235,27 @@
 </style>
 <div id="complianceAuditReport" class="px-4 py-2">
     <div class="card section-card">
-        <h4 class="mt-3" style="color: #E45D27">Compliance Audit Report</h4>
+        <h4 class="mt-3" style="color: #E45D27">Compliance Audit Report  [{{DocumentStatus}}  ]</h4>
 
         <!-- Audit Details  -->
         <div class="audit-info-row">
             <div class="audit-info-item">
                 <span class="audit-label">Audit Score</span>
-                <span class="audit-value">Score Obtained: 49</span>
+                <span class="audit-value">Score Obtained: {{TotalComplianceScoreAchieved}}</span>
             </div>
 
             <div class="audit-info-divider"></div>
 
             <div class="audit-info-item">
                 <span class="audit-label">Compliance Score</span>
-                <span class="audit-value">44.55%</span>
+                <span class="audit-value">{{ScorePer}}%</span>
             </div>
 
             <div class="audit-info-divider"></div>
 
             <div class="audit-info-item">
                 <span class="audit-label">Date of Audit Report</span>
-                <span class="audit-value">2025-11-21</span>
+                <span class="audit-value">   {{AuditDate}}</span>
             </div>
         </div>
 
@@ -262,34 +264,34 @@
             <div class="row g-3">
 
                 <!-- Compliance Score-->
-                <div class="col-md-3">
+                @*<div class="col-md-3">
                     <div class="kpi-card d-flex">
-                        <div class="kpi-title">Compliance Score</div>
-                        <div class="kpi-value">230</div>
+                        <div class="kpi-title">  Name of Auditor</div>
+                        <div class="kpi-value">     {{Auditer}}</div>
                     </div>
-                </div>
+                </div>*@
 
                 <!-- High Risk -->
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="kpi-card d-flex">
-                        <div class="kpi-title">High Risk</div>
-                        <div class="kpi-value">86</div>
+                        <div class="kpi-title">   {{TypeInvoice}}</div>
+                        <div class="kpi-value">   {{VendorInvNum}}</div>
                     </div>
                 </div>
 
                 <!-- Medium Risk -->
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="kpi-card d-flex">
-                        <div class="kpi-title">Medium Risk</div>
-                        <div class="kpi-value">68</div>
+                        <div class="kpi-title">{{InvoiceDate}}</div>
+                        <div class="kpi-value">         {{InvDate}}</div>
                     </div>
                 </div>
 
                 <!-- Low Risk -->
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="kpi-card d-flex">
-                        <div class="kpi-title">Low Risk</div>
-                        <div class="kpi-value">25</div>
+                        <div class="kpi-title">  Audit Month</div>
+                        <div class="kpi-value">  {{MONTH}}</div>
                     </div>
                 </div>
 
@@ -301,7 +303,7 @@
 
             <!-- Toolbar -->
             <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
-                <div class="d-flex align-items-center gap-2">
+                @*<div class="d-flex align-items-center gap-2">
 
                     <div class="dropdown">
                         <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -324,12 +326,12 @@
                     </div>
 
                     <button class="btn btn-sm filter-btn active">Go</button>
-                </div>
+                </div>*@
 
                 <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
                     <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
                         <div class="input-group input-group-sm">
-                            <input id="scSearch" type="text" class="form-control form-control-sm" placeholder="Search..." />
+                            <input id="scSearch" type="text" ng-model="Search" class="form-control form-control-sm" placeholder="Search..." />
                             <button class="btn btn-sm" id="scSearchBtn" style="border-color: #E45D27" type="button"><i class="bi bi-search"></i></button>
                         </div>
                     </div>
@@ -338,9 +340,8 @@
                         <div class="dropdown">
                             <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">CSV</a></li>
-                                <li><a class="dropdown-item" href="#">PDF</a></li>
-                                <li><a class="dropdown-item" href="#">Print</a></li>
+                                <li><a class="dropdown-item" href="#" ng-click="exportCSV()">CSV</a></li> 
+                                <li><a class="dropdown-item" href="#" ng-click="printTable()">Print</a></li>
                             </ul>
                         </div>
                     </div>
@@ -351,7 +352,7 @@
             <!-- Table wrapper -->
             <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3">
                 <div class="table-responsive">
-                    <table class="table table-sm mb-0 small-table">
+                    <table class="table table-sm mb-0 small-table" ng-init="LoadData()" id="printTable" >
                         <thead>
                             <tr>
                                 <th>S.No</th>
@@ -361,198 +362,53 @@
                                 <th>Compliance Score</th>
                                 <th>Compliance Score achieved</th>
                                 <th>Compliance Status</th>
-                                <th>Action</th>
-                                <th>Upload</th>
-                                <th>Download</th>
-                                <th>Remark</th>
+                                <th>Auditor Remarks</th>
+                                <th>Vendor Remarks</th>
                             </tr>
                         </thead>
                         <tbody>
 
-                            <tr>
-                                <td>1</td>
-                                <td><a href="#" class="text-success text-decoration-none">The Employees' State Insurance Act - 1948</a></td>
-                                <td>Half yearly return</td>
-                                <td>Return</td>
-                                <td>1</td>
-                                <td>0.5</td>
-                                <td>Partially Complied</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td>
-                                    <label class="btn btn-sm btn-upload px-3" style="white-space:nowrap; cursor:pointer;">
-                                        Choose File <input type="file" hidden>
-                                    </label>
+                            <tr ng-repeat="x in DocList | filter : Search">
+                                <td >
+                                    <input type="hidden" ng-model="AuditorList[$index].DocId" ng-init="AuditorList[$index].DocId=x.Id" />
+                                    <input type="hidden" ng-model="AuditorList[$index].SrNo" ng-init="AuditorList[$index].SrNo=x.Id" value="{{x.Id}}" />
+                                    {{x.SRNO}}
+                                <td  ng-init="AuditorList[$index].Act=x.Act">{{x.Act}}</td>
+                                <td  ng-init="AuditorList[$index].Form=x.Form">{{x.Form}}</td>
+                                <td  ng-init="AuditorList[$index].Nature=x.Nature">{{x.Nature}} </td>
+                                <td  ng-init="AuditorList[$index].ComplianceScore=x.ComplianceScore">{{x.ComplianceScore}} </td>
+                                <td  ng-init="AuditorList[$index].ComplianceScoreAchieved=x.ComplianceScoreAchieved">{{x.ComplianceScoreAchieved}} </td>
+                                <td  ng-init="AuditorList[$index].CSS=x.CSS">{{x.CSS}} </td>
+                                <td  ng-init="AuditorList[$index].Remark=x.Remark">{{x.Remark}} </td>
+                                <td  ng-init="AuditorList[$index].VendorRemark=x.VendorRemark">
+                                    <p ng-show="FinalSave =='2'">{{x.VendorRemark}}</p>
+                                    <div ng-hide="FinalSave =='2'">
+                                        <textarea type="text" class="form-control-capitalize hidecss" ng-disabled="NotOpenforClient !='2'" ng-model="AuditorList[$index].VendorRemark" onkeyup="this.value = this.value.replace(/[^a-zA-Z0-9'! ?.-]+/g, '')" ng-init="AuditorList[$index].VendorRemark=x.VendorRemark"></textarea>
+                                    </div>
+
                                 </td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
                             </tr>
-
                             <tr>
-                                <td>2</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Register of Attendance / Muster Roll as per prescribed format</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>1.5</td>
-                                <td>Partially Complied</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
+                                <td colspan="3"></td>
+                                <td>
+                                    Total :
+                                </td>
+                                <td ng-init="AuditorList[$index].TotalComplianceScore=x.TotalComplianceScore">{{TotalComplianceScore}}</td>
+                                <td ng-init="AuditorList[$index].TotalComplianceScoreAchieved=x.TotalComplianceScoreAchieved">{{TotalComplianceScoreAchieved}}</td>
+                                <td ng-show="NotOpenforClient =='2'">
+                                    <button id="btnSave" type="button" value="Save" class="btn btn-sm export-btn no-print" ng-disabled="FinalSave =='2'"
+                                            name="SaveButton" ng-model="Save" ng-click="VendorDraftRecord()">
+                                        <span class="triangle-box" title="Print"></span>
+                                        <span>Save </span>
+                                    </button>
+                                </td>
+
+
+                                <td colspan="2"></td>
                             </tr>
+                        </tbody>
 
-                            <tr>
-                                <td>3</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Register of Wages as per prescribed format</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Non-Complied</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>4</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Register of Employment as per prescribed format</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>3</td>
-                                <td>Complied</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>5</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Register of Advance, Deduction, Damage or Losses</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>6</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Wage Slip issued as per prescribed format</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>7</td>
-                                <td>Shops and Establishment Act</td>
-                                <td>Obtained Registration Certificate</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>8</td>
-                                <td>Payment of Wages Act, 1936</td>
-                                <td>Whether wages paid before 7th every month</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>9</td>
-                                <td>Employees State Insurance Act, 1948</td>
-                                <td>Coverage of eligible employees under ESI</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>10</td>
-                                <td>Employees State Insurance Act, 1948</td>
-                                <td>Issued insurance card for all employees covered</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>11</td>
-                                <td>Employees State Insurance Act, 1948</td>
-                                <td>ESI Contribution remitted by 15th of every month</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>12</td>
-                                <td>Employees Provident Funds & Miscellaneous Provisions Act</td>
-                                <td>Coverage of all employees under PF Act</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></label></td>
-                                <td><button class="btn btn-sm btn-submit px-3">Download</button></td>
-                                <td><input type="text" class="form-control form-control-sm"></td>
-                            </tr>
-
-                            <tr>
-                                <td>13</td>
-                                <td>Employees Provident Funds & Miscellaneous Provisions Act</td>
-                                <td>Remittance of PF contribution before 15th of every month</td>
-                                <td>Nature</td>
-                                <td>3</td>
-                                <td>0</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-view">Fix</button></td>
-                                <td><label class="btn btn-sm btn-upload px-3">Choose File<input type="file" hidden></l
-
-</table>
+                    </table>
                 </div>
             </div>
         </div>

@@ -569,7 +569,18 @@
                     </div>
                     <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
 
-
+  <div class="d-flex align-items-center gap-2">
+                            <div class="search-container">
+                                <div class="input-group input-group-sm">
+                                    <input type="text"
+                                           class="form-control form-control-sm" ng-model="searchText"
+                                           placeholder="Search..." />
+                                    <button class="btn btn-sm btn-outline-primary" type="button">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                         <div class="d-flex align-items-center gap-2 justify-content-center">
                             <div class="d-flex align-items-center gap-2 check-all-wrap">
                                 <input ng-disabled="!StoreUserId" type="checkbox" class="clear" ng-model="chkAll" ng-change="chkStoreAllRow()" />
@@ -595,7 +606,7 @@
                                     <th>User Type</th>
                                 </tr>
                             </thead>
-                            <tr ng-repeat="x in OverallStoresList" repeat-done>
+                            <tr ng-repeat="x in OverallStoresList | filter:SearchLocation" repeat-done>
                                 <td class="text-center">
                                     <div class="checkbox checkbox-primary table-check-wt">
                                         <input ng-disabled="!StoreUserId" type="checkbox" class="clear" id="chkAllow" ng-model="x.IsAllow" ng-checked="x.IsAllow"
@@ -994,6 +1005,18 @@
 
                 <!-- Toolbar -->
                 <div class="table-toolbar d-flex align-items-center justify-content-end mb-2 gap-2 flex-wrap">
+				 <div class="d-flex align-items-center gap-2">
+                        <div class="search-container">
+                            <div class="input-group input-group-sm">
+                                <input type="text"
+                                       class="form-control form-control-sm" ng-model="Searchdocument"
+                                       placeholder="Search..." />
+                                <button class="btn btn-sm btn-outline-primary" type="button">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-flex align-items-center gap-2">
                         <button class="btn btn-sm add-user-btn" data-bs-toggle="modal" data-bs-target="#AddDocumentModel">
                             <i class="bi bi-plus-lg me-1"></i> Add Document
@@ -1010,6 +1033,7 @@
                             <thead>
                                 <tr>
                                     <th>S.No</th>
+                                    <th>Default</th>
                                     <th>Document Name</th>
                                     <th>Location</th>
                                     <th>Created On</th>
@@ -1017,9 +1041,18 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tr ng-repeat="row in groupedDocs | filter:scSearch track by $index">
+                            <tr ng-repeat="row in groupedDocs | filter:Searchdocument">
                                 <td>{{$index + 1}}</td>
+                                <td>
+                                    <span ng-if="!row.isEdit">
+                                        <input type="checkbox" ng-checked="row.IsDefault" disabled />
+                                    </span>
 
+                                    <input type="checkbox"
+                                           ng-if="row.isEdit"
+                                           ng-model="row.IsDefault"
+                                           ng-change="SetDefault(row)" /> 
+                                </td>
                                 <td>
                                     <span ng-if="!row.isEdit"> {{row.DocumentName}} </span>
                                     <input type="text" class="form-control form-control-sm" ng-if="row.isEdit" ng-model="row.DocumentName" />

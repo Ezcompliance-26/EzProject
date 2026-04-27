@@ -4,12 +4,14 @@
     ViewBag.Title = "Supplier Admin";
     Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
-
+<script src="~/Masters/NewEmployeeMaster/script.js"></script>
+<link href="~/Masters/NewEmployeeMaster/style.css" rel="stylesheet" />
 <script src="~/Dashboards/SupplierAdmin/script.js"></script>
 <link href="~/Dashboards/SupplierAdmin/style.css" rel="stylesheet" />
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="~/scripts/RetailJsLib/VendorDashboardController.js"></script> 
+<script src="~/scripts/RetailJsLib/VendorDashboardController.js"></script>
+<script src="~/scripts/RetailJsLib/TransportController.js"></script>
 <div class="supplierAdminPage px-4 py-2">
     <!-- Capsule Toggle (single capsule container) -->
     <div class="mb-3">
@@ -19,8 +21,10 @@
             <button type="button" class="btn btn-pill" data-target="#user" aria-pressed="false">User</button>
             <button type="button" class="btn btn-pill" data-target="#siteManagement" aria-pressed="false">Site Management</button>
             @*<button type="button" class="btn btn-pill" data-target="#locationManagement" aria-pressed="false">Location Management</button>
-            <button type="button" class="btn btn-pill" data-target="#siteMapping" aria-pressed="false">Site Mapping</button>*@
-          <button type="button" class="btn btn-pill" data-target="#empCompDocs" aria-pressed="false" ng-show="loginType==5">Employee Compliance Docs</button> 
+                <button type="button" class="btn btn-pill" data-target="#siteMapping" aria-pressed="false">Site Mapping</button>*@
+            <button type="button" class="btn btn-pill" data-target="#empCompDocs" aria-pressed="false" ng-show="loginType==5">Employee Compliance Docs</button>
+            <button type="button" class="btn btn-pill" data-target="#activityReport" ng-click="ManageLog('Log Report');BindActivity()" aria-pressed="false">Log Report</button>
+            <button type="button" class="btn btn-pill" data-target="#Transportmapping" aria-pressed="false" ng-click="GetTransport()">Transport</button>
         </div>
     </div>
 
@@ -29,21 +33,21 @@
 
         <!-- CARD 1 : Overview (default visible) -->
         @*<div id="overview" class="card section-card active adminOverview">
-            <div class="card-body">
+                <div class="card-body">
 
 
 
-            </div>
+                </div>
 
-        </div>*@
+            </div>*@
 
 
         <!-- CARD 2 : party -->
         <div id="party" class="card section-card active">
             <div class="d-flex align-items-center justify-content-between mb-3">
-                <h4 class="mb-0">Party Management</h4>  
+                <h4 class="mb-0">Party Management</h4>
                 <button type="button" class="btn btn-sm add-btn" ng-show="loginType=='5'" data-bs-toggle="modal" data-bs-target="#addPartyModal">
-                <i class="bi bi-plus me-1"></i> Add Party
+                    <i class="bi bi-plus me-1"></i> Add Party
                 </button>
             </div>
 
@@ -87,25 +91,25 @@
                                 {{SelectedIndustry || 'Industry'}}
                             </button>
 
-                            <ul class="dropdown-menu"> 
+                            <ul class="dropdown-menu">
                                 <li>
                                     <a class="dropdown-item"
                                        href=""
                                        ng-click="SelectIndustry('')">
                                         All
                                     </a>
-                                </li> 
+                                </li>
                                 <li ng-repeat="item in NIndustryList">
                                     <a class="dropdown-item"
                                        href=""
                                        ng-click="SelectIndustry(item)">
                                         {{item}}
                                     </a>
-                                </li> 
+                                </li>
                             </ul>
                         </div>
 
-                         
+
 
                     </div>
 
@@ -172,10 +176,10 @@
                                     </td>
                                     <td>{{x.IsActived}}</td>
                                     @*<td class="action-menu">
-            <button class="btn btn-sm">
-                Edit
-            </button>
-        </td>*@
+                                            <button class="btn btn-sm">
+                                                Edit
+                                            </button>
+                                        </td>*@
                                 </tr>
 
 
@@ -250,7 +254,7 @@
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                     <label class="form-label">Contact Person Mobile No.</label>
                                     <input type="text" id="txtContactMobile" class="form-control form-control-sm" onblur="validatePhoneNo('#txtContactMobile')" maxlength="10" placeholder="" ng-model="ContactMobile" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))">
-                                </div> 
+                                </div>
                                 <!-- User Limit -->
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                     <label class="form-label">User Limit </label>
@@ -282,13 +286,13 @@
 
                                 <!-- Is Active -->
                                 <div class="col-lg-3 col-md-4 col-sm-6">
-                                    <label class="form-label">Is Active</label> 
-                                <select id="ddlIsActive" ng-init = "IsActive='True'" class="form-select form-select-sm" ng-model="IsActive">
-                                    <option value="">Select</option>
-                                    <option value="True">Yes</option>
-                                    <option value="False">No</option> 
-                                </select>
-                                    
+                                    <label class="form-label">Is Active</label>
+                                    <select id="ddlIsActive" ng-init="IsActive='True'" class="form-select form-select-sm" ng-model="IsActive">
+                                        <option value="">Select</option>
+                                        <option value="True">Yes</option>
+                                        <option value="False">No</option>
+                                    </select>
+
                                 </div>
 
                                 <!-- Month Expired -->
@@ -324,7 +328,7 @@
                             Cancel
                         </button>
 
-                        <button type="button" ng-click="AddParty()"  class="btn btn-sm save-btn">
+                        <button type="button" ng-click="AddParty()" class="btn btn-sm save-btn">
                             Save
                         </button>
                     </div>
@@ -444,7 +448,7 @@
                                     <th>S.No</th>
                                     <th>UserName</th>
                                     <th>Party Name</th>
-                                  
+
                                     <th>EmailId</th>
                                     <th>Contact No</th>
                                     <th>Role</th>
@@ -460,7 +464,7 @@
                                         {{x.UserName}}
                                     </td>
                                     <td>{{x.PartyName}}</td>
-                                    
+
                                     <td>
                                         {{x.EmailId}}
                                     </td>
@@ -470,10 +474,10 @@
                                     <td>      {{ x.Usertype}}</td>
 
                                     @*<td class="action-menu">
-            <button class="btn btn-sm">
-                Edit
-            </button>
-        </td>*@
+                                            <button class="btn btn-sm">
+                                                Edit
+                                            </button>
+                                        </td>*@
                                 </tr>
 
 
@@ -552,16 +556,16 @@
                                     <input ng-model="UserEmail" id="txtUserEmail" class="form-control">
                                 </div>
                                 @*<div class="col-lg-3 col-md-4 col-sm-6">
-                                    <label class="form-label">User Type</label>
-                                    <select ng-model="VendorType" id="ddlUser" class="form-control">
-                                        <option value="">Select</option>
-                                        <option value="6">Vendor Admin</option>
-                                        <option value="2">Vendor User</option>
-                                    </select>
-                                </div>*@
+                                        <label class="form-label">User Type</label>
+                                        <select ng-model="VendorType" id="ddlUser" class="form-control">
+                                            <option value="">Select</option>
+                                            <option value="6">Vendor Admin</option>
+                                            <option value="2">Vendor User</option>
+                                        </select>
+                                    </div>*@
 
 
-                                
+
 
                             </div>
                         </div>
@@ -576,7 +580,7 @@
                         </button>
 
                         <button type="button"
-                                class="btn btn-sm save-btn"  ng-click="SaveUser()">
+                                class="btn btn-sm save-btn" ng-click="SaveUser()">
                             Save
                         </button>
                     </div>
@@ -591,7 +595,7 @@
         <div id="siteManagement" class="card section-card d-none">
             <div class="d-flex align-items-center justify-content-between mb-3">
                 <h4 class="mb-0">Site Management</h4>
-                <button type="button" class="btn btn-sm add-btn" data-bs-toggle="modal" data-bs-target="#addSiteModal">
+                <button type="button" class="btn btn-sm add-btn" data-bs-toggle="modal" id="btnsite" data-bs-target="#addSiteModal" ng-click="Resetsite()">
                     <i class="bi bi-plus me-1"></i> Add Site
                 </button>
             </div>
@@ -611,12 +615,12 @@
                     <!-- Expiring Soon License -->
                     <div class="kpi-card">
                         <div>
-                            <div class="kpi-title">Total Site</div> 
+                            <div class="kpi-title">Total Site</div>
                         </div>
                         <div class="kpi-value">{{TotalSite||0}}</div>
                     </div>
-                  
-                   
+
+
                 </div>
             </div>
 
@@ -624,7 +628,7 @@
 
                 <!-- Toolbar -->
                 <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
-                     
+
 
                     <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
                         <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
@@ -638,7 +642,7 @@
                             <div class="dropdown">
                                 <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="" ng-click="ExportSiteCSV()">CSV</a></li> 
+                                    <li><a class="dropdown-item" href="" ng-click="ExportSiteCSV()">CSV</a></li>
                                     <li><a class="dropdown-item" href="" ng-click="PrintSiteList()">Print</a></li>
                                 </ul>
                             </div>
@@ -687,7 +691,7 @@
                                     </td>
                                     <td class="action-menu">
                                         <button class="btn btn-danger btn-sm"
-                                                ng-click="EditSite(x)">
+                                                ng-click="EditVendorSite(x)">
                                             Edit
                                         </button>
                                     </td>
@@ -732,12 +736,12 @@
                         <div class="container-fluid">
                             <div class="row g-3">
                                 <!-- Party Name -->
-                                <div class="col-lg-2 col-md-4 col-sm-6">
-                                    <label class="form-label">Party Name </label>
+                                <div class="col-lg-2 col-md-4 col-sm-6" ng-hide="Editetime=='1'">
+                                    <label class="form-label">Party Name  </label>
                                     @*<select ng-model="PartyId" id="ddlparty" class="form-select form-select-sm">
-                    <option value="">Select</option>
-                    <option ng-repeat="x in VendorList" value="{{x.PartyId}}">{{x.PartyName}}</option>
-                </select>*@
+                                            <option value="">Select</option>
+                                            <option ng-repeat="x in VendorList" value="{{x.PartyId}}">{{x.PartyName}}</option>
+                                        </select>*@
 
 
 
@@ -760,6 +764,18 @@
                                             </li>
                                         </ul>
                                     </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-4 col-sm-6">
+                                    <label class="form-label">Assign Color</label>
+                                    <select id="ddlCLRARC" class="form-select form-select-sm" ng-model="AssignColor">
+                                        <option value="">Select</option>
+                                        <option value="Red">Red</option>
+                                        <option value="Green">Green</option>
+                                        <option value="Yellow">Yellow</option>
+                                        <option value="Blue">Blue</option>
+                                        <option value="Orange">Orange</option>
+                                    </select>
                                 </div>
 
                                 <!-- Site Name -->
@@ -992,15 +1008,15 @@
 
                                     <!-- Types of Vendors Allowed (Static Dropdown) -->
                                     <div class="col-lg-3 col-md-4 col-sm-6">
-                                        <label class="form-label">Types of Vendors Allowed</label>  
-                                            <select id="ddlCLRARC" class="form-select form-select-sm" ng-model="Nature">
-                                                <option value="">Select Vendor Type</option>
-                                                <option value="Manpower Supply">Manpower Supply</option>
-                                                <option value="Security Services">Security Services</option>
-                                                <option value="Housekeeping">Housekeeping</option>
-                                                <option value="Facility Management">Facility Management</option>
-                                                <option value="Others Services">Others Services</option>
-                                            </select> 
+                                        <label class="form-label">Types of Vendors Allowed</label>
+                                        <select id="ddlCLRARC" class="form-select form-select-sm" ng-model="Nature">
+                                            <option value="">Select Vendor Type</option>
+                                            <option value="Manpower Supply">Manpower Supply</option>
+                                            <option value="Security Services">Security Services</option>
+                                            <option value="Housekeeping">Housekeeping</option>
+                                            <option value="Facility Management">Facility Management</option>
+                                            <option value="Others Services">Others Services</option>
+                                        </select>
                                     </div>
 
                                     <div class="col-lg-3 col-md-4 col-sm-6">
@@ -1027,9 +1043,9 @@
                                         <select id="ddlCLRARC" class="form-select form-select-sm" ng-model="PPEMandatory">
                                             <option value="">Select</option>
                                             <option value="Yes">Yes</option>
-                                            <option value="No"> No</option> 
+                                            <option value="No"> No</option>
                                         </select>
-                                     
+
                                     </div>
 
                                     <div class="col-lg-3 col-md-4 col-sm-6">
@@ -1038,7 +1054,7 @@
                                     </div>
 
                                     <div class="col-lg-3 col-md-4 col-sm-6">
-                                        <label class="form-label">Safety Training Required</label> 
+                                        <label class="form-label">Safety Training Required</label>
                                         <select id="ddlSafetyTraining" class="form-select form-select-sm" ng-model="SafetyTraining">
                                             <option value="">Select</option>
                                             <option value="Yes">Yes</option>
@@ -1053,11 +1069,11 @@
                                             <option value="Yes">Yes</option>
                                             <option value="No"> No</option>
                                         </select>
-                                       
+
                                     </div>
 
                                     <div class="col-lg-3 col-md-4 col-sm-6">
-                                        <label class="form-label">Police Verification Required</label><br> 
+                                        <label class="form-label">Police Verification Required</label><br>
                                         <select id="ddlPoliceVerification" class="form-select form-select-sm" ng-model="PoliceVerification">
                                             <option value="">Select</option>
                                             <option value="Yes">Yes</option>
@@ -1067,7 +1083,7 @@
 
                                     <div class="col-lg-3 col-md-4 col-sm-6">
                                         <label class="form-label">ID Card Issuance Required</label><br>
-                                       
+
                                         <select id="ddlIDCardRequired" class="form-select form-select-sm" ng-model="IDCardRequired">
                                             <option value="">Select</option>
                                             <option value="Yes">Yes</option>
@@ -1089,9 +1105,14 @@
                             Cancel
                         </button>
 
-                        <button type="button"
+                        <button type="button" ng-hide="Editetime=='1'"
                                 class="btn btn-sm save-btn" ng-click="AfterSave()">
                             Save
+                        </button>
+
+                        <button type="button" ng-show="Editetime=='1'"
+                                class="btn btn-sm save-btn" ng-click="AfterUpdateSite()">
+                            Update
                         </button>
                     </div>
 
@@ -1101,62 +1122,564 @@
 
 
         <!-- CARD 5 : Employee Compliance Docs -->
-         
-            <div id="empCompDocs" class="card section-card d-none">
-                <div class="d-flex align-items-center justify-content-between mb-3">
-                    <h4 class="mb-0">Employee Management</h4>
-                    <button type="button" class="btn btn-sm add-btn" data-bs-toggle="modal" data-bs-target="#addDocumentempModal" ng-show="loginType==5">
-                        <i class="bi bi-plus me-1"></i> Add Document
-                    </button>
+
+        <div id="empCompDocs" class="card section-card d-none">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h4 class="mb-0">Employee Management</h4>
+                <button type="button" class="btn btn-sm add-btn" data-bs-toggle="modal" data-bs-target="#addDocumentempModal" ng-show="loginType==5">
+                    <i class="bi bi-plus me-1"></i> Add Document
+                </button>
+            </div>
+
+            <!-- KPI Bar  -->
+            <div class="container mb-4">
+                <div class="kpi-row d-flex gap-2">
+
+                    <!-- Total License -->
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-title">Total Document</div>
+                        </div>
+                        <div class="kpi-value">{{EmpDocumentList.length ||0}}</div>
+                    </div>
+
+                    <!-- Expiring Soon License -->
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-title">Total Vendor</div>
+                        </div>
+                        <div class="kpi-value">{{EVendorList.length || 0}}</div>
+                    </div>
+
+                    <!-- Expired -->
+
+                </div>
+            </div>
+
+            <div class="card-body p-3 d-flex flex-column">
+
+                <!-- Toolbar -->
+                <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="dropdown" ng-init="BindVendorListList()">
+
+                            <select class="btn btn-sm export-btn dropdown-toggle"
+                                    ng-model="SelectedVendorId"
+                                    ng-change="BindEmpDocumentList()"
+                                    ng-options="x.PartyId as x.PartyName for x in EVendorList">
+
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+
+                        <button type="button"
+                                class="btn btn-sm save-btn" ng-click="SaveVendorDocumentMapping()">
+                            Save
+                        </button>
+
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
+                        <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
+                            <div class="input-group input-group-sm">
+                                <input id="scSearch" type="text" class="form-control form-control-sm" ng-model="empSiteSearch" placeholder="Search..." />
+                                <button class="btn btn-sm" id="exLicSearchBtn" style="border-color: #E45D27" type="button"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2 justify-content-center">
+                            <div class="dropdown">
+                                <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="" ng-click="PrintemployeedocList()">Print</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- KPI Bar  -->
-                <div class="container mb-4">
-                    <div class="kpi-row d-flex gap-2">
+                <!-- Table wrapper -->
+                <div class="small-table-wrapper flex-grow-1 rounded-3" ng-init="BindEmpDocumentList()">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0 small-table">
+                            <thead>
+                                <tr>
+                                    <th>✔ Check All<input type="checkbox" ng-model="checkAll" ng-change="toggleAll()" /></th>
+                                    <th>S.No</th>
+                                    <th>Document Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="x in EmpDocumentList | filter:empSiteSearch">
 
-                        <!-- Total License -->
-                        <div class="kpi-card">
-                            <div>
-                                <div class="kpi-title">Total Document</div>
+
+                                    <td>
+                                        <input type="checkbox" ng-model="x.IsCheck" />
+                                    </td>
+                                    <td>{{$index+1}}</td>
+                                    <td>{{x.DocumentName}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="modal fade supplierAdminModal"
+             id="addDocumentempModal"
+             tabindex="-1"
+             aria-hidden="true">
+
+            <div class="modal-dialog modal-x modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Document</h5>
+                        <button type="button"
+                                class="btn-close btn-close-white"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row g-12">
+                                <div class="col-lg-12 col-md-4 col-sm-6">
+                                    <label class="form-label">Document Name </label>
+                                    <input id="txtDocumentName" type="text" class="form-control form-control-sm" ng-model="DocumentName">
+                                </div>
+
                             </div>
-                            <div class="kpi-value">{{EmpDocumentList.length ||0}}</div>
+
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-sm cancel-btn"
+                                data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-sm save-btn" ng-click="Saveempdoc()">
+                            Save
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+
+        @*//---------------------Log report*@
+        <div id="activityReport" class="card section-card d-none">
+            <div class="card-body p-3 d-flex flex-column">
+                <!-- Toolbar -->
+                <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="admin-dd">
+                            <label class="admin-dd-label">Activity Date</label>
+                            <input id="txtStartDate"
+                                   type="date"
+                                   ng-model="StartDate"
+                                   ng-change="BindActivity()"
+                                   class="form-control admin-dd-select" />
+
+                        </div>
+                    </div>
+
+                    <!-- RIGHT : Search + Export -->
+                    <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-md-end">
+
+                        <!-- Search -->
+                        <div class="search-container">
+                            <div class="input-group input-group-sm">
+                                <input type="text"
+                                       class="form-control form-control-sm" ng-model="SearchActivity"
+                                       placeholder="Search..." />
+                                <button class="btn btn-sm btn-outline-primary" type="button">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
                         </div>
 
-                        <!-- Expiring Soon License -->
-                        <div class="kpi-card">
-                            <div>
-                                <div class="kpi-title">Total Vendor</div>
-                            </div>
-                            <div class="kpi-value">{{EVendorList.length || 0}}</div>
-                        </div>
-
-                        <!-- Expired -->
+                        <!-- Export -->
+                        <button type="button" class="btn btn-sm export-btn" ng-click="printActivityReport()">
+                            <i class="bi bi-download me-1"></i> Print
+                        </button>
 
                     </div>
                 </div>
 
-                <div class="card-body p-3 d-flex flex-column">
+                <!-- Table wrapper -->
+                <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0 small-table" id="activityReportTable">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>User Name</th>
+                                    <th>UserType</th>
+                                    <th>Created On</th>
+                                    <th>Activity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="x in LogActivity | filter:SearchActivity">
+                                    @*<td>{{x.RowId}}</td>*@
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{x.UserName}}</td>
 
-                    <!-- Toolbar -->
-                    <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="dropdown" ng-init="BindVendorListList()">
+                                    <td>{{x.UserType}}</td>
+                                    <td>{{x.CreatedOn}}</td>
+                                    <td>{{x.Activity}}</td>
+                            </tbody>
+                        </table>
+                    </div>
 
-                                <select class="btn btn-sm export-btn dropdown-toggle"
-                                        ng-model="SelectedVendorId"
-                                        ng-change="BindEmpDocumentList()"
-                                        ng-options="x.PartyId as x.PartyName for x in EVendorList">
 
-                                    <option value="">Select</option>
-                                </select>
+                </div>
+
+            </div>
+        </div>
+        @*-------------End report*@
+
+
+        <div class="modal fade supplierAdminModal" id="newtransModal" tabindex="-1">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content employee-modal">
+                    <!-- Header -->
+                    <div class="modal-header employee-modal-header">
+                        <h6 class="modal-title">Bus Route</h6>
+                        <button type="button" class="btn-close btn-close-white" ng-click="opensomething()" data-bs-dismiss="modal"></button>
+                    </div>
+                    <!-- Body -->
+                    <div class="modal-body employee-modal-body">
+                        <form>
+                            <!-- Employee Details  -->
+                            <h6 class="section-title">Route Details</h6>
+                            <div class="row g-3">
+                                <div class="col-lg-3 col-md-6" ng-if="RouteID">
+                                    <label class="form-label">Route ID</label>
+                                    <input class="form-control form-control-sm"
+                                           id="txtEmployeeCode"
+                                           ng-model="RouteID"
+                                           disabled>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Route Name</label>
+                                    <input class="form-control form-control-sm" id="txtRouteName" ng-model="RouteName">
+                                </div>
+
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Company Name</label>
+                                    <input class="form-control form-control-sm" id="txtCompanyName" ng-model="CompanyName">
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Location / Plant Name   <span class="text-danger">*</span></label>
+                                    <input class="form-control form-control-sm validateA" id="txtLocation" ng-model="Location">
+                                </div>
+
+
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Route Start Location <span class="text-danger">*</span></label>
+                                    <input class="form-control form-control-sm validateA" id="txtRouteStartLocation" ng-model="RouteStartLocation">
+                                </div>
+
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Route End Location</label>
+                                    <input class="form-control form-control-sm" id="txtRouteEndLocation" ng-model="RouteEndLocation">
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select form-select-sm validateA"
+                                            ng-model="Status">
+                                        <option value="">Select</option>
+                                        <option value="Deactive">Deactive</option>
+                                        <option value="Active">Active</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <button type="button"
-                                    class="btn btn-sm save-btn" ng-click="SaveVendorDocumentMapping()">
-                                Save
-                            </button>
+                            <!-- Contact  -->
+                            <hr>
+                            <h6 class="section-title">Bus Details</h6>
+                            <div class="row g-3">
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Bus Number</label>
+                                    <input class="form-control form-control-sm" id="txtBusNumber" ng-model="BusNumber">
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Bus Registration Number</label>
+                                    <input class="form-control form-control-sm" id="txtRCNO" ng-model="RCNO">
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Seating Capacity<span class="text-danger">*</span></label>
+                                    <input class="form-control form-control-sm validateA" id="txtSeatingCapacity" ng-model="SeatingCapacity">
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Bus Type</label>
+                                    <select class="form-select form-select-sm validateA" ng-model="BusType">
+                                        <option value="">Select</option>
+                                        <option value="AC">AC</option>
+                                        <option value="Non-AC">Non-AC</option>
+                                        <option value="Mini">Mini</option>
+                                        <option value="Shuttle">Shuttle</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr>
+                            <h6 class="section-title">Driver Details</h6>
+                            <div class="row g-3">
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label"> Driver Name</label>
+                                    <input class="form-control form-control-sm" id="txtDriverName" ng-model="DriverName">
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Driver Contact Number </label>
+                                    <input class="form-control form-control-sm" id="txtDriverContactNumber" ng-model="DriverContactNumber" onblur="validatePhoneNo('#txtDriverContactNumber')" numeric-only dynamic-length maxlength="10" minlength="10">
+                                </div>
+                                <div class="col-lg-3 col-md-6"><label class="form-label">Address</label><input class="form-control form-control-sm" id="txtDriverAddress" ng-model="DriverAddress"></div>
+
+                                <div class="col-lg-3 col-md-6"><label class="form-label"> Driver License Number </label><input class="form-control form-control-sm" id="txtLicenseNumber" ng-model="LicenseNumber"></div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">License Copy</label>
+                                    <div class="upload-field">
+                                        <div class="upload-input-wrap">
+                                            <input type="file" class="upload-input form-control-sm "
+                                                   accept=".pdf"
+                                                   id="LicenseCopy" onchange="angular.element(this).scope().showFileName(this, 'LicenseCopy')" ng-model="LicenseCopy">
+                                            <span class="file-name">
+                                                {{ LicenseCopyName}}
+                                            </span>
+                                        </div>
+                                        <div class="upload-actions" ng-if="LicenseCopy">
+                                            <i class="bi bi-eye upload-icon"
+                                               title="View"
+                                               ng-click="ViewFileC(LicenseCopy)"></i>
+                                            <i class="bi bi-download upload-icon"
+                                               title="Download"
+                                               ng-click="DownloadFileC(LicenseCopy,'Driver_LicenseCopy')"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Driver Aadhar Card Copy</label>
+                                    <div class="upload-field">
+                                        <div class="upload-input-wrap">
+                                            <input type="file" class="upload-input form-control-sm "
+                                                   accept=".pdf,.jpg,.jpeg,.png"
+                                                   id="AadharCardCopy" onchange="angular.element(this).scope().showFileName(this, 'AadharCardCopy')" ng-model="AadharCardCopy">
+                                            <span class="file-name">
+                                                {{ AadharCardCopyName}}
+                                            </span>
+
+
+
+                                        </div>
+                                        <div class="upload-actions" ng-if="AadharCardCopy">
+                                            <i class="bi bi-eye upload-icon"
+                                               title="View"
+                                               ng-click="ViewFileC(AadharCardCopy)"></i>
+                                            <i class="bi bi-download upload-icon"
+                                               title="Download"
+                                               ng-click="DownloadFileC(AadharCardCopy,'AadharCardCopy')"></i>
+                                        </div>
+                                    </div>
+                                </div>  <hr>
+                                <div class="col-lg-3 col-md-6"><label class="form-label">Conductor Name</label><input class="form-control form-control-sm" id="txtConductorName" ng-model="ConductorName"></div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Conductor Contact Number </label><input class="form-control form-control-sm" id="txtConductorContact"
+                                                                                                      ng-model="ConductorContact" numeric-only dynamic-length maxlength="10" minlength="10">
+                                </div>
+
+                                <div class="col-lg-3 col-md-6"><label class="form-label">Address</label><input class="form-control form-control-sm" id="txtConductorAddress" ng-model="ConductorAddress"></div>
+
+
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Conductor Aadhaar Card</label>
+                                    <div class="upload-field">
+                                        <div class="upload-input-wrap">
+                                            <input type="file" class="upload-input form-control-sm "  id="ConductorAadhaarCard" onchange="angular.element(this).scope().showFileName(this, 'ConductorAadhaarCard')" ng-model="ConductorAadhaarCard">
+                                            <span class="file-name"> {{ ConductorAadhaarCardName}} </span>
+                                        </div>
+
+                                        <div class="upload-actions" ng-if="ConductorAadhaarCard">
+                                            <i class="bi bi-eye upload-icon"
+                                               title="View"
+                                               ng-click="ViewFileC(ConductorAadhaarCard)"></i>
+                                            <i class="bi bi-download upload-icon"
+                                               title="Download"
+                                               ng-click="DownloadFileC(ConductorAadhaarCard,'ConductorAadhaarCard')"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <!-- Nominee  -->
+                            <hr>
+
+                            <h6 class="section-title">Upload Documents</h6>
+                            <div class="row g-3">
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label"> Bus RC (Registration Certificate)</label>
+                                    <div class="upload-field">
+                                        <div class="upload-input-wrap">
+                                            <input type="file"  class="upload-input form-control-sm " accept=".pdf" id="BusRC" onchange="angular.element(this).scope().showFileName(this, 'BusRC')" ng-model="BusRC">
+                                            <span class="file-name">
+                                                {{ BusRCName }}
+                                            </span>
+
+
+
+                                        </div>
+                                        <div class="upload-actions" ng-if="BusRC">
+                                            <i class="bi bi-eye upload-icon" title="View" ng-click="ViewFileC(BusRC)"></i>
+                                            <i class="bi bi-download upload-icon" title="Download" ng-click="DownloadFileC(BusRC,'Bus_RC')"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Educational Certificate -->
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label"> Pollution Certificate (PUC)</label>
+                                    <div class="upload-field">
+                                        <div class="upload-input-wrap">
+                                            <input type="file" class="upload-input form-control-sm " accept=".pdf" id="PollutionCertificate" ng-model="PollutionCertificate" onchange="angular.element(this).scope().showFileName(this, 'PollutionCertificate')">
+                                            <span class="file-name">{{ PollutionCertificateName}} </span>
+                                        </div>
+                                        <div class="upload-actions" ng-if="PollutionCertificate">
+                                            <i class="bi bi-eye upload-icon" title="View" ng-click="ViewFileC(PollutionCertificate)"></i>
+                                            <i class="bi bi-download upload-icon" title="Download" ng-click="DownloadFileC(PollutionCertificate,'Pollution_Certificate')"></i>
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                                <!-- Experience Certificate -->
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">Fitness Certificate</label>
+                                    <div class="upload-field">
+                                        <div class="upload-input-wrap">
+
+                                            <input type="file" class="upload-input form-control-sm " accept=".pdf" id="FitnessCertificate" onchange="angular.element(this).scope().showFileName(this, 'FitnessCertificate')" ng-model="FitnessCertificate">
+                                            <span class="file-name">
+                                                {{ FitnessCertificateName}}
+                                            </span>
+                                        </div>
+                                        <div class="upload-actions" ng-if="FitnessCertificate">
+                                            <i class="bi bi-eye upload-icon" title="View" ng-click="ViewFileC(FitnessCertificate)"></i>
+                                            <i class="bi bi-download upload-icon" title="Download" ng-click="DownloadFileC(FitnessCertificate,'Fitness_Certificate')"></i>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+
+                                <!-- Relieving Letter -->
+                                <div class="col-lg-3 col-md-6">
+                                    <label class="form-label">   Insurance Copy</label>
+                                    <div class="upload-field">
+                                        <div class="upload-input-wrap">
+                                            <input type="file" class="upload-input form-control-sm " accept=".pdf" id="InsuranceCopy" onchange="angular.element(this).scope().showFileName(this, 'InsuranceCopy')" ng-model="InsuranceCopy">
+                                            <span class="file-name">
+                                                {{ InsuranceCopyName }}
+                                            </span>
+                                        </div>
+                                        <div class="upload-actions" ng-if="InsuranceCopy">
+                                            <i class="bi bi-eye upload-icon" title="View" ng-click="ViewFileC(InsuranceCopy)"></i>
+                                            <i class="bi bi-download upload-icon" title="Download" ng-click="DownloadFileC(InsuranceCopy,'InsuranceCopy')"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+
+                        </form>
+                    </div>
+                    <!-- Footer -->
+                    <div class="modal-footer employee-modal-footer">
+                        <button class="btn cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-sm add-btn"
+                                ng-click="SaveRouteMaster();ManageLog('Submit Route')">
+                            Submit
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="Transportmapping" class="card section-card d-none">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h4 class="mb-0">Transport Management</h4>
+                <button class="btn btn-sm add-btn" id="btnNewEmployee" type="button" data-bs-toggle="modal" data-bs-target="#newtransModal" ng-click="ResetForm();ManageLog('click on New Employee button')">
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                    <span>Add BusRoute</span>
+                </button>
+            </div> 
+
+            <!-- KPI Bar  -->
+            <div class="container mb-4">
+                <div class="kpi-row d-flex gap-2">
+
+                    <!-- Total License -->
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-title">Total Bus Route</div>
+                        </div>
+                        <div class="kpi-value">{{TransportList.length ||0}}</div>
+                    </div>
+
+                    <!-- Expiring Soon License -->
+                    <div class="kpi-card">
+                        <div>
+                            <div class="kpi-title">Total Vendor</div>
+                        </div>
+                        <div class="kpi-value">{{EVendorList.length || 0}}</div>
+                    </div>
+
+                    <!-- Expired -->
+
+                </div>
+            </div>
+
+            <div class="card-body p-3 d-flex flex-column">
+
+                <!-- Toolbar -->
+                <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="dropdown" ng-init="BindVendorListList()">
+
+                            <select class="btn btn-save export-btn dropdown-toggle" ng-model="SelectedVendorId" ng-change="GetTransport()">
+                                <option value="">Select</option>
+                                <option ng-repeat="x in EVendorList" value="{{x.PartyId}}">{{x.PartyName}}</option>
+                            </select>
+
 
                         </div>
+
+                        <button type="button"
+                                class="btn btn-sm save-btn" ng-click="SaveVendorTransportMapping()">
+                            Save
+                        </button>
+
+                    </div> 
 
                         <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
                             <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
@@ -1170,93 +1693,80 @@
                                 <div class="dropdown">
                                     <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="" ng-click="PrintemployeedocList()">Print</a></li>
+                                        <li>
+                                            <a class="dropdown-item" href="" ng-click="TExportToCSV();ManageLog('Transport Print')">
+                                                CSV
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="" ng-click="TExportToPDF(); $event.preventDefault(); ManageLog('Export Transport PDF')">
+                                                PDF
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="" ng-click="TExportToPrint(); $event.preventDefault(); ManageLog('Export Transport Print')">
+                                                Print
+                                            </a>
+                                        </li> 
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Table wrapper -->
-                    <div class="small-table-wrapper flex-grow-1 rounded-3" ng-init="BindEmpDocumentList()">
-                        <div class="table-responsive">
-                            <table class="table table-sm mb-0 small-table">
-                                <thead>
-                                    <tr>
-                                        <th>✔ Check All<input type="checkbox" ng-model="checkAll" ng-change="toggleAll()" /></th>
-                                        <th>S.No</th>
-                                        <th>Document Name</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="x in EmpDocumentList | filter:empSiteSearch">
-
-
-                                        <td>
-                                            <input type="checkbox" ng-model="x.IsCheck" />
-                                        </td>
-                                        <td>{{$index+1}}</td>
-                                        <td>{{x.DocumentName}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                  
-                    
                 </div>
-            </div>
 
-            <div class="modal fade supplierAdminModal"
-                 id="addDocumentempModal"
-                 tabindex="-1"
-                 aria-hidden="true">
+                <!-- Table wrapper -->
+                <div class="small-table-wrapper flex-grow-1 rounded-3" >
+                    <div class="table-responsive">
+                        <table id="example" class="table table-sm mb-0 small-table">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" ng-model="SelectAll" ng-click="TrtansporttoggleAll()" /></th>
+                                    <th>Sr.No</th>
+                                    <th>Route ID</th>
+                                    <th>Route Name</th>
+                                    <th>Start Location</th>
+                                    <th>End Location</th>
+                                    <th>Bus Number</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                <div class="modal-dialog modal-x modal-dialog-centered">
-                    <div class="modal-content">
+                                <tr ng-repeat="x in TransportList | filter: SearchEmp | filter: { RouteName: SelectedPartyName }">
+                                    <td>
+                                        <input type="checkbox" ng-model="x.IsSelected" />
+                                    </td>
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{ x.RouteID }}</td>
+                                    <td>{{ x.RouteName }}</td>
+                                    <td>{{ x.RouteStartLocation }}</td>
+                                    <td>{{ x.RouteEndLocation }}</td>
+                                    <td>{{ x.BusNumber }}</td>
+                                    <td>{{ x.Status }}</td>
 
-                        <!-- Header -->
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add Document</h5>
-                            <button type="button"
-                                    class="btn-close btn-close-white"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                        </div>
+                                    <td class="action-menu">
+                                        <button class="btn btn-sm" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#newtransModal" ng-click="setTransportData(x.Id)">
+                                                    View More
+                                                </a>
+                                            </li>
 
-                        <!-- Body -->
-                        <div class="modal-body">
-                            <div class="container-fluid">
-                                <div class="row g-12"> 
-                                    <div class="col-lg-12 col-md-4 col-sm-6">
-                                        <label class="form-label">Document Name </label>
-                                        <input id="txtDocumentName" type="text" class="form-control form-control-sm" ng-model="DocumentName">
-                                    </div> 
 
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- Footer -->
-                        <div class="modal-footer">
-                            <button type="button"
-                                    class="btn btn-sm cancel-btn"
-                                    data-bs-dismiss="modal">
-                                Cancel
-                            </button>
-
-                            <button type="button"
-                                    class="btn btn-sm save-btn" ng-click="Saveempdoc()">
-                                Save
-                            </button>
-                        </div>
-
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-            </div>
 
+                </div>
+
+
+            </div>
+        </div>
     </div>
 </div>
 

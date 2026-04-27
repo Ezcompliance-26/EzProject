@@ -494,13 +494,15 @@
                         <div class="locationDash-chartWrap">
                             <div style="max-height:350px; overflow-y:auto;" ng-init="DocumentHighlights()">
 
-                               
-                               
+
+                                
                                 <table class="table table-sm mb-0 small-table" id="locationDashTable">
                                     <thead style="position: sticky; top: 0; background: #fff; z-index: 1;">
                                         <tr>
                                             <th>S.No</th>
                                             <th>Location Code</th>
+                                            <th>Unit Name</th>
+                                            
                                             <th>Document Name</th>
                                             <th>Status</th>
                                         </tr>
@@ -511,6 +513,7 @@
 
                                             <td>{{ licenseMaster.SrNo }}</td>
                                             <td>{{ licenseMaster.StoreName }}</td>
+                                            <td>{{ licenseMaster.UnitName }}</td> 
                                             <td>{{ licenseMaster.DocumentName}}</td>
 
                                             <td>
@@ -682,7 +685,7 @@
 
                         </table>
                     </div>
-                    <button class="btn btn-sm btn-outline-primary"
+                    <button class="btn btn-sm btn-primary mb-2"
                             ng-click="GetAllBindStoreList(viewAll ? 10 : 99999)"
                             ng-disabled="isLoading">
 
@@ -701,7 +704,6 @@
         </div>
     </div>
 </div>
-
 <div class="column-popup" ng-show="showColumnPopup">
     <div class="popup-content">
 
@@ -711,8 +713,44 @@
             <button class="close-btn" ng-click="showColumnPopup=false">✖</button>
         </div>
 
+        <!-- Select All -->
+        <div style="padding:10px; border-bottom:1px solid #ddd;">
+            <label>
+                <input type="checkbox"
+                       ng-model="selectAll"
+                       ng-change="toggleAllColumns()">
+                <b>Select All</b>
+            </label>
+        </div>
+
         <!-- Column List -->
         <div class="popup-body">
+
+            <div class="column-item" ng-repeat="col in tblheader">
+                <label>
+                    <input type="checkbox"
+                           ng-checked="col.ShowColumn=='Yes'"
+                           ng-click="toggleSingleColumn(col)">
+
+                    <span>{{col.HeaderText}}</span>
+                </label>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<!--<div class="column-popup" ng-show="showColumnPopup">
+    <div class="popup-content">-->
+
+        <!-- Header -->
+        <!--<div class="popup-header">
+            <h6>Select Columns</h6>
+            <button class="close-btn" ng-click="showColumnPopup=false">✖</button>
+        </div>-->
+
+        <!-- Column List -->
+        <!--<div class="popup-body">
 
             <div class="column-item" ng-repeat="col in tblheader">
                 <label>
@@ -729,7 +767,7 @@
 
 
     </div>
-</div>
+</div>-->
 @*<script>
     function FIRESMS() {
         var CircularProgressBar = function () {

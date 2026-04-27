@@ -86,18 +86,31 @@
         $scope.GetLicenseRequestData(1);
     }
 
-    $scope.bindtiles = function () { 
+    $scope.bindtiles = function () {
         $scope.showLoader();
+
         var collectionobj = {
             Action: 11,
-            UserId: LoginId 
+            UserId: LoginId
         };
-        var getData = myService.methode('POST', ("../RetailSection/LicenseRequestData"), JSON.stringify(collectionobj));
+
+        var getData = myService.methode('POST', "../RetailSection/LicenseRequestData", JSON.stringify(collectionobj));
+
         getData.then(function (response) {
-            $scope.DocumentPending = response.data.Result[0].DocumentPending; 
-            $scope.RenewalPending = response.data.Result[0].RenewalPending;
+
+            if (response.data && response.data.Result && response.data.Result.length > 0) {
+
+                $scope.DocumentPending = response.data.Result[0].DocumentPending;
+                $scope.RenewalPending = response.data.Result[0].RenewalPending;
+
+            } else {
+                // Optional: default value set kar do
+                $scope.DocumentPending = 0;
+                $scope.RenewalPending = 0;
+            }
+
             $scope.selectAll = false;
-        })
+        });
     }
 
     $scope.currentPage = 1;
@@ -167,7 +180,7 @@
             Action: 4,
             UserId: LoginId,
             PageNo: 1,
-            PageSize: 99999999 
+            PageSize: 999999 
         };
 
         try {
@@ -693,13 +706,13 @@
             return;
         }
 
-        const MAX_SIZE_MB = 3;
-        const fileSizeMB = file.size / (1024 * 1024);
-        if (fileSizeMB > MAX_SIZE_MB) {
-            swal("File Too Large", "Maximum allowed file size is 3 MB.", "error");
-            input.value = "";
-            return;
-        }
+        //const MAX_SIZE_MB = 3;
+        //const fileSizeMB = file.size / (1024 * 1024);
+        //if (fileSizeMB > MAX_SIZE_MB) {
+        //    swal("File Too Large", "Maximum allowed file size is 3 MB.", "error");
+        //    input.value = "";
+        //    return;
+        //}
 
         $scope.showValidationLoader();
 
@@ -906,6 +919,7 @@
             SetLT === "undefined"
         ) {
             $scope.ResetLicenseData();
+            return;
         }
         $scope.LimId = SetLT;
         $scope.List = $scope.LicenseList.filter(item => item.LicenceRequstId == SetLT); // Use '==' for type conversion
@@ -990,7 +1004,7 @@
                     if (license.IssuedDate) {
 
                         if (moment(license.IssuedDate, "DD/MM/YYYY", true).isValid()) {
-                            $scope.LMLicensDate = license.ApplicationDate;
+                            $scope.LMLicensDate = license.IssuedDate;
                         }
                         else {
                             $scope.LMLicensDate = moment(license.IssuedDate).format("DD/MM/YYYY");
@@ -1062,7 +1076,7 @@
                         }
                     }
 
-
+                    $scope.LMRenewalRequestDate = license.RenewalRequestDate;
 
                     $scope.LMoverday = license.PaymentOverDueDate;
                     $scope.LMActualCost = license.ActualCost;
@@ -1157,7 +1171,7 @@
                     if (license.IssuedDate) {
 
                         if (moment(license.IssuedDate, "DD/MM/YYYY", true).isValid()) {
-                            $scope.LMLicensDate = license.ApplicationDate;
+                            $scope.LMLicensDate = license.IssuedDate;
                         }
                         else {
                             $scope.LMLicensDate = moment(license.IssuedDate).format("DD/MM/YYYY");
@@ -1277,7 +1291,7 @@
         if ($scope.LMLicenseStatus === 'Issued')
         {
             // Validate License Date
-            if (!$scope.LMLicensDate || isNaN(new Date($scope.LMLicensDate).getTime())) {
+            if (!$scope.LMLicensDate || !$scope.LMLicensDate.match(/^\d{2}\/\d{2}\/\d{4}$/) ) {
                 $('#LMLicensDate').focus().addClass("red-validation");
                 showMsgBox('999', 'Mandatory', 'License Date is Required', 'warning', 'btn-warning');
                 return;
@@ -1292,7 +1306,7 @@
             }
 
             // Validate Validity Start Date
-            if (!$scope.LMValidityStartDate || isNaN(new Date($scope.LMValidityStartDate).getTime())) {
+            if (!$scope.LMValidityStartDate || !$scope.LMValidityStartDate.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
                 $('#LMValidityStartDate').focus().addClass("red-validation");
                 showMsgBox('999', 'Mandatory', 'Validity Start Date is Required', 'warning', 'btn-warning');
                 return;
@@ -1400,22 +1414,22 @@
        
         formData.append('LicenceRequestId', $scope.LMLicenceRequstId);
         formData.append('ApplicationStatus', $scope.LMAppStatus);
-        formData.append('ApplicationDate', moment($scope.AppDate).format(FORMAT));
+        formData.append('ApplicationDate', $scope.AppDate);
         formData.append('UploadApplicationCopy', $scope.UploadApplicationCopy);
         formData.append('UploadChallanCopy', $scope.UploadChallanCopy);
         formData.append('UploadFeesCopy', $scope.UploadFeesCopy);
         formData.append('LicenseStatus', $scope.LMLicenseStatus);
-        formData.append('IssuedDate', moment($scope.LMLicensDate).format(FORMAT));
+        formData.append('IssuedDate', $scope.LMLicensDate);
         formData.append('LicenseNumber', $scope.LMLicenseNumber);
         formData.append('MachineNumber', $scope.LMMachineNumber);
 
 
         
-        formData.append('ValidityStartDate', moment($scope.LMValidityStartDate).format(FORMAT));
+        formData.append('ValidityStartDate', $scope.LMValidityStartDate );
 
        
 
-        formData.append('ValidityEndDate',   moment($scope.LMValidityEndDate, "DD/MM/YYYY").format(FORMAT));
+        formData.append('ValidityEndDate', $scope.LMValidityEndDate);
   /*      formData.append('ValidityEndDate', moment($scope.LMValidityEndDate).format(FORMAT));*/
 
         
@@ -1424,9 +1438,9 @@
         formData.append('UploadAmendmentCopy', $scope.UploadAmendmentCopy);
 
         formData.append('RenewalStatus', $scope.LMRenewalStatus);
-        formData.append('RenewalStartDate', moment($scope.LMRenewalStartDate).format(FORMAT));
+        formData.append('RenewalStartDate', $scope.LMRenewalStartDate);
 
-        formData.append('RenewalEndDate', moment($scope.LMRenewalEnddate).format(FORMAT));
+        formData.append('RenewalEndDate', $scope.LMRenewalEnddate);
         formData.append('UploadRenewedCopy', $scope.UploadRenewedCopy);
         formData.append('UserName', $scope.LMUserName);
         formData.append('Remark', $scope.LMRemark);
@@ -1436,7 +1450,7 @@
         formData.append('EmailId', $scope.LMEmailId);
         formData.append('TentativeDateofComp', $scope.LMTentativeDateofComp);
         formData.append('InvoiceStatus', $scope.LMInvoiceStatus);
-        formData.append('InvoiceDate', moment($scope.LMInvoiceDate).format(FORMAT));
+        formData.append('InvoiceDate', $scope.LMInvoiceDate);
         formData.append('InvoiceNo', $scope.LMInvoiceNo);
         formData.append('InvoiceAmount', $scope.LMInvoiceAmount);
         formData.append('UploadInvoice', $scope.UploadInvoice);
@@ -1989,12 +2003,28 @@
         collectionobj.LicenceRequestId = LicenceId;
         var getData = myService.methode('POST', ("../RetailSection/ApprovalUpdate"), JSON.stringify(collectionobj));
         getData.then(function (response) {
-            LicenceId = ''; 
+          
             if (showMsgBox(response.data.Result)) {
                 $scope.ClearControl(1);
             }
-            $scope.GetLicenseRequestData();
+            $scope.List = $scope.LicenseList.filter(item => item.LicenceRequstId == LicenceId);  
+            LicenceId = '';
+            $scope.SetLicense($scope.List[0]);
         });
+    };
+
+
+    $scope.SyncDates = function () {
+
+        // Start Date Sync
+        if ($scope.LMRenewalStartDate) {
+            $scope.LMValidityStartDate = $scope.LMRenewalStartDate;
+        }
+
+        // End Date Sync
+        if ($scope.LMRenewalEnddate) {
+            $scope.LMValidityEndDate = $scope.LMRenewalEnddate;
+        }
     };
        
     $scope.ApprovalRecord = function (Id) {
@@ -2823,23 +2853,43 @@
 
     $scope.SelectedLicenseData = [];
 
+    //$scope.FilterFileSta = function (lic) {
+
+    //    $scope.SelectedLicenseData = $scope.LicenseNameList.filter(function (item) {
+    //        return item.Lname === lic;
+    //    });
+
+    //    $scope.FilteredData = angular.copy($scope.SelectedLicenseData);
+
+    //    var statusArr = [];
+
+    //    $scope.SelectedLicenseData.forEach(function (item) {
+    //        statusArr.push(item.ApplicationStatus);
+    //        statusArr.push(item.LicenseStatus);
+    //    });
+
+    //    $scope.StatusList = [...new Set(statusArr.filter(x => x))];
+    //}; 
+
     $scope.FilterFileSta = function (lic) {
 
-        $scope.SelectedLicenseData = $scope.LicenseNameList.filter(function (item) {
-            return item.Lname === lic;
+        const licenseName = lic.Lname || lic;
+        let data = $scope.LicenseNameList; // NO FILTER
+
+        $scope.SelectedLicenseData = data;
+        $scope.FilteredData = angular.copy(data);
+
+        let statusArr = [];
+
+        data.forEach(item => {
+            if (item.ApplicationStatus) statusArr.push(item.ApplicationStatus.trim());
+            if (item.LicenseStatus) statusArr.push(item.LicenseStatus.trim());
         });
 
-        $scope.FilteredData = angular.copy($scope.SelectedLicenseData);
+        console.log("Final Status:", statusArr);
 
-        var statusArr = [];
-
-        $scope.SelectedLicenseData.forEach(function (item) {
-            statusArr.push(item.ApplicationStatus);
-            statusArr.push(item.LicenseStatus);
-        });
-
-        $scope.StatusList = [...new Set(statusArr.filter(x => x))];
-    }; 
+        $scope.StatusList = [...new Set(statusArr)];
+    };
  
     
     $scope.DownloadAllFiles = function (fieldName, label) {

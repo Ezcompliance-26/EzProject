@@ -1,8 +1,228 @@
 ﻿ 
-app.WithoutInvoiceController = function ($scope, $element, $filter, myService) {
+app.WithoutInvoiceController = function ($scope, $element, $filter, myService, $http) {
    
-   
- 
+
+
+
+    $scope.fileChange = function (input) {
+        var index = input.id.replace('fuCandidatePhoto', '');
+
+        if (input.files && input.files[0]) {
+            $scope.$apply(function () {
+                $scope.InvoiceDetail[index].file = input.files[0];   // ✅ actual file
+                $scope.InvoiceDetail[index].IsFile = 'Attached Invoice';
+                $scope.InvoiceDetail[index].loading = false;
+            });
+        }
+    };
+
+
+    //--------------------------------------------------------
+    $scope.BeforeSaveRecord = function () {
+
+        for (var i = 0; i < $scope.InvoiceDetail.length; i++) {
+
+            $scope.InvoiceDetail[i].StateId = $scope.StateId;
+
+            // ✅ FILE CHECK (new OR existing)
+            if (!$scope.InvoiceDetail[i].file && !$scope.InvoiceDetail[i].fileupload) {
+                showMsgBox('999', 'Invoice Required',
+                    'Please attach Invoice in row ' + $scope.InvoiceDetail[i].Srno +
+                    ' / Invoice No: ' + $scope.InvoiceDetail[i].VendorInvNum,
+                    'warning', 'btn-warning');
+                return;
+            }
+
+            // ✅ DATE CHECK
+            if (!$scope.InvoiceDetail[i].InvDate ||
+                $scope.InvoiceDetail[i].InvDate == 'Invalid date') {
+
+                showMsgBox('999', 'Invoice Required',
+                    'Please add date in row ' + $scope.InvoiceDetail[i].Srno +
+                    ' / Invoice No: ' + $scope.InvoiceDetail[i].VendorInvNum,
+                    'warning', 'btn-warning');
+                return;
+            }
+
+            // ✅ SPACE NOT ALLOWED
+            if ($scope.InvoiceDetail[i].VendorInvNum &&
+                $scope.InvoiceDetail[i].VendorInvNum.match(/\s/g)) {
+
+                showMsgBox('999', 'Invoice Error',
+                    'Invoice number cannot contain spaces (Row ' + $scope.InvoiceDetail[i].Srno + ')',
+                    'warning', 'btn-warning');
+                return;
+            }
+
+            // ✅ DATE FORMAT
+            $scope.InvoiceDetail[i].InvDate = moment(
+                $scope.InvoiceDetail[i].InvDate,
+                "DD-MMM-YYYY"
+            ).format('YYYY-MM-DD');
+        }
+
+        $scope.SaveInvoiceAfterValidate();
+    };
+
+    $scope.SaveInvoiceAfterValidate = function () {
+
+        if (!$scope.ValidateInvoiceGrid()) return;
+
+        $scope.showLoader();
+
+        var formData = new FormData();
+
+        // 🔥 MAIN FIELDS
+        formData.append("ClientId", $scope.ClientId);
+        formData.append("ClientSiteId", 'NA');
+        formData.append("VendorSiteId", LoginId);
+        formData.append("FYID", $scope.FyId);
+        formData.append("Month", $scope.Month);
+        formData.append("InvDate", $scope.InvDate);
+        formData.append("CreatedBy", LoginId);
+        formData.append("InvoiceId", $scope.hfId);
+        formData.append("VendorId", LoginId);
+        formData.append("ActionType", 1);
+
+        // 🔥 LOOP DATA
+        angular.forEach($scope.InvoiceDetail, function (item, index) {
+
+            // ✅ FILE SEND
+            if (item.file) {
+                formData.append("files[" + index + "]", item.file);
+            }
+
+            // ✅ JSON SEND
+            formData.append("InvoiceDetail[" + index + "]", JSON.stringify(item));
+        });
+
+        // 🔥 API CALL
+        $http.post("../VenInvoice/NewInsertUpdateDelVenInvoice", formData, {
+            transformRequest: angular.identity,
+            headers: { 'Content-Type': undefined }
+        })
+            .then(function (response) {
+
+                if (!response.data || !response.data.Result) {
+                    showMsgBox('999', 'Alert', 'Something Went Wrong', 'warning', 'btn-warning');
+                } else  
+                    {
+
+                    showMsgBox('999', 'Success',
+                        'Saved Successfully. Batch No: ' + response.data.Result,
+                        'success', 'btn-success');
+                    $scope.BindCommunication();
+                    $scope.ResetInvoiceForm();
+                    $scope.ClearHEADER(); 
+                    $scope.FireEmail(16, response.data.Result, $scope.ClientId);
+                
+                }
+            })
+            .catch(function (err) {
+                console.error("Error:", err);
+                showMsgBox('999', 'Error', 'Server Error Occurred', 'danger', 'btn-danger');
+            })
+            .finally(function () {
+                $scope.hideLoader();
+            });
+    };
+
+    $scope.ClearHEADER = function () {
+        $scope.freeze = false;
+        $scope.IsHide = false;
+        $scope.InvoiceDetail = [];
+        $scope.AddInvoiceDetail();
+    }
+    $scope.ValidateInvoiceGrid = function () {
+
+        for (var i = 0; i < $scope.InvoiceDetail.length; i++) {
+
+            var row = $scope.InvoiceDetail[i];
+
+            // reset error flags
+            row.errVendorInvNum = false;
+            row.errInvDate = false;
+            row.errTaxable = false;
+            row.errFile = false;
+
+            // 🔴 Invoice No
+            if (!row.VendorInvNum || row.VendorInvNum.trim() == '') {
+                row.errVendorInvNum = true;
+                showMsgBox('999', 'Validation', 'Enter Invoice No at row ' + (i + 1), 'warning', 'btn-warning');
+                return false;
+            }
+
+            // 🔴 Date
+            if (!row.InvDate) {
+                row.errInvDate = true;
+                showMsgBox('999', 'Validation', 'Select Invoice Date at row ' + (i + 1), 'warning', 'btn-warning');
+                return false;
+            }
+
+            // 🔴 Taxable
+            if (!row.TaxableValue || row.TaxableValue == 0) {
+                row.errTaxable = true;
+                showMsgBox('999', 'Validation', 'Enter Taxable Value at row ' + (i + 1), 'warning', 'btn-warning');
+                return false;
+            }
+
+            // 🔴 File
+            if (!row.file && !row.fileupload) {
+                row.errFile = true;
+                showMsgBox('999', 'Validation', 'Upload file at row ' + (i + 1), 'warning', 'btn-warning');
+                return false;
+            }
+        }
+
+        return true; // ✅ ALL GOOD
+    };
+
+    $scope.ResetInvoiceForm = function () {
+
+        $scope.ClientId = '';
+        $scope.FyId = '';
+        $scope.Month = '';
+        $scope.InvDate = '';
+        $scope.hfId = '';
+        $scope.Save = "Save";
+
+        if ($scope.InvoiceDetail && $scope.InvoiceDetail.length > 0) {
+
+            angular.forEach($scope.InvoiceDetail, function (item) {
+
+                item.Srno = '';
+                item.InvDate = '';
+                item.VendorInvNum = '';
+                item.StateId = '';
+                item.Location = '';
+                item.ManpowerType = '';
+                item.ManpowerCount = '';
+                item.InvoiceType = '';
+                item.TaxableValue = '';
+                item.CGST = '';
+                item.SGST = '';
+                item.IGST = '';
+                item.GrossAmount = '';
+                item.Status = '';
+
+                item.file = null;
+                item.fileupload = '';
+                item.IsFile = '';
+                item.loading = false;
+            });
+        }
+
+        $scope.InvoiceDetail = [{
+            Srno: 1,
+            InvDate: '',
+            VendorInvNum: '',
+            file: null,
+            fileupload: '',
+            IsFile: '',
+            loading: false
+        }];
+    };
+    //----------------------------------------------
 
     $scope.AllPartySiteLoadWI = function () {
         var collectionobj = {};
@@ -82,9 +302,9 @@ app.WithoutInvoiceController = function ($scope, $element, $filter, myService) {
             return;
         }
         else {
-            if (isValidate()) {
+           
                 $scope.SAVEWithoutInvoice();
-            }
+          
         }
 
 
@@ -400,7 +620,7 @@ app.WithoutInvoiceController = function ($scope, $element, $filter, myService) {
         });
     };
     $scope.ValidateFileDoc = function (InvoiceNo, SNO, DocumentName, DocumentId, FormatFile, index, ConversationId) {
-        fileName = document.querySelector('#fuCandidatePhoto' + index).value;
+        fileName = document.querySelector('#fuCandidatePhoto1' + index).value;
         if (fileName != "") {
             extension = fileName.substring(fileName.lastIndexOf('.') + 1);
             if (FormatFile == extension) {

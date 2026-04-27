@@ -1045,6 +1045,7 @@
     <Content Include="DownloadMat\Rootfile\xlsx.full.min.js" />
     <Content Include="DownloadMat\talent new logo.png" />
     <Content Include="favicon.ico" />
+    <Content Include="Icard.html" />
     <Content Include="Litigation Management\style.css" />
     <Content Include="login\image\app1.png" />
     <Content Include="login\image\Content.png" />
@@ -1223,6 +1224,7 @@
     <Content Include="scripts\RetailJsLib\StoreDashboardController.js" />
     <Content Include="scripts\RetailJsLib\Storemastersepcontroller.js" />
     <Content Include="scripts\RetailJsLib\SubsidiaryController.js" />
+    <Content Include="scripts\RetailJsLib\TransportController.js" />
     <Content Include="scripts\RetailJsLib\VendorDashboardController.js" />
     <Content Include="scripts\Rootfile\all.min.css" />
     <Content Include="scripts\Rootfile\angular-route.min.js" />
@@ -2814,6 +2816,7 @@
     <Compile Include="BAL\RetailUploadModelBAL.cs" />
     <Compile Include="BAL\RetialEmployeeManager.cs" />
     <Compile Include="BAL\RetialStoreManager.cs" />
+    <Compile Include="BAL\RouteMasterModelBAL.cs" />
     <Compile Include="BAL\SMSBAL.cs" />
     <Compile Include="BAL\StoreLicesensDocument.cs" />
     <Compile Include="BAL\StorePrefix.cs" />
@@ -3619,6 +3622,12 @@
     <Content Include="Views\Retail\LabourSetup.cshtml" />
     <Content Include="Views\RetailSection\VendorRegistration.cshtml" />
     <Content Include="Views\RetailSection\Declaration.cshtml" />
+    <Content Include="Views\RetailSection\TransportMaster.cshtml" />
+    <Content Include="Views\RetailSection\ContractorCompliance.cshtml" />
+    <Content Include="Views\RetailSection\ContractorComplianceVendor.cshtml" />
+    <Content Include="Views\RetailSection\ContractorReport.cshtml" />
+    <Content Include="Views\RetailSection\ContractorReportVendor.cshtml" />
+    <Content Include="Views\Retail\EntitySetup.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

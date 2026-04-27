@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>ID Card</title>
+
+    <!-- Angular + jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- PDF + Canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f5f5;
+        }
+
+        .card {
+            width: 320px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin: 30px auto;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            width: 60px;
+        }
+
+        .photo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 10px 0;
+            border: 2px solid #007bff;
+        }
+
+        .qr {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .btns {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 8px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body ng-controller="myCtrl">
+
+    <div id="card" class="card">
+
+        <img src="https://via.placeholder.com/60x60?text=LOGO" class="logo" />
+
+        <h3>Company Name</h3>
+
+        <img ng-src="{{emp.Photo || 'https://via.placeholder.com/90'}}" class="photo" />
+
+        <p><b>{{emp.EmpName}}</b></p>
+        <p>{{emp.EmpDesignation}}</p>
+
+        <p><b>ID:</b> {{emp.EmpCode}}</p>
+        <p><b>Dept:</b> {{emp.EmpDep}}</p>
+        <p><b>Mobile:</b> {{emp.EmpMobile}}</p>
+
+        <!-- QR -->
+        <div class="qr">
+            <img id="qrImg" width="60" />
+        </div>
+
+    </div>
+
+    <!-- Buttons -->
+    <div class="btns">
+        <button ng-click="printCard()">Print</button>
+        <button ng-click="downloadPDF()">Download PDF</button>
+    </div>
+
+    <script>
+        var app = angular.module("myApp", []);
+
+        app.controller("myCtrl", function ($scope, $http) {
+
+            // 🔥 URL se Employee ID
+            const urlParams = new URLSearchParams(window.location.search);
+            const empId = urlParams.get('id');
+
+            // 🔥 API Call
+            $scope.GetEmployeeMaster = function () {
+
+                var obj = { ActionType: 18, PartyId: empId };
+
+                $http.post("../RetailSection/GetEmployeeMaster", obj)
+                    .then(function (res) {
+
+                        if (res.data && res.data.Result.length > 0) {
+
+                            $scope.emp = res.data.Result[0];
+
+                            // 🔥 QR GENERATE (jQuery fix)
+                            var urlData = window.location.origin + "/Icard.html?id=" + $scope.emp.EmpCode;
+
+                            var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=" + encodeURIComponent(urlData);
+
+                            $("#qrImg").attr("src", qrUrl);
+                        }
+
+                    }, function (err) {
+                        console.log("Error:", err);
+                    });
+            };
+
+            // 🔥 Print
+            $scope.printCard = function () {
+                var printContents = document.getElementById('card').innerHTML;
+                var w = window.open('', '', 'width=400,height=600');
+                w.document.write('<html><head><title>Print</title></head><body>');
+                w.document.write(printContents);
+                w.document.write('</body></html>');
+                w.document.close();
+                w.print();
+            };
+
+            // 🔥 PDF Download
+            $scope.downloadPDF = function () {
+                html2canvas(document.getElementById("card")).then(canvas => {
+                    const imgData = canvas.toDataURL("image/png");
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF();
+                    pdf.addImage(imgData, 'PNG', 10, 10, 180, 100);
+                    pdf.save("IDCard_" + ($scope.emp.EmpCode || "Employee") + ".pdf");
+                });
+            };
+
+            // 🔥 Load Data
+            $scope.GetEmployeeMaster();
+
+        });
+    </script>
+
+</body>
+</html>

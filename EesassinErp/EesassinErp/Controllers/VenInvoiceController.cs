@@ -1,6 +1,7 @@
 ﻿using BAL;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -186,6 +187,83 @@ namespace EesassinErp.Controllers
             return result;
         }
 
+        [HttpPost]
+        public async Task<JsonResult> NewInsertUpdateDelVenInvoice()
+        {
+            var request = HttpContext.Request;
+
+            // 🔥 FORM DATA
+            string ClientId = request.Form["ClientId"];
+            string ClientSiteId = request.Form["ClientSiteId"];
+            string VendorSiteId = request.Form["VendorSiteId"];
+            string FYID = request.Form["FYID"];
+            string Month = request.Form["Month"];
+            string InvDate = request.Form["InvDate"];
+            string CreatedBy = request.Form["CreatedBy"];
+            string InvoiceId = request.Form["InvoiceId"];
+
+            int VendorId = int.TryParse(request.Form["VendorId"], out int vId) ? vId : 0;
+            int ActionType = int.TryParse(request.Form["ActionType"], out int aType) ? aType : 0;
+
+            // 🔥 LIST
+            List<InvoiceDetailList> invoiceList = new List<InvoiceDetailList>();
+
+            foreach (string key in request.Form.AllKeys)
+            {
+                if (key.StartsWith("InvoiceDetail"))
+                {
+                    var json = request.Form[key];
+
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                        var obj = JsonConvert.DeserializeObject<InvoiceDetailList>(json);
+                        invoiceList.Add(obj);
+                    }
+                }
+            }
+
+            // 🔥 FILE SAVE + INDEX MAP
+            foreach (string fileKey in request.Files)
+            {
+                var file = request.Files[fileKey];
+
+                if (file != null && file.ContentLength > 0)
+                {
+                    string fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    string relativePath = "/DownloadMat/Doc/" + fileName;
+                    string fullPath = Server.MapPath("~/DownloadMat/Doc/" + fileName);
+
+                    file.SaveAs(fullPath);
+
+                    int index = Convert.ToInt32(fileKey.Replace("files[", "").Replace("]", ""));
+
+                    if (index < invoiceList.Count)
+                    {
+                        invoiceList[index].fileupload = relativePath;
+                    }
+                }
+            }
+
+            // 🔥 FINAL OBJECT
+            TblVendorInvoiceBAL objBAL = new TblVendorInvoiceBAL
+            {
+                ClientId = ClientId,
+                ClientSiteId = ClientSiteId,
+                VendorSiteId = Convert.ToInt32(VendorSiteId),
+                FYID = FYID,
+                Month = Month,
+                CreatedBy = Convert.ToInt32(CreatedBy),
+                InvoiceId = InvoiceId,
+
+                VendorId = VendorId,
+                ActionType = ActionType,
+                InvoiceDetail = invoiceList
+            };
+
+            var result = await Task.Run(() => DAL.DLL.dll.InsertUpdateDelVenInvoice(objBAL));
+
+            return Json(new { Result = result }, JsonRequestBehavior.AllowGet);
+        }
 
         public async Task<string> InsertUpdateDelWithoutVenInvoice(TblVendorInvoiceBAL obj)
         {

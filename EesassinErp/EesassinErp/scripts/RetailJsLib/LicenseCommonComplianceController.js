@@ -305,14 +305,19 @@
    
    var licCommonChart = null;
     $scope.FilterGraph = function () {
+
+        if ($scope.isLoading) return; // 🔥 multiple call stop
+        $scope.isLoading = true;
+
         $scope.showLoader();
+
         var collectionobj = {
             Action: 1,
             RegionId: $scope.RegionId,
             LicenceApplicable: $scope.LicenceApplicable,
             DocStatus: $scope.DocStatus,
             LicenceStatus: $scope.LicenceStatus,
-            ExpiryStatus: $scope.ExpiryStatus, 
+            ExpiryStatus: $scope.ExpiryStatus,
             LicenceType: $scope.LicenceType,
             Client: $scope.Client,
             InvoiceStatus: $scope.InvoiceStatus,
@@ -332,28 +337,34 @@
         ).then(function (response) {
 
             var result = response.data.Result || [];
-                
+
+            // 🔥 IMPORTANT: data nahi hai to yahin stop
+            if (!result || result.length === 0) {
+                console.log("Data not received yet");
+                return;
+            }
+
             var labels = [];
             var chartData = [];
 
-            angular.forEach(result, function (obj)
-            {
-                function uniqueArray(arr) {
-                    const map = new Map();
+            // 🔥 function loop ke bahar (performance fix)
+            function uniqueArray(arr) {
+                const map = new Map();
 
-                    arr.forEach(x => {
-                        if (x && x !== 'undefined') {
-                            const cleaned = x.trim();
-                            const key = cleaned.toLowerCase(); // 🔥 case-insensitive
-
-                            if (!map.has(key)) {
-                                map.set(key, cleaned);
-                            }
+                arr.forEach(x => {
+                    if (x && x !== 'undefined') {
+                        const cleaned = x.trim();
+                        const key = cleaned.toLowerCase();
+                        if (!map.has(key)) {
+                            map.set(key, cleaned);
                         }
-                    });
+                    }
+                });
 
-                    return Array.from(map.values());
-                }
+                return Array.from(map.values());
+            }
+
+            angular.forEach(result, function (obj) {
 
                 labels.push(obj.LicenseName);
 
@@ -361,22 +372,25 @@
                     x: obj.LicenseName,
                     y: obj.Number || 0,
 
-                    License : uniqueArray((obj.LicenseName  || '').split(',')),
+                    License: uniqueArray((obj.LicenseName || '').split(',')),
                     LocationCode: uniqueArray((obj.StoreCode || '').split(',')),
-                    Unit: uniqueArray((obj.storeName  || '').split(',')),
-                    Region: uniqueArray((obj.RegionName  || '').split(',')),
+                    Unit: uniqueArray((obj.storeName || '').split(',')),
+                    Region: uniqueArray((obj.RegionName || '').split(',')),
                     City: uniqueArray((obj.City || '').split(',')),
                     State: uniqueArray((obj.State || '').split(','))
                 });
             });
 
+            // 🔥 double safety
+            if (labels.length > 0 && chartData.length > 0) {
+                $scope.RenderLicenseChart(labels, chartData);
+                $scope.RenderLicenseCategoryChart(labels, chartData);
+            }
 
-        
-
-
-            $scope.RenderLicenseChart(labels, chartData);
-            $scope.RenderLicenseCategoryChart(labels, chartData);
-
+        }).catch(function (error) {
+            console.error("API Error:", error);
+        }).finally(function () {
+            $scope.isLoading = false;
             $scope.hideLoader();
         });
     };
@@ -1007,10 +1021,18 @@
             return day + '/' + month + '/' + year;
         }
 
+        function safeValue(val) {
+            if (val === null || val === undefined || val === "null") {
+                return "";
+            }
+            return val;
+        }
+
         // headers
         var headers = [
             "Location Code",
             "License Name",
+			"Unit Name",
             "License Number",
             "Expiry Status",
             "Validity Start Date",
@@ -1041,10 +1063,12 @@
             csvRows.push([
                 row.StoreCode || "",
                 row.LicenseName || "",
+				  
+				    '"' + (row.StoreName || "").replace(/"/g, '""') + '"',
                 '="' + (row.LicenseNumber || "") + '"', // ✅ number fix
                 row.ExpiryStatus || "",
-                '="' + formatDate(row.ValidityStartDate) + '"', // ✅ date fix
-                '="' + formatDate(row.ValidityEndDate) + '"',   // ✅ date fix
+                '="' + safeValue(row.ValidityStartDate) + '"', // ✅ date fix
+                '="' + safeValue(row.ValidityEndDate) + '"',   // ✅ date fix
                 row.DaysOfExpire || ""
             ].join(","));
 
@@ -1115,6 +1139,7 @@
         <tr>
             <th>Store Code</th>
             <th>License Name</th>
+			<th>Unit Name</th>
             <th>License Number</th>
             <th>Expiry Status</th>
             <th>Start Date</th>
@@ -1129,6 +1154,7 @@
             <tr>
                 <td>${row.StoreCode || ""}</td>
                 <td>${row.LicenseName || ""}</td>
+				 <td>${row.StoreName || ""}</td>
                 <td>${row.LicenseNumber || ""}</td>
                 <td>${row.ExpiryStatus || ""}</td>
                 <td>${row.ValidityStartDate || ""}</td>

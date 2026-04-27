@@ -11,10 +11,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Net.Mail;
+using System.Collections.Generic; 
+ 
 
 namespace EesassinErp.Controllers
 {
-    [AllowAnonymous]
+ 
     public class LoginController : Controller
     {
         //public string CaptchaImage()
@@ -254,6 +257,87 @@ namespace EesassinErp.Controllers
             return result;
 
         }
+
+        public class EmailDetails
+        {
+            public string ToEmail { get; set; }
+            public string ReplyToList { get; set; }
+            public string EmailName { get; set; }
+            public string EmailId { get; set; }
+            public string Password { get; set; }
+            public int Port { get; set; }
+            public string SmtpServer { get; set; }
+            public string Subject { get; set; }
+            public string Msg { get; set; }
+        }
+        [System.Web.Services.WebMethod]
+        public async Task<string> SendEmail(DocumentBAL obj)
+        {
+
+            try
+            {
+                string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.FireEmail(obj)));
+
+                //dynamic jsonDe = JsonConvert.DeserializeObject(result); 
+                var jsonDe = JsonConvert.DeserializeObject<List<EmailDetails>>(result);
+                string SMTPUser = jsonDe[0].EmailId;
+                string SMTPPassword = jsonDe[0].Password;
+                int SmtpPort = jsonDe[0].Port;
+                string SmtpServer = jsonDe[0].SmtpServer;
+                string EmailName = jsonDe[0].EmailName;
+                string ToEmail = jsonDe[0].ToEmail;
+
+                string Subject = jsonDe[0].Subject;
+                string Msg = jsonDe[0].Msg;
+
+
+                MailMessage EmailMsg = new MailMessage();
+                EmailMsg.From = new MailAddress(SMTPUser, EmailName);
+                EmailMsg.To.Add(new MailAddress(ToEmail));
+
+                if (jsonDe[0].ReplyToList != "-1")
+                {
+                    string ReplyToList = jsonDe[0].ReplyToList;
+                    EmailMsg.CC.Add(ReplyToList);
+                }
+
+
+
+                EmailMsg.Subject = Subject;
+
+                EmailMsg.Body = Msg;
+
+                EmailMsg.IsBodyHtml = true;
+                EmailMsg.Priority = MailPriority.Normal;
+
+                System.Net.Mail.SmtpClient SMTP = new System.Net.Mail.SmtpClient();
+                SMTP.Host = SmtpServer;
+                SMTP.Port = SmtpPort;
+                SMTP.EnableSsl = true;
+                System.Net.ServicePointManager.SecurityProtocol =     System.Net.SecurityProtocolType.Tls12;
+
+                SMTP.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+                SMTP.UseDefaultCredentials = false;
+                SMTP.Credentials = new System.Net.NetworkCredential(SMTPUser, SMTPPassword);
+
+                SMTP.Send(EmailMsg);
+
+                return result;
+
+            }
+
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+
+        }
+
+
+
+
+
+
         public async Task<string> UrlAccessPermission(BCommon obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.GetUrlAccessPermission(obj)));

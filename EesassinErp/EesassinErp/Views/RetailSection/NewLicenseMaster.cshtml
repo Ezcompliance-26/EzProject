@@ -61,7 +61,7 @@
 
     });
 </script>
-<div class="licenseMasterPage px-4 py-2" ng-init="FilterResetFile();CountTiles()" ng-cloak>
+<div class="licenseMasterPage px-4 py-2" ng-init="CountTiles();FilterResetFile()" ng-cloak>
     <!-- Main CARD -->
     <div id="mainCard" class="card section-card active">
         <h3 class="mt-2 px-4" style="color: #E45D27">License Master </h3>
@@ -177,7 +177,7 @@
                             </ul>
                         </div>
                         <div class="dropdown">
-                            <button class="btn btn-sm download-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Download</button>
+                            <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Download</button>
                             <ul class="dropdown-menu dropdown-menu-end">
 
                                 <li><a class="dropdown-item" ng-click="DownloadAllFiles('UploadApplicationCopy', 'ApplicationCopy'); ManageLog('Download All Application Copies')">Application Copies</a></li>
@@ -245,7 +245,13 @@
                                 </td>
                                 <td>{{license.STATE_NAME}}</td>
                                 <td>{{license.LicenseName}}</td>
-                                <td>{{license.LicenseType}}</td>
+                                <td>
+                                    {{license.LicenseType}}
+                                    <a ng-if="license.UploadRenewedCopy" href="#" ng-click="ViewFileC(license.UploadRenewedCopy);ManageLog('View Renewed Copy  Licence Name : '+ LMLicenseName + ' & Location '+ license.RefStoreCode)">
+                                        <i class="bi bi-eye" style="color: #f37437;"></i>
+                                    </a>
+
+                                </td>
 
                                 <td>{{license.LicenseStatus}}</td>
                                 <td>{{license.ApplicationStatus}} </td>
@@ -320,7 +326,7 @@
                     <div class="container-fluid" ng-show="isedit">
                         <div class="row g-3 mb-4 align-items-end">
                             <div class="col-md-3">
-                                <label class="form-label">License Type</label>
+                                <label class="form-label">License Type</label> 
                                 <select style="width:auto" class="form-select form-control validate" ng-model="SetLT" ng-change="ChangeLicenseType(SetLT)">
                                     <option value="">Select License Type</option>
                                     <option ng-repeat="x in filteredLicenses" value="{{x.LicenceRequstId}}">
@@ -347,7 +353,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">License Date</label>
-                                <input date-input type="text" class="form-control form-control-sm custom-date" id="LMLicensDate" ng-model="LMLicensDate" ng-disabled="{{IsValid}}" ng-change="LDate($index)" />
+                                <input date-input type="text" class="form-control form-control-sm custom-date" readonly id="LMLicensDate" ng-model="LMLicensDate" ng-disabled="{{IsValid}}" ng-change="LDate($index)" />
 
                             </div>
 
@@ -357,7 +363,7 @@
                             <div class="col-md-4">
                                 <label class="form-label">License Copy</label>
                                 <div class="lic-upload-field">
-                                    <input id="LMLicenseCopy" class="form-control form-control-sm" type="file" ng-model="LMLicenseCopy" onchange="angular.element(this).scope().uploadFile('UploadLicenseCopy', this)" />
+                                    <input id="LMLicenseCopy" class="form-control form-control-sm" type="file" ng-model="LMLicenseCopy" onchange="angular.element(this).scope().uploadFile('UploadLicenseCopy', this)" file-size-limit="20" />
                                     <div class="lic-upload-actions" ng-show="LMLicenseCopy">
                                         <a href="#" ng-click="ViewFileC(LMLicenseCopy)">
                                             <i class="bi bi-eye">
@@ -371,7 +377,7 @@
                             <div class="col-md-4">
                                 <label class="form-label">Amendment Copy</label>
                                 <div class="lic-upload-field">
-                                    <input id="LMLicenseCopy" class="form-control form-control-sm" type="file" ng-model="LMAmendmentCopy" onchange="angular.element(this).scope().uploadFile('UploadAmendmentCopy', this)" />
+                                    <input id="LMLicenseCopy" class="form-control form-control-sm" type="file" ng-model="LMAmendmentCopy" onchange="angular.element(this).scope().uploadFile('UploadAmendmentCopy', this)" file-size-limit="20" />
                                     <div class="lic-upload-actions" ng-show="LMAmendmentCopy">
                                         <a href="#" ng-click="ViewFileC(LMAmendmentCopy)">
                                             <i class="bi bi-eye">
@@ -392,11 +398,11 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Validity Start Date</label>
-                                <input date-input type="text" class="form-control form-control-sm custom-date" ng-model="LMValidityStartDate" id="LMValidityStartDate" ng-disabled="{{IsValid}}" />
+                                <input date-input type="text" class="form-control form-control-sm custom-date" readonly ng-model="LMValidityStartDate" id="LMValidityStartDate" ng-disabled="{{IsValid}}" />
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Validity End Date</label>
-                                <input date-input type="text" class="form-control form-control-sm custom-date" ng-model="LMValidityEndDate" id="LMValidityEndDate" ng-disabled="{{IsValid}}"  ng-change="SetDate($index)" />
+                                <input date-input type="text" class="form-control form-control-sm custom-date" readonly ng-model="LMValidityEndDate" id="LMValidityEndDate" ng-disabled="{{IsValid}}" ng-change="SetDate($index)" />
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">License Category</label>
@@ -406,7 +412,7 @@
                             <div class="col-md-4">
                                 <label class="form-label">Tentative Date</label>
 
-                                <input type="text" ng-model="LMTentativeDateofComp" class="form-control form-control-sm custom-date">
+                                <input type="text" ng-model="LMTentativeDateofComp" class="form-control form-control-sm custom-date" readonly>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">License Cost</label>
@@ -444,17 +450,17 @@
                         <div class="row g-3 mt-1">
                             <div class="col-md-4">
                                 <label class="form-label">Proposed Date</label>
-                                <input type='text' class="form-control form-control-sm validate custom-date" ng-model="LMProposedDate" ng-disabled="true">
+                                <input type='text' class="form-control form-control-sm validate custom-date" ng-model="LMProposedDate" ng-disabled="true" readonly>
 
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Requested Date</label>
-                                <input type='text' class="form-control form-control-sm validate custom-date" ng-model="LMRequestedDate" ng-disabled="true">
+                                <input type='text' class="form-control form-control-sm validate custom-date" ng-model="LMRequestedDate" ng-disabled="true" readonly>
 
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Document Date</label>
-                                <input type='text' class="form-control form-control-sm validate custom-date" ng-model="LMDocDate" ng-disabled="true">
+                                <input type='text' class="form-control form-control-sm validate custom-date" ng-model="LMDocDate" ng-disabled="true" readonly>
 
                             </div>
                         </div>
@@ -474,13 +480,13 @@
                             <div class="col-md-4">
                                 <label class="form-label">Application Date</label>
 
-                                <input date-input type="text" class="form-control form-control-sm custom-date" id="AppDate" ng-model="AppDate" ng-class="{'validate': AppDate}" ng-disabled="{{IsValid}}" />
+                                <input date-input type="text" class="form-control form-control-sm custom-date" id="AppDate" ng-model="AppDate" ng-class="{'validate': AppDate}" ng-disabled="{{IsValid}}" readonly/>
 
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Application Copy</label>
                                 <div class="lic-upload-field">
-                                    <input id="LMAppcopy" class="form-control form-control-sm" type="file" ng-model="LMAppcopy" onchange="angular.element(this).scope().uploadFile('UploadApplicationCopy', this)" ng-required="isChallanCopyMandatory" />
+                                    <input id="LMAppcopy" class="form-control form-control-sm" type="file" ng-model="LMAppcopy" onchange="angular.element(this).scope().uploadFile('UploadApplicationCopy', this)" ng-required="isChallanCopyMandatory" file-size-limit="20" />
                                     <div class="lic-upload-actions" ng-show="LMAppcopy">
                                         <a href="#" ng-Click="ViewFileC(LMAppcopy)">
                                             <i class="bi bi-eye"></i>
@@ -500,7 +506,7 @@
                                 <div class="col-md-4">
                                     <label class="form-label">Challan Copy</label>
                                     <div class="lic-upload-field">
-                                        <input id="LMchallanCopy" type="file" class="form-control form-control-sm" ng-model="LMchallanCopy" onchange="angular.element(this).scope().uploadFile('UploadChallanCopy', this)" ng-required="isChallanCopyMandatory" />
+                                        <input id="LMchallanCopy" type="file" class="form-control form-control-sm" ng-model="LMchallanCopy" onchange="angular.element(this).scope().uploadFile('UploadChallanCopy', this)" ng-required="isChallanCopyMandatory" file-size-limit="20" />
 
                                         <div class="lic-upload-actions" ng-show="LMchallanCopy">
                                             <a href="#" ng-Click="ViewFileC(LMchallanCopy)">
@@ -514,7 +520,7 @@
                                 <div class="col-md-4">
                                     <label class="form-label">Fees Copy</label>
                                     <div class="lic-upload-field">
-                                        <input id="LMFeeCopy" type="file" class="form-control form-control-sm" ng-model="LMFeeCopy" onchange="angular.element(this).scope().uploadFile('UploadFeesCopy', this)" />
+                                        <input id="LMFeeCopy" type="file" class="form-control form-control-sm" ng-model="LMFeeCopy" onchange="angular.element(this).scope().uploadFile('UploadFeesCopy', this)" file-size-limit="20" />
 
                                         <div class="lic-upload-actions" ng-show="LMFeeCopy">
                                             <a href="#" ng-Click="ViewFileC(LMFeeCopy)">
@@ -569,18 +575,18 @@
                             <div class="col-md-4">
                                 <label class="form-label">Renewal Request Date</label>
 
-                                <input type="text" class="form-control custom-date" ng-model="LMRenewalRequestDate" ng-disabled="true" />
+                                <input type="text" class="form-control custom-date" ng-model="LMRenewalRequestDate" ng-disabled="true" readonly />
 
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Renewal Start Date</label>
 
-                                <input type="text" class="form-control custom-date" ng-model="LMRenewalStartDate" />
+                                <input type="text" class="form-control custom-date" ng-model="LMRenewalStartDate" ng-change="SyncDates()" readonly />
 
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Renewal End Date</label>
-                                <input date-input type="text" class="form-control custom-date" ng-model="LMRenewalEnddate" />
+                                <input  type="text" class="form-control custom-date" ng-model="LMRenewalEnddate" ng-change="SyncDates()" readonly/>
 
                             </div>
                             <div class="col-md-4">
@@ -594,7 +600,7 @@
                             <div class="col-md-4">
                                 <label class="form-label">Renewal Copy</label>
                                 <div class="lic-upload-field">
-                                    <input id="LMUploadRenewedCopy" class="form-control form-control-sm" type="file" ng-model="LMUploadRenewedCopy" onchange="angular.element(this).scope().uploadFile('UploadRenewedCopy', this)" />
+                                    <input id="LMUploadRenewedCopy" class="form-control form-control-sm" type="file" ng-model="LMUploadRenewedCopy" onchange="angular.element(this).scope().uploadFile('UploadRenewedCopy', this)" file-size-limit="20" />
 
                                     <div class="lic-upload-actions" ng-show="LMUploadRenewedCopy && LMUploadRenewedCopy.trim() !== ''">
 
@@ -616,17 +622,24 @@
                     </div>
                     <!-- USER DETAILS -->
                     <!-- Save button -->
-                    <div class="d-flex justify-content-end mt-4" ng-show="LM_EditFlag==1">
-                        <button class="btn px-4" id="saveBtn" style="background:var(--primary); color:#fff;"
-                                ng-click="LSave();ManageLog('Submit License Licence Name : '+license.LicenseName + ' &amp; StoreName '+license.StoreCode)" ng-hide="LMLStatus==2||LMLStatus==4">
-                            Save
+                 
+                     
+                    <div class="d-flex justify-content-end mt-12" >
+                        <button class="btn px-4" id="saveBtn" style="background:var(--primary); color:#fff;" ng-if="loginType=='5'"
+                                ng-click="DeleteRecord(LMLicenceRequstId);ManageLog('Delete License, Licence Name : '+ LMLicenseNamee + ' &amp; Location  '+ LMStoreCode )">
+                            Delete 
                         </button>
-
+                        <div ng-show="LM_EditFlag==1">
+                            <button class="btn px-4" id="saveBtn" style="background:var(--primary); color:#fff;"
+                                    ng-click="LSave();ManageLog('Submit License Licence Name : '+ LMLicenseNamee + ' &amp; Location  '+ LMStoreCode )" ng-hide="LMLStatus==2||LMLStatus==4">
+                                Save
+                            </button>
+                        </div>
                     </div>
-                </div>
+                    </div>
 
             </div>
-
+            o
         </div>
     </div>
 </div>

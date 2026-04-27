@@ -1296,42 +1296,84 @@
     $scope.getStatusName = function (s) {
         return $scope.StatusText[s];
     };
+
+    // here  is commented old code dated 21/04/2026
+
+    //$scope.downloadCSV = function () {
+    //    if (!$scope.DocumentHighlightsList || !$scope.DocumentHighlightsList.length) {
+    //        alert("No data available");
+    //        return;
+    //    }
+
+    //    let csv = [];
+    //    let headers = [
+    //        "S.No",
+    //        "Location Code",
+    //        "Unit Name",
+    //        "Document Name",  
+    //        "Status"
+    //    ];
+    //    csv.push(headers.join(","));
+
+    //    $scope.DocumentHighlightsList.forEach(function (item) {
+    //        let row = [
+    //            item.SrNo,
+    //            item.StoreName,
+    //            item.UnitName,
+    //            item.DocumentName,
+    //            item.UploadStatus
+    //        ];
+    //        csv.push(row.join(","));
+    //    });
+
+    //    let csvContent = csv.join("\n");
+    //    let blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    //    let url = URL.createObjectURL(blob);
+
+    //    let link = document.createElement("a");
+    //    link.setAttribute("href", url);
+    //    link.setAttribute("download", "Document_Highlight.csv");
+    //    document.body.appendChild(link);
+    //    link.click();
+    //    document.body.removeChild(link);
+    //};
+
+
     $scope.downloadCSV = function () {
         if (!$scope.DocumentHighlightsList || !$scope.DocumentHighlightsList.length) {
             alert("No data available");
             return;
         }
 
+        let filteredData = $filter('filter')($scope.DocumentHighlightsList, $scope.searchText);
+
+        let currentPage = $scope.currentPage || 1;
+        let pageSize = $scope.pageSize || filteredData.length;
+
+        let startIndex = (currentPage - 1) * pageSize;
+        let paginatedData = filteredData.slice(startIndex, startIndex + pageSize);
+
         let csv = [];
-        let headers = [
-            "S.No",
-            "Location Code",
-            "Document Name",  
-            "Status"
-        ];
+        let headers = ["Location Code", "Unit Name", "Document Name", "Status"];
         csv.push(headers.join(","));
 
-        $scope.DocumentHighlightsList.forEach(function (item) {
-            let row = [
-                item.SrNo,
-                item.StoreCode,
+        paginatedData.forEach(function (item) {
+            csv.push([
+                item.StoreName,
+                item.UnitName,
                 item.DocumentName,
                 item.UploadStatus
-            ];
-            csv.push(row.join(","));
+            ].join(","));
         });
 
-        let csvContent = csv.join("\n");
-        let blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-        let url = URL.createObjectURL(blob);
-
+        let blob = new Blob([csv.join("\n")], { type: "text/csv;charset=utf-8;" });
         let link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", "Document_Highlight.csv");
-        document.body.appendChild(link);
+        link.href = URL.createObjectURL(blob);
+        link.download = "Document_Highlight.csv";
         link.click();
-        document.body.removeChild(link);
     };
+
+
     $scope.printTable = function () {
         let table = document.getElementById("locationDashTable");
         let printWindow = window.open("", "", "height=600,width=900");
@@ -1511,7 +1553,24 @@
 
 
  
+    // Select All toggle
+    $scope.toggleAllColumns = function () {
+        angular.forEach($scope.tblheader, function (col) {
+            col.ShowColumn = $scope.selectAll ? 'Yes' : 'No';
+        });
+    };
 
+    // Single checkbox click
+    $scope.toggleSingleColumn = function (col) {
+        col.ShowColumn = (col.ShowColumn == 'Yes') ? 'No' : 'Yes';
+
+        // Check if all are selected → update Select All checkbox
+        var allSelected = $scope.tblheader.every(function (c) {
+            return c.ShowColumn == 'Yes';
+        });
+
+        $scope.selectAll = allSelected;
+    };
 
     $scope.GetAllBindStoreList = function (PageSize) {
         $scope.isLoading = true;

@@ -10,6 +10,16 @@
         row.isEdit = true; 
         row._oldDocumentName = row.DocumentName;
     };
+    $scope.SetDefault = function (selectedRow) {
+
+        angular.forEach($scope.groupedDocs, function (row) {
+            if (row !== selectedRow) {
+                row.IsDefault = false;
+            }
+        });
+
+        selectedRow.IsDefault = true;
+    };
     $scope.Updaterow = function (row) {
         $scope.ManageLog('Update Compliance Document')
         row.isEdit = false;
@@ -23,6 +33,7 @@
         var fd = new FormData();
         fd.append('Action', 2);  
         fd.append('locationId', row.ComplianceDocId);
+        fd.append('IsDefault', row.IsDefault ? 1 : 0);   // 🔥 ADD THIS
         fd.append('DocumentName', row.DocumentName);
         fd.append('Id', MapId);
 
@@ -46,7 +57,8 @@
             });
     };
 
-    $scope.Deleterow = function (row) {
+    $scope.Deleterow = function (row)
+    {
         $scope.ManageLog('Delete Compliance Document')
         if (!row || !row.RowData.ComplianceDocId) {
             showMsgBox('999', 'Error', 'Invalid record selected.', 'error', 'btn-danger');
@@ -278,6 +290,7 @@
                             DocumentName: row.DocumentName,
                             CreatedDate: row.CreatedDate,
                             UserName: row.UserName,
+                            IsDefault: row.IsDefault ,
                             isEdit: false,
                             show: false,
                             Locations: []
@@ -1271,6 +1284,20 @@
         printWindow.document.close();
         printWindow.focus();
         printWindow.print();
+    };
+  $scope.SearchLocation = function (item) {
+        console.log(item);
+        if (!$scope.searchText) return true;
+
+        let text = $scope.searchText.toString().toLowerCase();
+
+        return (
+            (item.StoreCode && item.StoreCode.toLowerCase().includes(text)) ||
+            (item.RefStoreCode && item.RefStoreCode.toLowerCase().includes(text)) ||
+            (item.StoreName && item.StoreName.toLowerCase().includes(text)) ||
+            (item.UserName && item.UserName.toLowerCase().includes(text)) ||
+            (item.ClientType && item.ClientType.toLowerCase().includes(text))
+        );
     };
 
 }

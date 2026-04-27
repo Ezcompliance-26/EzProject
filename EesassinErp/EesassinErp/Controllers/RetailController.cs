@@ -1862,7 +1862,22 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
+        public ActionResult FinanceCompliance()
+        {
+            return View();
+        }
 
-        
+
+        public ActionResult EntitySetup()
+        {
+            return View();
+        } 
+ 
+        public async Task<string> SearchFinacialStatutoryEvent(RetailBAL obj)
+        {
+
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchFinacialStatutoryEvent(obj)));
+            return result;
+        }
     }
 }

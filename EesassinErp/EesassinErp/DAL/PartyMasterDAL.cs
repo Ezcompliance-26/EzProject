@@ -122,7 +122,7 @@ namespace DAL
                 new SqlParameter("@BankDetails",obj.BankDetails),
                 new SqlParameter("@RegistrationType",obj.RegistrationType),
                 new SqlParameter("@PANITNO",obj.Panitno),
-
+               
                 new SqlParameter("@CLRARC",obj.CLRARC),
                 new SqlParameter("@CLRLIC",obj.CLRLIC),
                 new SqlParameter("@ContactPerson",obj.ContactPerson),
@@ -141,6 +141,7 @@ namespace DAL
 
                 new SqlParameter("@NLabourOffice",obj.NLabourOffice),
                 new SqlParameter("@Nature",obj.Nature),
+                  new SqlParameter("@AssignColor",obj.AssignColor),
                 new SqlParameter("@PrincipalRegistration",obj.PrincipalRegistration),
                 new SqlParameter("@IssuingAuthority",obj.IssuingAuthority),
                 new SqlParameter("@CLRA_MaxWorkers",obj.CLRA_MaxWorkers),

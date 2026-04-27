@@ -1,5 +1,5 @@
 ﻿ 
-app.VendorInvoiceController = function ($scope, $element, $filter, myService) {
+app.VendorInvoiceController = function ($scope, $element, $filter, myService, $http) {
     $scope.SetFocus('#txtVendorInvNum');
     $('#ddlfyid').attr('style', 'display:block');
     $('#txtfyid').attr('style', 'display:none');
@@ -14,6 +14,10 @@ app.VendorInvoiceController = function ($scope, $element, $filter, myService) {
     $scope.IsLocation = true;
     $scope.hideIsLocation = false;
     $scope.IWITHStatus = false;
+
+
+
+
     $scope.SetTextbox = function (SINVOICENO, ClientId, VendorCId)
     {
 
@@ -534,6 +538,8 @@ app.VendorInvoiceController = function ($scope, $element, $filter, myService) {
             $(imgfileid).attr('value', '');
         }
     };
+ 
+     
     $scope.BindDashBoardInvoice = function () {
         var collectionobj = {};
         collectionobj.ActionType = 16;
@@ -756,6 +762,12 @@ app.VendorInvoiceController = function ($scope, $element, $filter, myService) {
             });
         }
     }
+
+
+
+
+
+
 
     $scope.fileuploadClick = function (fuControlId) {
         $(fuControlId).click();

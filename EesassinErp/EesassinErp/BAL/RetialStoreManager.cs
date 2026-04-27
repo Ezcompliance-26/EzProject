@@ -6,6 +6,7 @@ namespace BAL
     public class RetialStoreManager
     {
         public string PFAccount { get; set; }
+        public string IsDefault { get; set; }
 
         public string LicenseId { get; set; }
         public string LicenseName { get; set; }
@@ -208,6 +209,23 @@ namespace BAL
         public string NomineeRelation { get; set; }
         public string NomineeDOB { get; set; }
         public string IsActive { get; set; }
+
+        public string Designation { get; set; } 
+            public string MinimumWageCategory { get; set; }
+            public string WageType { get; set; }
+            public string WageDisbursementMode { get; set; } 
+            public string PPE { get; set; }
+            public string PPEType { get; set; } 
+            public string SafetyTrainingStatus { get; set; }
+            public string SiteInductionStatus { get; set; }
+            public string PoliceVerificationStatus { get; set; } 
+            public string TempIDStatus { get; set; }
+            public string TempIDNumber { get; set; }
+            public string TempIDDate { get; set; } 
+            public string PermanentIDStatus { get; set; }
+            public string PermanentIDNumber { get; set; }
+            public string PermanentIDDate { get; set; }
+        public string SiteName { get; set; }
 
     }
     public class ComplianceMasterList

@@ -144,8 +144,61 @@
 
                     obj.RefEmployeeCode = $(td[0]).text();
                     obj.EmployeeName = $(td[1]).text();
-                    obj.EmployeeDesignation = $(td[2]).text();
+                    obj.SiteName = $(td[2]).text();
 
+                    obj.EmployeeDesignation = $(td[3]).text();
+                    obj.EmployeeDepartment = $(td[4]).text();
+                    obj.FatherHusbandName = $(td[5]).text();
+                    obj.Gender = $(td[6]).text();
+                    obj.MaritalStatus = $(td[7]).text();
+
+                    obj.DateofBirth = $(td[8]).text();
+                    obj.DOJ = $(td[9]).text();
+
+                    obj.PresentAddress = $(td[10]).text();
+                    obj.PermanentAddress = $(td[11]).text();
+
+                    obj.MobileNumber = $(td[12]).text();
+                    obj.AlternativeMobileNumber = $(td[13]).text();
+                    obj.EmployeeEmailID = $(td[14]).text();
+
+                    obj.PANNumber = $(td[15]).text();
+                    obj.AdharCardNumber = $(td[16]).text();
+
+                    obj.UAN = $(td[17]).text();
+                    obj.PFAccount = $(td[18]).text();
+
+                    obj.BankAccountNumber = $(td[19]).text();
+                    obj.BankIFSCCode = $(td[20]).text();
+
+                    obj.PreviousESI = $(td[21]).text();
+                    obj.GrossSalary = $(td[22]).text();
+
+                    obj.NomineeName = $(td[23]).text();
+                    obj.NomineeRelation = $(td[24]).text();
+                    obj.NomineeDOB = $(td[25]).text();
+                    obj.NomineeAddress = $(td[26]).text();
+
+                    obj.MinimumWageCategory = $(td[27]).text();
+                    obj.WageType = $(td[28]).text();
+                    obj.WageDisbursementMode = $(td[29]).text();
+
+                    obj.PPE = $(td[30]).text();
+                    obj.PPEType = $(td[31]).text();
+
+                    obj.SafetyTrainingStatus = $(td[32]).text();
+                    obj.SiteInductionStatus = $(td[33]).text();
+                    obj.PoliceVerificationStatus = $(td[34]).text();
+
+                    obj.TempIDStatus = $(td[35]).text();
+                    obj.TempIDNumber = $(td[36]).text();
+                    obj.TempIDDate = $(td[37]).text();
+
+                    obj.PermanentIDStatus = $(td[38]).text();
+                    obj.PermanentIDNumber = $(td[39]).text();
+                    obj.PermanentIDDate = $(td[40]).text();
+                 
+                    
                     $scope.EmployeeeMasterList.push(obj);
                 });
 
@@ -168,11 +221,11 @@
         $scope.showLoader();
         var collectionobj = {};
         collectionobj.EmployeeMaster = $scope.EmployeeeMasterList;
-        collectionobj.ActionType = 10;
+        collectionobj.ActionType = 17;
         collectionobj.PartyTypeId = $scope.PartyTypeId;
         collectionobj.PartyId = MapId
         collectionobj.UserId = LoginId
-        var getData = myService.methode('POST', "../RetailSection/IUDBulkEmployeee", '{obj:' + JSON.stringify(collectionobj) + '}');
+        var getData = myService.methode('POST', "../RetailSection/NewIUDBulkEmployeee", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             showMsgBox('999', 'Alert', 'Save Successfully', 'warning', 'btn-warning');
 
@@ -614,6 +667,7 @@
                 RelievingLetterfFilePath: selectedEmployee.RelievingLetterfFilePath,
                 PayslipsFilePath: selectedEmployee.PayslipsFilePath,
                 Photos_1_FilePath: selectedEmployee.Photos_1_FilePath,
+                EmployeePhoto: selectedEmployee.EmployeePhoto,
             };
             //showModal();
         } else {
@@ -703,6 +757,7 @@
         $scope.Photos_2_FilePath = selectedEmployee.Photos_2_FilePath;
         $scope.Photos_3_FilePath = selectedEmployee.Photos_3_FilePath;
         $scope.Photos_4_FilePath = selectedEmployee.Photos_4_FilePath;
+        $scope.EmployeePhoto = selectedEmployee.EmployeePhoto;
         $scope.ShowDivEmployeeMasterForm();
         $('#profileview').modal('hide');
         $scope.IsActionType = 2;

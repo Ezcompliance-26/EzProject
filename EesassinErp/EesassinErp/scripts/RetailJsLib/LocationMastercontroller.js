@@ -3257,6 +3257,14 @@
         var file = input.files[0];
         if (!file) return;
 
+        var maxSizeMB = 20;
+        var maxSize = maxSizeMB * 1024 * 1024;
+
+        // ❌ Block invalid file FIRST
+        if (file.size > maxSize) {
+            return; // already popup shown by directive
+        }
+
         var scopeRow = angular.element(input).scope().x;   // current row
 
         var formData = new FormData();
@@ -4258,40 +4266,85 @@
 };
 
     // File Bind
-    $scope.onDiligenceFileChange = function (element) {
-        $scope.$apply(function () {
-            $scope.DiligenceFileReport = element.files[0];
-        });
+    //$scope.onDiligenceFileChange = function (element) {
+    //    $scope.$apply(function () {
+    //        $scope.DiligenceFileReport = element.files[0];
+    //    });
 
-        if (!$scope.DiligenceFileReport) {
+    //    if (!$scope.DiligenceFileReport) {
+    //        Showmsg("Please select a file.");
+    //        return;
+    //    }
+    //    var fd = new FormData();
+    //    fd.append('Action',7);
+    //    fd.append('locationId', $scope.DeligStoreId);  
+    //    if ($scope.DiligenceFileReport) {
+    //        fd.append('DiligenceFile', $scope.DiligenceFileReport)
+    //    }
+    //    $http.post('../RetailSection/IUDCOMPLIANCESTORE', fd, {
+    //        transformRequest: angular.identity, // DON'T let Angular modify FormData
+    //        headers: { 'Content-Type': undefined } // let browser set boundary
+    //    })
+    //        .then(function (response) {
+    //            $scope.BindDiligenceFile($scope.DeligStoreId);
+    //        })
+    //        .catch(function (err) {
+    //            console.error('SaveRow Error:', err);
+
+    //        })
+    //        .finally(function () {
+    //            $scope.hideLoader();
+
+    //        });
+         
+    //};
+
+    $scope.onDiligenceFileChange = function (element) {
+
+        var file = element.files[0];
+
+        if (!file) {
             Showmsg("Please select a file.");
             return;
         }
-        var fd = new FormData();
-        fd.append('Action',7);
-        fd.append('locationId', $scope.DeligStoreId);  
-        if ($scope.DiligenceFileReport) {
-            fd.append('DiligenceFile', $scope.DiligenceFileReport)
+
+        // ✅ Get limit from attribute
+        var maxSizeMB = element.getAttribute("file-size-limit") || 20;
+        var maxSize = maxSizeMB * 1024 * 1024;
+
+        // ❌ Block invalid file FIRST
+        if (file.size > maxSize) {
+            return; // already popup shown by directive
         }
+
+        // ✅ Only valid file assign karo
+        $scope.$apply(function () {
+            $scope.DiligenceFileReport = file;
+        });
+
+        // ✅ Upload start
+        var fd = new FormData();
+        fd.append('Action', 7);
+        fd.append('locationId', $scope.DeligStoreId);
+
+        if ($scope.DiligenceFileReport) {
+            fd.append('DiligenceFile', $scope.DiligenceFileReport);
+        }
+
         $http.post('../RetailSection/IUDCOMPLIANCESTORE', fd, {
-            transformRequest: angular.identity, // DON'T let Angular modify FormData
-            headers: { 'Content-Type': undefined } // let browser set boundary
+            transformRequest: angular.identity,
+            headers: { 'Content-Type': undefined }
         })
             .then(function (response) {
                 $scope.BindDiligenceFile($scope.DeligStoreId);
             })
             .catch(function (err) {
                 console.error('SaveRow Error:', err);
-
             })
             .finally(function () {
                 $scope.hideLoader();
-
             });
-         
     };
-
-   
     // Row validation function
     $scope.isRowValid = function (row) {
      

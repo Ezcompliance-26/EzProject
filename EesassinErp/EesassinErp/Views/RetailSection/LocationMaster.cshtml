@@ -830,7 +830,13 @@
                     <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
                         <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
                             <div class="input-group input-group-sm">
-                                <input id="lmSearch" type="text" class="form-control form-control-sm" placeholder="Search..." ng-keyup="GetStoreMaster(1,10)" />
+                                 @* <input id="lmSearch" type="text" class="form-control form-control-sm" placeholder="Search..." ng-keyup="GetStoreMaster(1,10)" />  *@
+								 
+								 <input id="lmSearch"
+                                         type="text"
+                                         class="form-control form-control-sm"
+                                         placeholder="Search..."
+                                         ng-model="searchText" />
                                 <button class="btn btn-sm" style="border-color: #E45D27" id="lmSearchBtn" type="button"><i class="bi bi-search"></i></button>
                             </div>
                         </div>
@@ -869,8 +875,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="x in (FilteredStoreList.length ? FilteredStoreList : StoreList) track by $index">
-
+                                <tr ng-repeat="x in (FilteredStoreList || StoreList) | filter:searchText track by $index">
+                                    @*<tr ng-repeat="x in (FilteredStoreList.length ? FilteredStoreList : StoreList) track by $index">*@
 
                                     <td>{{$index+1}}</td>
                                     <td><a href="#" class="store-code-link text-success" ng-click="GetLicenseMaster(x.Id, x.UserId, x.StoreCode);openRequestModal(x.Id, x.UserId, x.StoreCode);ManageLog('Click on  Location Code ' + x.StoreCode +' view License')"> {{x.StoreCode}}</a></td>
@@ -2257,17 +2263,18 @@
                                     <label class="btn btn-sm btn-upload px-3">
                                         Choose File 
                                         <input type="file" hidden
-                                               onchange="angular.element(this).scope().onDiligenceFileChange(this)">
+                                               onchange="angular.element(this).scope().onDiligenceFileChange(this)" file-size-limit="20">
                                     </label>
                                     <small class="text-muted d-block mt-1" ng-if="DiligenceFileReport">
                                         {{DiligenceFileReport.name}}
                                     </small>
                                     <i class="bi bi-eye-fill"
                                        title="View" ng-show="DiligenceFileReport"
-                                       style="color:#E45D27; cursor:pointer;" ng-click="viewFile(DiligenceFileReport)">
+                                       style="color:#E45D27; cursor:pointer;"  ng-click="ViewFileC(DiligenceFileReport,'Due Diligence Report')"> 
                                     </i> 
                                     <i ng-show="DiligenceFileReport" class="bi bi-download" style="color:#E45D27;
-                                 cursor:pointer;" ng-click="downloadDiligenceFile(DiligenceFileReport, DocumentName)"> </i>
+                                 cursor:pointer;"
+                                         ng-click="DownloadFileC(DiligenceFileReport,'Due Diligence Report')" > </i>
                                 </div>
                                 
                             </div>
@@ -2336,7 +2343,7 @@
                                                         Choose File
                                                         <input type="file"
                                                                hidden
-                                                               file-model="row.file">
+                                                               file-model="row.file" file-size-limit="20">
                                                     </label>
 
                                                     <small class="text-muted d-block mt-1" ng-if="row.file">
@@ -2345,14 +2352,14 @@
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-sm btn-view"      ng-if="row.AdditionalDocPath"
-                                                            ng-click="viewFile(row.AdditionalDocPath)">
+                                                            ng-click="ViewFileC(row.AdditionalDocPath,row.DocumentName)">
                                                         View
                                                     </button>
                                                 </td>
 
                                                 <td>
                                                     <button class="btn btn-sm btn-view"      ng-if="row.AdditionalDocPath"
-                                                            ng-click="downloadFile(row.AdditionalDocPath,row.DocumentName)">
+                                                            ng-click="DownloadFileC(row.AdditionalDocPath,row.DocumentName)">
                                                         Download
                                                     </button>
                                                 </td>

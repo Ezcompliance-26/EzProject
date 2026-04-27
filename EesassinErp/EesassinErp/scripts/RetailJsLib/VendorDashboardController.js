@@ -1,5 +1,185 @@
 ﻿app.VendorDashboardcontroller = function ($scope, $element, $filter, myService, $http) {
 
+    $scope.Editetime = '';
+
+    $scope.EditVendorSite = function (item) {
+        $('#btnsite').click();
+        // 🔹 Hidden Id
+        $scope.hfId = item.SiteId;
+        $scope.Editetime = 1;
+        // 🔹 Basic Details
+        $scope.SiteName = item.SiteName;
+        $scope.SiteAddress = item.Address;
+        $scope.LocationCode = item.LocationCode;
+        $scope.EmailId = item.EmailId;
+        $scope.MobileNo = item.ContactNo;
+        $scope.Description = item.Description;
+
+        // 🔹 Bank & Tax
+        $scope.BankDetails = item.BankDetails;
+        $scope.AccountNo = item.AccountNo;
+        $scope.Panitno = item.Panitno;
+        $scope.Gstinuin = item.Gstinuin;
+
+        // 🔹 Location
+        $scope.Pincode = item.Pincode;
+        
+
+        $scope.CountryId = item.CountryID.toString();
+      
+        $scope.AllState();
+        setTimeout(function () {
+            $scope.StateId = item.StateID.toString();
+            $scope.AllCity();
+
+         
+
+        }, 300);
+        setTimeout(function () {
+            $scope.CityId = item.CityID.toString();
+        }, 300);
+
+        // 🔹 Party Multi Select
+        if (item.PartyIds) {
+            $scope.PPIds = item.PartyIds.split(',').map(Number);
+
+            angular.forEach($scope.VendorList, function (x) {
+                x.Selected = $scope.PPIds.includes(x.Id);
+            });
+        }
+
+        // 🔹 Contact
+        $scope.ContactPerson = item.ContactPerson;
+        $scope.ContactMobile = item.ContactMobile;
+
+        // 🔹 CLRA
+        $scope.CLRARC = item.CLRARC;
+        $scope.CLRLIC = item.CLRLIC;
+        $scope.ValidFrom = item.ValidFrom;
+        $scope.ValidTo = item.ValidTo;
+
+        // 🔹 Manpower
+        $scope.Manpowertype = item.Manpowertype;
+        $scope.ManPowerCount = item.ManPowerCount;
+
+        // 🔹 Labour
+        $scope.NLabourOffice = item.NLabourOffice;
+        $scope.Nature = item.Nature;
+        $scope.AssignColor = item.AssignColor;
+        $scope.PrincipalRegistration = item.PrincipalRegistration;
+        $scope.IssuingAuthority = item.IssuingAuthority;
+        $scope.CLRA_MaxWorkers = item.CLRA_MaxWorkers;
+        $scope.CLRA_Validity = item.CLRA_Validity;
+
+        // 🔹 Files
+        $scope.RCCopy = item.RCCopy;
+        $scope.RenewalRCCopy = item.RenewalRCCopy;
+
+        // 🔹 BOCW
+        $scope.BOCW_Reg = item.BOCW_Reg;
+        $scope.BOCW_IssuingAuth = item.BOCW_IssuingAuth;
+        $scope.BOCW_MaxWorkers = item.BOCW_MaxWorkers;
+        $scope.BOCW_Validity = item.BOCW_Validity;
+
+        $scope.BOCWRCCopy = item.BOCWRCCopy;
+        $scope.RenewalBOCWRCCopy = item.RenewalBOCWRCCopy;
+
+        // 🔹 Safety
+        $scope.VendorType = item.VendorType;
+        $scope.MaxContractors = item.MaxContractors;
+        $scope.MaxWorkersSite = item.MaxWorkersSite;
+        $scope.PPEMandatory = item.PPEMandatory;
+        $scope.PPEType = item.PPEType;
+        $scope.SafetyTraining = item.SafetyTraining;
+        $scope.SiteInduction = item.SiteInduction;
+        $scope.PoliceVerification = item.PoliceVerification;
+        $scope.IDCardRequired = item.IDCardRequired;
+        $scope.AssignColor = item.AssignColor;
+
+        // 🔹 Files
+        $scope.VendorFileDoc = item.VendorFileDoc;
+        $scope.AdminFileDoc = item.AdminFileDoc;
+    };
+
+    $scope.printActivityReport = function () {
+
+        var table = document.getElementById("activityReportTable").outerHTML;
+
+        var printWindow = window.open('', '', 'height=700,width=1200');
+
+        printWindow.document.write(`
+        <html>
+        <head>
+            <title>Log Report</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    padding: 20px;
+                }
+
+                .company-header {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+
+                .company-header h2 {
+                    margin: 0;
+                    color: #F37437;
+                }
+
+                .company-header p {
+                    margin: 2px 0;
+                    font-size: 13px;
+                    color: #555;
+                }
+
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 12px;
+                }
+
+                th {
+                    background-color: #F37437;
+                    color: #fff;
+                    border: 1px solid #ddd;
+                    padding: 6px;
+                    text-align: center;
+                }
+
+                td {
+                    border: 1px solid #ddd;
+                    padding: 6px;
+                }
+
+                tr:nth-child(even) {
+                    background-color: #f8f9fa;
+                }
+
+                tr:hover {
+                    background-color: #eef4ff;
+                }
+            </style>
+        </head>
+        <body>
+
+            <div class="company-header">
+                <h2>${MapUser}</h2>
+                <p>Log Report</p>
+                <p>Generated On: ${new Date().toLocaleDateString()}</p>
+            </div>
+
+            ${table}
+
+        </body>
+        </html>
+    `);
+
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+    };
+
     $scope.AllIndustry = function () {
         var getData = myService.methode('POST', ("../Retail/SearchRetailCreateIndustry"), { "Action": 8 });
         getData.then(function (response) {
@@ -16,6 +196,29 @@
                 showMsgBox('999', 'Alert', 'Contact Number Should be 10 digit', 'warning', 'btn-warning')
             }
         }
+    }
+    $scope.StartDate = new Date();
+    $scope.BindActivity = function () {
+        /* $('#loadingModal').modal('show');*/
+        var collectionobj = {};
+        var datenew = "";
+        if ($('#txtStartDate').val() == '') {
+            datenew = '-1';
+        }
+        else { datenew = $('#txtStartDate').val(); }
+        collectionobj.CreatedOn = datenew;
+        collectionobj.Action = 7;
+        collectionobj.Id = MapId
+        debugger;
+        myService.methode(
+            'POST',
+            "../RetailSection/GetMaintainLog",
+            JSON.stringify(collectionobj)
+        ).then(function (response) {
+            $scope.LogActivity = response.data.Result;
+            /* $('#loadingModal').modal('hide');*/
+        });
+        /*   /* $('#loadingModal').modal('hide');*/
     }
 
     $scope.PartySearch = function () {
@@ -968,9 +1171,11 @@
             return false;
         }
 
-        // 🔴 Validation
-        if (!$scope.PPIds || $scope.PPIds.length === 0)
-            return setError("#ddlparty", "Party Required");
+      
+            if (!$scope.PPIds || $scope.PPIds.length === 0)
+                return setError("#ddlparty", "Party Required");
+        
+      
 
         if (!$scope.SiteName || !$scope.SiteName.trim())
             return setError("#txtSiteName", "Site Name Required");
@@ -1033,6 +1238,7 @@
 
             NLabourOffice: $scope.NLabourOffice,
             Nature: $scope.Nature,
+            AssignColor: $scope.AssignColor,
             PrincipalRegistration: $scope.PrincipalRegistration,
             IssuingAuthority: $scope.IssuingAuthority,
             CLRA_MaxWorkers: $scope.CLRA_MaxWorkers,
@@ -1062,38 +1268,7 @@
             if (showMsgBox(response.data.Result)) {
 
                 $scope.BindVendorSiteList();
-                 
-                $scope.SiteName = "";
-                $scope.SiteAddress = "";
-                $scope.EmailId = "";
-                $scope.MobileNo = "";
-                $scope.Description = "";
-                $scope.LocationCode = "";
-                $scope.BankDetails = "";
-                $scope.AccountNo = "";
-                $scope.Panitno = "";
-                $scope.Gstinuin = "";
-                $scope.Pincode = "";
-                $scope.CLRARC = "";
-                $scope.CLRLIC = "";
-                $scope.ContactPerson = "";
-                $scope.ContactMobile = "";
-                $scope.Descritpion = "";
-                $scope.ValidFrom = "";
-                $scope.ValidTo = "";
-                $scope.Manpowertype = "";
-                $scope.ManPowerCount = "";
-
-                $scope.AdminFileDoc = "";
-                $scope.VendorFileDoc = "";
-
-                $("#txtpincode").val('');
-
-                $scope.CountryId = "";
-                $scope.StateId = "";
-                $scope.CityId = ""; 
-                $scope.PPIds = [];
-                $scope.IsAllSelected = false;
+                $scope.Resetsite();
 
                 angular.forEach($scope.VendorList, function (item) {
                     item.Selected = false;
@@ -1101,6 +1276,164 @@
             }
         });
     };
+
+
+    $scope.AfterUpdateSite = function () {
+
+        function setError(id, message) {
+
+            $(".form-control, select").removeClass("border-danger");
+
+            var element = $(id);
+            element.addClass("border-danger");
+
+            setTimeout(function () {
+                element.focus();
+            }, 100);
+
+            showMsgBox('999', 'Alert', message, 'warning', 'btn-warning');
+            return false;
+        }
+
+       
+
+
+        if (!$scope.SiteName || !$scope.SiteName.trim())
+            return setError("#txtSiteName", "Site Name Required");
+
+        if (!$scope.SiteAddress || !$scope.SiteAddress.trim())
+            return setError("#txtSiteAddress", "Address Required");
+
+        if (!$scope.MobileNo)
+            return setError("#txtMobileNo", "Contact No Required");
+
+        if (!$scope.EmailId)
+            return setError("#txtEmailId", "Email Required");
+
+        if (!$scope.Pincode)
+            return setError("#txtPincode", "Pincode Required");
+
+        if (!$("#ddlcountry").val())
+            return setError("#ddlcountry", "Country Required");
+
+        if (!$("#ddlstate").val())
+            return setError("#ddlstate", "State Required");
+
+        if (!$("#ddlcity").val())
+            return setError("#ddlcity", "City Required");
+
+        $(".form-control, select").removeClass("border-danger");
+
+        $scope.showLoader();
+
+        var collectionobj = {
+            PartyIds: $scope.PPIds.join(','),
+            PartyType: 'Vendor',
+            SiteId: $scope.hfId,
+            SiteName: $scope.SiteName,
+            Address: $scope.SiteAddress,
+            LocationCode: $scope.LocationCode,
+            EmailId: $scope.EmailId,
+            ContactNo: $scope.MobileNo,
+            BankDetails: $scope.BankDetails,
+            AccountNo: $scope.AccountNo,
+            Description: $scope.Description,
+            Panitno: $scope.Panitno,
+            Gstinuin: $scope.Gstinuin,
+            CreatedBy: LoginId,
+            Pincode: $scope.Pincode,
+            CountryId: $("#ddlcountry").val(),
+            StateId: $("#ddlstate").val(),
+            CityId: $("#ddlcity").val(),
+            CLRARC: $scope.CLRARC,
+            CLRLIC: $scope.CLRLIC,
+            ContactPerson: $scope.ContactPerson,
+            ContactMobile: $scope.ContactMobile,
+            Descritpion: $scope.Descritpion,
+            ValidFrom: $scope.ValidFrom,
+            ValidTo: $scope.ValidTo,
+            VendorFileDoc: $scope.VendorFileDoc,
+            AdminFileDoc: $scope.AdminFileDoc,
+            Manpowertype: $scope.Manpowertype,
+            ManPowerCount: $scope.ManPowerCount,
+
+            NLabourOffice: $scope.NLabourOffice,
+            Nature: $scope.Nature,
+            AssignColor: $scope.AssignColor,
+            PrincipalRegistration: $scope.PrincipalRegistration,
+            IssuingAuthority: $scope.IssuingAuthority,
+            CLRA_MaxWorkers: $scope.CLRA_MaxWorkers,
+            CLRA_Validity: $scope.CLRA_Validity,
+            RCCopy: $scope.RCCopy,
+            RenewalRCCopy: $scope.RenewalRCCopy,
+            BOCW_Reg: $scope.BOCW_Reg,
+            BOCW_IssuingAuth: $scope.BOCW_IssuingAuth,
+            BOCW_MaxWorkers: $scope.BOCW_MaxWorkers,
+            BOCW_Validity: $scope.BOCW_Validity,
+            BOCWRCCopy: $scope.BOCWRCCopy,
+
+            RenewalBOCWRCCopy: $scope.RenewalBOCWRCCopy,
+            VendorType: 2,
+            BOCWRCCopy: $scope.BOCWRCCopy,
+
+            ActionType: 2
+        };
+
+        var getData = myService.methode(
+            'POST',
+            "../SiteManager/InsertUpdateDelSiteManager",
+            JSON.stringify(collectionobj)
+        );
+
+        getData.then(function (response) {
+            if (showMsgBox(response.data.Result)) {
+
+                $scope.BindVendorSiteList();
+                $scope.Resetsite();
+
+                angular.forEach($scope.VendorList, function (item) {
+                    item.Selected = false;
+                });
+            }
+        });
+    };
+
+
+    $scope.Resetsite = function () {
+        $scope.Editetime = '';
+        $scope.SiteName = "";
+        $scope.SiteAddress = "";
+        $scope.EmailId = "";
+        $scope.MobileNo = "";
+        $scope.Description = "";
+        $scope.LocationCode = "";
+        $scope.BankDetails = "";
+        $scope.AccountNo = "";
+        $scope.Panitno = "";
+        $scope.Gstinuin = "";
+        $scope.Pincode = "";
+        $scope.CLRARC = "";
+        $scope.CLRLIC = "";
+        $scope.ContactPerson = "";
+        $scope.ContactMobile = "";
+        $scope.Descritpion = "";
+        $scope.ValidFrom = "";
+        $scope.ValidTo = "";
+        $scope.Manpowertype = "";
+        $scope.ManPowerCount = "";
+        $scope.AssignColor = '';
+        $scope.Nature = '';
+        $scope.AdminFileDoc = "";
+        $scope.VendorFileDoc = "";
+
+        $("#txtpincode").val('');
+
+        $scope.CountryId = "";
+        $scope.StateId = "";
+        $scope.CityId = "";
+        $scope.PPIds = [];
+        $scope.IsAllSelected = false;
+    }
     $scope.BindVendorSiteList = function () {
         var collectionobj = {};
         collectionobj.Action = 29;

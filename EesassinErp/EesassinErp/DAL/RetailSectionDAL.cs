@@ -65,6 +65,7 @@ namespace DAL
                 new SqlParameter("@Photos_2_FilePath", obj.Photos_2_FilePath),
                 new SqlParameter("@Photos_3_FilePath", obj.Photos_3_FilePath),
                 new SqlParameter("@Photos_4_FilePath", obj.Photos_4_FilePath),
+                   new SqlParameter("@EmployeePhotos",obj.EmployeePhotos),
                 new SqlParameter("@UserIds", obj.LoginId),
                  new SqlParameter("@PFAccount", obj.PFAccount),
                   new SqlParameter("@LeavingDate", obj.LeavingDate),
@@ -87,8 +88,12 @@ new SqlParameter("@TempIDDate", obj.TempIDDate),
 new SqlParameter("@PermanentIDStatus", obj.PermanentIDStatus),
 new SqlParameter("@PermanentIDNumber", obj.PermanentIDNumber),
 new SqlParameter("@PermanentIDDate", obj.PermanentIDDate),
+new SqlParameter("@Transport", obj.Transport),
+new SqlParameter("@RouteId", obj.RouteId) ,
 
-
+new SqlParameter("@IssueDate", obj.IssueDate),
+new SqlParameter("@ValidTill", obj.ValidTill),
+new SqlParameter("@BloodGroup", obj.BloodGroup),
 
                 new SqlParameter("@RESULT",""),
             };
@@ -209,6 +214,7 @@ new SqlParameter("@PermanentIDDate", obj.PermanentIDDate),
                   new SqlParameter("@validTo",obj.validTo),
                     new SqlParameter("@validFrom",obj.validFrom),
                   new SqlParameter("@status",obj.status),
+                     new SqlParameter("@IsDefault",obj.IsDefault),
                  new SqlParameter("@Createdby",obj.LoginId),
                 new SqlParameter("@RESULT",""),
             };
@@ -1052,7 +1058,20 @@ new SqlParameter("@PermanentIDDate", obj.PermanentIDDate),
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.USP_ContractorComplianceBulk", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
+        public async static Task<DataTable> AuditGetContractorComlist(ContractorAttendance obj)
+        {
 
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter("@Action", obj.Action),
+                new SqlParameter("@State",obj.State),
+                new SqlParameter("@Month",obj.Month),
+                new SqlParameter("@Year",obj.Year),
+
+            };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.USP_AuditContractorComplianceBulk", CommandType.StoredProcedure, param.ToArray()));
+            return dt;
+        }
         public async static Task<string> IUDBulkContractorComplianceExcel(ContractorAttendance obj)
         {
             StringBuilder AttendanceCompliance = new StringBuilder();
@@ -1103,7 +1122,58 @@ new SqlParameter("@PermanentIDDate", obj.PermanentIDDate),
         }
 
 
-        
+
+        public async static Task<string> AuditIUDBulkContractorComplianceExcel(ContractorAttendance obj)
+        {
+            StringBuilder AttendanceCompliance = new StringBuilder();
+            string separator = ",";
+            string bigSeparator = "";
+
+            foreach (var att in obj.ContractorAttendanceList)
+            {
+                AttendanceCompliance.Append(bigSeparator);
+                AttendanceCompliance.Append(att.EmployeeId).Append(separator)
+                                    .Append(att.Month).Append(separator)
+                                    .Append(att.Year).Append(separator)
+                                    .Append(att.State).Append(separator);
+
+                for (int d = 1; d <= 31; d++)
+                {
+                    var prop = att.GetType().GetProperty($"Day{d}");
+                    AttendanceCompliance.Append(prop?.GetValue(att, null)?.ToString() ?? "").Append(separator);
+                }
+
+                AttendanceCompliance.Append(att.Designation).Append(separator)
+                                    .Append(att.BasicActGross).Append(separator)
+                                    .Append(att.BasicEarned).Append(separator)
+                                    .Append(att.DA_Earned).Append(separator)
+                                    .Append(att.HRA_Earned).Append(separator)
+                                    .Append(att.OtherAllowanceEarned);
+
+                bigSeparator = "|";
+            }
+
+
+
+            string miscCsv = obj.MiscExcelList ?? "";
+
+            var param = new List<SqlParameter>
+    {
+        new SqlParameter("@ContractorComplianceBulkList", AttendanceCompliance.ToString()),
+        new SqlParameter("@MiscExcelList", miscCsv),
+        new SqlParameter("@UserId", obj.LoginId),
+        new SqlParameter("@Action", obj.Action),
+        new SqlParameter("@Signature", obj.Signature ?? ""),
+        new SqlParameter("@RESULT", "") { Direction = ParameterDirection.Output },
+        new SqlParameter("@p4output", "") { Direction = ParameterDirection.Output }
+    };
+
+            return await Task.Factory.StartNew(() =>
+                SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("RTL.USP_AuditContractorComplianceBulk", CommandType.StoredProcedure, param.ToArray()));
+        }
+
+
+
         public async static Task<DataTable> GetReportlist(RetailLicenseDocuementMaster obj)
         {
 
@@ -1311,96 +1381,339 @@ new SqlParameter("@PermanentIDDate", obj.PermanentIDDate),
 
         }
 
+        //public async static Task<string> IUDBulkEmployeee(RetialStoreManager obj)
+        //{
+
+        //    StringBuilder EmployeeMaster = new StringBuilder();
+
+        //    string seprator = ",";
+        //    string bigseprator = "";
+        //    for (int i = 0; i < obj.EmployeeMaster.Count; i++)
+        //    {
+        //        EmployeeMaster.Append(bigseprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].RefEmployeeCode);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].EmployeeName);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].EmployeeDesignation);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].EmployeeDepartment);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].Father_Husband_Name);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].Gendar);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].MaritalStatus);
+        //        EmployeeMaster.Append(seprator);
+        //        //EmployeeMaster.Append(Convert.ToDateTime(obj.EmployeeMaster[i].DateOfBirth).ToString("yyyy-MM-dd"));
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].DateOfBirth);
+
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].PresentAddress);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].PermanemtAddress);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].AdharCardNumber);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].PANNumber);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].MobileNumber);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].AlternativeMobileNumber);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].EmployeeEmailID);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].BankAccountNumber);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].BankIFSCCode);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].PreviousUAN);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].PreviousESI);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].GrossSalary);
+        //        EmployeeMaster.Append(seprator);
+
+        //      // EmployeeMaster.Append(Convert.ToDateTime(obj.EmployeeMaster[i].DOJ).ToString("yyyy-MM-dd"));
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].DOJ);
+
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].NomineeName);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].NomineeAddress);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].NomineeRelation);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].NomineeDOB);
+        //        //EmployeeMaster.Append(Convert.ToDateTime(obj.EmployeeMaster[i].NomineeDOB).ToString("yyyy-MM-dd"));
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].StoreCode);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].IsActive);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].LeavingDate);
+        //        EmployeeMaster.Append(seprator);
+        //        EmployeeMaster.Append(obj.EmployeeMaster[i].PFAccount);
+        //        bigseprator = "|";
+        //    }
+
+        //    var param = new List<SqlParameter>
+        //    {
+        //        new SqlParameter("@EmployeeMaster", EmployeeMaster.ToString()),
+        //          new SqlParameter("@PartyId", obj.PartyId),
+        //            new SqlParameter("@UserId", obj.UserId),
+        //        new SqlParameter("@Action", obj.ActionType),
+        //        new SqlParameter("@RESULT",""),
+        //    };
+        //    return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[RTL].[USP_EmployeeMaster]", CommandType.StoredProcedure, param.ToArray()));
+
+        //}
+
+
         public async static Task<string> IUDBulkEmployeee(RetialStoreManager obj)
         {
-
             StringBuilder EmployeeMaster = new StringBuilder();
 
             string seprator = ",";
             string bigseprator = "";
+
             for (int i = 0; i < obj.EmployeeMaster.Count; i++)
             {
+                var item = obj.EmployeeMaster[i];
+
                 EmployeeMaster.Append(bigseprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].RefEmployeeCode);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].EmployeeName);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].EmployeeDesignation);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].EmployeeDepartment);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].Father_Husband_Name);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].Gendar);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].MaritalStatus);
-                EmployeeMaster.Append(seprator);
-                //EmployeeMaster.Append(Convert.ToDateTime(obj.EmployeeMaster[i].DateOfBirth).ToString("yyyy-MM-dd"));
-                EmployeeMaster.Append(obj.EmployeeMaster[i].DateOfBirth);
 
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].PresentAddress);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].PermanemtAddress);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].AdharCardNumber);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].PANNumber);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].MobileNumber);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].AlternativeMobileNumber);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].EmployeeEmailID);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].BankAccountNumber);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].BankIFSCCode);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].PreviousUAN);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].PreviousESI);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].GrossSalary);
-                EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.RefEmployeeCode); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.EmployeeName); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.EmployeeDesignation); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.EmployeeDepartment); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.Father_Husband_Name); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.Gendar); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.MaritalStatus); EmployeeMaster.Append(seprator);
 
-              // EmployeeMaster.Append(Convert.ToDateTime(obj.EmployeeMaster[i].DOJ).ToString("yyyy-MM-dd"));
-                EmployeeMaster.Append(obj.EmployeeMaster[i].DOJ);
+                EmployeeMaster.Append(item.DateOfBirth); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.DOJ); EmployeeMaster.Append(seprator);
 
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].NomineeName);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].NomineeAddress);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].NomineeRelation);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].NomineeDOB);
-                //EmployeeMaster.Append(Convert.ToDateTime(obj.EmployeeMaster[i].NomineeDOB).ToString("yyyy-MM-dd"));
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].StoreCode);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].IsActive);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].LeavingDate);
-                EmployeeMaster.Append(seprator);
-                EmployeeMaster.Append(obj.EmployeeMaster[i].PFAccount);
+                EmployeeMaster.Append(item.PresentAddress); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.PermanemtAddress); EmployeeMaster.Append(seprator);
+
+                EmployeeMaster.Append(item.MobileNumber); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.AlternativeMobileNumber); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.EmployeeEmailID); EmployeeMaster.Append(seprator);
+
+                EmployeeMaster.Append(item.PANNumber); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.AdharCardNumber); EmployeeMaster.Append(seprator);
+
+                EmployeeMaster.Append(item.PreviousUAN); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.PFAccount); EmployeeMaster.Append(seprator);
+
+                EmployeeMaster.Append(item.BankAccountNumber); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.BankIFSCCode); EmployeeMaster.Append(seprator);
+
+                EmployeeMaster.Append(item.PreviousESI); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.GrossSalary); EmployeeMaster.Append(seprator);
+
+                EmployeeMaster.Append(item.NomineeName); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.NomineeRelation); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.NomineeDOB); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.NomineeAddress); EmployeeMaster.Append(seprator);
+
+                EmployeeMaster.Append(item.MinimumWageCategory); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.WageType); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.WageDisbursementMode); EmployeeMaster.Append(seprator);
+
+                EmployeeMaster.Append(item.PPE); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.PPEType); EmployeeMaster.Append(seprator);
+
+                EmployeeMaster.Append(item.SafetyTrainingStatus); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.SiteInductionStatus); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.PoliceVerificationStatus); EmployeeMaster.Append(seprator);
+
+                EmployeeMaster.Append(item.TempIDStatus); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.TempIDNumber); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.TempIDDate); EmployeeMaster.Append(seprator);
+
+                EmployeeMaster.Append(item.PermanentIDStatus); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.PermanentIDNumber); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.PermanentIDDate); EmployeeMaster.Append(seprator);
+
+                // existing extra fields
+                EmployeeMaster.Append(item.StoreCode); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.IsActive); EmployeeMaster.Append(seprator);
+                EmployeeMaster.Append(item.LeavingDate);
+
                 bigseprator = "|";
             }
 
             var param = new List<SqlParameter>
-            {
-                new SqlParameter("@EmployeeMaster", EmployeeMaster.ToString()),
-                  new SqlParameter("@PartyId", obj.PartyId),
-                    new SqlParameter("@UserId", obj.UserId),
-                new SqlParameter("@Action", obj.ActionType),
-                new SqlParameter("@RESULT",""),
-            };
-            return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[RTL].[USP_EmployeeMaster]", CommandType.StoredProcedure, param.ToArray()));
+    {
+        new SqlParameter("@EmployeeMaster", EmployeeMaster.ToString()),
+        new SqlParameter("@PartyId", obj.PartyId),
+        new SqlParameter("@UserId", obj.UserId),
+        new SqlParameter("@Action", obj.ActionType),
+        new SqlParameter("@RESULT",""),
+    };
 
+            return await Task.Factory.StartNew(() =>
+                SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar(
+                    "[RTL].[USP_EmployeeMaster]",
+                    CommandType.StoredProcedure,
+                    param.ToArray()
+                )
+            );
         }
 
 
 
+
+        public async static Task<string> NewIUDBulkEmployeee(RetialStoreManager obj)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("RefEmployeeCode");
+                dt.Columns.Add("EmployeeName");
+                dt.Columns.Add("SiteName");
+                dt.Columns.Add("EmployeeDesignation");
+
+                dt.Columns.Add("EmployeeDepartment");
+                dt.Columns.Add("Father_Husband_Name");
+                dt.Columns.Add("Gendar");
+                dt.Columns.Add("MaritalStatus");
+                dt.Columns.Add("DateOfBirth");
+                dt.Columns.Add("DOJ");
+                dt.Columns.Add("PresentAddress");
+                dt.Columns.Add("PermanemtAddress");
+                dt.Columns.Add("MobileNumber");
+                dt.Columns.Add("AlternativeMobileNumber");
+                dt.Columns.Add("EmployeeEmailID");
+                dt.Columns.Add("PANNumber");
+                dt.Columns.Add("AdharCardNumber");
+                dt.Columns.Add("UAN");
+                dt.Columns.Add("PFAccount");
+                dt.Columns.Add("BankAccountNumber");
+                dt.Columns.Add("BankIFSCCode");
+                dt.Columns.Add("PreviousESI");
+                dt.Columns.Add("GrossSalary");
+                dt.Columns.Add("NomineeName");
+                dt.Columns.Add("NomineeRelation");
+                dt.Columns.Add("NomineeDOB");
+                dt.Columns.Add("NomineeAddress");
+                dt.Columns.Add("MinimumWageCategory");
+                dt.Columns.Add("WageType");
+                dt.Columns.Add("WageDisbursementMode");
+                dt.Columns.Add("PPE");
+                dt.Columns.Add("PPEType");
+                dt.Columns.Add("SafetyTrainingStatus");
+                dt.Columns.Add("SiteInductionStatus");
+                dt.Columns.Add("PoliceVerificationStatus");
+                dt.Columns.Add("TempIDStatus");
+                dt.Columns.Add("TempIDNumber");
+                dt.Columns.Add("TempIDDate");
+                dt.Columns.Add("PermanentIDStatus");
+                dt.Columns.Add("PermanentIDNumber");
+                dt.Columns.Add("PermanentIDDate");
+
+                foreach (var item in obj.EmployeeMaster)
+                {
+                    dt.Rows.Add(
+                        item.RefEmployeeCode,
+                        item.EmployeeName,
+                        item.SiteName,
+                        item.EmployeeDesignation,
+
+                        item.EmployeeDepartment,
+                        item.Father_Husband_Name,
+                        item.Gendar,
+                        item.MaritalStatus,
+                        item.DateOfBirth,
+                        item.DOJ,
+                        
+
+                        item.PresentAddress,
+                        item.PermanemtAddress,
+
+                        item.MobileNumber,
+                        item.AlternativeMobileNumber,
+                        item.EmployeeEmailID,
+
+                        item.PANNumber,
+                        item.AdharCardNumber,
+
+                        item.PreviousUAN,
+                        item.PFAccount,
+
+                        item.BankAccountNumber,
+                        item.BankIFSCCode,
+
+                        item.PreviousESI,
+                       item.GrossSalary,
+
+                        item.NomineeName,
+                        item.NomineeRelation,
+                        item.NomineeDOB,
+                        item.NomineeAddress,
+
+                        item.MinimumWageCategory,
+                        item.WageType,
+                        item.WageDisbursementMode,
+
+                        item.PPE,
+                        item.PPEType,
+
+                        item.SafetyTrainingStatus,
+                        item.SiteInductionStatus,
+                        item.PoliceVerificationStatus,
+
+                        item.TempIDStatus,
+                        item.TempIDNumber,
+                         item.TempIDDate,
+
+                        item.PermanentIDStatus,
+                        item.PermanentIDNumber,
+                       item.PermanentIDDate
+                    );
+                }
+
+                // 🔍 Debug check
+                if (dt.Rows.Count == 0)
+                {
+                    return "No data found to insert";
+                }
+
+                var parameters = new List<SqlParameter>
+        {
+            new SqlParameter("@EmployeeTable", dt)
+            {
+                SqlDbType = SqlDbType.Structured,
+                TypeName = "EmployeeType_V2" // 🔥 yaha check karo SQL me same naam ho
+            },
+            new SqlParameter("@PartyId", obj.PartyId),
+            new SqlParameter("@UserId", obj.UserId),
+            new SqlParameter("@Action", obj.ActionType),
+            new SqlParameter("@RESULT", SqlDbType.NVarChar, 100)
+            {
+                Direction = ParameterDirection.Output
+            }
+        };
+
+                var result = await Task.Run(() =>
+                    SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar(
+                        "[RTL].[USP_EmployeeMaster]",
+                        CommandType.StoredProcedure,
+                        parameters.ToArray()
+                    )
+                );
+
+                return result?.ToString() ?? "Success";
+            }
+            catch (Exception ex)
+            {
+                // 🔥 Full error return karega (debug ke liye best)
+                return "ERROR: " + ex.Message + " | INNER: " + ex.InnerException;
+            }
+        }
 
         public async static Task<string> IUDBulkComplianceExcel(Attendance obj)
         {
@@ -2852,6 +3165,19 @@ new SqlParameter("@PermanentIDDate", obj.PermanentIDDate),
         }
 
 
+        public async static Task<DataTable> SearchRoute(RetailBAL obj)
+        {
+            var param = new List<SqlParameter>
+                {
+                new SqlParameter("@Id", obj.Id),
+                new SqlParameter("@Action", obj.Action),
+                new SqlParameter("@LoginId", obj.UserId)
+                };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.USP_RouteMaster", CommandType.StoredProcedure, param.ToArray()));
+            return dt;
+        }
+        
+
         public async static Task<string> InsertRegister(RetailBAL obj)
         {
             var param = new List<SqlParameter>
@@ -2953,5 +3279,80 @@ new SqlParameter("@PermanentIDDate", obj.PermanentIDDate),
             );
         }
 
+
+
+        public async static Task<string> InsertUpdateRouteMaster(RouteMasterModel obj)
+        {
+            var param = new List<SqlParameter>
+    {
+        new SqlParameter("@Action", obj.ActionType ?? (object)DBNull.Value),
+        new SqlParameter("@Id", obj.Id ?? (object)DBNull.Value),
+        new SqlParameter("@UserId", obj.UserId ?? (object)DBNull.Value),
+        new SqlParameter("@PartyId", obj.PartyId ?? (object)DBNull.Value),
+
+        // Route Details
+       
+        new SqlParameter("@RouteID", obj.RouteID ?? (object)DBNull.Value),
+
+              new SqlParameter("@RouteName", obj.RouteName),
+        new SqlParameter("@CompanyName", obj.CompanyName ?? (object)DBNull.Value),
+        new SqlParameter("@Location", obj.Location ?? (object)DBNull.Value),
+        new SqlParameter("@RouteStartLocation", obj.RouteStartLocation ?? (object)DBNull.Value),
+        new SqlParameter("@RouteEndLocation", obj.RouteEndLocation ?? (object)DBNull.Value),
+        new SqlParameter("@Status", obj.Status ?? (object)DBNull.Value),
+
+        // Bus Details
+        new SqlParameter("@BusNumber", obj.BusNumber ?? (object)DBNull.Value),
+        new SqlParameter("@RCNO", obj.RCNO ?? (object)DBNull.Value),
+        new SqlParameter("@SeatingCapacity", obj.SeatingCapacity ?? (object)DBNull.Value),
+        new SqlParameter("@BusType", obj.BusType ?? (object)DBNull.Value),
+
+        // Driver Details
+        new SqlParameter("@DriverName", obj.DriverName ?? (object)DBNull.Value),
+        new SqlParameter("@DriverContactNumber", obj.DriverContactNumber ?? (object)DBNull.Value),
+        new SqlParameter("@DriverAddress", obj.DriverAddress ?? (object)DBNull.Value),
+        new SqlParameter("@LicenseNumber", obj.LicenseNumber ?? (object)DBNull.Value),
+
+        // Conductor Details
+        new SqlParameter("@ConductorName", obj.ConductorName ?? (object)DBNull.Value),
+        new SqlParameter("@ConductorContact", obj.ConductorContact ?? (object)DBNull.Value),
+        new SqlParameter("@ConductorAddress", obj.ConductorAddress ?? (object)DBNull.Value),
+
+        // FILES
+        new SqlParameter("@LicenseCopy", obj.LicenseCopy ?? (object)DBNull.Value),
+        new SqlParameter("@AadharCardCopy", obj.AadharCardCopy ?? (object)DBNull.Value),
+        new SqlParameter("@ConductorAadhaarCard", obj.ConductorAadhaarCard ?? (object)DBNull.Value),
+
+        new SqlParameter("@BusRC", obj.BusRC ?? (object)DBNull.Value),
+        new SqlParameter("@PollutionCertificate", obj.PollutionCertificate ?? (object)DBNull.Value),
+        new SqlParameter("@FitnessCertificate", obj.FitnessCertificate ?? (object)DBNull.Value),
+        new SqlParameter("@InsuranceCopy", obj.InsuranceCopy ?? (object)DBNull.Value),
+
+        new SqlParameter("@RESULT", "")
+    };
+
+            return await Task.Factory.StartNew(() =>
+                SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar(
+                    "RTL.USP_RouteMaster",   
+                    CommandType.StoredProcedure,
+                    param.ToArray()
+                )
+            );
+        }
+ // here is define bind financial compliance events dated 18/4/2026
+        public async static Task<DataTable> SearchFinacialStatutoryEvent(RetailBAL obj)
+        {
+            var param = new List<SqlParameter>
+            {
+                    new SqlParameter("@Action", obj.Action),
+                     new SqlParameter("@Year", obj.Year),
+                    new SqlParameter("@Month", obj.Month),
+                    new SqlParameter("@State", obj.State),
+                    new SqlParameter("@CACId", obj.CACId),
+                    new SqlParameter("@Id", obj.Id),
+            };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[USP_FinancialStatutoryEvent]", CommandType.StoredProcedure, param.ToArray()));
+            return dt;
+        }
     }
 }

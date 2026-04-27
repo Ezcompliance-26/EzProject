@@ -608,6 +608,8 @@
         // Use input.id instead of event.target.id
         let idText = input.id.replace(fieldName, "");
 
+
+
         // convert to number safely
         let rowId = parseInt(idText);
 
@@ -633,11 +635,9 @@
             return;
         }
 
-        const MAX_SIZE_MB = 3;
+        const MAX_SIZE_MB = 20;
         const fileSizeMB = file.size / (1024 * 1024);
-        if (fileSizeMB > MAX_SIZE_MB) {
-            swal("File Too Large", "Maximum allowed file size is 3 MB.", "error");
-            input.value = "";
+        if (fileSizeMB > MAX_SIZE_MB) { 
             return;
         }
 

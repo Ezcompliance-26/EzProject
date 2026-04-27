@@ -4,8 +4,353 @@
     Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
 <script src="~/Masters/NewEmployeeMaster/script.js"></script>
-<link href="~/Masters/NewEmployeeMaster/style.css" rel="stylesheet" /> 
+<link href="~/Masters/NewEmployeeMaster/style.css" rel="stylesheet" />
 <script src="~/scripts/RetailJsLib/NewEmployeeController.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<style>
+    p {
+        margin-top: 0;
+        margin-bottom: 0rem !important;
+    }
+
+    .d-none-print {
+        display: none;
+    }
+
+    .d-none-print {
+        display: none;
+    }
+    .cropper-view-box,
+    .cropper-face {
+        border-radius: 50%;
+    }
+</style>
+<style>
+        /* ================= CONTAINER ================= */
+        .idCardContainer {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* ================= CARD BASE ================= */
+        .idCard {
+            background: #f4f4f4;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================= UI CARD (MODAL) ================= */
+        .employeeViewModalPage .idCard {
+            width: 420px;
+            height: 260px;
+        }
+
+        /* ================= PRINT CARD ================= */
+        /*#printArea .idCard {
+        width: 340px;
+        height: 214px;
+    }*/
+
+        /* ================= HEADER ================= */
+        .idHeader {
+            height: 60px;
+            background: #8f8f8f;
+            /*border-bottom-left-radius: 25px;
+        border-bottom-right-radius: 25px;*/
+            position: relative;
+        }
+
+        .logoBox {
+            position: absolute;
+            right: 0px;
+            top: 8px;
+            background: #D9D9D9;
+            padding: 10px 10px;
+            border-bottom-left-radius: 40px;
+            border-top-left-radius: 40px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            width: 30%;
+            overflow: hidden;
+        }
+
+            .logoBox span {
+                font-size: 11px;
+                font-weight: 600;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .logoBox img {
+                width: 18px;
+            }
+
+        /* ================= PROFILE ================= */
+        .profileSection {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 15px;
+            gap: 10px;
+        }
+
+        .profileImage {
+            width: 100px;
+            height: 100px;
+            min-width: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-top: -40px;
+            border: 2px solid #fff;
+            z-index: 10;
+        }
+
+            .profileImage img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .profileDetails {
+            /*flex: 1;*/
+            min-width: 0;
+            padding-left: 1rem;
+        }
+
+            .profileDetails h2 {
+                font-size: 16px;
+                /* color: #00224F;*/
+                margin: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .profileDetails p {
+                font-size: 12px;
+                margin: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+        /* ================= QR ================= */
+        .qrCode {
+            margin-left: auto;
+        }
+
+            .qrCode img {
+                width: 55px;
+            }
+
+        /* ================= INFO ================= */
+        .infoSection {
+            display: flex;
+            padding: 8px 10px;
+            flex: 1;
+        }
+
+            .infoSection .left,
+            .infoSection .right {
+                width: 50%;
+                min-width: 0;
+            }
+
+        .divider {
+            width: 2px;
+            background: #1d3557;
+            margin: 0 5px;
+        }
+
+        .field label {
+            font-size: 10px;
+            color: #1d3557;
+        }
+
+        .field h4 {
+            font-size: 13px;
+            margin: 2px 0 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ================= BACK ================= */
+        .backContent {
+            padding: 10px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .row1 {
+            display: flex;
+            justify-content: space-between;
+            gap: 6px;
+        }
+
+            .row1 div {
+                width: 50%;
+                min-width: 0;
+            }
+
+        .backContent h4 {
+            font-size: 11px;
+            margin: 2px 0 6px;
+            line-height: 1.2;
+            max-height: 28px;
+            overflow: hidden;
+        }
+
+
+        /* ================= NOTES ================= */
+        .notesBox {
+            background: #e6e6e6;
+            border-radius: 8px;
+            padding: 6px;
+            font-size: 10px;
+            text-align: left;
+        }
+
+            .notesBox ul {
+                margin: 0;
+                padding-left: 12px;
+            }
+
+        /* ================= FLIP ================= */
+        .flip-card {
+            width: 420px;
+            height: 260px;
+            perspective: 1000px;
+            margin: auto;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flip .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+        }
+
+            .card-face.back {
+                transform: rotateY(180deg);
+            }
+
+        /* ================= PRINT FIX ================= */
+        /* HIDE FROM SCREEN BUT KEEP FOR PRINT */
+        .printAreaHidden {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        @@media print {
+
+            body * {
+                visibility: hidden !important;
+            }
+
+            #printArea,
+            #printArea * {
+                visibility: visible !important;
+            }
+
+            #printArea {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
+
+            FORCE STYLES
+            #printArea .idCard {
+                width: 340px !important;
+                height: 214px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                background: #f4f4f4 !important;
+            }
+
+            #printArea .idCardContainer {
+                display: flex !important;
+                gap: 10px !important;
+                justify-content: center !important;
+            }
+        }
+
+        .row1 {
+            display: flex;
+            gap: 6px;
+        }
+
+            .row1 div {
+                width: 50%;
+                min-width: 0;
+            }
+
+                .row1 div[style*="100%"] {
+                    width: 100%;
+                }
+
+        Company + Address stacking
+        .backContent .row1:first-child div:first-child h4 {
+            font-size: 12px;
+            line-height: 1.2;
+            margin: 2px 0;
+        }
+
+        Prevent overflow breaking layout
+        .backContent .row1 div {
+            min-width: 0;
+        }
+
+        .backContent h4 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /*FOOTER*/
+        .footerRow {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 400;
+        }
+
+            .footerRow .label {
+                color: #00224F;
+                font-size: 11px;
+            }
+
+            .footerRow span {
+                font-size: 11px;
+            }
+
+        .rightAlign {
+            text-align: right;
+        }
+</style>            
 <script>
 
     $(document).ready(function () {
@@ -48,13 +393,13 @@
 
         document.body.innerHTML = originalContents;
     }</script>
-<div class="employeeMasterPage px-4 py-2"  >
+<div class="employeeMasterPage px-4 py-2">
     <!-- Top bar: instruction left + Bulk Download button right -->
     <div class="d-flex align-items-center justify-content-between mb-3 top-bar">
         <div class="d-flex align-items-center gap-2 flex-wrap">
             @*<div class="limit-instruction">Location Employee Limit: <strong>600</strong></div>
-            <div class="limit-instruction">Created: <strong>250</strong></div>
-            <div class="limit-instruction">Left: <strong>350</strong></div>*@
+                <div class="limit-instruction">Created: <strong>250</strong></div>
+                <div class="limit-instruction">Left: <strong>350</strong></div>*@
         </div>
         <div class="d-flex align-items-center gap-2" ng-hide="loginType === 5">
             <!-- New Employee (rounded pill) -->
@@ -70,7 +415,7 @@
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content employee-modal">
                 <!-- Header -->
-                <div class="modal-header employee-modal-header" >
+                <div class="modal-header employee-modal-header">
                     <h6 class="modal-title">Add New Employee</h6>
                     <button type="button" class="btn-close btn-close-white" ng-click="opensomething()" data-bs-dismiss="modal"></button>
                 </div>
@@ -134,6 +479,22 @@
                                     <option value="UnMarried">UnMarried</option>
                                 </select>
                             </div>
+                            <div class="col-lg-3 col-md-6" ng-init="GetTransport()">
+                                <label class="form-label">Allow Transport<span class="text-danger">*</span></label>
+                                <select class="form-select form-select-sm" ng-model="Transport" ng-change="openRoutetransport();GetTransport()">
+                                    <option value="">Select</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-6" ng-show="OpenRoute">
+
+                                <label class="form-label">Route<span class="text-danger">*</span></label>
+                                <select class="form-select form-control-sm validate" ng-model="RouteId">
+                                    <option value="">Select</option>
+                                    <option ng-repeat="x in TransportList" value="{{x.RouteID}}">{{x.RouteName}}</option>
+                                </select>
+                            </div>
                             <!-- Dates & Status  -->
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
@@ -143,10 +504,16 @@
                                 <label class="form-label">Date of Joining <span class="text-danger">*</span></label>
                                 <input type="date" class="form-control form-control-sm validate" id="txtDOJ" ng-model="DOJ">
                             </div>
-                            @*<div class="col-lg-3 col-md-6">
-                <label class="form-label">Date of Leaving <span class="text-danger">*</span></label>
-                <input type="date" class="form-control form-control-sm" id="txtleavingDate" ng-model="LeavingDate">
-            </div>*@
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Employee Photo<span class="text-danger">*</span></label>
+
+
+                                <input type="file" class="file-name"
+                                       onchange="angular.element(this).scope().openCropper(this)" />
+                                <img ng-if="EmployeePhotos"
+                                     ng-src="{{EmployeePhotos}}"
+                                     style="width:80px;height:80px;border-radius:5px;margin-top:5px;" />
+                            </div>
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Status</label>
                                 <select class="form-select form-select-sm validate"
@@ -156,7 +523,19 @@
                                     <option value="1">Active</option>
                                 </select>
                             </div>
-                        </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">I card Issue Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control form-control-sm validate" id="txtissueDate" ng-model="IssueDate">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">I card Valid Till<span class="text-danger">*</span></label>
+                                <input type="date" class="form-control form-control-sm validate" id="txtValidTill" ng-model="ValidTill">
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label class="form-label">Blood Group<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-sm validate" id="txtBloodGroup" ng-model="BloodGroup">
+                            </div>
+                        </div> 
 
                         <!-- Contact  -->
                         <hr>
@@ -182,6 +561,7 @@
                                 <label class="form-label">Employee Email ID</label>
                                 <input class="form-control form-control-sm" id="txtEmployeeEmailID" ng-model="EmployeeEmailID" onblur="validateEmail('#txtEmployeeEmailID')">
                             </div>
+
                         </div>
 
                         <!-- Identity & Bank  -->
@@ -569,7 +949,7 @@
 
                             <div class="col-lg-3 col-md-6">
                                 <label class="form-label">Permanent Gate Pass Date</label>
-                                <input type="date"  id="txtPermanentIDDate" class="form-control form-control-sm"
+                                <input type="date" id="txtPermanentIDDate" class="form-control form-control-sm"
                                        ng-model="PermanentIDDate">
                             </div>
 
@@ -579,13 +959,13 @@
                 <!-- Footer -->
                 <div class="modal-footer employee-modal-footer" ng-hide="loginType === 5">
                     <button class="btn cancel-btn" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn import-save-btn"  
-                            ng-show="act==1" 
+                    <button class="btn import-save-btn"
+                            ng-show="act==1"
                             ng-click="ShowDivEmployeeMasterGrid();ManageLog('Submit in Employee Master ')">
                         Submit
                     </button>
 
-                    <button class="btn import-save-btn" data-bs-dismiss="modal" 
+                    <button class="btn import-save-btn" data-bs-dismiss="modal"
                             ng-show="act==2"
                             ng-click="SaveEmployee();ManageLog('Update in Employee Master ')">
                         Update
@@ -597,8 +977,8 @@
     <!-- Capsule Toggle (single capsule container) -->
     <div class="mb-3">
         <div class="toggle-pill" role="tablist" aria-label="View or Generate">
-            @*<button type="button" class="btn btn-pill active" data-target="#viewCard" aria-pressed="true">View</button>*@
-            @*<button type="button" class="btn btn-pill" data-target="#generateCard" aria-pressed="false">Generate</button>*@
+            <button type="button" id="tab1-tab" class="btn btn-pill active" data-target="#viewCard" aria-pressed="true">View</button>
+            <button type="button" class="btn btn-pill" data-target="#generateCard" aria-pressed="false">Generate</button>
         </div>
     </div>
 
@@ -645,13 +1025,13 @@
                         </div>
                         <div>
                             @*<div class="dropdown">
-                                    <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="" ng-click="ExportExcel(); $event.preventDefault(); ManageLog('Export CSV')"> CSV </a></li>
-                                        <li><a class="dropdown-item" href="" ng-click="ExportPdf();ManageLog('click on Export in PDF button  Employee button')">PDF</a></li>
-                                        <li><a class="dropdown-item" href="" ng-click="ExportPdf();ManageLog('click on Export in PDF button  Employee button')">Print</a></li>
-                                    </ul>
-                                </div>*@
+                                <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Export</button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="" ng-click="ExportExcel(); $event.preventDefault(); ManageLog('Export CSV')"> CSV </a></li>
+                                    <li><a class="dropdown-item" href="" ng-click="ExportPdf();ManageLog('click on Export in PDF button  Employee button')">PDF</a></li>
+                                    <li><a class="dropdown-item" href="" ng-click="ExportPdf();ManageLog('click on Export in PDF button  Employee button')">Print</a></li>
+                                </ul>
+                            </div>*@
                             <div class="dropdown">
                                 <button class="btn btn-sm export-btn dropdown-toggle" data-bs-toggle="dropdown">
                                     Export
@@ -717,6 +1097,11 @@
                                             <li>
                                                 <a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#employeeViewModal" ng-click="openEmployeeModal(employee.Id)">
                                                     View More
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#IcardViewModal" ng-click="IcardDetail(employee)">
+                                                    I-Card
                                                 </a>
                                             </li>
                                             <li>
@@ -962,7 +1347,7 @@
                             <div class="ev-transfer-table">
                                 <table class="ev-transfer-table-inner">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th>Site Name</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
@@ -970,7 +1355,7 @@
                                     </thead>
                                     <tbody>
                                         <tr ng-repeat="x in TransferLog">
-                                            <td>{{x.UnitCode}}</td> 
+                                            <td>{{x.UnitCode}}</td>
                                             <td>{{x.StartDate}}</td>
                                             <td>{{x.EndDate}}</td>
                                         </tr>
@@ -988,8 +1373,8 @@
                                 data-bs-target="#transferEmployeeModal">
                             Transfer
                         </button>
-                     
-                        <button class="btn ev-footer-btn primary"  data-bs-dismiss="modal"
+
+                        <button class="btn ev-footer-btn primary" data-bs-dismiss="modal"
                                 ng-click="EditEmployee(employee.Id)">
                             View More
                         </button>
@@ -1020,7 +1405,7 @@
                         </div>
                         <hr />
                         <div class="te-units-title">Sites</div>
-                        
+
                         <div class="te-unit-row" ng-repeat="x in TransferStoreList | filter : Searctrasnsfer" ng-if="x.SiteId != employee.SiteId">
                             <div class="te-unit-left">
                                 <div class="te-unit-code">{{x.SiteName}}</div>
@@ -1056,7 +1441,7 @@
                     </div>
                     <!-- BODY -->
                     <div class="modal-body complianceDocs-body" ng-init="BindEmpComplianceDoc()">
-                            
+
                         <!-- DOCUMENT ITEM -->
                         <div class="doc-item" ng-repeat="x in AllempComplianceDocList">
                             <div class="doc-row">
@@ -1067,11 +1452,11 @@
                                            onchange="angular.element(this).scope().FileChanged(this)" />
                                 </div>
                                 <div class="doc-actions">
-                                 
-                                    <i class="bi bi-upload action-icon" ng-click="UploadDoc(x.DocumentId)"  ng-hide="loginType === 5" ></i>
-                                    <i class="bi bi-eye action-icon"  ng-if="x.Filepath" ng-click="ViewFileC(x.Filepath)"></i>
-                                    <i class="bi bi-download action-icon"  ng-if="x.Filepath"  ng-click="DownloadFileC(x.Filepath,x.DocumentName)"></i>
-                                    <i class="bi bi-chevron-down toggle-history"  ng-if="x.Filepath"
+
+                                    <i class="bi bi-upload action-icon" ng-click="UploadDoc(x.DocumentId)" ng-hide="loginType === 5"></i>
+                                    <i class="bi bi-eye action-icon" ng-if="x.Filepath" ng-click="ViewFileC(x.Filepath)"></i>
+                                    <i class="bi bi-download action-icon" ng-if="x.Filepath" ng-click="DownloadFileC(x.Filepath,x.DocumentName)"></i>
+                                    <i class="bi bi-chevron-down toggle-history" ng-if="x.Filepath"
                                        data-bs-toggle="collapse"
                                        data-bs-target="#panHistory"></i>
                                 </div>
@@ -1081,11 +1466,11 @@
                                 <div class="history-item">
                                     <span class="version">v1</span>
                                     <span class="date">Uploaded: {{x.Uploaded}}</span>
-                                    <i class="bi bi-download action-icon small-icon"  ng-click="UploadDoc(x)" ></i>
+                                    <i class="bi bi-download action-icon small-icon" ng-click="UploadDoc(x)"></i>
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
 
                 </div>
@@ -1117,5 +1502,305 @@
             </div>
         </div>
 
+
+        <!-- ================= Employee ID Card ================= -->
+        <!--  PRINT AREA (HIDDEN) -->
+        <div id="printArea" class="d-none-print" >
+
+            <div style="display:flex;gap:20px;justify-content:center;font-family:'Segoe UI',sans-serif;">
+
+                <!-- FRONT -->
+                <div style="width:420px;height:260px;background:#f4f4f4;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;position:relative;">
+
+                    <!-- HEADER -->
+                    <div style="height:60px;background:{{AssignColor}};position:relative;">
+
+                        <div style="position:absolute;right:0;top:9px;background:#D9D9D9;padding:10px;border-bottom-left-radius:40px;border-top-left-radius:40px;width:30%;display:flex;align-items:center;justify-content:center;">
+                          {{MapUser}}
+                        </div>
+                    </div>
+
+                    <!-- PROFILE -->
+                    <div style="display:flex;align-items:flex-start;padding:10px 15px;gap:10px;">
+
+                        <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;margin-top:-40px;border:2px solid #fff; z-index:999">
+                            <img ng-src="{{EmployeePhotos ? EmployeePhotos : '../DownloadMat/dummy.jpg'}}"
+                                 style="width:100%;height:100%;object-fit:cover;">
+                        </div>
+
+                        <div style="padding-left:1rem;min-width:0;">
+                            <h2 style="font-size:16px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                {{EmpName}}
+                            </h2>
+                            <p style="font-size:12px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                {{EmpDesignation}}
+                            </p>
+                        </div>
+
+                        <div style="margin-left:auto;">
+                            <img ng-src="{{getQrUrl()}}" style="width:55px;">
+                        </div>
+
+                    </div>
+
+                    <!-- INFO -->
+                    <div style="display:flex;padding:8px 10px;flex:1;">
+
+                        <!-- LEFT -->
+                        <div style="width:50%;min-width:0;">
+                            <div>
+                                <label style="font-size:10px;color:#1d3557;">EmpCode</label>
+                                <h4 style="font-size:13px;margin:2px 0 6px;">{{EmpCode}}</h4>
+                            </div>
+
+                            <div>
+                                <label style="font-size:10px;color:#1d3557;">Mobile Number</label>
+                                <h4 style="font-size:13px;margin:2px 0 6px;">{{EmpMobile}}</h4>
+                            </div>
+                        </div>
+
+                        <!-- DIVIDER -->
+                        <div style="width:2px;background:#1d3557;margin:0 5px;"></div>
+
+                        <!-- RIGHT -->
+                        <div style="width:50%;min-width:0;">
+                            <div>
+                                <label style="font-size:10px;color:#1d3557;">Department</label>
+                                <h4 style="font-size:13px;margin:2px 0 6px;">{{EmpDep}}</h4>
+                            </div>
+
+                            <div>
+                                <label style="font-size:10px;color:#1d3557;">Site</label>
+                                <h4 style="font-size:13px;margin:2px 0 6px;">{{SiteName}}</h4>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- BACK -->
+                <div style="width:420px;height:260px;background:#f4f4f4;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+
+                    <div style="padding:10px;height:100%;display:flex;flex-direction:column;justify-content:space-between;">
+
+                        <!-- ROW 1 -->
+                        <div style="display:flex;gap:6px;">
+                            <div style="width:50%;">
+                                <label style="font-size:10px;color:#1d3557;">Address</label>
+                                <h4 style="font-size:11px;margin:2px 0;line-height:1.2;">
+                                    {{MapUser}}<br>{{BranchAddress}}
+                                </h4>
+                            </div>
+
+                            <div style="width:50%;">
+                                <label style="font-size:10px;color:#1d3557;">EmailId</label>
+                                <h4 style="font-size:11px;margin:2px 0;">{{PartyEMail}}</h4>
+                            </div>
+                        </div>
+
+                        <!-- ROW 2 -->
+                        <div style="display:flex;gap:6px;">
+                            <div style="width:50%;">
+                                <label style="font-size:10px;color:#1d3557;">Blood Group</label>
+                                <h4 style="font-size:11px;margin:2px 0;">{{BloodGroup}}</h4>
+                            </div>
+
+                            <div style="width:50%;">
+                                <label style="font-size:10px;color:#1d3557;">Route No.</label>
+                                <h4 style="font-size:11px;margin:2px 0;"> {{RouteId}}</h4>
+                            </div>
+                        </div>
+
+                        <!-- NOTES -->
+                        <div style="background:#e6e6e6;border-radius:8px;padding:6px;font-size:10px;">
+                            <ul style="margin:0;padding-left:12px;">
+                                <li>This identity card must always be carried & displayed for security & identification.</li>
+                                <li>Loss or theft of this card should be reported to the Admin Department.</li>
+                                <li>This card is not transferable & must be returned immediately on cessation of employment.</li>
+                            </ul>
+                        </div>
+
+                        <!-- FOOTER -->
+                        <div style="display:flex;justify-content:space-between;">
+                            <div>
+                                <span style="font-size:11px;color:#00224F;">Issue Date :</span>
+                                <span style="font-size:11px;">{{IssueDate | date:'dd/MM/yyyy'}}</span>
+                            </div>
+
+                            <div style="text-align:right;">
+                                <span style="font-size:11px;color:#00224F;">Valid Upto :</span>
+                                <span style="font-size:11px;">{{ValidTill | date:'dd/MM/yyyy'}}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- ================= MODAL ================= -->
+        <div class="modal fade employeeViewModalPage" id="IcardViewModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+                <div class="modal-content rounded-3">
+
+                    <div class="modal-header ev-header">
+                        <a href="javascript:void(0)" ng-click="printIDCard()" style="color:#fff">
+                            <i class="bi bi-printer"></i>
+                        </a>
+                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body text-center">
+
+                        <div class="flip-card" onclick="this.classList.toggle('flip')">
+                            <div class="card-inner">
+
+                                <!-- FRONT -->
+                                <div class="card-face front">
+                                    <div class="idCard frontCard">
+                                        <div style="height: 60px; background: {{AssignColor}}; position: relative; ">
+                                            <div class="logoBox">
+                                                {{MapUser}}   @*<img src="../assets/logo-placeholder.png">*@
+                                            </div>
+                                        </div>
+
+                                        <div class="profileSection">
+                                            <div class="profileImage">
+                                                <img ng-src="{{EmployeePhotos ? EmployeePhotos : '../DownloadMat/dummy.jpg'}}" />
+                                            </div>
+
+                                            <div class="profileDetails">
+                                                <h2>{{EmpName}}</h2>
+                                                <p>{{EmpDesignation}}</p>
+                                            </div>
+
+                                            <div class="qrCode">
+                                                <img ng-src="{{getQrUrl()}}" />
+                                            </div>
+                                        </div>
+
+                                        <div class="infoSection">
+
+                                            <div class="left">
+                                                <div class="field">
+                                                    <label>EmpCode</label>
+                                                    <h4>{{EmpCode}}</h4>
+                                                </div>
+
+                                                <div class="field">
+                                                    <label>Mobile Number</label>
+                                                    <h4>{{EmpMobile}}</h4>
+                                                </div>
+                                            </div>
+
+                                            <div class="divider"></div>
+
+                                            <div class="right">
+                                                <div class="field">
+                                                    <label>Department</label>
+                                                    <h4>{{EmpDep}}</h4>
+                                                </div>
+
+                                                <div class="field">
+                                                    <label>Site</label>
+                                                    <h4>{{SiteName}}</h4> <!-- confirm this binding -->
+                                                </div>
+                                            </div>
+
+                                        </div>   
+                                    </div>
+                                </div>
+
+                                <!-- BACK -->
+                                <div class="card-face back">
+                                    <div class="idCard backCard">
+                                        <div class="backContent">
+
+                                            <!-- Row 1 -->
+                                            <div class="row1">
+                                                <div class="field">
+                                                    <label>Company & Address</label>
+                                                    <h4>{{MapUser}}<br>{{BranchAddress}}</h4>
+                                                </div>
+
+                                                <div class="field">
+                                                    <label>EmailId</label>
+                                                    <h4>{{PartyEMail}}</h4>
+                                                </div>
+                                            </div>
+
+                                            <!-- Row 2 -->
+                                            <div class="row1">
+                                                <div class="field">
+                                                    <label>Blood Group</label>
+                                                    <h4>{{BloodGroup}}</h4>
+                                                </div>
+
+                                                <div class="field">
+                                                    <label>Route No.</label>
+                                                    <h4>
+                                                        {{RouteId}}
+                                                    </h4>
+                                                </div>
+                                            </div>
+
+                                            <!-- NOTES (UNCHANGED) -->
+                                            <div class="notesBox">
+                                                <ul>
+                                                    <li>This identity card must always be carried & displayed for security & identification.</li>
+                                                    <li>Loss or theft of this card should be reported to the Admin Department.</li>
+                                                    <li>This card is not transferable & must be returned immediately on cessation of employment.</li>
+                                                </ul>
+                                            </div>
+
+                                            <!-- Footer -->
+                                            <div class="footerRow">
+                                                <div>
+                                                    <span class="label">Issue Date :</span>
+                                                    <span>{{IssueDate | date:'dd/MM/yyyy'}}</span>
+                                                </div>
+
+                                                <div class="rightAlign">
+                                                    <span class="label">Valid Upto :</span>
+                                                    <span>{{ValidTill | date:'dd/MM/yyyy'}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="cropModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%; background:rgba(0,0,0,0.7);z-index:9999;
+justify-content:center;align-items:center;">
+
+            <div style="background:#fff;padding:10px;border-radius:10px;width:80%;text-align:center;">
+
+                <img id="cropImage" style="max-width:100%;max-height:300px;" />
+
+                <br><br>
+
+
+                <button class="btn cancel-btn" ng-click="closeCrop()">Cancel</button>
+                <button class="btn import-save-btn" ng-click="cropImageSave()">
+                    Crop & Save
+                </button>
+            </div>
+        </div>
     </div>
 </div>
+
+
+
+ 

@@ -261,17 +261,19 @@ app.RetailFinacialCreateActCalenderController = function ($scope, $element, $fil
         var getData = myService.methode('POST', ("../Retail/SearchRetailFinacialCreateActCalender"), JSON.stringify(collectionobj));
         getData.then(function (response) {
             var tblheader =
-                [
+                [ {
+                        "HeaderText": "id.", "Value": "Id", "HeaderValue": "Id", "Width": "50px", "ShowColumn": "No", "ImageColumn": "No", "CssClass": "srno"
+                    },
                     {
                         "HeaderText": "Sr.No.", "Value": "ROWId", "HeaderValue": "Id", "Width": "50px", "ShowColumn": "Yes", "ImageColumn": "No", "CssClass": "srno"
                     },
                     {
                         "HeaderText": "State", "HeaderValue": "STATE_NM", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No"
                     },
-                    { "HeaderText": "Act", "HeaderValue": "ActName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "Act", "HeaderValue": "Act", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Constitution", "HeaderValue": "Constitution", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Department", "HeaderValue": "Department", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
-                    { "HeaderText": "Month", "HeaderValue": "MonthName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
+                    { "HeaderText": "Month", "HeaderValue": "Month", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Year", "HeaderValue": "Year", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Frequency", "HeaderValue": "Frequency", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
                     { "HeaderText": "Ministry", "HeaderValue": "Ministry", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },
@@ -296,22 +298,34 @@ app.RetailFinacialCreateActCalenderController = function ($scope, $element, $fil
 
                 ];
 
-            $scope.SearchMasterList = response.data.Result;
+             $scope.SearchMasterList = response.data.Result;
             loadDataUsingPreDefinedColumn(tblheader, response.data.Result);
             $('#example tbody').on('dblclick', 'tr', function () {
+                console.log($scope.SearchMasterList);
                 $scope.showLoader();
                 var row = $('#example').DataTable().row(this).data();
-                $scope.hfId = $(this).find('input[type="hidden"]').val();
-                $scope.hfId = parseInt($scope.hfId);
-                $scope.SearchMasterList = $filter('filter')($scope.SearchMasterList, { 'ROWId': $scope.hfId }, true);
+                // old code are commented by Aadarsh Dated 20/04/2026
+                //$scope.hfId = $(this).find('input[type="hidden"]').val();
+                //$scope.hfId = parseInt($scope.hfId);
+                // Add New code here dated 20/04/2026
+                var tempDiv = $('<div>').html(row[0]);
+                var id = tempDiv.find('input[type="hidden"]').val();
+
+                $scope.hfId = parseInt(id);
+                console.log("ID", $scope.hfId);
+                console.log("List", $scope.SearchMasterList);
+                $scope.SearchMasterList = $filter('filter')($scope.SearchMasterList, { 'Id': $scope.hfId }, true);
                 $scope.State = $scope.SearchMasterList[0].State;
-                $scope.BindAct();
-                setTimeout(function () {
-                    $scope.Act = ($scope.SearchMasterList[0].Act).toString();
-                    $scope.$applyAsync();
-                }, 500);
+                
+                //setTimeout(function () {
+                //    $scope.Act = ($scope.SearchMasterList[0].Act).toString();
+                //    $scope.$applyAsync();
+                //}, 500);
                 $scope.ActId = $scope.SearchMasterList[0].CACId;
-                $scope.Act = $scope.SearchMasterList[0].Act;
+                $scope.Forms = $scope.SearchMasterList[0].Forms;
+                $scope.Applicability = $scope.SearchMasterList[0].Applicability;
+                
+              
                 $scope.Constitution = $scope.SearchMasterList[0].Constitution;
                 $scope.Department = $scope.SearchMasterList[0].Department;
                 $scope.Month = $scope.SearchMasterList[0].Month;
@@ -335,9 +349,13 @@ app.RetailFinacialCreateActCalenderController = function ($scope, $element, $fil
                 $scope.selectedCategory = $scope.SearchMasterList[0].selectedCategory;
                 $scope.ComplianceLevel = $scope.SearchMasterList[0].ComplianceLevel;
                 $scope.updateSubcategories();
-
+                $scope.updateMonthList();
+                $scope.BindAct();
                 setTimeout(() => {
                     $scope.selectedSubcategory = $scope.SearchMasterList[0].selectedSubcategory;
+                }, 100);
+                setTimeout(() => {
+                    $scope.Act = $scope.SearchMasterList[0].ActName;
                 }, 100);
 
 

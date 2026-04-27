@@ -5,6 +5,7 @@ namespace BAL
     public partial class TblSiteManager
     {
 
+        public string AssignColor { get; set; }
         public string ClientId { get; set; }
         public string ActionType { get; set; }
         public string FileName { get; set; }

@@ -304,7 +304,7 @@
                         <!-- Expiring Soon License -->
                         <!--<div class="licCommonCompPage-kpi-card">
                             <div>
-                                <div class="licCommonCompPage-kpi-title">Expring Soon</div>
+                                <div class="licCommonCompPage-kpi-title">Expiring Soon</div>
                             </div>
                             <div class="licCommonCompPage-kpi-value">{{SExpiringSoon}}</div>
                         </div>-->
@@ -832,7 +832,9 @@
                                     <th>S.No</th>
                                     <th>Location Code</th>
                                     <th>License Name</th>
+									 <th>Unit Name</th>
                                     <th>License Number</th>
+									
                                     <th>Validity Start</th>
                                     <th>Validity End</th>
                                     <th>Days to Expire</th>
@@ -851,6 +853,7 @@
                                         </span>
                                     </td>
                                     <td>{{ licenseMaster.LicenseName }}</td>
+									 <td>{{ licenseMaster.StoreName }}</td>
                                     <td>{{ licenseMaster.LicenseNumber }}</td>
                                     <td>{{ licenseMaster.ValidityStartDate }}</td>
                                     <td>{{ licenseMaster.ValidityEndDate }}</td>

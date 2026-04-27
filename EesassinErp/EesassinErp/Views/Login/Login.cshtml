@@ -249,7 +249,7 @@
 
                         <div ng-show="hidemobile">
                             <input id="txtContactNo" ng-model="MobileNo" class="removespacer" type="text" placeholder="Enter registered Email or Mobile number" />
-                            <button id="btnRLogin" type="button" ng-show="hidemobile" class="sign-in-btn" ng-click="RedirectLogin();ManageLog('Click on Send OTP')">Send OTP</button>
+                            <button id="btnRLogin" type="button" ng-show="hidemobile" class="sign-in-btn" ng-click="RedirectLogin();">Send OTP</button>
                         </div>
                         <div ng-show="IshideOtp">
                             @Html.TextBox("txtOtp", "", new { @class = "form-control removespacer", @placeholder = "Enter OTP", @type = "text", @ng_model = "notp", @autocomplete = "off", @maxlength = "10" })

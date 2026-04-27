@@ -1392,7 +1392,62 @@ namespace EesassinErp.Controllers
         }
 
 
+        [HttpPost]
+        [Route("Api/RetailSectionApi/AuditIUDBulkContractorComplianceExcel")]
+        public async Task<IHttpActionResult> AuditIUDBulkContractorComplianceExcel()
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                return BadRequest("Unsupported media type. Please use multipart/form-data.");
+            }
 
+            var provider = await Request.Content.ReadAsMultipartAsync(new MultipartMemoryStreamProvider());
+
+            ContractorAttendance data = null;
+            byte[] fileBytes = null;
+            string fileName = null;
+
+            foreach (var content in provider.Contents)
+            {
+                var contentName = content.Headers.ContentDisposition.Name?.Trim('\"');
+
+                if (contentName == "obj")
+                {
+                    var jsonString = await content.ReadAsStringAsync();
+                    data = JsonConvert.DeserializeObject<ContractorAttendance>(jsonString);
+                }
+                else if (contentName == "SignatureFile")
+                {
+                    fileBytes = await content.ReadAsByteArrayAsync();
+                    fileName = content.Headers.ContentDisposition.FileName?.Trim('\"');
+                }
+            }
+
+            if (data == null)
+            {
+                return BadRequest("Attendance data (obj) not found or invalid.");
+            }
+
+            if (fileBytes != null && !string.IsNullOrEmpty(fileName))
+            {
+                var saveFolder = HttpContext.Current.Server.MapPath("~/DownloadMat/ComSignatures");
+                if (!Directory.Exists(saveFolder))
+                {
+                    Directory.CreateDirectory(saveFolder);
+                }
+
+                var savePath = Path.Combine(saveFolder, fileName);
+                File.WriteAllBytes(savePath, fileBytes);
+
+                data.Signature = "/DownloadMat/ComSignatures/" + fileName;
+            }
+
+            var dalResult = await Task.Factory.StartNew(() =>
+                DAL.DLL.AuditIUDBulkContractorComplianceExcel(data)
+            );
+
+            return Ok(dalResult);
+        }
 
     }
 }

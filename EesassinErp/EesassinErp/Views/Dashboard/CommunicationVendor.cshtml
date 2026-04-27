@@ -4,6 +4,7 @@
     ViewBag.Title = "Communication Vendor";
     Layout = "~/Views/Common/_NewRetailLayout.cshtml"; 
 }
+<script src="~/Scripts/myjslib/VendorInvoiceController.js?Ver=@ViewBag.Version"></script>
 <script src="~/Scripts/myjslib/WithoutInvoiceController.js?Ver=@ViewBag.Version"></script>
 <style>
     #communicationVendorPage {
@@ -367,7 +368,10 @@
         <h4 style="color: #E45D27">Communication Page</h4>
 
         <div class="d-flex align-items-center gap-2">
-            <!-- Create Compliance Document (rounded pill) -->
+            <button class="btn btn-sm " id="createComplDoc" type="button" data-bs-toggle="modal" data-bs-target="#InvoiceRegistrationModal">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                <span>  Invoice Registration</span>
+            </button>
             <button class="btn btn-sm " id="createComplDoc" type="button" data-bs-toggle="modal" data-bs-target="#createComplianceDocModal">
                 <i class="bi bi-plus-lg" aria-hidden="true"></i>
                 <span>Create Compliance Doc</span>
@@ -375,6 +379,231 @@
         </div>
     </div>
 
+    <div class="modal fade" id="InvoiceRegistrationModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <!-- large modal -->
+            <div class="modal-content">
+
+                <!-- Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title">Invoice Registration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
+
+                    <!-- 🔽 Yaha tumhara pura form paste karo -->
+                    <form id="user-form">
+
+                        <!-- 🔹 CARD 1 -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row g-3">
+
+                                    <div class="col-md-3" ng-init="AllParty()">
+                                        <label class="form-label">Client</label>
+                                        <select id="ddlClient" autocomplete='address-level2' class="form-select form-select-sm clear validate" ng-model="ClientId" ng-change="BindStatusInvoice()" ng-disabled="freeze">
+                                            <option value="">Select</option>
+                                            <option ng-repeat="x in AllPartyList | filter: { PartyType: 'Client' }" value="{{x.PartyId}}">{{x.PartyName}}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">State</label>
+
+                                        <select id="ddlstate" autocomplete='address-level2' class="form-select form-select-sm clear validate" ng-disabled="freeze" ng-init="AllState()" ng-model="StateId" ng-change="AllPartySiteLoadWI();WIBindMonth();WIBindFinacialYear();">
+                                            <option value="">Select State</option>
+                                            <option ng-repeat="x in AllStateList" value="{{x.SATE_CODE}}">{{x.STATE_NM}}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="form-label">Financial Year</label>
+
+                                        <select id="ddlfyid" autocomplete='address-level2' class="form-select form-select-sm clear validate" ng-model="FyId" ng-change="BindIn(FyId)" ng-disabled="freeze">
+                                            <option value="">Select</option>
+                                            <option ng-repeat="x in WIfinacialyearList" value="{{x.FinancialName}}">{{x.FinancialName}}</option>
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label class="form-label">Month</label>
+
+                                        <select id="ddlMONTH" autocomplete='address-level2' class="form-select form-select-sm clear validate" ng-model="Month" ng-change="ChangeMonth()" ng-disabled="freeze">
+                                            <option value="">Select</option>
+                                            <option ng-repeat="x in WIMonthList" value="{{x.MonthNumber}}">{{x.MonthName}}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2" style="display:none">
+                                        <label class="form-label">Site</label>
+
+                                        <select class="form-select form-select-sm clear " ng-model="WClientSiteId" ng-change="SetSingleLocation(WClientSiteId)">
+                                            <option value="">Select Site</option>
+                                            <option ng-repeat="x in AllPartySiteVList" value="{{x.SiteId}}">{{x.SiteName}}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2" style="display:none">
+                                        <label class="form-label">Location</label>
+
+                                        <select id="ddlLocation" autocomplete='address-level2' class="form-select form-select-sm  clear" ng-model="WLocation">
+                                            <option value="">Select Location</option>
+                                            <option ng-repeat="x in LocationL" value="{{x.Location}}">{{x.Location}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2" >
+                                        <button type="button" style="margin-top:17%"  class="btn btn-sm filter-btn active" ng-model="Search" ng-click="HideShowtable()">Search</button>
+                                        <button type="button" style="margin-top:17%" class="btn btn-sm filter-btn" ng-model="ClearH" ng-click="ClearHEADER()">Refresh</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                            
+                            </div>
+                        </div>
+
+                        <!-- 🔹 CARD 2 -->
+                        <div class="card" ng-init="AddInvoiceDetail()" ng-show="IsHide">
+                            <div class="card-body">
+                                <h4 class="card-title">Invoice Details</h4>
+                                <div class="table-responsive" style="max-height: 400px; overflow: auto;">
+                                    <table class="table table-bordered nowrap" style="min-width: 1400px; table-layout: fixed;">
+                                        <thead style="position: sticky; top: 0; background: #fff; z-index: 2;">
+                                            <tr>
+                                                <th style="width: 100px;">SNo.</th>
+                                                <th style="width: 150px;">Site</th>
+                                                <th style="width:130px;">Invoice Date</th>
+                                                <th style="width:150px;">Invoice No.</th>
+                                                <th style="width: 150px;">Location</th>
+                                                <th style="width:120px;">Manpower Count</th>
+                                                <th style="width: 150px;">Invoice Type</th>
+                                                <th style="width:120px;">Taxable Value</th>
+                                                <th style="width:100px;">CGST</th>
+                                                <th style="width:100px;">SGST</th>
+                                                <th style="width:120px;">IGST</th>
+                                                <th style="width:120px;">Gross Amount</th>
+                                                <th style="width:120px;">upload Invoicecopy</th>
+                                                <th ng-if="{{Save}}=='Edit'">View Invoice</th>
+                                                <th style="width: 100px;" class="text-center">+/-</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="obj in InvoiceDetail" repeat-done>
+                                                <td>
+                                                    <label ng-model="InvoiceDetail[$index].Srno" ng-bind="InvoiceDetail[$index].Srno=$index+1"></label>
+                                                </td>
+                                                <td>
+                                                    <select id="ddlVendorSiteId" autocomplete='address-level2' class="select2 form-control validate" ng-init="AllPartySiteLoad()" ng-disabled="{{hideIsLocation}}" ng-model="InvoiceDetail[$index].VendorSiteId" ng-change="SetLocation(InvoiceDetail[$index].VendorSiteId,$index)">
+                                                        <option value="">Select Site</option>
+                                                        <option ng-repeat="x in AllPartySiteVList" value="{{x.SiteId}}">{{x.SiteName}}</option>
+                                                    </select>
+                                                </td>
+
+                                                <td>
+                                                    <input id="txtToDate" type="date" ng-show="{{InvoiceDetail[$index].Ishide}}!=false" class="form-control clear" placeholder="To Date" ng-model="InvoiceDetail[$index].InvDate" ng-change="SetState($index)" min="{{StartDate}}" max="{{EndDate}}" value="{{convertTodate(InvoiceDetail[$index].InvDate)}}" />
+                                                    <div ng-show="{{InvoiceDetail[$index].Ishide}}==false">{{InvoiceDetail[$index].InvDate}}</div>
+                                                </td>
+                                                <td>
+                                                    <input id="VendorInvNum{{$index}}" type="text" ng-model="InvoiceDetail[$index].VendorInvNum" class="form-control clear validate" onkeyup="nospaces(this)" maxlength="50" />
+                                                </td>
+
+                                                <td>
+
+                                                    <select id="ddlLocation{{$index}}" autocomplete='address-level2' class="form-control  clear" ng-model="InvoiceDetail[$index].Location" ng-hide="{{hideIsLocation}}">
+                                                        <option value="">Select Location</option>
+                                                        <option ng-repeat="x in LocationList[InvoiceDetail[$index].Srno-1]" value="{{x.Location}}">{{x.Location}}</option>
+                                                    </select>
+
+                                                    <input style="width: 150px !important;" id="txtLoc{{$index}}" type="text" ng-model="InvoiceDetail[$index].Location" class="form-control clear" ng-hide="{{IsLocation}}" ng-disabled="true" />
+                                                </td>
+
+
+                                                <td>
+                                                    <input id="txtManpowerCount{{$index}}" type="text" ng-model="InvoiceDetail[$index].ManpowerCount" class="form-control clear" ng-keyup="ValidateINvoice($index);chkManpower($index)" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
+
+
+                                                </td>
+                                                <td>
+                                                    <select  id="ddlInvoiceType" autocomplete='address-level2' class="select2 form-control validate" ng-model="InvoiceDetail[$index].InvoiceType" ng-keyup="ValidateINvoice($index);chkManpower($index)">
+                                                        <option value="">Select </option>
+                                                        <option value="Regular">Regular </option>
+                                                        <option value="Reimbursement">Reimbursement</option>
+                                                        <option value="Overtime">Overtime</option>
+                                                        <option value="other">other</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input id="txtTaxable{{$index}}" type="text" ng-change="BindRowTax($index)" ng-model="InvoiceDetail[$index].TaxableValue" ng-keyup="ValidateINvoice($index)" class="form-control clear validate" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
+                                                </td>
+                                                <td>
+                                                    <input id="txtCGST{{$index}}" type="text" ng-model="InvoiceDetail[$index].CGST" ng-blur="BindSGSTTax($index)" ng-keyup="ValidateINvoice($index)" class="form-control clear validate" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
+                                                </td>
+                                                <td>
+                                                    <input id="txtSGST{{$index}}" type="text" ng-model="InvoiceDetail[$index].SGST" ng-disabled="true" class="form-control clear validate" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
+                                                </td>
+                                                <td>
+                                                    <input id="txtIGST{{$index}}" type="text" ng-model="InvoiceDetail[$index].IGST" ng-blur="BindIGSTTax($index)" ng-keyup="ValidateINvoice($index)" class="form-control clear validate" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
+                                                </td>
+                                                <td>
+                                                    <input id="txtGrossAmount{{$index}}" type="text" ng-model="InvoiceDetail[$index].GrossAmount"
+                                                           ng-disabled="true" class="form-control clear validate" />
+                                                </td>
+
+                                                <td>
+                                                    <i class="bi bi-cloud-upload" ng-show="InvoiceDetail[$index].Ishide != false"
+                                                       style="font-size: 22px; cursor:pointer; color:#0d6efd;"
+                                                       ng-click="SetValue($index,'#fuCandidatePhoto'+$index)">
+                                                    </i>
+                                                    <a ng-show="InvoiceDetail[$index].Ishide == false" on-click="ViewFileC(InvoiceDetail[$index].fileupload)">
+                                                        <i class="bi bi-eye" style="font-size:20px; color:green;"></i>
+                                                    </a>
+                                                    <div ng-show="InvoiceDetail[$index].IsFile">
+                                                        <i class="bi bi-check-circle text-success"></i>
+                                                        {{InvoiceDetail[$index].IsFile}}
+                                                    </div>
+                                                    <div ng-show="InvoiceDetail[$index].loading" class="text-info">
+                                                        Uploading...
+                                                    </div>
+                                                    @*<img id="CandidatePhoto{{$index}}" src="~/Content/img/upload.png" ng-click="SetValue($index,'#fuCandidatePhoto'+$index)" style="width: 35px; height: 35px" />*@
+                                                    @*<div ng-show="{{InvoiceDetail[$index].IsFile}} !=''">{{InvoiceDetail[$index].IsFile}}</div>
+                                               <a target="_blank" ng-show="{{InvoiceDetail[$index].Ishide}}==false" href="{{InvoiceDetail[$index].fileupload}}">View Invoice</a>*@
+                                                <input type="file"
+                                                       id="fuCandidatePhoto{{$index}}"
+                                                       style="display:none"
+                                                       onchange="angular.element(this).scope().fileChange(this)">
+                                                </td>
+
+
+                                                <td class="text-center">
+                                                    <input type="button" value="+" class="btn btn-default2" ng-click="ValidateINvoice($index);AddInvoiceDetail()" data-toggle="tooltip" data-placement="top" title="Add Row"
+                                                           ng-if="InvoiceDetail[$index].Srno==InvoiceDetail.length" />
+                                                    <input type="button" class="btn btn-default2" id="btnRemoveCourses" value="-" ng-click="RemoveInvoiceDetail($index);"
+                                                           ng-if="InvoiceDetail.length>1" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer" ng-show="IsHide">
+                    <button type="button" class="btn btn-sm filter-btn" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-sm filter-btn active" ng-click="BeforeSaveRecord()">Save</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <!-- Create Compliance Doc Modal -->
     <div class="modal fade" id="createComplianceDocModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered">
@@ -393,7 +622,7 @@
                     <div class="row g-3">
 
                         <div class="col-md-6" ng-init="AllParty()">
-                            <label class="form-label">Client</label> 
+                            <label class="form-label">Client</label>
                             <select id="ddlClient" autocomplete='address-level2' class="form-select form-select-sm clear validate" ng-model="ClientId" ng-change="BindStatusInvoice()" ng-disabled="freeze">
                                 <option value="">Select</option>
                                 <option ng-repeat="x in AllPartyList | filter: { PartyType: 'Client' }" value="{{x.PartyId}}">{{x.PartyName}}</option>
@@ -402,7 +631,7 @@
 
                         <div class="col-md-6">
                             <label class="form-label">State</label>
-                             
+
                             <select id="ddlstate" autocomplete='address-level2' class="form-select form-select-sm clear validate" ng-disabled="freeze" ng-init="AllState()" ng-model="StateId" ng-change="AllPartySiteLoadWI();WIBindMonth();WIBindFinacialYear();">
                                 <option value="">Select State</option>
                                 <option ng-repeat="x in AllStateList" value="{{x.SATE_CODE}}">{{x.STATE_NM}}</option>
@@ -411,7 +640,7 @@
 
                         <div class="col-md-6">
                             <label class="form-label">Financial Year</label>
-                          
+
                             <select id="ddlfyid" autocomplete='address-level2' class="form-select form-select-sm clear validate" ng-model="FyId" ng-change="BindIn(FyId)" ng-disabled="freeze">
                                 <option value="">Select</option>
                                 <option ng-repeat="x in WIfinacialyearList" value="{{x.FinancialName}}">{{x.FinancialName}}</option>
@@ -421,7 +650,7 @@
 
                         <div class="col-md-6">
                             <label class="form-label">Month</label>
-                           
+
                             <select id="ddlMONTH" autocomplete='address-level2' class="form-select form-select-sm clear validate" ng-model="Month" ng-change="ChangeMonth()" ng-disabled="freeze">
                                 <option value="">Select</option>
                                 <option ng-repeat="x in WIMonthList" value="{{x.MonthNumber}}">{{x.MonthName}}</option>
@@ -430,7 +659,7 @@
 
                         <div class="col-md-6">
                             <label class="form-label">Site</label>
-                            
+
                             <select class="form-select form-select-sm clear  validate" ng-model="WClientSiteId" ng-change="SetSingleLocation(WClientSiteId)">
                                 <option value="">Select Site</option>
                                 <option ng-repeat="x in AllPartySiteVList" value="{{x.SiteId}}">{{x.SiteName}}</option>
@@ -439,7 +668,7 @@
 
                         <div class="col-md-6">
                             <label class="form-label">Location</label>
-                         
+
                             <select id="ddlLocation" autocomplete='address-level2' class="form-select form-select-sm  clear validate" ng-model="WLocation">
                                 <option value="">Select Location</option>
                                 <option ng-repeat="x in LocationL" value="{{x.Location}}">{{x.Location}}</option>
@@ -451,10 +680,10 @@
 
                 <!-- Footer -->
                 <div class="modal-footer cv-footer">
-                    <button class="btn btn-sm cv-btn-outline" data-bs-dismiss="modal"  ng-model="ClearH" ng-click="ClearReset()" >
+                    <button class="btn btn-sm cv-btn-outline" data-bs-dismiss="modal" ng-model="ClearH" ng-click="ClearReset()">
                         Cancel
                     </button>
-                    <button class="btn btn-sm cv-btn-primary" ng-click="ValidateWithoutInvoice()" >
+                    <button class="btn btn-sm cv-btn-primary" ng-click="ValidateWithoutInvoice()">
                         Create
                     </button>
                 </div>
@@ -579,7 +808,7 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody >
+                        <tbody>
                             <tr ng-repeat="x in FilteredList | filter:Searchbox track by $index">
                                 <td>{{$index+1}}</td>
                                 <td>{{x.PartyName}}</td>
@@ -598,7 +827,7 @@
                                     <button class="btn btn-sm btn-submit px-3" data-bs-toggle="modal" data-bs-target="#submitComplianceModal" ng-click="GetDocument(x.ConversationId)">Click here to Upload Doc</button>
                                 </td>
                             </tr>
- 
+
                         </tbody>
 
                     </table>
@@ -629,12 +858,12 @@
 
                     <!-- BODY -->
                     <div class="modal-body p-8" style="background: var(--card-bg)">
-                      
+
                         <div class="d-flex justify-content-end mb-2">
-                            <button class="btn btn-sm export-btn" ng-click="ChkDefaultFile()"> 
+                            <button class="btn btn-sm export-btn" ng-click="ChkDefaultFile()">
                                 Send To Auditor
                             </button>
-                            <button class="btn btn-sm export-btn"  ng-click="downloadAll()">
+                            <button class="btn btn-sm export-btn" ng-click="downloadAll()">
                                 <i class="bi bi-download me-1"></i>
                                 Download All
                             </button>
@@ -675,7 +904,7 @@
                                             <td>{{xx.Mandatory}}</td>
                                             <td>{{xx.FormatType}}</td>
                                             <td>{{xx.Note}}</td>
-                                         
+
                                             <td>
 
                                                 <div class="d-flex align-items-center" ng-if="xx.Status!=1">
@@ -686,12 +915,12 @@
                                                         Choose File
 
                                                         <input type="file"
-                                                               id="fuCandidatePhoto{{$index}}"
+                                                               id="fuCandidatePhoto1{{$index}}"
                                                                style="display:none"
                                                                ng-disabled="TimeLeftMsg"
                                                                onchange="angular.element(this).scope().show(this, '#AlbumIcon')"
                                                                ng-model="InvoiceDetail[$index].fileupload">
-                                                    </label> 
+                                                    </label>
                                                 </div>
                                             </td>
                                             <td>
@@ -740,12 +969,12 @@
                         </button>
 
                         @*<button class="btn btn-sm cv-btn-outline">
-                            Save Draft
-                        </button>
+                                Save Draft
+                            </button>
 
-                        <button class="btn btn-sm cv-btn-primary">
-                            Submit
-                        </button>*@
+                            <button class="btn btn-sm cv-btn-primary">
+                                Submit
+                            </button>*@
                     </div>
 
                 </div>

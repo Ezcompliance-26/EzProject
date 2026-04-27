@@ -1,5 +1,145 @@
 ﻿app.AuditorComplianceController = function ($scope, $element, $filter, myService) {
- 
+    $scope.printTable = function () {
+
+        var html = `
+        <html>
+        <head>
+            <title>Print</title>
+            <style>
+                body { font-family: Arial; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid black; padding: 6px; font-size: 12px; }
+            </style>
+        </head>
+        <body>
+            <h3>Compliance Report</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Act</th>
+                        <th>Forms/Description</th>
+                        <th>Nature</th>
+                        <th>Score</th>
+                        <th>Achieved</th>
+                        <th>Status</th>
+                        <th>Auditor Remarks</th>
+                        <th>Vendor Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+        angular.forEach($scope.DocList, function (x, i) {
+            html += `
+            <tr>
+                <td>${x.SRNO || ''}</td>
+                <td>${x.Act || ''}</td>
+                <td>${x.Form || ''}</td>
+                <td>${x.Nature || ''}</td>
+                <td>${x.ComplianceScore || ''}</td>
+                <td>${x.ComplianceScoreAchieved || ''}</td>
+                <td>${x.CSS || ''}</td>
+                <td>${x.Remark || ''}</td>
+                <td>${x.VendorRemark || ''}</td>
+            </tr>
+        `;
+        });
+
+        // 🔥 Total row
+        html += `
+        <tr>
+            <td colspan="3"></td>
+            <td><b>Total</b></td>
+            <td>${$scope.TotalComplianceScore || ''}</td>
+            <td>${$scope.TotalComplianceScoreAchieved || ''}</td>
+            <td colspan="3"></td>
+        </tr>
+    `;
+
+        html += `
+                </tbody>
+            </table>
+        </body>
+        </html>
+    `;
+
+        var newWin = window.open('', '', 'width=1200,height=800');
+        newWin.document.write(html);
+        newWin.document.close();
+
+        setTimeout(function () {
+            newWin.print();
+            newWin.close();
+        }, 300);
+    };
+
+    $scope.exportCSV = function () {
+
+        var csv = [];
+
+        // 🔹 Header
+        var headers = [
+            "S.No",
+            "Act",
+            "Forms/Description",
+            "Nature of Compliance",
+            "Compliance Score",
+            "Compliance Score Achieved",
+            "Compliance Status",
+            "Auditor Remarks",
+            "Vendor Remarks"
+        ];
+        csv.push(headers.join(","));
+
+        // 🔹 Data
+        angular.forEach($scope.DocList, function (x) {
+            var row = [
+                x.SRNO,
+                x.Act,
+                x.Form,
+                x.Nature,
+                x.ComplianceScore,
+                x.ComplianceScoreAchieved,
+                x.CSS,
+                x.Remark,
+                x.VendorRemark
+            ];
+
+            // Escape commas
+            row = row.map(function (field) {
+                return '"' + (field != null ? field.toString().replace(/"/g, '""') : '') + '"';
+            });
+
+            csv.push(row.join(","));
+        });
+
+        // 🔹 Total Row
+        var totalRow = [
+            "",
+            "",
+            "",
+            "Total",
+            $scope.TotalComplianceScore,
+            $scope.TotalComplianceScoreAchieved,
+            "",
+            "",
+            ""
+        ];
+        csv.push(totalRow.join(","));
+
+        // 🔹 Download CSV
+        var csvFile = new Blob([csv.join("\n")], { type: "text/csv;charset=utf-8;" });
+
+        var downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(csvFile);
+        downloadLink.download = "Compliance_Report.csv";
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }; 
+   
     $scope.LoadData = function ()
     {
       var  trans = [];
@@ -493,5 +633,116 @@
         popupWin.document.write(head);
         popupWin.document.close();
     };
-     
+    $scope.printCompianceTable = function () {
+
+        var printContent = `
+        <html>
+        <head>
+            <title>Invoice List</title>
+            <style>
+                body { font-family: Arial; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+                th { background: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <h3>Invoice List</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>SNo</th>
+                        <th>Invoice No</th>
+                        <th>Client</th>
+                        <th>Vendor User</th>
+                        <th>Auditor</th>
+                        <th>Month</th>
+                        <th>Status</th>
+                        <th>Final Submit</th>
+                        <th>Generated On</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+        angular.forEach($scope.filteredInvoices, function (x, index) {
+            printContent += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${x.VendorInvNum || ''}</td>
+                <td>${x.Client || ''}</td>
+                <td>${x.VendorUser || ''}</td>
+                <td>${x.Auditor || ''}</td>
+                <td>${x.MonthName || ''}</td>
+                <td>${x.ComplianceStatus || ''}</td>
+                <td>${x.FinalSubmit || ''}</td>
+                <td>${x.GeneratedOn || ''}</td>
+            </tr>
+        `;
+        });
+
+        printContent += `
+                </tbody>
+            </table>
+        </body>
+        </html>
+    `;
+
+        var newWin = window.open('', '', 'width=1000,height=700');
+        newWin.document.write(printContent);
+        newWin.document.close();
+        newWin.print();
+    };
+
+
+
+    $scope.exportCompianceoCSV = function () {
+
+        var csv = [];
+
+        // Header
+        var headers = [
+            "SNo",
+            "Invoice No",
+            "Client",
+            "Vendor User",
+            "Auditor",
+            "Month",
+            "Status",
+            "Final Submit",
+            "Generated On"
+        ];
+
+        csv.push(headers.join(","));
+
+        // Data
+        angular.forEach($scope.filteredInvoices, function (x, index) {
+
+            var row = [
+                index + 1,
+                '"' + (x.VendorInvNum || '') + '"',
+                '"' + (x.Client || '') + '"',
+                '"' + (x.VendorUser || '') + '"',
+                '"' + (x.Auditor || '') + '"',
+                '"' + (x.MonthName || '') + '"',
+                '"' + (x.ComplianceStatus || '') + '"',
+                '"' + (x.FinalSubmit || '') + '"',
+                '"' + (x.GeneratedOn || '') + '"'
+            ];
+
+            csv.push(row.join(","));
+        });
+
+        var csvString = csv.join("\n");
+
+        var blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+        var url = URL.createObjectURL(blob);
+
+        var link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "Invoice_List.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 }
