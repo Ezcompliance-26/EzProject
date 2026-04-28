@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
+    [ValidateSession]
     public class DashboardController : Controller
     {
         #region Akhand
@@ -232,7 +233,7 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.GetDetails(obj)));
             return result;
         }
-        
+
         public ActionResult ReportHeader()
         {
             return View();
@@ -265,7 +266,7 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.GetempRegistration(obj)));
             return result;
         }
-        
+
         public async Task<string> IUDUserRegistration(BCommon obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.IUDUserRegistration(obj)));
@@ -318,9 +319,9 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DLL.dll.GetManageReportHeader(obj)));
             return result;
         }
-		
-		
-		
+
+
+
         ///Commondashbaord////
         ///
 
@@ -338,17 +339,18 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
-        public ActionResult NewVendorDashboard()
+        public ActionResult Dash()
         {
             return View();
         }
 
-        public ActionResult InvoiceRegistration()
+        public ActionResult Board()
         {
             return View();
         }
+        //----------------------------
 
-        public ActionResult OneTimeDocVendor()
+        public ActionResult VBoard()
         {
             return View();
         }
@@ -356,95 +358,31 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
-        
-        public ActionResult NewLocationDashboard()
+        public ActionResult NewVendorDashboard()
         {
             return View();
         }
-
-        public ActionResult NewLocationDashboardBackUp()
+        public ActionResult CommunicationVendor()
         {
             return View();
         }
-
-        public ActionResult AdminSetup()
-        {
-            return View();
-        }
-
-        public ActionResult Subscription()
-        {
-            return View();
-        }
-        public ActionResult Dash()
-        {
-            return View();
-        }
-        public ActionResult Notifications()
-        {
-            return View();
-        }
-
-        public ActionResult NotificationDetails()
-        {
-            return View();
-        }
-
         public ActionResult CommunicationClient()
         {
             return View();
         }
-        public ActionResult OneTimeDocClient()
+        public ActionResult OneTimeDocVendor()
         {
             return View();
         }
-
-        public ActionResult SupplierAdmin()
+        public ActionResult oneTimeDocClient()
         {
             return View();
         }
-
         public ActionResult ComplianceAuditReport()
         {
             return View();
         }
-
-        public ActionResult ComplianceAuditFinalReport()
-        {
-            return View();
-        }
-
-        public ActionResult NewAuditorDashboard()
-        {
-            return View();
-        }
-
-        public ActionResult CommunicationAuditor()
-        {
-            return View();
-        }
-
-        public ActionResult AuditComplianceReport()
-        {
-            return View();
-        }
-
-        public ActionResult VendorAdmin()
-        {
-            return View();
-        }
-
-        public ActionResult VendorAdminCommunication()
-        {
-            return View();
-        }
-
-        public ActionResult VendorAdminDashboard()
-        {
-            return View();
-        }
-
-        public ActionResult Board()
+        public ActionResult ComplianceReport()
         {
             return View();
         }

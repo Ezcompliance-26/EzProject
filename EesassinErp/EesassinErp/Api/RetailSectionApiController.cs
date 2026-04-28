@@ -1407,6 +1407,10 @@ namespace EesassinErp.Controllers
             byte[] fileBytes = null;
             string fileName = null;
 
+
+            byte[] excelBytes = null;
+            string excelFileName = null;
+
             foreach (var content in provider.Contents)
             {
                 var contentName = content.Headers.ContentDisposition.Name?.Trim('\"');
@@ -1416,6 +1420,12 @@ namespace EesassinErp.Controllers
                     var jsonString = await content.ReadAsStringAsync();
                     data = JsonConvert.DeserializeObject<ContractorAttendance>(jsonString);
                 }
+                // ✅ Excel File (MANDATORY)
+                else if (contentName == "excelfile")
+                {
+                    excelBytes = await content.ReadAsByteArrayAsync();
+                    excelFileName = content.Headers.ContentDisposition.FileName?.Trim('\"');
+                }
                 else if (contentName == "SignatureFile")
                 {
                     fileBytes = await content.ReadAsByteArrayAsync();
@@ -1423,10 +1433,38 @@ namespace EesassinErp.Controllers
                 }
             }
 
+
+            //if (!excelFileName.EndsWith(".xlsx") && !excelFileName.EndsWith(".xls"))
+            //{
+            //    return BadRequest("Only Excel files allowed.");
+            //}
+
+            // =========================
+            // ✅ SAVE EXCEL FILE
+            // =========================
+            var excelFolder = HttpContext.Current.Server.MapPath("~/DownloadMat/ExcelFiles");
+
+            if (!Directory.Exists(excelFolder))
+            {
+                Directory.CreateDirectory(excelFolder);
+            }
+
+            var uniqueExcelName = excelFileName + "_" + Guid.NewGuid() ;
+            var excelPath = Path.Combine(excelFolder, uniqueExcelName);
+
+            File.WriteAllBytes(excelPath, excelBytes);
+
+            data.ExcelFilePath = "/DownloadMat/ExcelFiles/" + uniqueExcelName;
+
             if (data == null)
             {
                 return BadRequest("Attendance data (obj) not found or invalid.");
             }
+            if (excelBytes == null || string.IsNullOrEmpty(excelFileName))
+            {
+                return BadRequest("Excel file is required.");
+            }
+
 
             if (fileBytes != null && !string.IsNullOrEmpty(fileName))
             {

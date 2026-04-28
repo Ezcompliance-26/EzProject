@@ -2796,12 +2796,7 @@ namespace EesassinErp.Controllers
             return result;
         }
 
-        ////////////////     Start  Added by shipra Contractor Compliance /////////////
-
-
-
-
-        ///regionBulkComplianceExcelforContractorcompliance 
+        
         public async Task<string> IUDBulkContractorComplianceExcel(ContractorAttendance obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.IUDBulkContractorComplianceExcel(obj)));
@@ -2833,8 +2828,7 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.GetContractorBulkReportlist(obj)));
             return result;
         }
-
-        ////////////////     End  Added by shipra Contractor Compliance /////////////
+         
 
         public async Task<string> bindcommonreport(RetailBAL obj)
         {

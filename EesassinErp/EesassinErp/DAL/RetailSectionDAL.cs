@@ -1067,6 +1067,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@State",obj.State),
                 new SqlParameter("@Month",obj.Month),
                 new SqlParameter("@Year",obj.Year),
+                  new SqlParameter("@Id",obj.LoginId),
 
             };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.USP_AuditContractorComplianceBulk", CommandType.StoredProcedure, param.ToArray()));
@@ -1164,6 +1165,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
         new SqlParameter("@UserId", obj.LoginId),
         new SqlParameter("@Action", obj.Action),
         new SqlParameter("@Signature", obj.Signature ?? ""),
+          new SqlParameter("@ExcelFile", obj.ExcelFilePath ?? ""),
         new SqlParameter("@RESULT", "") { Direction = ParameterDirection.Output },
         new SqlParameter("@p4output", "") { Direction = ParameterDirection.Output }
     };

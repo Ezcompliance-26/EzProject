@@ -295,7 +295,7 @@
         var getData = myService.methode('POST', ("../RetailSection/SearchStoreCompliance"), JSON.stringify(collectionobj));
         getData.then(function (response) {
             $scope.NewStoreList = response.data.Result;
-            alert($scope.NewStoreList);
+           
             $scope.hideLoader();
         });
         $scope.hideLoader();
@@ -354,7 +354,7 @@
         var getData = myService.methode('POST', ("../VenInvoice/GetVenInvoiceListDT"), { "ActionType": 7 });
         getData.then(function (response) {
             debugger;
-            $scope.MonthList = response.data;
+            $scope.MMonthList = response.data;
         });
     }
     $scope.AllState = function () {
@@ -368,7 +368,7 @@
     $scope.BindDocumentList = function () {
         var collectionobj = {};
         collectionobj.Action = 6;
-        var getData = myService.methode('POST', "../RetailSection/GetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
+        var getData = myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             $scope.DocumentList = response.data.Result;
 
@@ -418,13 +418,185 @@
     $scope.OpenPanel = function () {
         $scope.existSection = true;
     }
+    $scope.SelectedMonth = null;
+    $scope.SelectedYear = null;
+    $scope.AllContratorList = function () {
+        var collectionobj = {};
+        collectionobj.Action = 18; 
+        collectionobj.LoginId = MapId;
+        var getData = myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            if (response.data.Result.length > 0)
+            {
+                $scope.ContratorList = response.data.Result;
+                var monthOrder = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+                $scope.MonthList = [...new Set($scope.ContratorList.map(x => x.MonthName))]
+                    .sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));
+
+                // ✅ Unique Year
+                $scope.YearList = [...new Set($scope.ContratorList.map(x => x.Year))];
+            }
+            $scope.FilteredList = $scope.ContratorList;
+
+        });
+    }
+
+    $scope.BindContractorReport = function () {
+        var collectionobj = {};
+        collectionobj.Action = 19;
+        var urlParams = new URLSearchParams(window.location.search);
+        var uid = urlParams.get('UID');
+        collectionobj.LoginId = uid;
+        var getData = myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            if (response.data.Result.length > 0) {
+                $scope.ContractorReportList = response.data.Result; 
+            }
+            $scope.FilteredContractorReportList = $scope.ContractorReportList;
+
+        });
+    }
+    $scope.ResetFiltercontractor = function () {
+        $scope.SelectedMonth = '';
+        $scope.SelectedYear = '';
+        $scope.FilteredList = $scope.ContratorList;
+    }
+    $scope.FilteredList = [];
+
+    $scope.ApplyFilter = function (SelectedMonth, SelectedYear) {
+
+        $scope.SelectedMonth = SelectedMonth;
+        $scope.SelectedYear = SelectedYear; // ✅ correct
+
+        $scope.FilteredList = $scope.ContratorList.filter(function (item) {
+
+            var matchMonth = true;
+            var matchYear = true;
+
+            if ($scope.SelectedMonth) {
+                matchMonth = (item.MonthName || '').toString().trim().toLowerCase() ===
+                    $scope.SelectedMonth.toString().trim().toLowerCase();
+            }
+
+            if ($scope.SelectedYear) {
+                matchYear = (item.Year || '').toString().trim() ===
+                    $scope.SelectedYear.toString().trim();
+            }
+
+            return matchMonth && matchYear;
+        });
+    };
+
+
+    $scope.ContractorexportCSV = function () {
+
+        if (!$scope.FilteredList || $scope.FilteredList.length === 0) {
+            alert("No data to export");
+            return;
+        }
+
+        var csv = [];
+
+        // Header
+        var headers = ["Sr.No", "Month", "Year", "State Count", "Employee Count", "Location Count", "Generated On"];
+        csv.push(headers.join(","));
+
+        // Data
+        angular.forEach($scope.FilteredList, function (item, index) {
+
+            var row = [
+                index + 1,
+                item.MonthName,
+                item.Year,
+                item.TotalState,
+                item.TotalEmployee,
+                item.TotalSite,
+                item.generatedon
+            ];
+
+            csv.push(row.join(","));
+        });
+
+        // Create CSV file
+        var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+        var downloadLink = document.createElement("a");
+        downloadLink.download = "Contractor_Report.csv";
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.click();
+    };
+
+
+   
+    $scope.ContractorprintTable = function () {
+
+        if (!$scope.FilteredList || $scope.FilteredList.length === 0) {
+            alert("No data to print");
+            return;
+        }
+
+        var html = `
+        <html>
+        <head>
+            <title>Print</title>
+            <style>
+                body { font-family: Arial; }
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+                th { background-color: #f2f2f2; }
+                h3 { text-align: center; }
+            </style>
+        </head>
+        <body>
+            <h3>Contractor Report</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sr.No</th>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th>State Count</th>
+                        <th>Employee Count</th>
+                        <th>Location Count</th>
+                        <th>Generated On</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+        angular.forEach($scope.FilteredList, function (item, index) {
+            html += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${item.MonthName}</td>
+                <td>${item.Year}</td>
+                <td>${item.TotalState}</td>
+                <td>${item.TotalEmployee}</td>
+                <td>${item.TotalSite}</td>
+                <td>${item.generatedon}</td>
+            </tr>
+        `;
+        });
+
+        html += `
+                </tbody>
+            </table>
+        </body>
+        </html>
+    `;
+
+        var newWin = window.open("", "", "width=900,height=700");
+        newWin.document.write(html);
+        newWin.document.close();
+        newWin.print();
+    };
     $scope.AllData = function () {
         var collectionobj = {};
         collectionobj.Action = 4;
         collectionobj.Month = $scope.CMonth;
         collectionobj.Year = $scope.FY;
         collectionobj.LoginId = MapId;
-        var getData = myService.methode('POST', "../RetailSection/GetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
+        var getData = myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             if (response.data.Result.length > 0) {
                 proceedConfirmbox("Found Duplicate Record , Do you want to show ?", function () { $scope.confirmData(); });
@@ -443,7 +615,7 @@
         collectionobj.Month = $scope.CMonth;
         collectionobj.Year = $scope.FY;
         collectionobj.LoginId = MapId;
-        var getData = myService.methode('POST', "../RetailSection/GetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
+        var getData = myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             $scope.AllList = response.data.Result;
             if (response.data.Result.length > 0) {
@@ -460,7 +632,7 @@
         collectionobj.State = $scope.StateId;
         collectionobj.Month = $scope.CMonth;
         collectionobj.Year = $scope.FY;
-        var getData = myService.methode('POST', "../RetailSection/GetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
+        var getData = myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             $scope.AllerdList = response.data.Result;
         });
@@ -717,28 +889,7 @@
                 let rowObj = { EmployeeId: empCode };
                 html += `<tr><td>${empCode}</td>`;
 
-                let duplicateFound = false;
-
-                //miscFields.forEach(f => {
-                //    const val = col(row, f);
-                //    rowObj[f.replace(/\s+/g, '_').replace(/[^\w]/g, '')] = val;
-                //    html += `<td>${val}</td>`;
-
-                //    // ✅ Check duplicate for only important fields
-                //    if (["Employee_Code", "UAN_No", "ESIC_No", "Account_No"].includes(f) && val) {
-                //        if (seen[f].has(val)) {
-                //            alert(`⚠ Duplicate found in column "${f}" at row ${i + headerRowIndex + 1}. Already exists at row ${seen[f].get(val)}.`);
-                //            duplicateFound = true;
-                //        } else {
-                //            seen[f].set(val, i + headerRowIndex + 1); // Save row index
-                //        }
-                //    }
-                //});
-
-                //if (!duplicateFound) {
-                //    $scope.MiscExcelList.push(rowObj);
-                //}
-                //html += '</tr>';
+                let duplicateFound = false; 
                 miscFields.forEach(f => {
                     const val = col(row, f) ? col(row, f).toString().trim() : ""; // normalize value
                     rowObj[f.replace(/\s+/g, '_').replace(/[^\w]/g, '')] = val;
@@ -980,6 +1131,17 @@
         formData.append("obj", JSON.stringify(collectionobj));
 
         var fileInput = document.getElementById('signatureFile');
+
+        var excelfile = document.getElementById('input-excel');
+
+        var excelofile = excelfile?.files?.[0];
+
+         
+
+        if (excelofile) {
+            formData.append("excelfile", excelofile);
+        }
+
         var file = fileInput?.files?.[0];
         if (file) {
             formData.append("SignatureFile", file);
@@ -991,6 +1153,7 @@
         }).then(function (response) {
             $scope.hideLoader();
             $('#btnViewCard').click();
+            $scope.AllContratorList();
             $scope.Panel = false; $scope.existSection = false; $('#wrapper').html(''); $('#miscellaneousSection').html('');
             showMsgBox(response.data.result || "Saved successfully.");
         }).catch(function (error) {

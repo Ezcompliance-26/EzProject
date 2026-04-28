@@ -18,6 +18,10 @@ namespace BAL
         public string MiscExcelList { get; set; }
 
         public string Signature { get; set; }
+
+        public string ExcelFilePath { get; set; }
+
+        
         public string LoginId  { get; set; }
 
             public string Action { get; set; }
