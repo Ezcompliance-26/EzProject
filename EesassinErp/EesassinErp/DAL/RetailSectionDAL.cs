@@ -2809,10 +2809,35 @@ namespace DAL
             return dt;
         }
 
-        
 
+        // here is add new code dated 28/04/2026
+        public async static Task<DataTable> GetUserPermissionSectionRoll(TblPartyMaster obj)
+        {
+            var param = new List<SqlParameter>
+            {
+              new SqlParameter("@Id", obj.Id),
+               new SqlParameter("@Action", obj.Action),
+                new SqlParameter("@cacid", obj.MapId),
+            };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[USP_FinancialStatutoryEvent]", CommandType.StoredProcedure, param.ToArray()));
+            return dt;
+        }
 
-
+        // here is define bind financial compliance events dated 18/4/2026
+        public async static Task<DataTable> SearchFinacialStatutoryEvent(RetailBAL obj)
+        {
+            var param = new List<SqlParameter>
+            {
+                    new SqlParameter("@Action", obj.Action),
+                     new SqlParameter("@Year", obj.Year),
+                    new SqlParameter("@Month", obj.Month),
+                    new SqlParameter("@State", obj.State),
+                    new SqlParameter("@CACId", obj.CACId),
+                    new SqlParameter("@Id", obj.Id),
+            };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[USP_FinancialStatutoryEvent]", CommandType.StoredProcedure, param.ToArray()));
+            return dt;
+        }
 
     }
 }

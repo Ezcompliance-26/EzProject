@@ -10,6 +10,16 @@
         row.isEdit = true; 
         row._oldDocumentName = row.DocumentName;
     };
+    $scope.SetDefault = function (selectedRow) {
+
+        angular.forEach($scope.groupedDocs, function (row) {
+            if (row !== selectedRow) {
+                row.IsDefault = false;
+            }
+        });
+
+        selectedRow.IsDefault = true;
+    };
     $scope.Updaterow = function (row) {
         $scope.ManageLog('Update Compliance Document')
         row.isEdit = false;
@@ -23,6 +33,7 @@
         var fd = new FormData();
         fd.append('Action', 2);  
         fd.append('locationId', row.ComplianceDocId);
+        fd.append('IsDefault', row.IsDefault ? 1 : 0);   // 🔥 ADD THIS
         fd.append('DocumentName', row.DocumentName);
         fd.append('Id', MapId);
 
@@ -46,7 +57,8 @@
             });
     };
 
-    $scope.Deleterow = function (row) {
+    $scope.Deleterow = function (row)
+    {
         $scope.ManageLog('Delete Compliance Document')
         if (!row || !row.RowData.ComplianceDocId) {
             showMsgBox('999', 'Error', 'Invalid record selected.', 'error', 'btn-danger');
@@ -278,6 +290,7 @@
                             DocumentName: row.DocumentName,
                             CreatedDate: row.CreatedDate,
                             UserName: row.UserName,
+                            IsDefault: row.IsDefault ,
                             isEdit: false,
                             show: false,
                             Locations: []
@@ -589,83 +602,150 @@
           /* $('#loadingModal').modal('hide');*/
     }
     $scope.GetPagesSectionMasterList = function () {
-        debugger;
       /* $('#loadingModal').modal('show');*/
         $scope.showLoader();
         var collectionobj = {};
         collectionobj.PartyId = MapId;
         collectionobj.PartyType = "4";
-        collectionobj.UserId = $scope.UserId
+        collectionobj.UserId = $scope.UserId;
         collectionobj.RoleId = $scope.Id;
-        collectionobj.LoginId = LoginId; 
+        collectionobj.LoginId = LoginId;
+        console.log(MapId,$scope.UserId, LoginId);
         var getData = myService.methode('POST', '../Dashboard/PagesSectionMasterList', '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
-            debugger;
-              /* $('#loadingModal').modal('hide');*/
             $scope.PagesSectionMasterList = response.data.Result;
-              /* $('#loadingModal').modal('hide');*/
+            console.log("Check Flag Data",$scope.PagesSectionMasterList);
             $scope.hideLoader();
         });
           /* $('#loadingModal').modal('hide');*/
     };
+    //$scope.SavePermissionRecord = function () {
+    //    debugger
+    //    if ($scope.UserId == '' || $scope.UserId == undefined) {
+    //        showMsgBox('999', 'Warning', 'Please Select User', 'warning', 'btn-warning');
+    //        return;
+    //    }
+
+    //    var SectionList = [];
+    //    var anyPermissionSelected = false; // ⭐ flag
+
+    //    $("#permissionTable tbody tr").each(function () {
+    //        debugger;
+    //        var row = $(this);
+
+    //        var SectionId = row.find("input[type='hidden']#hfId").val();
+
+    //        var chkAllowView = row.find("#chkAllowView").prop("checked");
+    //        var chkAllowEdit = row.find("#chkAllowEdit").prop("checked");
+    //        var chkAllowDelete = row.find("#chkAllowDelete").prop("checked");
+    //        var chkAllowUpload = row.find("#chkupload").prop("checked");
+    //        var chkAllowDownload = row.find("#chkAllowDownload").prop("checked");
+    //        var chkAllowNewStore = row.find("#chkAllowNewStore").prop("checked");
+    //        var chkAllowNewEmployee = row.find("#chkAllowNewEmployee").prop("checked");
+    //        var chkAllowChk1 = row.find("#chkAllowChk1").prop("checked");
+    //        var chkAllowChk2 = row.find("#chkAllowChk2").prop("checked");
+    //        var chkAllowVerify = row.find("#chkVerify").prop("checked");
+
+    //        if (
+    //            chkAllowView || chkAllowEdit || chkAllowDelete || chkAllowUpload ||
+    //            chkAllowDownload || chkAllowNewStore || chkAllowNewEmployee ||
+    //            chkAllowChk1 || chkAllowChk2 || chkAllowVerify
+    //        ) {
+    //            anyPermissionSelected = true; // ⭐ at least one selected
+
+    //            SectionList.push({
+    //                SectionId: SectionId,
+    //                View: chkAllowView,
+    //                Edit: chkAllowEdit,
+    //                Delete: chkAllowDelete,
+    //                Upload: chkAllowUpload,
+    //                Download: chkAllowDownload,
+    //                NewStore: chkAllowNewStore,
+    //                NewEmployee: chkAllowNewEmployee,
+    //                Checkbox1: chkAllowChk1,
+    //                Checkbox2: chkAllowChk2,
+    //                Verify: chkAllowVerify
+    //            });
+    //        }
+    //    });
+
+    //    // 🚨 FINAL VALIDATION
+    //    if (!anyPermissionSelected) {
+    //        showMsgBox(
+    //            '999',
+    //            'Warning',
+    //            'Please select at least one permission. If you do not want to assign any permission, please disable the user or contact SuperAdmin.',
+    //            'warning',
+    //            'btn-warning'
+    //        );
+    //        return;
+    //    }
+
+    //    var collectionobj = {
+    //        ModuleType: "4",
+    //        LoginId: MapId,
+    //        UserId: $scope.UserId,
+    //        EmployeeCode: "",
+    //        SectionList: SectionList,
+    //        BranchCode: $scope.Id,
+    //        CreatedBy: LoginId,
+    //        Action: 1
+    //    };
+
+    //    var getData = myService.methode(
+    //        'POST',
+    //        "../Dashboard/InsertSectionPermissionForRole",
+    //        '{obj:' + JSON.stringify(collectionobj) + '}'
+    //    );
+
+    //    getData.then(function (response) {
+    //        if (showMsgBox(response.data.Result)) {
+    //            // success logic
+    //        }
+    //    });
+    //};
+
+
     $scope.SavePermissionRecord = function () {
 
-        if ($scope.UserId == '' || $scope.UserId == undefined) {
+        if (!$scope.UserId) {
             showMsgBox('999', 'Warning', 'Please Select User', 'warning', 'btn-warning');
             return;
         }
 
         var SectionList = [];
-        var anyPermissionSelected = false; // ⭐ flag
+        var anyPermissionSelected = false;
 
-        $("#permissionTable tbody tr").each(function () {
-            var row = $(this);
-
-            var SectionId = row.find("input[type='hidden']#hfId").val();
-
-            var chkAllowView = row.find("#chkAllowView").prop("checked");
-            var chkAllowEdit = row.find("#chkAllowEdit").prop("checked");
-            var chkAllowDelete = row.find("#chkAllowDelete").prop("checked");
-            var chkAllowUpload = row.find("#chkAllowUpload").prop("checked");
-            var chkAllowDownload = row.find("#chkAllowDownload").prop("checked");
-            var chkAllowNewStore = row.find("#chkAllowNewStore").prop("checked");
-            var chkAllowNewEmployee = row.find("#chkAllowNewEmployee").prop("checked");
-            var chkAllowChk1 = row.find("#chkAllowChk1").prop("checked");
-            var chkAllowChk2 = row.find("#chkAllowChk2").prop("checked");
-            var chkAllowVerify = row.find("#chkAllowVerify").prop("checked");
+        angular.forEach($scope.PagesSectionMasterList, function (item) {
 
             if (
-                chkAllowView || chkAllowEdit || chkAllowDelete || chkAllowUpload ||
-                chkAllowDownload || chkAllowNewStore || chkAllowNewEmployee ||
-                chkAllowChk1 || chkAllowChk2 || chkAllowVerify
+                item.ViewFlag || item.EditFlag || item.DeleteFlag || item.UploadFlag ||
+                item.DownloadFlag || item.NewStoreFlag || item.NewEmployeeFlag ||
+                item.Checkbox1Flag || item.Checkbox2Flag || item.VerifyFlag
             ) {
-                anyPermissionSelected = true; // ⭐ at least one selected
+                anyPermissionSelected = true;
 
                 SectionList.push({
-                    SectionId: SectionId,
-                    View: chkAllowView,
-                    Edit: chkAllowEdit,
-                    Delete: chkAllowDelete,
-                    Upload: chkAllowUpload,
-                    Download: chkAllowDownload,
-                    NewStore: chkAllowNewStore,
-                    NewEmployee: chkAllowNewEmployee,
-                    Checkbox1: chkAllowChk1,
-                    Checkbox2: chkAllowChk2,
-                    Verify: chkAllowVerify
+                    SectionId: item.Id,
+                    View: item.ViewFlag,
+                    Edit: item.EditFlag,
+                    Delete: item.DeleteFlag,
+                    Upload: item.UploadFlag,
+                    Download: item.DownloadFlag,
+                    NewStore: item.NewStoreFlag,
+                    NewEmployee: item.NewEmployeeFlag,
+                    Checkbox1: item.Checkbox1Flag,
+                    Checkbox2: item.Checkbox2Flag,
+                    Verify: item.VerifyFlag   // 🔥 DIRECT VALUE
                 });
             }
+
         });
 
-        // 🚨 FINAL VALIDATION
         if (!anyPermissionSelected) {
-            showMsgBox(
-                '999',
-                'Warning',
-                'Please select at least one permission. If you do not want to assign any permission, please disable the user or contact SuperAdmin.',
-                'warning',
-                'btn-warning'
-            );
+            showMsgBox('999', 'Warning',
+                'Please select at least one permission.',
+                'warning', 'btn-warning');
             return;
         }
 
@@ -673,23 +753,18 @@
             ModuleType: "4",
             LoginId: MapId,
             UserId: $scope.UserId,
-            EmployeeCode: "",
             SectionList: SectionList,
             BranchCode: $scope.Id,
             CreatedBy: LoginId,
             Action: 1
         };
 
-        var getData = myService.methode(
+        myService.methode(
             'POST',
             "../Dashboard/InsertSectionPermissionForRole",
             '{obj:' + JSON.stringify(collectionobj) + '}'
-        );
-
-        getData.then(function (response) {
-            if (showMsgBox(response.data.Result)) {
-                // success logic
-            }
+        ).then(function (response) {
+            showMsgBox(response.data.Result);
         });
     };
 
@@ -706,7 +781,6 @@
         }
 
         angular.forEach($scope.PagesSectionMasterList, function (item, index) {
-
             if (!$scope.chkAllow[index])
                 $scope.chkAllow[index] = {};
 
@@ -715,10 +789,15 @@
 
             if (item.AllowEditFlag)
                 $scope.chkAllow[index].Edit = $scope.checkAll;
+   
+            if (item.AllowVerifyFlag)
+                $scope.chkAllow[index].VerifyFlag = $scope.checkAll;
+
+            if (item.AllowUploadFlag)
+                $scope.chkAllow[index].UploadFlag = $scope.checkAll;
         });
     };
 
-    // ---------------------------------SXtore Mapping
     $scope.AllUserListsLoad = function () {
       /* $('#loadingModal').modal('show');*/
         var collectionobj = {};
@@ -1271,6 +1350,19 @@
         printWindow.document.close();
         printWindow.focus();
         printWindow.print();
+    };
+  $scope.SearchLocation = function (item) {
+        if (!$scope.searchText) return true;
+
+        let text = $scope.searchText.toString().toLowerCase();
+
+        return (
+            (item.StoreCode && item.StoreCode.toLowerCase().includes(text)) ||
+            (item.RefStoreCode && item.RefStoreCode.toLowerCase().includes(text)) ||
+            (item.StoreName && item.StoreName.toLowerCase().includes(text)) ||
+            (item.UserName && item.UserName.toLowerCase().includes(text)) ||
+            (item.ClientType && item.ClientType.toLowerCase().includes(text))
+        );
     };
 
 }

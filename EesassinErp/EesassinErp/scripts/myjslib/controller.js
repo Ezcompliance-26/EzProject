@@ -1,6 +1,5 @@
 ﻿ 
 var LoginId = sessionStorage.getItem("LoginId");
-debugger;
 var MapId = sessionStorage.getItem("MapId");
 var MapUser = sessionStorage.getItem("MapUser");
 var BranchCode = sessionStorage.getItem("BranchCode");
@@ -2492,6 +2491,28 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
         })
     }
+
+    // here is new code for userpermission 
+    $scope.Bindflags = function () {
+        //var sessionData = JSON.parse(sessionStorage.getItem("userSession"));
+        var collectionobj = {};
+        console.log(LoginId, MapId);
+        collectionobj.Id = LoginId;
+        collectionobj.Action = 2;
+        collectionobj.MapId = MapId;
+
+        var getData = myService.methode(
+            'POST',
+            "../RetailSection/GetUserPermissionSectionRoll",
+            JSON.stringify(collectionobj)
+        );
+        getData.then(function (response) {
+            sessionStorage.setItem("RollPermission", JSON.stringify(response.data.Result));
+            console.log("Print Data", response.data.Result);
+        });
+    };
+
+
     $scope.VerifyPassword = function () {
         var collectionobj = {};
         collectionobj.BranchCode = '001';

@@ -3075,5 +3075,12 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
+
+        // here is define new code for check roll permission dated 23/04/2026
+        public async Task<string> GetUserPermissionSectionRoll(TblPartyMaster obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.GetUserPermissionSectionRoll(obj)));
+            return result;
+        }
     }
 }

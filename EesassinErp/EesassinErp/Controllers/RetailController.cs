@@ -1850,5 +1850,17 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
+        public ActionResult FinanceCompliance()
+        {
+            return View();
+        }
+        //here is new code for  Bind financial year Events dated 18/04/2026 
+
+        public async Task<string> SearchFinacialStatutoryEvent(RetailBAL obj)
+        {
+
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchFinacialStatutoryEvent(obj)));
+            return result;
+        }
     }
 }
