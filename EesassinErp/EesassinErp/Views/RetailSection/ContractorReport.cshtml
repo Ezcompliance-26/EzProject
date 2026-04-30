@@ -3,7 +3,17 @@
     ViewBag.Title = "Contractor Report";
     Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.5/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<!-- For Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="~/scripts/RetailJsLib/AddAuditContractorComplianceController.js"></script>
 <style>
     .contractorReportPage {
@@ -364,15 +374,15 @@
 
                 <!-- Pagination -->
                 @*<div class="table-pagination d-flex justify-content-between align-items-center mt-2" id="estRepPaginationWrap">
-                    <div class="d-flex align-items-center gap-2">
-                        <button class="btn btn-sm" id="estRepPrev" type="button">Previous</button>
-                        <button class="btn btn-sm" id="estRepNext" type="button">Next</button>
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <div id="estRepPageInfo" style="font-size:0.85rem;color:#555;"></div>
-                        <button class="btn btn-sm btn-primary" id="viewAllRows" type="button">View All Rows</button>
-                    </div>
-                </div>*@
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-sm" id="estRepPrev" type="button">Previous</button>
+                            <button class="btn btn-sm" id="estRepNext" type="button">Next</button>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <div id="estRepPageInfo" style="font-size:0.85rem;color:#555;"></div>
+                            <button class="btn btn-sm btn-primary" id="viewAllRows" type="button">View All Rows</button>
+                        </div>
+                    </div>*@
             </div>
         </div>
     </div>
@@ -430,7 +440,7 @@
                                 <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
                                     <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
                                         <div class="input-group input-group-sm">
-                                            <input id="estRepSearch" type="text" class="form-control form-control-sm" placeholder="Search..." />
+                                            <input id="estRepSearch" type="text" ng-model="Docsearch" class="form-control form-control-sm" placeholder="Search..." />
                                             <button class="btn btn-sm" style="border-color: #E45D27" id="estRepSearchBtn" type="button"><i class="bi bi-search"></i></button>
                                         </div>
                                     </div>
@@ -444,7 +454,7 @@
                                                     <li><a class="dropdown-item" href="#">Print</a></li>
                                                 </ul>
                                             </div>*@
-                                        <button class="btn btn-sm export-btn">Download All</button>
+                                        @*<button class="btn btn-sm export-btn">Download All</button>*@
                                     </div>
                                 </div>
                             </div>
@@ -452,15 +462,14 @@
                             <!-- TABLE -->
                             <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3" ng-init="BindDocumentList()">
                                 <div class="table-responsive">
+
                                     <table class="table table-sm mb-0 small-table">
                                         <thead>
                                             <tr>
-                                                <th style="width:40px;">
-                                                    <input type="checkbox" />
-                                                </th>
+                                                
                                                 <th>Document Name</th>
                                                 <th>Document Type</th>
-                                                <th>Act</th>
+
                                                 <th>Form No.</th>
                                                 <th>Criticality</th>
                                                 <th>Frequency</th>
@@ -468,10 +477,8 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr ng-repeat="x in DocumentList">
-                                                <td>
-                                                    <input type="checkbox" />
-                                                </td> 
+                                            <tr ng-repeat="x in DocumentList | filter : Docsearch ">
+                                              
                                                 <td>
                                                     {{x.DocumentName}}
                                                 </td>
@@ -487,14 +494,57 @@
                                                 <td>
                                                     {{x.Frequency}}
                                                 </td>
+
                                                 <td class="action-col">
-                                                    <i class="bi bi-download" title="Download"></i>
-                                                    <i class="bi bi-printer" title="Print"></i>
-                                                    <i class="bi bi-file-earmark-excel" title="Excel"></i>
+                                                    <div class="btn-group" role="group">
+                                                        <!-- Download Button -->
+                                                        <button class="btn btn-sm btn-success"
+                                                                title="Download"
+                                                                ng-click="ApproveBeforeDownload(x.HeaderHtml,x.Allowed,x.DocumentId,3,x.DocumentName)"
+                                                                ng-disabled="loading[x.DocumentId]">
+                                                            <span ng-if="!loading[x.DocumentId]">
+                                                                <i class="bi bi-download"></i>
+                                                            </span>
+                                                            <span ng-if="loading[x.DocumentId]">
+                                                                <i class="fa fa-spinner fa-spin"></i>
+                                                            </span>
+                                                        </button>
+
+                                                        <!-- Print Button -->
+                                                        <button class="btn btn-sm btn-primary"
+                                                                title="Print"
+                                                                ng-click="ApproveBeforeDownload(x.HeaderHtml,x.Allowed,x.DocumentId,1,x.DocumentName)"
+                                                                ng-disabled="loading[x.DocumentId]">
+                                                            <span ng-if="!loading[x.DocumentId]">
+                                                                <i class="bi bi-printer"></i>
+                                                            </span>
+                                                            <span ng-if="loading[x.DocumentId]">
+                                                                <i class="fa fa-spinner fa-spin"></i>
+                                                            </span>
+                                                        </button>
+                                                        <!-- Excel Button -->
+                                                        <button class="btn btn-sm btn-warning"
+                                                                title="Download Excel"
+                                                                ng-click="ApproveBeforeDownload(x.HeaderHtml,x.Allowed,x.DocumentId,2,x.DocumentName)"
+                                                                ng-disabled="loading[x.DocumentId]">
+                                                            <span ng-if="!loading[x.DocumentId]">
+                                                                <i class="bi bi-file-earmark-excel"></i>
+                                                            </span>
+                                                            <span ng-if="loading[x.DocumentId]">
+                                                                <i class="fa fa-spinner fa-spin"></i>
+                                                            </span>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <div id="dynamic-content" style="display: none;"></div>
+                                    <div id="print-area"
+                                         style="position:absolute; top:-9999px; left:-9999px;
+            background:#fff; min-width:800px; min-height:600px;
+            display:block; visibility:visible;">
+                                    </div>
                                 </div>
                             </div>
 

@@ -37,11 +37,12 @@
         fd.append('DocumentName', row.DocumentName);
         fd.append('Id', MapId);
 
-        $http.post('../RetailSection/IUDCOMPLIANCESTORE', fd, {
+        $http.post('../RetailSection/IUDCOMPLIANCESTORE', fd, { 
             transformRequest: angular.identity,
             headers: { 'Content-Type': undefined }
         })
             .then(function (res) {
+                $scope.hideLoader();
                 if (res.data && res.data.Result) {
                     showMsgBox(res.data.Result);
                     $scope.BindComDoc();
@@ -50,6 +51,7 @@
                 }
             })
             .catch(function () {
+                $scope.hideLoader();
                 showMsgBox('999', 'Error', 'Server error.', 'error', 'btn-danger');
             })
             .finally(function () {
@@ -77,6 +79,7 @@
             headers: { 'Content-Type': undefined }
         })
             .then(function (res) {
+                $scope.hideLoader();
                 if (res.data && res.data.Result) {
                     showMsgBox(res.data.Result);
                     $scope.BindComDoc();
@@ -85,6 +88,7 @@
                 }
             })
             .catch(function () {
+                $scope.hideLoader();
                 showMsgBox('999', 'Error', 'Server error.', 'error', 'btn-danger');
             })
             .finally(function () {
@@ -163,7 +167,7 @@
             headers: { 'Content-Type': undefined }
         })
             .then(function (res) {
-
+                $scope.hideLoader();
                 if (res.data && res.data.Result) {
 
                     showMsgBox(res.data.Result);
@@ -180,11 +184,13 @@
                     $('#LicenseDocument').modal('hide');
                 }
                 else {
+                    $scope.hideLoader();
                     showMsgBox('999', 'Error', 'Something went wrong.', 'error', 'btn-danger');
                 }
 
             })
             .catch(function () {
+                $scope.hideLoader();
                 showMsgBox('999', 'Error', 'Server error.', 'error', 'btn-danger');
             })
             .finally(function () {
@@ -218,6 +224,7 @@
             headers: { 'Content-Type': undefined }
         })
             .then(function (res) {
+                $scope.hideLoader();
                 if (res.data && res.data.Result) {
                     showMsgBox(res.data.Result);
 
@@ -230,6 +237,7 @@
                     $scope.BindComDoc();
                     $('#AddDocumentModel').modal('hide');
                 } else {
+                    $scope.hideLoader();
                     showMsgBox('999', 'Error', 'Something went wrong.', 'error', 'btn-danger');
                 }
             })
@@ -273,7 +281,7 @@
 
         myService.methode('POST', "../RetailSection/GetComDoc", JSON.stringify(collectionobj))
             .then(function (response) {
-
+                $scope.hideLoader();
                 var data = response.data.Result || [];
 
                 // 🔹 FRONT-END GROUPING (Document unique)
@@ -511,6 +519,7 @@
             getData.then(function (response) {
                 debugger;
                 if (showMsgBox(response.data.Result)) {
+                    $scope.hideLoader();
                     $scope.FireEmail(1, $scope.EmailId, 0); 
                     $scope.Limit();
                     $scope.UserNames = '';
@@ -518,6 +527,7 @@
                     $scope.UName = '';
                     $scope.ContactNumber = '';
                     $scope.EmailId = '';
+                    $scope.hideLoader();
                     /* data-bs-dismiss="modal"*/
                 }
             });
@@ -602,150 +612,84 @@
           /* $('#loadingModal').modal('hide');*/
     }
     $scope.GetPagesSectionMasterList = function () {
+        debugger;
       /* $('#loadingModal').modal('show');*/
         $scope.showLoader();
         var collectionobj = {};
         collectionobj.PartyId = MapId;
         collectionobj.PartyType = "4";
-        collectionobj.UserId = $scope.UserId;
+        collectionobj.UserId = $scope.UserId
         collectionobj.RoleId = $scope.Id;
-        collectionobj.LoginId = LoginId;
-        console.log(MapId,$scope.UserId, LoginId);
+        collectionobj.LoginId = LoginId; 
         var getData = myService.methode('POST', '../Dashboard/PagesSectionMasterList', '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
+            debugger;
+            $scope.hideLoader();
+              /* $('#loadingModal').modal('hide');*/
             $scope.PagesSectionMasterList = response.data.Result;
-            console.log("Check Flag Data",$scope.PagesSectionMasterList);
+              /* $('#loadingModal').modal('hide');*/
             $scope.hideLoader();
         });
           /* $('#loadingModal').modal('hide');*/
     };
-    //$scope.SavePermissionRecord = function () {
-    //    debugger
-    //    if ($scope.UserId == '' || $scope.UserId == undefined) {
-    //        showMsgBox('999', 'Warning', 'Please Select User', 'warning', 'btn-warning');
-    //        return;
-    //    }
-
-    //    var SectionList = [];
-    //    var anyPermissionSelected = false; // ⭐ flag
-
-    //    $("#permissionTable tbody tr").each(function () {
-    //        debugger;
-    //        var row = $(this);
-
-    //        var SectionId = row.find("input[type='hidden']#hfId").val();
-
-    //        var chkAllowView = row.find("#chkAllowView").prop("checked");
-    //        var chkAllowEdit = row.find("#chkAllowEdit").prop("checked");
-    //        var chkAllowDelete = row.find("#chkAllowDelete").prop("checked");
-    //        var chkAllowUpload = row.find("#chkupload").prop("checked");
-    //        var chkAllowDownload = row.find("#chkAllowDownload").prop("checked");
-    //        var chkAllowNewStore = row.find("#chkAllowNewStore").prop("checked");
-    //        var chkAllowNewEmployee = row.find("#chkAllowNewEmployee").prop("checked");
-    //        var chkAllowChk1 = row.find("#chkAllowChk1").prop("checked");
-    //        var chkAllowChk2 = row.find("#chkAllowChk2").prop("checked");
-    //        var chkAllowVerify = row.find("#chkVerify").prop("checked");
-
-    //        if (
-    //            chkAllowView || chkAllowEdit || chkAllowDelete || chkAllowUpload ||
-    //            chkAllowDownload || chkAllowNewStore || chkAllowNewEmployee ||
-    //            chkAllowChk1 || chkAllowChk2 || chkAllowVerify
-    //        ) {
-    //            anyPermissionSelected = true; // ⭐ at least one selected
-
-    //            SectionList.push({
-    //                SectionId: SectionId,
-    //                View: chkAllowView,
-    //                Edit: chkAllowEdit,
-    //                Delete: chkAllowDelete,
-    //                Upload: chkAllowUpload,
-    //                Download: chkAllowDownload,
-    //                NewStore: chkAllowNewStore,
-    //                NewEmployee: chkAllowNewEmployee,
-    //                Checkbox1: chkAllowChk1,
-    //                Checkbox2: chkAllowChk2,
-    //                Verify: chkAllowVerify
-    //            });
-    //        }
-    //    });
-
-    //    // 🚨 FINAL VALIDATION
-    //    if (!anyPermissionSelected) {
-    //        showMsgBox(
-    //            '999',
-    //            'Warning',
-    //            'Please select at least one permission. If you do not want to assign any permission, please disable the user or contact SuperAdmin.',
-    //            'warning',
-    //            'btn-warning'
-    //        );
-    //        return;
-    //    }
-
-    //    var collectionobj = {
-    //        ModuleType: "4",
-    //        LoginId: MapId,
-    //        UserId: $scope.UserId,
-    //        EmployeeCode: "",
-    //        SectionList: SectionList,
-    //        BranchCode: $scope.Id,
-    //        CreatedBy: LoginId,
-    //        Action: 1
-    //    };
-
-    //    var getData = myService.methode(
-    //        'POST',
-    //        "../Dashboard/InsertSectionPermissionForRole",
-    //        '{obj:' + JSON.stringify(collectionobj) + '}'
-    //    );
-
-    //    getData.then(function (response) {
-    //        if (showMsgBox(response.data.Result)) {
-    //            // success logic
-    //        }
-    //    });
-    //};
-
-
     $scope.SavePermissionRecord = function () {
 
-        if (!$scope.UserId) {
+        if ($scope.UserId == '' || $scope.UserId == undefined) {
             showMsgBox('999', 'Warning', 'Please Select User', 'warning', 'btn-warning');
             return;
         }
 
         var SectionList = [];
-        var anyPermissionSelected = false;
+        var anyPermissionSelected = false; // ⭐ flag
 
-        angular.forEach($scope.PagesSectionMasterList, function (item) {
+        $("#permissionTable tbody tr").each(function () {
+            var row = $(this);
+
+            var SectionId = row.find("input[type='hidden']#hfId").val();
+
+            var chkAllowView = row.find("#chkAllowView").prop("checked");
+            var chkAllowEdit = row.find("#chkAllowEdit").prop("checked");
+            var chkAllowDelete = row.find("#chkAllowDelete").prop("checked");
+            var chkAllowUpload = row.find("#chkAllowUpload").prop("checked");
+            var chkAllowDownload = row.find("#chkAllowDownload").prop("checked");
+            var chkAllowNewStore = row.find("#chkAllowNewStore").prop("checked");
+            var chkAllowNewEmployee = row.find("#chkAllowNewEmployee").prop("checked");
+            var chkAllowChk1 = row.find("#chkAllowChk1").prop("checked");
+            var chkAllowChk2 = row.find("#chkAllowChk2").prop("checked");
+            var chkAllowVerify = row.find("#chkAllowVerify").prop("checked");
 
             if (
-                item.ViewFlag || item.EditFlag || item.DeleteFlag || item.UploadFlag ||
-                item.DownloadFlag || item.NewStoreFlag || item.NewEmployeeFlag ||
-                item.Checkbox1Flag || item.Checkbox2Flag || item.VerifyFlag
+                chkAllowView || chkAllowEdit || chkAllowDelete || chkAllowUpload ||
+                chkAllowDownload || chkAllowNewStore || chkAllowNewEmployee ||
+                chkAllowChk1 || chkAllowChk2 || chkAllowVerify
             ) {
-                anyPermissionSelected = true;
+                anyPermissionSelected = true; // ⭐ at least one selected
 
                 SectionList.push({
-                    SectionId: item.Id,
-                    View: item.ViewFlag,
-                    Edit: item.EditFlag,
-                    Delete: item.DeleteFlag,
-                    Upload: item.UploadFlag,
-                    Download: item.DownloadFlag,
-                    NewStore: item.NewStoreFlag,
-                    NewEmployee: item.NewEmployeeFlag,
-                    Checkbox1: item.Checkbox1Flag,
-                    Checkbox2: item.Checkbox2Flag,
-                    Verify: item.VerifyFlag   // 🔥 DIRECT VALUE
+                    SectionId: SectionId,
+                    View: chkAllowView,
+                    Edit: chkAllowEdit,
+                    Delete: chkAllowDelete,
+                    Upload: chkAllowUpload,
+                    Download: chkAllowDownload,
+                    NewStore: chkAllowNewStore,
+                    NewEmployee: chkAllowNewEmployee,
+                    Checkbox1: chkAllowChk1,
+                    Checkbox2: chkAllowChk2,
+                    Verify: chkAllowVerify
                 });
             }
-
         });
 
+        // 🚨 FINAL VALIDATION
         if (!anyPermissionSelected) {
-            showMsgBox('999', 'Warning',
-                'Please select at least one permission.',
-                'warning', 'btn-warning');
+            showMsgBox(
+                '999',
+                'Warning',
+                'Please select at least one permission. If you do not want to assign any permission, please disable the user or contact SuperAdmin.',
+                'warning',
+                'btn-warning'
+            );
             return;
         }
 
@@ -753,18 +697,23 @@
             ModuleType: "4",
             LoginId: MapId,
             UserId: $scope.UserId,
+            EmployeeCode: "",
             SectionList: SectionList,
             BranchCode: $scope.Id,
             CreatedBy: LoginId,
             Action: 1
         };
 
-        myService.methode(
+        var getData = myService.methode(
             'POST',
             "../Dashboard/InsertSectionPermissionForRole",
             '{obj:' + JSON.stringify(collectionobj) + '}'
-        ).then(function (response) {
-            showMsgBox(response.data.Result);
+        );
+
+        getData.then(function (response) {
+            if (showMsgBox(response.data.Result)) {
+                // success logic
+            }
         });
     };
 
@@ -781,6 +730,7 @@
         }
 
         angular.forEach($scope.PagesSectionMasterList, function (item, index) {
+
             if (!$scope.chkAllow[index])
                 $scope.chkAllow[index] = {};
 
@@ -789,15 +739,10 @@
 
             if (item.AllowEditFlag)
                 $scope.chkAllow[index].Edit = $scope.checkAll;
-   
-            if (item.AllowVerifyFlag)
-                $scope.chkAllow[index].VerifyFlag = $scope.checkAll;
-
-            if (item.AllowUploadFlag)
-                $scope.chkAllow[index].UploadFlag = $scope.checkAll;
         });
     };
 
+    // ---------------------------------SXtore Mapping
     $scope.AllUserListsLoad = function () {
       /* $('#loadingModal').modal('show');*/
         var collectionobj = {};
@@ -879,6 +824,7 @@
             JSON.stringify(collectionobj)
         ).then(function (response) {
             if (showMsgBox(response.data.Result)) {
+                $scope.hideLoader();
                 $scope.IsOpen = false;
                 $scope.FireEmail(10, $scope.StoreUserId, $scope.StoreId);
                 $('#emailSendingModal').modal('hide');
@@ -980,7 +926,8 @@
         );
 
         getData.then(function (response) {
-              /* $('#loadingModal').modal('hide');*/
+            /* $('#loadingModal').modal('hide');*/
+            $scope.hideLoader();
             $scope.OverallList = response.data.Result || [];
 
             if ($scope.OverallList.length > 0) {
@@ -1066,6 +1013,7 @@
 
         getData.then(function (response) {
             /* $('#loadingModal').modal('hide');*/
+            $scope.hideLoader();
             $scope.LicenseList = response.data.Result || [];
             $scope.FilteredLicenseList = angular.copy($scope.LicenseList);
             $scope.StateList = [...new Set($scope.LicenseList.map(x => x.State))];
@@ -1246,6 +1194,7 @@
             headers: { 'Content-Type': undefined }
         })
             .then(function (res) {
+                $scope.hideLoader();
                 $scope.AllIndustry();
                 if (res.data && res.data.Result)
                 {
@@ -1352,6 +1301,7 @@
         printWindow.print();
     };
   $scope.SearchLocation = function (item) {
+        console.log(item);
         if (!$scope.searchText) return true;
 
         let text = $scope.searchText.toString().toLowerCase();

@@ -2734,6 +2734,28 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
             applyFlags(response.data.Result);
         });
     };
+	
+	
+	
+    $scope.Bindflags = function () {
+        var sessionData = JSON.parse(sessionStorage.getItem("userSession"));
+        var collectionobj = {};
+        collectionobj.Id = sessionData.LoginId;
+        collectionobj.Action = 2;
+        collectionobj.MapId = sessionData.MapId;
+
+        var getData = myService.methode(
+            'POST',
+            "../RetailSection/GetUserPermissionSectionRoll",
+            JSON.stringify(collectionobj)
+        );
+        getData.then(function (response) {
+            sessionStorage.setItem("RollPermission", JSON.stringify(response.data.Result));
+        });
+    };
+
+	
+	
     function applyFlags(menuData) {
 
         let row = menuData.find(x => x.SectionName === 'Store Compliance Status');
@@ -2744,7 +2766,8 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         let row5 = menuData.find(x => x.SectionName === 'Manage Project');
         let row6 = menuData.find(x => x.SectionName === 'License Master');
         let row7 = menuData.find(x => x.SectionName === 'Labour Compliance');
-
+        let row8 = menuData.find(x => x.SectionName === 'Finance Compliance');
+       
         if (row) {
             $scope.SCS_ViewFlag = row.ViewFlag;
             $scope.SCS_AllowEditFlag = row.ViewFlag;
@@ -2800,6 +2823,11 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         if (row7) {
             $scope.PFUpload = row7.UploadFlag;
             $scope.PFVerify = row7.VerifyFlag;
+        }
+        if (row8) { 
+            $scope.FM_ViewFlag = row8.ViewFlag; 
+            $scope.allowupdfile = row8.UploadFlag; 
+            $scope.allowverifyflag = row8.VerifyFlag;
         }
     }
    

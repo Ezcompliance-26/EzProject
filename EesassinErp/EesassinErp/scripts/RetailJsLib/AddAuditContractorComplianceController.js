@@ -52,7 +52,7 @@
         };
 
         try {
-            const response = await myService.methode('POST', "../RetailSection/GetContractorBulkReportlist", '{obj:' + JSON.stringify(collectionobj) + '}');
+            const response = await myService.methode('POST', "../RetailSection/AuditGetContractorBulkReportlist", '{obj:' + JSON.stringify(collectionobj) + '}');
             const list = response.data?.Result?.Table || [];
 
             if (!list.length) {
@@ -368,6 +368,7 @@
     $scope.BindDocumentList = function () {
         var collectionobj = {};
         collectionobj.Action = 6;
+        collectionobj.LoginId = MapId
         var getData = myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             $scope.DocumentList = response.data.Result;
@@ -1229,20 +1230,18 @@
     $scope.ApproveBeforeDownload = function (html, Allowed, DocumentId, Doctype, DocName) {
         $scope.loading[DocumentId] = true;
         newhtml = '';
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var uid = urlParams.get('UID');
         if (Allowed == 1) {
             var collectionobj = {
-                Action: 11,
-                CMonth: $scope.CMonth,
-                FY: $scope.FY,
+                Action: 11, 
                 Id: MapId,
-                StateId: $.trim($('#ddlState option:selected').text()),
-                StoreId: $scope.StoreId,
-                ComplianceCategory: $.trim($('#ddlComplianceCategory option:selected').text())
+                UID: uid
             };
-            var getData = myService.methode('POST', "../RetailSection/ContractorGetReportlist", '{obj:' + JSON.stringify(collectionobj) + '}');
+            var getData = myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
             getData.then(function (response) {
-                $scope.EmployeeDetail = response.data.Result;
-                // Modal open trigger
+                $scope.EmployeeDetail = response.data.Result; 
                 angular.element("#employeeModal").css("display", "block");
                 newhtml = html;
                 $scope.Doctype = Doctype;
@@ -1266,15 +1265,11 @@
         debugger;
         var collectionobj = {};
         collectionobj.Action = 10;
-        collectionobj.CMonth = $scope.CMonth;
-        collectionobj.FY = $scope.FY;
-        collectionobj.Id = MapId
-        collectionobj.LoginId = SelectedEmployee
+        var urlParams = new URLSearchParams(window.location.search);
+        var uid = urlParams.get('UID');
+        collectionobj.UID = uid;
         collectionobj.DocumentId = DocumentId;
-        collectionobj.StateId = $.trim($('#ddlState option:selected').text());
-        collectionobj.StoreId = $scope.StoreId;
-        collectionobj.ComplianceCategory = $.trim($('#ddlComplianceCategory option:selected').text());
-        var getData = myService.methode('POST', "../RetailSection/ContractorGetReportlist", '{obj:' + JSON.stringify(collectionobj) + '}');
+        var getData = myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             if (response && response.data && response.data.Result && response.data.Result.length > 0) {
                 $scope.DocumentDetailList = response.data.Result;

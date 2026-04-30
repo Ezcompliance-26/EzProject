@@ -13,7 +13,7 @@ namespace BAL
 
         public List<int> SelectedDocuments { get; set; }
 
-         
+        public string UID { get; set; }
         public string MaternityExcelList { get; set; }
         public string MiscExcelList { get; set; }
 

@@ -67,18 +67,18 @@
         }
 
         .logoBox {
-            position: absolute;
+           /* position: absolute;
             right: 0px;
-            top: 8px;
-            background: #D9D9D9;
-            padding: 10px 10px;
+            top: 8px;*/
+            
+           /* padding: 10px 10px;
             border-bottom-left-radius: 40px;
             border-top-left-radius: 40px;
-            display: flex;
+            display: flex;*/
             gap: 8px;
             align-items: center;
             justify-content: center;
-            width: 30%;
+            width: 100%;
             overflow: hidden;
         }
 
@@ -481,7 +481,7 @@
                             </div>
                             <div class="col-lg-3 col-md-6" ng-init="GetTransport()">
                                 <label class="form-label">Allow Transport<span class="text-danger">*</span></label>
-                                <select class="form-select form-select-sm" ng-model="Transport" ng-change="openRoutetransport();GetTransport()">
+                                <select class="form-select form-select-sm validate" ng-model="Transport" ng-change="openRoutetransport();GetTransport()">
                                     <option value="">Select</option>
                                     <option value="Yes">Yes</option>
                                     <option value="No">No</option>
@@ -490,7 +490,7 @@
                             <div class="col-lg-3 col-md-6" ng-show="OpenRoute">
 
                                 <label class="form-label">Route<span class="text-danger">*</span></label>
-                                <select class="form-select form-control-sm validate" ng-model="RouteId">
+                                <select class="form-select form-control-sm" ng-model="RouteId">
                                     <option value="">Select</option>
                                     <option ng-repeat="x in TransportList" value="{{x.RouteID}}">{{x.RouteName}}</option>
                                 </select>
@@ -1515,8 +1515,8 @@
                     <!-- HEADER -->
                     <div style="height:60px;background:{{AssignColor}};position:relative;">
 
-                        <div style="position:absolute;right:0;top:9px;background:#D9D9D9;padding:10px;border-bottom-left-radius:40px;border-top-left-radius:40px;width:30%;display:flex;align-items:center;justify-content:center;">
-                          {{MapUser}}
+                        <div style="top: 9px; width: 100%; text-align: center; justify-content: center; margin-top: 10px; font-size: larger;">
+                            {{ClientName}}
                         </div>
                     </div>
 
@@ -1663,8 +1663,8 @@
                                 <div class="card-face front">
                                     <div class="idCard frontCard">
                                         <div style="height: 60px; background: {{AssignColor}}; position: relative; ">
-                                            <div class="logoBox">
-                                                {{MapUser}}   @*<img src="../assets/logo-placeholder.png">*@
+                                            <div class="logoBox" style="margin-top: 10px; font-size: larger;">
+                                                {{ClientName}}   @*<img src="../assets/logo-placeholder.png">*@
                                             </div>
                                         </div>
 

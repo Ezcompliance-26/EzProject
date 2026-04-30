@@ -127,9 +127,9 @@
     $scope.EmpMobile = Detail.MobileNumber;
     $scope.ValidTill = Detail.ValidTill;
     $scope.IssueDate = Detail.IssueDate;
-    $scope.RouteId = Detail.RouteId;
-       $scope.AssignColor = Detail.AssignColor;
-       $scope.AssignColor = Detail.AssignColor;
+       $scope.RouteId = Detail.RouteId;
+       $scope.ClientName = Detail.ClientName;
+       $scope.AssignColor = Detail.AssignColor; 
        $scope.BloodGroup = Detail.BloodGroup;
     var site = $scope.SiteList.find(function (x) {
         return x.SiteId == Detail.Site;
@@ -143,12 +143,10 @@
 
         if (!$scope.EmpCode) return "";
 
-        var data =
-            "----- Employee ID Card -----\n\n" +
+        var data = 
             "Name: " + $scope.EmpName + "\n" +
             "ID: " + $scope.EmpCode + "\n" + 
-            "Mobile: " + $scope.EmpMobile + "\n\n" +
-            "----------------------------";
+            "Mobile: " + $scope.EmpMobile + "";
 
         return "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=" + encodeURIComponent(data);
     };
@@ -1003,6 +1001,17 @@
         debugger;
         if (isValidate())
         {
+
+            if ($scope.Transport === 'Yes') {
+
+                if (!$scope.RouteId || $scope.RouteId === '') {
+                    showMsgBox('999', 'Alert', 'Please Select Route', 'warning', 'btn-warning');
+                    return;
+                }
+
+            } else {
+                $scope.RouteId = '';
+            }
             var _isFileValid = true;
             if ($scope.EditId == 0) {
                 _isFileValid = IsFileValidation();

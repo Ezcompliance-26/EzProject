@@ -115,7 +115,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.USP_EmployeeMaster", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
-        public DataTable GetNewsletterForSearch(DocumentBAL obj)
+        public DataTable GetNewsletterForSearch(DocumentBAL obj) 
         {
             var param = new List<SqlParameter>
             {
@@ -126,15 +126,15 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@UserId", obj.LicenseName),
                 new SqlParameter("@Message", obj.Msg)
             };
-
-            DataTable dt = SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[dbo].[USP_GetNewsletterForSearch]", CommandType.StoredProcedure, param.ToArray());
-            return dt;
+         
+            DataTable dt =  SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[dbo].[USP_GetNewsletterForSearch]", CommandType.StoredProcedure, param.ToArray());
+            return dt;   
         }
         public async static Task<DataTable> getaisearch(ChatbotBAL obj)
         {
             var param = new List<SqlParameter>
             {
-                    new SqlParameter("@Action", obj.Action),
+                    new SqlParameter("@Action", obj.Action), 
                     new SqlParameter("@Question",obj.Question),
                     new SqlParameter("@Id",obj.Id)
 
@@ -184,9 +184,9 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("RTL.Usp_StoreMaster", CommandType.StoredProcedure, param.ToArray()));
         }
+        
 
-
-        public async static Task<string> IUDLicense(RetialStoreManager obj)
+             public async static Task<string> IUDLicense(RetialStoreManager obj)
         {
             var param = new List<SqlParameter>
             {
@@ -194,7 +194,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                  new SqlParameter("@Id",obj.Id),
                 new SqlParameter("@LicenseId",obj.LicenseId),
                  new SqlParameter("@LicenseName",obj.LicenseName),
-                new SqlParameter("@UniqueId",obj.UniqueId),
+                new SqlParameter("@UniqueId",obj.UniqueId), 
                  new SqlParameter("@Createdby",obj.LoginId),
                 new SqlParameter("@RESULT",""),
             };
@@ -221,7 +221,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("Usp_IUDStoreCompliance", CommandType.StoredProcedure, param.ToArray()));
         }
 
-
+        
         public async static Task<string> Savechatbot(ChatbotBAL obj)
         {
             var param = new List<SqlParameter>
@@ -262,7 +262,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             return dt;
         }
 
-
+      
         public async static Task<DataTable> GetMasters(tblMasters obj)
         {
 
@@ -293,7 +293,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             {
                 new SqlParameter("@TicketNo",obj.TicketNo),
                 new SqlParameter("@Action", obj.Action),
-                new SqlParameter("@Detail",obj.Detail),
+                new SqlParameter("@Detail",obj.Detail), 
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[RTL].[USP_Chatbot]", CommandType.StoredProcedure, param.ToArray()));
@@ -417,7 +417,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@StoreLocation",obj.StoreLocation),
                 new SqlParameter("@CityId",obj.CityId),
                  new SqlParameter("@CountryId",obj.CountryId),
-
+                
                 new SqlParameter("@CircleId",obj.CircleId),
                 new SqlParameter("@RegionId",obj.RegionId),
                 new SqlParameter("@zipCode",obj.ZipCode),
@@ -474,10 +474,10 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                         new SqlParameter("@ExecutionLevel3", obj.ExecutionLevel3),
                         new SqlParameter("@ExecutionLevel4", obj.ExecutionLevel4),
                         new SqlParameter("@ExecutionLevel5", obj.ExecutionLevel5),
-                        new SqlParameter("@SelectDuedatefor", obj.SelectDuedatefor),
+                        new SqlParameter("@SelectDuedatefor", obj.SelectDuedatefor), 
                          new SqlParameter("@LicenseD", obj.LicenseD),
                         new SqlParameter("@LicenseDaysOfExpire", obj.LicenseDaysOfExpire),
-                        new SqlParameter("@LicenseED", obj.LicenseED),
+                        new SqlParameter("@LicenseED", obj.LicenseED), 
                         new SqlParameter("@Labour", obj.Labour),
                         new SqlParameter("@LabourDaysOfExpire", obj.LabourDaysOfExpire),
                          new SqlParameter("@LabourED", obj.LabourED),
@@ -498,8 +498,8 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                               new SqlParameter("@InsuranceFromDate", obj.InsuranceFromDate),
                                   new SqlParameter("@InsurancePaidReceiptPeriodUpTo", obj.InsurancePaidReceiptPeriodUpTo),
                                       new SqlParameter("@InsurancePaidReceiptRemark", obj.InsurancePaidReceiptRemark),
-
-                       new SqlParameter("@RESULT","")
+ 
+                       new SqlParameter("@RESULT","") 
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("RTL.Usp_StoreMaster", CommandType.StoredProcedure, param.ToArray()));
         }
@@ -926,7 +926,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             {
                 new SqlParameter("@Id", obj.Id),
                 new SqlParameter("@Action", obj.ActionType),
-                new SqlParameter("@StoreCode", obj.StoreCode)
+                new SqlParameter("@StoreCode", obj.StoreCode)             
 
             };
 
@@ -1067,8 +1067,6 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@State",obj.State),
                 new SqlParameter("@Month",obj.Month),
                 new SqlParameter("@Year",obj.Year),
-                  new SqlParameter("@Id",obj.LoginId),
-                      new SqlParameter("@UID",obj.UID),
 
             };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.USP_AuditContractorComplianceBulk", CommandType.StoredProcedure, param.ToArray()));
@@ -1166,7 +1164,6 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
         new SqlParameter("@UserId", obj.LoginId),
         new SqlParameter("@Action", obj.Action),
         new SqlParameter("@Signature", obj.Signature ?? ""),
-          new SqlParameter("@ExcelFile", obj.ExcelFilePath ?? ""),
         new SqlParameter("@RESULT", "") { Direction = ParameterDirection.Output },
         new SqlParameter("@p4output", "") { Direction = ParameterDirection.Output }
     };
@@ -1180,7 +1177,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
         public async static Task<DataTable> GetReportlist(RetailLicenseDocuementMaster obj)
         {
 
-            string ActList = obj.NewActList != null ? string.Join(",", obj.NewActList) : "";
+           string ActList = obj.NewActList != null ? string.Join(",", obj.NewActList) : "";
 
             var param = new List<SqlParameter>
                 {
@@ -1192,7 +1189,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@FY", obj.FY),
                 new SqlParameter("@CMonth", obj.CMonth),
                 new SqlParameter("@ExecuterId", obj.LoginId),
-                new SqlParameter("@DocumentId", obj.DocumentId),
+                new SqlParameter("@DocumentId", obj.DocumentId), 
                 new SqlParameter("@ComplianceCategory", obj.ComplianceCategory)
                 };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.USP_ComplianceBulk", CommandType.StoredProcedure, param.ToArray()));
@@ -1368,7 +1365,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 StoreMaster.Append(seprator);
                 StoreMaster.Append(obj.StoreMaster[i].Operationmodel);
                 StoreMaster.Append(seprator);
-                StoreMaster.Append(obj.StoreMaster[i].ComplianceCategory);
+                StoreMaster.Append(obj.StoreMaster[i].ComplianceCategory);               
 
                 bigseprator = "|";
             }
@@ -1632,7 +1629,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                         item.MaritalStatus,
                         item.DateOfBirth,
                         item.DOJ,
-
+                        
 
                         item.PresentAddress,
                         item.PermanemtAddress,
@@ -1748,13 +1745,13 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 bigSeparator = "|";
             }
 
-
+         
 
             string miscCsv = obj.MiscExcelList ?? "";
 
             var param = new List<SqlParameter>
     {
-        new SqlParameter("@ComplianceBulkList", AttendanceCompliance.ToString()),
+        new SqlParameter("@ComplianceBulkList", AttendanceCompliance.ToString()), 
         new SqlParameter("@MiscExcelList", miscCsv),
         new SqlParameter("@UserId", obj.LoginId),
         new SqlParameter("@Action", obj.Action),
@@ -1770,7 +1767,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
 
         public async static Task<DataTable> GetComlist(Attendance obj)
         {
-
+          
             var param = new List<SqlParameter>
             {
                 new SqlParameter("@Action", obj.Action),
@@ -1850,10 +1847,10 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[USP_Payment]", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
+      
 
 
-
-
+        
         public static Task<string> RetailONETIMEDOCUMENT(TblSiteManager obj)
         {
             var param = new List<SqlParameter>
@@ -1938,7 +1935,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                  new SqlParameter("@PageNumber",obj.PageNumber),
                   new SqlParameter("@PageSize",obj.PageSize),
 
-
+                
                  new SqlParameter("@LicenceApplicable",obj.LicenceApplicable),
                 new SqlParameter("@PartyId",obj.UserId)
             };
@@ -2079,7 +2076,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[RTL].[USP_SecretarialStatutoryInternal]", CommandType.StoredProcedure, param.ToArray()));
 
         }
-
+        
         public async static Task<DataTable> SearchStatutoryInternal(RetailBAL obj)
         {
             var param = new List<SqlParameter>
@@ -2192,7 +2189,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@Createdby", obj.Createdby),
                 new SqlParameter("@CACId", obj.CACId),
                   new SqlParameter("@CSIID", obj.CSIID),
-
+                
                   new SqlParameter("@Status", obj.Status),
                     new SqlParameter("@VRemark", obj.VRemark),
                       new SqlParameter("@CRemark", obj.CRemark),
@@ -2241,7 +2238,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@Category", obj.Category),
                 new SqlParameter("@SubCategory", obj.SubCategory),
                     new SqlParameter("@Status", obj.Status),
-                new SqlParameter("@Id", obj.Id),
+                new SqlParameter("@Id", obj.Id), 
         };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[USP_ComplianceDashboard]", CommandType.StoredProcedure, param.ToArray()));
         }
@@ -2260,7 +2257,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             DataSet dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommandds("SaveRetailData", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
-
+       
 
         public async static Task<string> IUDActMaster(RetailBAL obj)
         {
@@ -2331,20 +2328,20 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             DataSet dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommandds("[RTL].[Usp_ManageLegalDashboard]", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
-
+        
 
 
         public static object IUDLitigationMaster3(List<HearingModel> hearings)
-        {
+            {
             object lastResult = null;
 
             foreach (var obj in hearings)
             {
-                var param = new List<SqlParameter>
+            var param = new List<SqlParameter>
             {
             new SqlParameter("@Action", obj.Action),
             new SqlParameter("@CaseID", obj.CaseId),
-             new SqlParameter("@CreatedBy", obj.CreatedBy),
+             new SqlParameter("@CreatedBy", obj.CreatedBy), 
             new SqlParameter("@CaseCode", obj.CaseCode),
             new SqlParameter("@DateOfHearing", obj.DateOfHearing),
             new SqlParameter("@PurposeOfHearing", obj.PurposeOfHearing),
@@ -2354,16 +2351,16 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             new SqlParameter("@HearingFileName", obj.HearingFileName ?? ""),
             new SqlParameter("@HearingFilePath", obj.HearingFilePath ?? ""),
                 new SqlParameter("@Result",""),
-            };
-                lastResult = SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar(
-                "RTL.Usp_ManageLegalCaseData",
-                CommandType.StoredProcedure,
-                param.ToArray()
-                );
+            }; 
+            lastResult = SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar(
+            "RTL.Usp_ManageLegalCaseData",
+            CommandType.StoredProcedure,
+            param.ToArray()
+            );
             }
 
             return lastResult; // Optionally return all results as list if needed
-        }
+            }
 
 
 
@@ -2371,7 +2368,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter("@Action", obj.Action),
+                new SqlParameter("@Action", obj.Action), 
                 new SqlParameter("@CaseID",obj.CaseID),
                 new SqlParameter("@CaseCode",obj.CaseCode),
                 new SqlParameter("@CaseTitle",obj.CaseTitle),
@@ -2398,7 +2395,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@Other",obj.Other),
                 new SqlParameter("@Probability",obj.Probability),
 
-
+                
 
                 new SqlParameter("@RepName",obj.RepName),
                 new SqlParameter("@RepMobile",obj.RepMobile),
@@ -2415,7 +2412,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@Note",obj.Note),
                 new SqlParameter("@PleadingsType",obj.PleadingsType),
                 new SqlParameter("@DateOfFilling",obj.DateOfFilling),
-                 new SqlParameter("@DateOfUpload",obj.DateOfUpload),
+                 new SqlParameter("@DateOfUpload",obj.DateOfUpload), 
                 new SqlParameter("@File1",obj.File1),
                 new SqlParameter("@File2",obj.File2),
                 new SqlParameter("@File3",obj.File3),
@@ -2453,13 +2450,13 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
         {
             var param = new List<SqlParameter>
             {
-                new SqlParameter("@Action", obj.Action),
-                new SqlParameter("@CaseCode",obj.CaseCode),
+                new SqlParameter("@Action", obj.Action), 
+                new SqlParameter("@CaseCode",obj.CaseCode), 
                 new SqlParameter("@Appealby",obj.Appealby),
                 new SqlParameter("@AppealStatus",obj.AppealStatus),
+              
 
-
-
+                
                 new SqlParameter("@Result",""),
 
             };
@@ -2490,15 +2487,15 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 Map1ListSet.Append(item.State).Append(seprator);
                 Map1ListSet.Append(item.StoreId).Append(seprator);
                 Map1ListSet.Append(item.Act).Append(seprator);
-                Map1ListSet.Append(item.ComplianceName).Append(seprator);
+                Map1ListSet.Append(item.ComplianceName).Append(seprator); 
                 Map1ListSet.Append(item.RegistrationNumber).Append(seprator);
                 Map1ListSet.Append(item.ValidFrom).Append(seprator);
                 Map1ListSet.Append(item.ValidTo).Append(seprator);
                 Map1ListSet.Append(item.TypeCode).Append(seprator);
-                Map1ListSet.Append(item.RegistrationType).Append(seprator);
-                Map1ListSet.Append(item.Upload);
+                Map1ListSet.Append(item.RegistrationType).Append(seprator); 
+                Map1ListSet.Append(item.Upload); 
                 bigseprator = "|";
-            }
+            } 
             var param = new List<SqlParameter>
            {
                     new SqlParameter("@MapListSet", Map1ListSet.ToString()),
@@ -2518,7 +2515,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             {
                 new SqlParameter("@Action", obj.Action),
                  new SqlParameter("@Id", obj.Id),
-                    new SqlParameter("@state", obj.Createdby)
+                    new SqlParameter("@state", obj.Createdby)  
             };
             return SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[USP_StatutorySetup]", CommandType.StoredProcedure, param.ToArray());
 
@@ -2682,13 +2679,13 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             return SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[usp_Entify]", CommandType.StoredProcedure, param.ToArray());
 
         }
-
+        
         public async static Task<string> IUDEntify(EnitfyBAL obj)
         {
             var param = new List<SqlParameter>
        {
         new SqlParameter("@Action", obj.Action),
-        new SqlParameter("@UserId", obj.UserId ?? (object)DBNull.Value),
+        new SqlParameter("@UserId", obj.UserId ?? (object)DBNull.Value), 
         new SqlParameter("@EntityType", obj.EntityType ?? (object)DBNull.Value),
         new SqlParameter("@ListedCompany", obj.ListedCompany ?? (object)DBNull.Value),
         new SqlParameter("@ListedStatus", obj.ListedStatus ?? (object)DBNull.Value),
@@ -2707,19 +2704,19 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
         new SqlParameter("@RBIRegistered", obj.RBIRegistered ?? (object)DBNull.Value),
         new SqlParameter("@Startup", obj.Startup ?? (object)DBNull.Value),
         new SqlParameter("@MSMERegistered", obj.MSMERegistered ?? (object)DBNull.Value),
-        new SqlParameter("@RegisteredunderGST", obj.RegisteredunderGST ?? (object)DBNull.Value),
+        new SqlParameter("@RegisteredunderGST", obj.RegisteredunderGST ?? (object)DBNull.Value), 
         new SqlParameter("@CIN", obj.CIN ?? (object)DBNull.Value),
         new SqlParameter("@PAN", obj.PAN ?? (object)DBNull.Value),
         new SqlParameter("@TAN", obj.TAN ?? (object)DBNull.Value),
         new SqlParameter("@IncorporationDate", obj.IncorporationDate ?? (object)DBNull.Value),
         new SqlParameter("@RegisteredState", obj.RegisteredState ?? (object)DBNull.Value),
         new SqlParameter("@NICCode", obj.NICCode ?? (object)DBNull.Value),
-        new SqlParameter("@FinancialYearEnd", obj.FinancialYearEnd ?? (object)DBNull.Value),
+        new SqlParameter("@FinancialYearEnd", obj.FinancialYearEnd ?? (object)DBNull.Value), 
         new SqlParameter("@ResidentDirector", obj.ResidentDirector ?? (object)DBNull.Value),
         new SqlParameter("@IndependentDirectors", obj.IndependentDirectors),
         new SqlParameter("@WomenDirector", obj.WomenDirector ?? (object)DBNull.Value),
         new SqlParameter("@CSAppointed", obj.CSAppointed ?? (object)DBNull.Value),
-        new SqlParameter("@KMPAppointed", obj.KMPAppointed ?? (object)DBNull.Value),
+        new SqlParameter("@KMPAppointed", obj.KMPAppointed ?? (object)DBNull.Value), 
         new SqlParameter("@Result", "") { Direction = ParameterDirection.Output }
     };
 
@@ -2779,7 +2776,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[USP_LabourCode]", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
-
+   
 
 
         public static DataTable ConvertToDataTable<T>(List<T> data)
@@ -2856,7 +2853,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 cmd.Parameters.AddWithValue("@StoreCode", obj.StoreCode ?? "");
                 cmd.Parameters.AddWithValue("@PayRollType", obj.PayRollType ?? "");
                 cmd.Parameters.AddWithValue("@Mode", obj.Mode ?? "");
-
+                
                 cmd.Parameters.AddWithValue("@Year", obj.Year ?? "");
                 cmd.Parameters.AddWithValue("@Month", obj.Month ?? "");
                 cmd.Parameters.AddWithValue("@LoginId", obj.LoginId ?? "");
@@ -2873,8 +2870,8 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 var result = cmd.ExecuteScalar();
                 return result?.ToString() ?? "SUCCESS";
             }
-        }
-
+        } 
+         
 
         public async static Task<DataSet> GetPAYROLLDetail(RetailUploadModelBAL obj)
         {
@@ -2895,14 +2892,14 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
 
 
 
-
+        
         public async static Task<string> UpdateerrorList(RetailUploadModelBAL obj)
         {
             var param = new List<SqlParameter>
             {
                 new SqlParameter("@Action", obj.Action),
                   new SqlParameter("@EmpId", obj.EmpId),
-                new SqlParameter("@Newvalue",obj.Newvalue),
+                new SqlParameter("@Newvalue",obj.Newvalue), 
                 new SqlParameter("@columnname", obj.columnname),
                      new SqlParameter("@Year", obj.Year),
                     new SqlParameter("@Month", obj.Month),
@@ -2919,23 +2916,23 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@Action", obj.Action),
                 new SqlParameter("@DiligenceName", obj.DiligenceName),
                 new SqlParameter("@DiligenceAssigned",obj.DiligenceAssigned),
-                new SqlParameter("@Diligencedate", obj.Diligencedate),
+                new SqlParameter("@Diligencedate", obj.Diligencedate), 
                 new SqlParameter("@StoreCode", obj.StoreCode),
                 new SqlParameter("@DocumentName", obj.DocumentName),
-                 new SqlParameter("@Id", obj.Id),
+                 new SqlParameter("@Id", obj.Id), 
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[RTL].[Usp_Diligence]", CommandType.StoredProcedure, param.ToArray()));
         }
 
 
-
-
+     
+        
         public async static Task<DataTable> DiligenceCheckList(RetailUploadModelBAL obj)
         {
             var param = new List<SqlParameter>
             {
-                    new SqlParameter("@Action", obj.Action),
+                    new SqlParameter("@Action", obj.Action),  
                      new SqlParameter("@StoreCode", obj.StoreCode),
                           new SqlParameter("@Id", obj.Id)
             };
@@ -2959,20 +2956,20 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@ExecuterId", obj.LoginId),
                 new SqlParameter("@DocumentId", obj.DocumentId),
                 new SqlParameter("@ComplianceCategory", obj.ComplianceCategory)
-                };
+                }; 
             DataSet dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommandds("RTL.USP_ComplianceBulk", CommandType.StoredProcedure, param.ToArray()));
-            return dt;
+            return dt; 
         }
 
         public async static Task<DataSet> bindingDashboard(RetailBAL obj)
-        {
-
+        { 
+            
             var param = new List<SqlParameter>
                 {
                 new SqlParameter("@Id", obj.Id),
                 new SqlParameter("@Action", obj.Action),
                 new SqlParameter("@UserId", obj.UserId),
-                new SqlParameter("@PartyId", obj.PartyId)
+                new SqlParameter("@PartyId", obj.PartyId) 
                 };
             DataSet dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommandds("RTL.USP_RetailDashboard", CommandType.StoredProcedure, param.ToArray()));
             return dt;
@@ -2982,7 +2979,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
 
 
         ///  Start Added by shipra ///
-
+        
 
 
         public async static Task<DataSet> bindingReport(RetailBAL obj)
@@ -2993,14 +2990,14 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@Action", obj.Action),
                 new SqlParameter("@UserId", obj.UserId),
                 new SqlParameter("@PartyId", obj.PartyId),
-                  new SqlParameter("@PageName", obj.PageName)
+                  new SqlParameter("@PageName", obj.PageName) 
                 };
             DataSet dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommandds("RTL.USP_ReportDashbaord", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
 
 
-
+       
 
         /// End Added by shipra ///
 
@@ -3080,28 +3077,6 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             DataSet dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommandds("RTL.USP_ContractorComplianceBulk", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
-        public async static Task<DataSet> AuditGetContractorBulkReportlist(RetailLicenseDocuementMaster obj)
-        {
-            string ActList = obj.NewActList != null ? string.Join(",", obj.NewActList) : "";
-
-            var param = new List<SqlParameter>
-                {
-                new SqlParameter("@Id", obj.Id),
-                new SqlParameter("@Action", obj.Action),
-                new SqlParameter("@StoreId", obj.StoreId),
-                new SqlParameter("@StateId", obj.StateId),
-                new SqlParameter("@ActList", ActList),
-                new SqlParameter("@FY", obj.FY),
-                new SqlParameter("@CMonth", obj.CMonth),
-                new SqlParameter("@ExecuterId", obj.LoginId),
-                new SqlParameter("@DocumentId", obj.DocumentId),
-                new SqlParameter("@ComplianceCategory", obj.ComplianceCategory)
-                };
-            DataSet dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommandds("RTL.USP_AuditContractorComplianceBulk", CommandType.StoredProcedure, param.ToArray()));
-            return dt;
-        }
-
-        
 
 
         public async static Task<string> IUDLabourCodeStatutory(RetailBAL obj)
@@ -3147,31 +3122,31 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@TemplateId", obj.TemplateId),
                 new SqlParameter("@To", obj.To),
                 new SqlParameter("@CC", obj.CC),
-                new SqlParameter("@BCC", obj.BCC),
+                new SqlParameter("@BCC", obj.BCC), 
 
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[RTL].[Usp_Mailing]", CommandType.StoredProcedure, param.ToArray()));
         }
 
-
-        public async static Task<DataSet> MailingSearching(RetailBAL obj)
+        
+      public async static Task<DataSet> MailingSearching(RetailBAL obj)
         {
             var param = new List<SqlParameter>
                 {
                 new SqlParameter("@Id", obj.Id),
-                new SqlParameter("@Action", obj.Action)
+                new SqlParameter("@Action", obj.Action) 
                 };
             DataSet dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommandds("[RTL].[Usp_Mailing]", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
         public async static Task<DataTable> GetComDoc(RetailBAL obj)
-        {
+        { 
             var param = new List<SqlParameter>
                 {
                 new SqlParameter("@Id", obj.Id),
                 new SqlParameter("@Action", obj.Action),
-                new SqlParameter("@StoreId", obj.StoreId)
+                new SqlParameter("@StoreId", obj.StoreId) 
                 };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[dbo].[Usp_IUDStoreCompliance]", CommandType.StoredProcedure, param.ToArray()));
             return dt;
@@ -3201,7 +3176,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.USP_RouteMaster", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
-
+        
 
         public async static Task<string> InsertRegister(RetailBAL obj)
         {
@@ -3358,13 +3333,13 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
 
             return await Task.Factory.StartNew(() =>
                 SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar(
-                    "RTL.USP_RouteMaster",
+                    "RTL.USP_RouteMaster",   
                     CommandType.StoredProcedure,
                     param.ToArray()
                 )
             );
         }
-        // here is define bind financial compliance events dated 18/4/2026
+ // here is define bind financial compliance events dated 18/4/2026
         public async static Task<DataTable> SearchFinacialStatutoryEvent(RetailBAL obj)
         {
             var param = new List<SqlParameter>
@@ -3375,19 +3350,6 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                     new SqlParameter("@State", obj.State),
                     new SqlParameter("@CACId", obj.CACId),
                     new SqlParameter("@Id", obj.Id),
-            };
-            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[USP_FinancialStatutoryEvent]", CommandType.StoredProcedure, param.ToArray()));
-            return dt;
-        }
-		
-		
-		 public async static Task<DataTable> GetUserPermissionSectionRoll(TblPartyMaster obj)
-        {
-            var param = new List<SqlParameter>
-            {
-              new SqlParameter("@Id", obj.Id),
-               new SqlParameter("@Action", obj.Action),
-                new SqlParameter("@cacid", obj.MapId),
             };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[USP_FinancialStatutoryEvent]", CommandType.StoredProcedure, param.ToArray()));
             return dt;

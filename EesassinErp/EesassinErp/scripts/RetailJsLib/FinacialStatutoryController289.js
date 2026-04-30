@@ -347,31 +347,18 @@
         getData.then(function (response) {
             $scope.complianceRows = response.data.Result;
             $scope.AllRows = response.data.Result;
-            angular.forEach($scope.complianceRows, function (row)
-            {
-                if (!row.IsVerified || row.IsVerified === "null" || row.IsVerified === "undefined") {
-                    row.TempIsVerified = "";
-                } else {
-                    row.TempIsVerified = row.IsVerified;
-                }
+            angular.forEach($scope.complianceRows, function (row) {
+                row.TempIsVerified = row.IsVerified;
             });
             $scope.getalldropdowndata();
         });
-        //let data = JSON.parse(sessionStorage.getItem("RollPermission") || "[]");
-        //let masterList = data.filter(x => x.PageName === "Master" && x.SectionName === "Finance Compliance");
-        //$scope.allowupdfile = masterList[0].UploadFlag;
-        //$scope.allowverifyflag = masterList[0].VerifyFlag;
-        //console.log("File Permission", $scope.allowupdfile);
-        //console.log("Verify Permission", $scope.allowverifyflag);
-        //console.log("Permission",masterList);
-        //console.log("Menu Permission", JSON.parse(sessionStorage.getItem("MenuPermission")));
     }
-    $scope.SelectedAct = 'Act';
+    $scope.SelectedAct = 'All';
     $scope.filterByAct = function (act) {
 
         $scope.SelectedAct = act;
 
-        if (act === 'Act') {
+        if (act === 'All') {
             $scope.complianceRows = angular.copy($scope.AllRows);
         } else {
             $scope.complianceRows = $scope.AllRows.filter(function (row) {
@@ -452,67 +439,13 @@
         $scope.updateTilesCount(filteredData);
     });
 
-    //$scope.globalSearch = function (row) {
-
-    //    if (!$scope.Search) return true;
-
-    //    var searchText = $scope.Search.toString().toLowerCase();
-    //    //var monthName = row.Month;
-    //    //monthName = monthName ? monthName.toLowerCase() : '';
-
-    //    return (
-    //        (row.SNo && row.SNo.toString().toLowerCase().includes(searchText)) ||
-    //        (row.Act && row.Act.toLowerCase().includes(searchText)) ||
-    //        (row.ComplianceName && row.ComplianceName.toLowerCase().includes(searchText)) ||
-    //        (row.RegistrationNumber && row.RegistrationNumber.toLowerCase().includes(searchText)) ||
-    //        (row.Risk && row.Risk.toLowerCase().includes(searchText)) ||
-    //        (row.Frequency && row.Frequency.toLowerCase().includes(searchText)) ||
-    //        //(monthName.includes(searchText)) ||
-    //        (row.Month && row.Month.toString().toLowerCase().includes(searchText)) ||
-    //        (row.STATE_NM && row.STATE_NM.toLowerCase().includes(searchText)) ||
-    //        (row.DueDate && row.DueDate.toString().toLowerCase().includes(searchText)) ||
-    //        (row.CStatus && row.CStatus.toLowerCase().includes(searchText)) ||
-    //        (row.DelayDays && row.DelayDays.toString().includes(searchText)) ||
-    //        (row.CreateOn && row.CreateOn.toString().toLowerCase().includes(searchText)) ||
-    //        (row.IsVerified && row.IsVerified.toLowerCase().includes(searchText)) ||
-    //        (row.VRemark && row.VRemark.toLowerCase().includes(searchText))
-    //    );
-    //};
-
     $scope.globalSearch = function (row) {
 
         if (!$scope.Search) return true;
 
         var searchText = $scope.Search.toString().toLowerCase();
-
-        function includes(val) {
-            if (val === null || val === undefined) return false;
-            return val.toString().toLowerCase().includes(searchText);
-        }
-        function formatDateForSearch(dateValue) {
-            if (!dateValue) return '';
-
-            var d = new Date(dateValue);
-            if (isNaN(d.getTime())) return '';
-
-            var day = ('0' + d.getDate()).slice(-2);
-            var month = ('0' + (d.getMonth() + 1)).slice(-2);
-            var year = d.getFullYear();
-
-            return day + '-' + month + '-' + year;
-        }
-
-        var dueDateFormatted = formatDateForSearch(row.DueDate);
-        var CreatedDateFormatted = formatDateForSearch(row.CreateOn);
-        var actualDateFormatted = formatDateForSearch(row.ActualSubmissionDate);
-
-        if (!row.IsVerified || row.IsVerified === 'null' || row.IsVerified === 'undefined') {
-            row.IsVerified = '';
-        }
-
-        if (!row.TempIsVerified || row.TempIsVerified === 'undefined' || row.TempIsVerified === null) {
-            row.TempIsVerified = row.IsVerified;
-        }
+        //var monthName = row.Month;
+        //monthName = monthName ? monthName.toLowerCase() : '';
 
         return (
             (row.SNo && row.SNo.toString().toLowerCase().includes(searchText)) ||
@@ -521,206 +454,75 @@
             (row.RegistrationNumber && row.RegistrationNumber.toLowerCase().includes(searchText)) ||
             (row.Risk && row.Risk.toLowerCase().includes(searchText)) ||
             (row.Frequency && row.Frequency.toLowerCase().includes(searchText)) ||
+            //(monthName.includes(searchText)) ||
             (row.Month && row.Month.toString().toLowerCase().includes(searchText)) ||
             (row.STATE_NM && row.STATE_NM.toLowerCase().includes(searchText)) ||
-            (dueDateFormatted.includes(searchText)) ||
-            (actualDateFormatted.includes(searchText)) ||
-            ((row.IsVerified === 'Clarify' ? 'Remarks' : (row.IsVerified || '')).toLowerCase().includes(searchText))||
+            (row.DueDate && row.DueDate.toString().toLowerCase().includes(searchText)) ||
             (row.CStatus && row.CStatus.toLowerCase().includes(searchText)) ||
             (row.DelayDays && row.DelayDays.toString().includes(searchText)) ||
-            /* (row.CreateOn && row.CreateOn.toString().toLowerCase().includes(searchText)) ||*/
-            (CreatedDateFormatted.includes(searchText)) ||
+            (row.CreateOn && row.CreateOn.toString().toLowerCase().includes(searchText)) ||
             (row.IsVerified && row.IsVerified.toLowerCase().includes(searchText)) ||
             (row.VRemark && row.VRemark.toLowerCase().includes(searchText))
         );
     };
-
-    //$scope.refreshDropdowns = function () {
-
-    //    var filtered = angular.copy($scope.AllRows); // ⭐ IMPORTANT (avoid reference issues)
-
-    //    // ✅ Filter by Act
-    //    if ($scope.SelectedAct && $scope.SelectedAct !== 'All') {
-    //        filtered = filtered.filter(row => row.Act === $scope.SelectedAct);
-    //    }
-
-    //    // ✅ Filter by State
-    //    if ($scope.SelectedState) {
-    //        filtered = filtered.filter(row => row.STATE_NM === $scope.SelectedState);
-    //    }
-
-    //    // ✅ Filter by Status
-    //    if ($scope.SelectedStatus) {
-    //        filtered = filtered.filter(function (row) {
-    //            // 1. Determine the actual status to show
-    //            var currentStatus = "";
-
-    //            if (row.IsVerified === "Verified") {
-    //                currentStatus = 'Verified';
-    //            } else if (row.IsVerified === "Clarify") {
-    //                currentStatus = 'Remarks';
-    //            } else {
-    //                // Agar verify nahi hai toh normal status uthao
-    //                currentStatus = (row.CStatus && row.CStatus.trim() !== '') ? row.CStatus.trim() : 'Pending';
-    //            }
-
-    //            // 2. Map it to the UI name (e.g. 'DelayComplied' -> 'Delayed')
-    //            var uiName = $scope.statusDisplayMap[currentStatus] || currentStatus;
-
-    //            // 3. Compare with dropdown selection
-    //            return uiName === $scope.SelectedStatus;
-    //        });
-    //    }
-
-    //    // ✅ Filter by Month
-    //    if ($scope.SelectedMonth) {
-    //        filtered = filtered.filter(row => row.Month == $scope.SelectedMonth);
-    //    }
-
-    //    // ✅ Filter by Year
-    //    if ($scope.SelectedYear) {
-    //        filtered = filtered.filter(row => row.Year == $scope.SelectedYear);
-    //    }
-
-    //    // ⭐⭐⭐ MAIN FIX (VERY IMPORTANT)
-    //    filtered.forEach(function (row) {
-
-    //        // Normalize IsVerified
-    //        if (!row.IsVerified || row.IsVerified === 'null' || row.IsVerified === 'undefined') {
-    //            row.IsVerified = '';
-    //        }
-
-    //        // Sync dropdown value
-    //        if (!row.TempIsVerified || row.TempIsVerified === 'undefined' || row.TempIsVerified === null) {
-    //            row.TempIsVerified = row.IsVerified;
-    //        }
-    //    });
-
-    //    // Dropdown lists
-    //    $scope.StatusList = [
-    //        ...new Set(
-    //            filtered.map(function (x) {
-    //                var status = x.CStatus;
-
-    //                if (!status || status.trim() === '') {
-    //                    status = 'Pending';
-    //                }
-
-    //                return $scope.statusDisplayMap[status] || status;
-    //            })
-    //        )
-    //    ];
-
-    //    $scope.StateList = [...new Set(filtered.map(x => x.STATE_NM))];
-    //    $scope.MonthList = [...new Set(filtered.map(x => x.Month))];
-    //    $scope.YearList = [...new Set(filtered.map(x => x.Year))];
-
-    //    $scope.complianceRows = filtered;
-
-    //    $scope.updateTilesCount(filtered);
-    //};
-
-
     $scope.refreshDropdowns = function () {
 
-        var filtered = angular.copy($scope.AllRows || []);
-
-        if ($scope.SelectedStatus) {
-            var selected = ($scope.SelectedStatus || '').toString().trim();
-
-            filtered = filtered.filter(function (row) {
-                var status = (row.CStatus || '').toString().trim();
-                var isVerified = (row.IsVerified || '').toString().trim();
-                var displayStatus = '';
-                if (!status) {
-                    displayStatus = 'Pending';
-                }
-                else if (isVerified === "Verified" && selected === "Verified") {
-                    displayStatus = 'Verified';
-                }
-               
-             
-                else if (isVerified === "Clarify" && selected ==="Remarks") {
-                    displayStatus = 'Remarks';
-                }
-                
-                else {
-                    displayStatus = ($scope.statusDisplayMap && $scope.statusDisplayMap[status])
-                        ? $scope.statusDisplayMap[status]
-                        : status;
-                }
-                var finalMatch = displayStatus.toString().trim() === selected;
-                return finalMatch;
-            });
-        }
-
-        // 4. Sabse zaruri step: Isse UI update hogi
-        $scope.DisplayRows = filtered;
-
-        // ✅ assign after filter
-       
+        var filtered = $scope.AllRows;
 
         // ✅ Filter by Act
-        if ($scope.SelectedAct && $scope.SelectedAct !== 'Act') {
-            filtered = filtered.filter(row => row.Act === $scope.SelectedAct);
+        if ($scope.SelectedAct && $scope.SelectedAct !== 'All') {
+            filtered = filtered.filter(function (row) {
+                return row.Act === $scope.SelectedAct;
+            });
         }
 
         // ✅ Filter by State
         if ($scope.SelectedState) {
-            filtered = filtered.filter(row => row.STATE_NM === $scope.SelectedState);
+            filtered = filtered.filter(function (row) {
+                return row.STATE_NM === $scope.SelectedState;
+            });
         }
 
-        // ✅ Month & Year
+        // ✅ ✅ FIXED: Filter by Status (Pending + blank handle)
+        if ($scope.SelectedStatus) {
+            filtered = filtered.filter(function (row) {
+
+                var status = row.CStatus;
+                if (!status || status.trim() === '') {
+                    status = 'Pending';
+                }
+                var displayStatus = $scope.statusDisplayMap[status] || status;
+
+                return displayStatus === $scope.SelectedStatus;
+            });
+        }
+
+        // ✅ Filter by Month
         if ($scope.SelectedMonth) {
-            filtered = filtered.filter(row => row.Month == $scope.SelectedMonth);
+            filtered = filtered.filter(function (row) {
+                return row.Month == $scope.SelectedMonth;
+            });
         }
 
+        // ✅ Filter by Year
         if ($scope.SelectedYear) {
-            filtered = filtered.filter(row => row.Year == $scope.SelectedYear);
+            filtered = filtered.filter(function (row) {
+                return row.Year == $scope.SelectedYear;
+            });
         }
-
-        // ✅ Normalize
-        filtered.forEach(function (row) {
-            if (!row.IsVerified || row.IsVerified === 'null' || row.IsVerified === 'undefined') {
-                row.IsVerified = '';
-            }
-            if (!row.TempIsVerified) {
-                row.TempIsVerified = row.IsVerified;
-            }
-        });
-
         $scope.StatusList = [
             ...new Set(
+                filtered.map(function (x) {
+                    var status = x.CStatus;
 
-                filtered.map(function (row) {
-                    debugger                
-                    var status = (row.CStatus || '').toString().trim();
-                    var isVerified = (row.IsVerified || '').toString().trim();
-
-                    var displayStatus = '';
-
-                    if (!status) {
-                        displayStatus = 'Pending';
-                    }
-                    else if (isVerified === "Verified" && (status !== 'NonApplicable' && status !== 'Delaycomplied' && status !== 'Complied' && status !== 'NonComplied')) {
-                        displayStatus = 'Verified';
-                    }
-                    else if (isVerified === "Clarify" && (status !== 'NonApplicable' && status !== 'Delaycomplied' && status !== 'Complied' && status !== 'NonComplied')) {
-                        displayStatus = 'Remarks';
+                    if (!status || status.trim() === '') {
+                        status = 'Pending';
                     }
 
-                    else {
-                        displayStatus = ($scope.statusDisplayMap && $scope.statusDisplayMap[status])
-                            ? $scope.statusDisplayMap[status]
-                            : status;
-                    }
-
-                    
-
-                    return displayStatus;
+                    return $scope.statusDisplayMap[status] || status;
                 })
             )
-        ].sort();
+        ];
         $scope.StateList = [...new Set(filtered.map(x => x.STATE_NM))];
         $scope.MonthList = [...new Set(filtered.map(x => x.Month))];
         $scope.YearList = [...new Set(filtered.map(x => x.Year))];
@@ -729,7 +531,6 @@
 
         $scope.updateTilesCount(filtered);
     };
-
 
     $scope.SaveRecord = function () {
         if (isValidate()) {
@@ -821,9 +622,10 @@
 
             // Header
             csv.push([
-                "S.No",
+                "SNo",
                 "Act Name",
                 "Compliance Name",
+                "Registration No.",
                 "Risk",
                 "Frequency",
                 "Month",
@@ -832,8 +634,6 @@
                 "Status",
                 "Actual Submission Date",
                 "Delay Days",
-                "Upload File",
-                "Upload Date",
                 "Verification Status"
             ].join(","));
 
@@ -844,19 +644,15 @@
                     index + 1,
                     row.Act || '',
                     row.ComplianceName || '',
+                    row.RegistrationNumber || '',
                     row.Risk || '',
                     row.Frequency || '',
                     row.Month || '',
                     row.STATE_NM || '',
                     row.DueDate || '',
-                    (row.CStatus === "NonComplied") ? 'Non-Complied' :
-                        (row.CStatus === "NonApplicable") ? 'Non-Applicable' :
-                            (row.CStatus === "Delaycomplied") ? 'Delay-Complied' :
-                                row.CStatus,
+                    row.CStatus || '',
                     formatDate(row.ActualSubmissionDate),
-                    row.DelayDays || '0',
-                    row.UploadFile ? 'Uploaded' : 'Not Uploaded',
-                    row.CreateOn || '',
+                    row.DelayDays || '',
                     (row.IsVerified == 0 ? '' : row.IsVerified == 'Clarify' ? 'Remarks' : (row.IsVerified || ''))
                 ];
 
@@ -883,7 +679,7 @@
             }
         }
         var isFilterApplied = $scope.filters && Object.values($scope.filters).some(v => v);
-        if (!isFilterApplied && !$scope.SelectedState && ($scope.SelectedAct === 'Act' || !$scope.SelectedAct) && !$scope.SelectedMonth &&
+        if (!isFilterApplied && !$scope.SelectedState && ($scope.SelectedAct === 'All' || !$scope.SelectedAct) && !$scope.SelectedMonth &&
             !$scope.SelectedStatus && !$scope.SelectedYear && !$scope.Search) {
             $scope.newexportdata().then(function (data) {
                 console.log("API Data:", data);
@@ -919,41 +715,11 @@
 
                 if ($scope.SelectedState && row.STATE_NM !== $scope.SelectedState) return false;
 
-                if ($scope.SelectedAct && $scope.SelectedAct !== 'Act' && row.Act !== $scope.SelectedAct) return false;
+                if ($scope.SelectedAct && $scope.SelectedAct !== 'All' && row.Act !== $scope.SelectedAct) return false;
 
                 if ($scope.SelectedMonth && row.Month !== $scope.SelectedMonth) return false;
 
-                // ✅ ✅ ✅ FIXED STATUS FILTER
-                if ($scope.SelectedStatus) {
-
-                    var cstatus = row.CStatus;
-                    if (!cstatus || cstatus.trim() === '') {
-                        cstatus = 'Pending';
-                    }
-
-                    var displayStatus = $scope.statusDisplayMap[cstatus] || cstatus;
-
-                    // ⭐ Verified
-                    if ($scope.SelectedStatus === 'Verified') {
-                        if (!row.IsVerified || row.IsVerified.toLowerCase() !== 'verified') {
-                            return false;
-                        }
-                    }
-
-                    // ⭐ Remarks (Clarify)
-                    else if ($scope.SelectedStatus === 'Remarks') {
-                        if (!row.IsVerified || row.IsVerified.toLowerCase() !== 'clarify') {
-                            return false;
-                        }
-                    }
-
-                    // ⭐ Normal Status
-                    else {
-                        if (displayStatus !== $scope.SelectedStatus) {
-                            return false;
-                        }
-                    }
-                }
+                if ($scope.SelectedStatus && row.CStatus !== $scope.SelectedStatus) return false;
 
                 if ($scope.SelectedYear && row.Year !== $scope.SelectedYear) return false;
 
@@ -988,9 +754,10 @@
         <table>
             <thead>
                 <tr>
-                    <th>S.No</th>
-                    <th>Act Name</th>
+                    <th>SNo</th>
+                    <th>Act</th>
                     <th>Compliance Name</th>
+                    <th>Registration No.</th>
                     <th>Risk</th>
                     <th>Frequency</th>
                     <th>Month</th>
@@ -998,26 +765,13 @@
                     <th>Due Date</th>
                     <th>Status</th>
                     <th>Actual Submission Date</th>
-                    <th>Delay Days</th>
-                    <th>Upload File</th>
-                    <th>Upload Date</th>
+                    <th>Delay Days</th> 
                     <th>Verification Status</th>
                 </tr>
             </thead>
             <tbody>
         `;
-            function formatDate(dateValue) {
-                if (!dateValue) return '';
 
-                var d = new Date(dateValue);
-                if (isNaN(d.getTime())) return '';
-
-                var day = ('0' + d.getDate()).slice(-2);
-                var month = ('0' + (d.getMonth() + 1)).slice(-2);
-                var year = d.getFullYear();
-
-                return day + '-' + month + '-' + year;
-            }
             filteredData.forEach(function (row, index) {
 
                 tableHTML += `
@@ -1025,21 +779,16 @@
                 <td>${index + 1}</td>
                 <td>${row.Act || ''}</td>
                 <td>${row.ComplianceName || ''}</td>
+                <td>${row.RegistrationNumber || ''}</td>
                 <td>${row.Risk || ''}</td>
                 <td>${row.Frequency || ''}</td>
                 <td>${row.Month}</td>
                 <td>${row.STATE_NM || ''}</td>
-                <td>${formatDate(row.DueDate)}</td>
-                <td>${(row.CStatus === "NonComplied") ? 'Non-Complied' :
-                    (row.CStatus === "NonApplicable") ? 'Non-Applicable' :
-                        (row.CStatus === "Complied") ? 'Complied' :
-                            (row.CStatus === "Delaycomplied") ? 'Delay-Complied' :
-                                ''}</td>
+                <td>${row.DueDate}</td>
+                <td>${row.CStatus || ''}</td>
                 <td>${formatDate(row.ActualSubmissionDate)}</td>
-                <td>${row.DelayDays || '0'}</td>
-                <td>${row.UploadFile ? 'Uploaded' : 'Not Uploaded'}</td>
-                <td>${formatDate(row.CreateOn)}</td>
-                <td>${(!row.IsVerified || row.IsVerified == 0 ? '' : row.IsVerified === 'Clarify' ? 'Remarks' : row.IsVerified)}</td>
+                <td>${row.DelayDays || ''}</td> 
+                <td>${(row.IsVerified == 0 ? '' : row.IsVerified == 'Clarify' ? 'Remarks' : (row.IsVerified || ''))}</td>
             </tr>
             `;
             });
@@ -1121,7 +870,7 @@
 
         var isNoFilter =
             !$scope.SelectedState &&
-            ($scope.SelectedAct === 'Act' || !$scope.SelectedAct) &&
+            ($scope.SelectedAct === 'All' || !$scope.SelectedAct) &&
             !$scope.SelectedMonth &&
             !$scope.SelectedStatus &&
             !$scope.SelectedYear &&
@@ -1157,11 +906,7 @@
             showMsgBox("Please enter both Status  and Actual Submission Date.");
             return;
         }
-        if (!row.IsVerified && $scope.allowverifyflag === true) {
-            showMsgBox("Please enter Verified Status");
-            return;
-        }
-        if (row.IsVerified == '') {
+        if (!row.IsVerified) {
             showMsgBox("Please enter Verified Status");
             return;
         }
@@ -1169,16 +914,18 @@
             showMsgBox("Please enter Remark in condition of Clarify.");
             return;
         }
-
         if (isValidate()) {
             var formData = new FormData();
             formData.append('ASD', $filter('date')(row.ActualSubmissionDate, 'yyyy/MM/dd'));
             formData.append('CSD', $filter('date')(row.CSD, 'yyyy/MM/dd'));
             formData.append('RegNo', row.RegistrationNumber);
             formData.append('DelayDay', row.DelayDay);
+            formData.append('UploadFile', row.UploadFile);
+
             if (row.UploadFile == undefined || row.UploadFile == null || row.UploadFile == '') {
                 formData.append('UploadFile', '-1');
-            } else {
+            }
+            else {
                 formData.append('UploadFile', row.UploadFile);
             }
             formData.append('Createdby', LoginId);
@@ -1197,7 +944,6 @@
                 $scope.UploadFile = '';
                 showMsgBox(response.data.Result);
                 $scope.BindSearch();
-                $scope.reset();
             }, function (error) {
                 console.error('Error', error);
             });
@@ -1210,8 +956,7 @@
         $scope.SelectedStatus = '';
         $scope.SelectedMonth = '';
         $scope.SelectedYear = '';
-        $scope.Search = '';
-        $scope.SelectedAct = 'Act';
+        $scope.SelectedAct = 'All';
         $scope.BindSearch();
     }
     $scope.getyear = function (year) {
@@ -1248,11 +993,8 @@
                 if ($scope.SelectedStatus === 'Pending') {
                     matchStatus = !row.CStatus || row.CStatus === '';
                 }
-                else if ($scope.SelectedStatus ==='Verified') {
-                    matchStatus = row.IsVerified ==='Verified';
-                }
-                else if ($scope.SelectedStatus === 'Clarify') {
-                    matchStatus = row.IsVerified === 'Remarks';
+                else if ($scope.SelectedStatus === 'Verified') {
+                    matchStatus = row.IsVerified === 'Verified';
                 }
                 else {
                     matchStatus = row.CStatus === $scope.SelectedStatus;
@@ -1283,17 +1025,15 @@
                     $scope.ActList.push(row.Act);
                 }
             });
-            console.log($scope.AllRows);
             $scope.statusDisplayMap = {
                 'Complied': 'Complied',
                 'NonComplied': 'Non-Complied',
-                'Delaycomplied': 'Delay-Complied',
+                'Delayed': 'Delayed',
                 'NonApplicable': 'Non-Applicable',
                 'Pending': 'Pending',
-                'Verified': 'Verified',
-                'Remarks': 'Remarks'
+                'Verified': 'Verified'
             };
-            $scope.StatusList = ['Complied', 'Delay-Complied', 'Non-Applicable', 'Non-Complied', 'Pending', 'Remarks', 'Verified'];
+            $scope.StatusList = ['Complied', 'Non-Complied', 'Delayed', 'Non-Applicable', 'Pending', 'Verified'];
             $scope.StateList = [];
             $scope.YearList = [];
             $scope.MonthList = [];
@@ -1378,6 +1118,7 @@
     };
     // New code added work from home
     $scope.AddEventNewverifyRecord = function (event) {
+        console.log(event);
         event.IsVerified = event.TempIsVerified;
         if (!event.CStatus || !event.ActualSubmissionDate) {
             showMsgBox("Please enter both Status  and Actual Submission Date.");
@@ -1397,7 +1138,9 @@
             formData.append('CSD', $filter('date')(event.CSD, 'yyyy/MM/dd'));
             formData.append('RegNo', "");
             formData.append('DelayDay', event.DelayDay);
-            if (event.UploadFile === undefined || event.UploadFile === null || event.UploadFile === '') {
+            formData.append('UploadFile', event.UploadFile);
+
+            if (!event.UploadFile) {
                 formData.append('UploadFile', '-1');
             } else {
                 formData.append('UploadFile', event.UploadFile);
@@ -1537,9 +1280,7 @@
         newRow.UploadFile = null;
         newRow.ActualSubmissionDate = '';
         newRow.DelayDays = 0;
-        newRow.IsVerified = '';
         newRow.CStatus = '';
-        newRow.isDisabled = false;
         newRow.CreateOn = '';
         newRow.TempIsVerified = '';
         newRow.VRemark = '';
@@ -1567,8 +1308,6 @@
                     return {
                         Act: x.Act,
                         ComplianceName: x.ComplianceName,
-                        Risk: x.Risk,
-                        Frequency: x.Frequency,
                         Month: x.Month,
                         STATE_NM: x.STATE_NM,
                         DueDate: x.DueDate,

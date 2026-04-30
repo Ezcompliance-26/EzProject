@@ -1378,7 +1378,7 @@
                                 </div>
                                 <div class="col-lg-3 col-md-6">
                                     <label class="form-label">Route Name</label>
-                                    <input class="form-control form-control-sm" id="txtRouteName" ng-model="RouteName">
+                                    <input class="form-control form-control-sm validateA" id="txtRouteName" ng-model="RouteName">
                                 </div>
 
                                 <div class="col-lg-3 col-md-6">
@@ -1398,7 +1398,7 @@
 
                                 <div class="col-lg-3 col-md-6">
                                     <label class="form-label">Route End Location</label>
-                                    <input class="form-control form-control-sm" id="txtRouteEndLocation" ng-model="RouteEndLocation">
+                                    <input class="form-control form-control-sm validateA" id="txtRouteEndLocation" ng-model="RouteEndLocation">
                                 </div>
                                 <div class="col-lg-3 col-md-6">
                                     <label class="form-label">Status</label>
@@ -1425,7 +1425,7 @@
                                 </div>
                                 <div class="col-lg-3 col-md-6">
                                     <label class="form-label">Seating Capacity<span class="text-danger">*</span></label>
-                                    <input class="form-control form-control-sm validateA" id="txtSeatingCapacity" ng-model="SeatingCapacity">
+                                    <input class="form-control form-control-sm validateA" id="txtSeatingCapacity" ng-model="SeatingCapacity" onkeyup="$(this).val($(this).val().replace(/[^\d]/ig, ''))">
                                 </div>
                                 <div class="col-lg-3 col-md-6">
                                     <label class="form-label">Bus Type</label>
@@ -1447,7 +1447,7 @@
                                 </div>
                                 <div class="col-lg-3 col-md-6">
                                     <label class="form-label">Driver Contact Number </label>
-                                    <input class="form-control form-control-sm" id="txtDriverContactNumber" ng-model="DriverContactNumber" onblur="validatePhoneNo('#txtDriverContactNumber')" numeric-only dynamic-length maxlength="10" minlength="10">
+                                    <input class="form-control form-control-sm" id="txtDriverContactNumber" onkeyup="$(this).val($(this).val().replace(/[^\d]/ig, ''))"   ng-model="DriverContactNumber" onblur="validatePhoneNo('#txtDriverContactNumber')" numeric-only dynamic-length maxlength="10" minlength="10">
                                 </div>
                                 <div class="col-lg-3 col-md-6"><label class="form-label">Address</label><input class="form-control form-control-sm" id="txtDriverAddress" ng-model="DriverAddress"></div>
 
@@ -1499,7 +1499,7 @@
                                 </div>  <hr>
                                 <div class="col-lg-3 col-md-6"><label class="form-label">Conductor Name</label><input class="form-control form-control-sm" id="txtConductorName" ng-model="ConductorName"></div>
                                 <div class="col-lg-3 col-md-6">
-                                    <label class="form-label">Conductor Contact Number </label><input class="form-control form-control-sm" id="txtConductorContact"
+                                    <label class="form-label">Conductor Contact Number </label><input class="form-control form-control-sm" id="txtConductorContact" onkeyup="$(this).val($(this).val().replace(/[^\d]/ig, ''))"
                                                                                                       ng-model="ConductorContact" numeric-only dynamic-length maxlength="10" minlength="10">
                                 </div>
 

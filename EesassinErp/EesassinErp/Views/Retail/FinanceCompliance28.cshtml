@@ -401,7 +401,7 @@
                     <div class="table-responsive">
                         <table class="table table-sm mb-0 small-table custom-table" id="lbTable">
                             <thead>
-                                <tr style="background-color: #F37437">
+                                <tr>
                                     <th>S.No</th>
                                     <th>Act Name</th>
                                     <th>Compliance Name</th>
@@ -409,7 +409,7 @@
                                     <th> Risk  </th>
                                     <th> Frequency  </th>
                                     <th>Month</th>
-                                    <th>State</th>
+                                    <th>State Name</th>
                                     <th>Due Date</th>
                                     <th>Status</th>
                                     <th>Actual Submission Date</th>
@@ -453,85 +453,25 @@
                                     <td>{{ row.DueDate | date:'dd-MM-yyyy' }}</td>
 
                                     <td>
-                                        <select class="form-select form-select-sm" ng-model="row.CStatus" ng-disabled="row.IsVerified==='Verified'">
-                                            <option value="">Select </option>
-                                            <option value="Complied">Complied</option>
-                                            <option value="NonComplied">Non-Complied</option>
-                                            <option value="Delaycomplied">Delay-Complied</option>
-                                            <option value="NonApplicable">Non-Applicable</option>
-                                        </select>
-                                        <p ng-show="false">{{row.CStatus}}</p>
+                                        <label class="btn btn-sm btn-upload px-3" style="white-space:nowrap; cursor:pointer;">
+                                            Choose File
+                                            <input type="file" hidden>
+                                        </label>
                                     </td>
                                     <td>
-                                        <input date-input type="date" style="width:auto" class="form-control form-control-sm no-print" id="ActualSubmissionDate{{$index}}" ng-model="row.ActualSubmissionDate" ng-disabled="row.IsVerified==='Verified' && row.Flag=='1'">
-                                        <p ng-show="false">{{ row.ActualSubmissionDate | date:'yyyy-MM-dd' }}</p>
-                                    </td>
-                                    <td>{{ row.DelayDays ? row.DelayDays : 0 }}</td>
-                                    <!-- Upload Field -->
-                                    <td class="no-print">
-                                        <div class="col-md-4 col-sm-6 col-xs-12 mgbt-xs-15  no-print">
-                                            <div class="input-box">
-                                                <div style="display: flex; align-items: center;">
-                                                    <button ng-disabled="row.IsVerified==='Verified' || allowupdfile===false" class="btn btn-sm btn-upload px-3 uploadbtn"
-                                                            ng-click="SetNewValue(row,'#fileupoad'+$index);ManageLog('Upload File'+row.Act)">
-                                                        <div ng-if="!row.UploadFile">Choose File</div>
-                                                        <div ng-if="row.UploadFile">Uploaded</div>
-                                                    </button>
-
-                                                    <input type="file"
-                                                           id="fileupoad{{$index}}"
-                                                           file-model="row.UploadFile"
-                                                           row-context="row"
-                                                           style="display:none;" />
-
-                                                </div>
-
-
-                                                <div class="text-box-msg-r">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p ng-show="false">
-                                            {{ row.UploadFile ? 'Uploaded' : 'Not Uploaded' }}
-                                        </p>
-                                    </td>
-
-                                    <td>{{row.CreateOn | date:'dd-MM-yyyy' }}</td>
-                                    <td class="no-print">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <input class="form-control form-control-sm" ng-model="row.VRemark1" ng-disabled="row.IsVerified==='Verified'" type="text" id="VRemark" style="font-size:10px" />
-
-                                            <i ng-if="row.VRemark !=''" class="bi bi-eye-fill" style="cursor: pointer; color: #F37437" ng-click="openRemarkModal(row.VRemark,'Client Remark')"></i>
+                                        <div class="d-flex align-items-center gap-2" style="min-width:150px;">
+                                            <input type="text" class="form-control form-control-sm">
+                                            <i class="bi bi-eye-fill" style="color:#E45D27" role="button" data-bs-toggle="modal" data-bs-target="#remarkModal"></i>
                                         </div>
                                     </td>
-
-
-                                    <td class="no-print">
-                                        <select class="form-select form-select-sm"
-                                                ng-model="row.TempIsVerified"
-                                                ng-disabled="row.IsVerified==='Verified' || allowverifyflag===false"
-                                                ng-class="{'text-success': row.IsVerified === 'Verified','text-danger': row.IsVerified === 'Clarify'
-}">
-
-                                            <option value="">Select</option>
-                                            <option value="Verified">Verified</option>
-                                            <option value="Clarify">Remarks</option>
-
-                                        </select>
-
+                                    <td>Yes/no</td>
+                                    <!--View column-->
+                                    <td>
+                                        <button class="btn btn-sm btn-view">View</button>
                                     </td>
-
-                                    <td class="no-print"><a href="#" class="view" style="color:#F37437" ng-show="row.openthis=='1'" ng-click="viewFile(row)">{{ row.openthis == '1' ? 'Download File' : '' }}</a> </td>
-                                    <td class="no-print">
-
-                                        <input class="btn btn-sm btn-submit px-3" ng-hide="row.IsVerified==='Verified'" type="button" value="Submit" ng-click="AfterverifyRecord(row)" />
-
-
-                                    </td>
-                                </tr>
-                                <tr ng-if="(complianceRows | filter:globalSearch).length === 0">
-                                    <td colspan="18" class="text-center text-danger fw-bold">
-                                        No Compliance Records Found
+                                    <!--Actyion column-->
+                                    <td>
+                                        <button class="btn btn-sm btn-submit px-3">Submit</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -610,8 +550,8 @@
                         <hr class="my-3">
 
                         <strong>Description:</strong>
-                        <div id="cd_description" class="text-secondary" style="line-height:1.5;overflow-y:scroll;height:160px;">
-                            {{Description}}
+                        <div id="cd_description" class="text-secondary" style="line-height:1.5;">
+                            To report the financial performance of overseas Joint Ventures (JV) or Wholly Owned Subsidiaries...
                         </div>
 
                     </div>
@@ -656,113 +596,52 @@
                                             <th>Upload Date</th>
                                             <th>Remark</th>
                                             <th>Verification Status</th>
-                                            <th>Download</th>
+                                            <th>View</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="fnTableBody">
-                                        <tr ng-repeat="event in selectedEvent1">
-
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Goods & Services Act, 2017</td>
+                                            <td><a href="#" class="store-code-link text-success">GSTR-1 (Outward Supply)</a></td>
+                                            <td><a href="#" class="event-link text-success">Event</a></td>
+                                            <td>Central</td>
+                                            <td>dec 11</td>
+                                            <!--Status column-->
                                             <td>
-                                                {{$index + 1}}
-                                                @*<input type="hidden" ng-model="event.CSIID">*@
-                                            </td>
-
-                                            <td>{{event.Act}}</td>
-
-                                            <td>{{event.ComplianceName}}</td>
-
-                                            <td>{{event.Risk}}</td>
-
-                                            <td>{{event.Frequency}}</td>
-
-                                            <td>{{event.Month}}</td>
-
-                                            <td>{{event.STATE_NM}}</td>
-
-                                            <td>{{ event.DueDate | date:'dd-MM-yyyy' }}</td>
-
-                                            <td>
-                                                <select class="form-select form-select-sm"
-                                                        ng-model="event.CStatus"
-                                                        ng-disabled="event.IsVerified==='Verified'">
-                                                    <option value="">Select </option>
-                                                    <option value="Complied">Complied</option>
-                                                    <option value="NonComplied">Non-Complied</option>
-                                                    <option value="Delaycomplied">Delay-Complied</option>
-                                                    <option value="NonApplicable">Non-Applicable</option>
+                                                <select class="form-select form-select-sm">
+                                                    <option value="">Select</option>
+                                                    <option>Complied</option>
+                                                    <option>Non-Complied</option>
+                                                    <option>Delayed</option>
+                                                    <option>Non-Applicable</option>
                                                 </select>
                                             </td>
 
                                             <td>
-                                                @*<input type="date"
-            class="form-control form-control-sm"
-            ng-model="event.ActualSubmissionDate"
-            ng-disabled="event.IsVerified==='Verified'">*@
-                                                <input date-input type="date" style="width:auto" class="form-control form-control-sm no-print" ng-model="event.ActualSubmissionDate" ng-disabled="event.IsVerified==='Verified'">
-                                                <p ng-show="false">{{ event.ActualSubmissionDate | date:'yyyy-MM-dd' }}</p>
-
+                                                <input type="date" class="form-control form-control-sm">
                                             </td>
-
-                                            <td>{{ event.DelayDays ? event.DelayDays : 0 }}</td>
-
-                                            <!-- Upload File -->
-                                            <td class="no-print">
-                                                <button ng-disabled="event.IsVerified==='Verified'"
-                                                        class="btn btn-sm btn-upload px-3 uploadbtn"
-                                                        ng-click="SetNewValue(event,'#fileupoad_event'+$index)">
-
-                                                    <span ng-if="!event.UploadFile">Choose File</span>
-                                                    <span ng-if="event.UploadFile">Uploaded</span>
-                                                </button>
-
-                                                <input type="file"
-                                                       id="fileupoad_event{{$index}}"
-                                                       file-model="event.UploadFile"
-                                                       row-context="event"
-                                                       style="display:none;" />
+                                            <td>23</td>
+                                            <!--Upload File column-->
+                                            <td>
+                                                <label class="btn btn-sm btn-upload px-3" style="white-space:nowrap; cursor:pointer;">
+                                                    Choose File
+                                                    <input type="file" hidden>
+                                                </label>
                                             </td>
-
-                                            <td>{{event.CreateOn | date:'dd-MM-yyyy' }}</td>
-
-                                            <!-- Remarks -->
-                                            <td class="no-print">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <input class="form-control form-control-sm"
-                                                           ng-model="event.VRemark1"
-                                                           type="text"
-                                                           style="font-size:10px" ng-disabled="event.IsVerified==='Verified'" />
-
-                                                    <i ng-if="event.VRemark !=''"
-                                                       class="bi bi-eye-fill"
-                                                       style="cursor:pointer;color:#F37437"
-                                                       ng-click="openRemarkModal1(event.VRemark,'Client Remark')">
-                                                    </i>
+                                            <td>dec 11</td>
+                                            <!--Remark column-->
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2" style="min-width:150px;">
+                                                    <input type="text" class="form-control form-control-sm">
+                                                    <i class="bi bi-eye-fill" style="color:#E45D27" role="button" data-bs-toggle="modal" data-bs-target="#remarkModal"></i>
                                                 </div>
                                             </td>
-
-                                            <!-- Verified -->
-                                            <td class="no-print">
-                                                <select class="form-select form-select-sm"
-                                                        ng-model="event.TempIsVerified"
-                                                        ng-class="{'text-success': event.IsVerified === 'Verified','text-danger': event.IsVerified === 'Clarify'
-}"
-                                                        ng-disabled="event.IsVerified=='Verified'">
-                                                    <option value="">Select</option>
-                                                    <option value="Verified">Verified</option>
-                                                    <option value="Clarify">Remarks</option>
-                                                </select>
-                                            </td>
-
-                                            <!-- View -->
-                                            <td class="no-print">
-                                                <a href=""
-                                                   class="view"
-                                                   style="color:#F37437"
-                                                   ng-show="event.openthis == '1' && event.UploadFile"
-                                                   ng-click="viewFile(event, $event)">
-                                                    Download File
-                                                </a>
+                                            <td>Yes/no</td>
+                                            <!--View column-->
+                                            <td>
+                                                <button class="btn btn-sm btn-view">View</button>
                                             </td>
 
                                             <!-- Action -->

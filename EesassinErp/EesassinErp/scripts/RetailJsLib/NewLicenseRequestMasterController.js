@@ -1391,8 +1391,9 @@
         }
 
         if ($scope.UploadRenewedCopy == undefined || $scope.UploadRenewedCopy == null || $scope.UploadRenewedCopy == '') {
-            if ($scope.LMRenewedCopy != '') {
-                $scope.UploadRenewedCopy = $scope.LMRenewedCopy;
+            if ($scope.LMUploadRenewedCopy != '') {
+                $scope.UploadRenewedCopy = $scope.LMUploadRenewedCopy;
+                $scope.UploadRenewedCopy = $scope.LMUploadRenewedCopy;
                 $scope.AUploadRenewedCopy = 1;
             }
         }

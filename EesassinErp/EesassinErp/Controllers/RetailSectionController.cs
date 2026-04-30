@@ -2828,7 +2828,13 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.GetContractorBulkReportlist(obj)));
             return result;
         }
-         
+
+        public async Task<string> AuditGetContractorBulkReportlist(RetailLicenseDocuementMaster obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.AuditGetContractorBulkReportlist(obj)));
+            return result;
+        }
+        
 
         public async Task<string> bindcommonreport(RetailBAL obj)
         {
@@ -3492,6 +3498,13 @@ namespace EesassinErp.Controllers
         public ActionResult ContractorReportVendor()
         {
             return View();
+        }
+		
+		  // here is define new code for check roll permission dated 23/04/2026
+        public async Task<string> GetUserPermissionSectionRoll(TblPartyMaster obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.GetUserPermissionSectionRoll(obj)));
+            return result;
         }
     }
 }
