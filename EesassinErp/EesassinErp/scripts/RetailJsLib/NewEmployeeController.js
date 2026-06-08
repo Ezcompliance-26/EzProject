@@ -1,4 +1,13 @@
 ﻿app.NewEmployeeController = function ($scope, $element, $filter, myService, $http, $timeout) {
+
+    $scope.rowLimit = 10
+    $scope.viewAll = function () {
+        $scope.rowLimit = $scope.EmployeeList.length; 
+    };
+
+    $scope.view10 = function () {
+        $scope.rowLimit = 10;
+    };
     $scope.PartyTypeId = "";
     $scope.PartyId = "";
     $scope.EmployeeCode = '';
@@ -9,7 +18,7 @@
     $scope.FatherHusbandName = '';
     $scope.Gender = '';
     $scope.MaritalStatus = '';
-    $scope.DateofBirth = new Date();
+    $scope.DateofBirth = '';
     $scope.PresentAddress = '';
     $scope.PermanentAddress = '';
     $scope.AdharCardNumber = '';
@@ -22,11 +31,11 @@
     $scope.PreviousUAN = '';
     $scope.PreviousESI = '';
     $scope.GrossSalary = '';
-    $scope.DOJ = new Date();
+    $scope.DOJ = '';
     $scope.NameofNominee = '';
     $scope.AddressofNominee = '';
     $scope.RelationofNominee = '';
-    $scope.DOBofNominee = new Date();
+    $scope.DOBofNominee = '';
     $scope.StoreCode = '';
     $scope.IsActive = '';
     $scope.EmployeeMasterGrid = true;
@@ -68,6 +77,7 @@
     $scope.PermanentIDNumber = "";
     $scope.PermanentIDDate = "";
     $('#txtTempIDDate').val('');
+    $scope.CampNumber = "";
 
 
 
@@ -117,7 +127,40 @@
 
 
     
-   $scope.IcardDetail = function (Detail) {
+    $scope.IcardDetail = function (Detail) {
+
+
+      
+        function convertToDate(dateStr) {
+            if (!dateStr) return null;
+
+            dateStr = dateStr.replace('AM', '').replace('PM', '').trim();
+
+            var parts = dateStr.split('/');
+
+            if (parts.length === 3) {
+                var day = parseInt(parts[0], 10);
+                var month = parseInt(parts[1], 10) - 1;
+                var year = parseInt(parts[2], 10);
+
+                var d = new Date(year, month, day);
+
+                if (isNaN(d)) {
+                    console.log("Invalid Date:", dateStr);
+                    return null;
+                }
+
+                return d;
+            }
+
+            var d = new Date(dateStr);
+            if (isNaN(d)) {
+                console.log("Invalid Date:", dateStr);
+                return null;
+            }
+
+            return d;
+        }
 
     $scope.EmployeePhotos = Detail.EmployeePhotos;
     $scope.EmpName = Detail.EmployeeName;
@@ -125,14 +168,28 @@
     $scope.EmpDep = Detail.EmployeeDepartment;
     $scope.EmpDesignation = Detail.EmployeeDesignation;
     $scope.EmpMobile = Detail.MobileNumber;
-    $scope.ValidTill = Detail.ValidTill;
-    $scope.IssueDate = Detail.IssueDate;
+ 
+        $scope.IssueDate = convertToDate(Detail.IssueDate);
+        $scope.ValidTill = convertToDate(Detail.ValidTill);
        $scope.RouteId = Detail.RouteId;
        $scope.ClientName = Detail.ClientName;
-       $scope.AssignColor = Detail.AssignColor; 
+        $scope.AssignColor = Detail.AssignColor;
+        $scope.backgroundcolor = Detail.backgroundcolor;
        $scope.BloodGroup = Detail.BloodGroup;
+       $scope.CampNumber = Detail.CampNumber;
+
+       $scope.BusNo = Detail.BusNo;
+
+
+       $scope.PreviousESI = Detail.PreviousESI;
+       $scope.PreviousUAN = Detail.PreviousUAN;
+       $scope.Location = Detail.LocationCode;
+       $scope.VendorName = Detail.VendorName;
+       $scope.ClientEmailId = Detail.ClientEmailId;
+       $scope.ClientMobileNo = Detail.ClientMobileNo;
+       $scope.RouteName = Detail.RouteName;
     var site = $scope.SiteList.find(function (x) {
-        return x.SiteId == Detail.Site;
+        return x.SiteCode == Detail.Site;
     });
 
     $scope.SiteName = site ? site.SiteName : '';
@@ -143,373 +200,84 @@
 
         if (!$scope.EmpCode) return "";
 
-        var data = 
-            "Name: " + $scope.EmpName + "\n" +
-            "ID: " + $scope.EmpCode + "\n" + 
-            "Mobile: " + $scope.EmpMobile + "";
+        var data =
+            "https://login.ezcompliance.in/icard.html?id=" + $scope.EmpCode + "";
 
         return "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=" + encodeURIComponent(data);
     };
-
-   
+    
     $scope.printIDCard = function () {
 
         var printContents = document.getElementById("printArea").outerHTML;
 
-        var popupWin = window.open('', '_blank', 'width=1000,height=700');
+        var popupWin = window.open('', '_blank');
 
         popupWin.document.open();
 
         popupWin.document.write(`
-    <html>
-    <head>
-        <title>Print ID Card</title>
+        <html>
+        <head>
+            <title>Print ID Card</title>
+ <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
 
-        <style>
-        /* ================= CONTAINER ================= */
- 
-        .idCardContainer {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        font-family: 'Segoe UI', sans-serif;
+    }
 
-        /* ================= CARD BASE ================= */
-        .idCard {
-            background: #f4f4f4;
-            border-radius: 14px;
-            overflow: hidden;
-            position: relative;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            flex-direction: column;
-        }
+    * {
+        box-sizing: border-box;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
 
-        /* ================= UI CARD (MODAL) ================= */
-        .employeeViewModalPage .idCard {
-            width: 420px;
-            height: 260px;
-        }
+    @page {
+        size: 85.6mm 53.98mm landscape;
+        margin: 0;
+    }
 
-        /* ================= PRINT CARD ================= */
-        /*#printArea .idCard {
-        width: 340px;
-        height: 214px;
-    }*/
+    #printArea {
+        margin: 0;
+        padding: 0;
+    }
 
-        /* ================= HEADER ================= */
-        .idHeader {
-            height: 60px;
-            background: #8f8f8f;
-            /*border-bottom-left-radius: 25px;
-        border-bottom-right-radius: 25px;*/
-            position: relative;
-        }
+    #printArea > div {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        align-items: center;
+    }
 
-        .logoBox {
-            position: absolute;
-            right: 0px;
-            top: 13px;
-            background: #D9D9D9;
-            padding: 10px 10px;
-            border-bottom-left-radius: 40px;
-            border-top-left-radius: 40px;
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            justify-content: center;
-            width: 30%;
-            overflow: hidden;
-        }
-
-            .logoBox span {
-                font-size: 11px;
-                font-weight: 600;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .logoBox img {
-                width: 18px;
-            }
-
-        /* ================= PROFILE ================= */
-        .profileSection {
-            display: flex;
-            align-items: flex-start;
-            padding: 10px 15px;
-            gap: 10px;
-        }
-
-        .profileImage {
-            width: 100px;
-            height: 100px;
-            min-width: 100px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-top: -40px;
-            border: 2px solid #fff;
-            z-index: 10;
-        }
-
-            .profileImage img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-        .profileDetails {
-            /*flex: 1;*/
-            min-width: 0;
-            padding-left: 1rem;
-        }
-
-            .profileDetails h2 {
-                font-size: 16px;
-                /* color: #00224F;*/
-                margin: 0;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .profileDetails p {
-                font-size: 12px;
-                margin: 0;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-        /* ================= QR ================= */
-        .qrCode {
-            margin-left: auto;
-        }
-
-            .qrCode img {
-                width: 55px;
-            }
-
-        /* ================= INFO ================= */
-        .infoSection {
-            display: flex;
-            padding: 8px 10px;
-            flex: 1;
-        }
-
-            .infoSection .left,
-            .infoSection .right {
-                width: 50%;
-                min-width: 0;
-            }
-
-        .divider {
-            width: 2px;
-            background: #1d3557;
-            margin: 0 5px;
-        }
-
-        .field label {
-            font-size: 10px;
-            color: #1d3557;
-        }
-
-        .field h4 {
-            font-size: 13px;
-            margin: 2px 0 6px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* ================= BACK ================= */
-        .backContent {
-            padding: 10px 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 100%;
-        }
-
-        .row1 {
-            display: flex;
-            justify-content: space-between;
-            gap: 6px;
-        }
-
-            .row1 div {
-                width: 50%;
-                min-width: 0;
-            }
-
-        .backContent h4 {
-            font-size: 11px;
-            margin: 2px 0 6px;
-            line-height: 1.2;
-            max-height: 28px;
-            overflow: hidden;
-        }
-
-
-        /* ================= NOTES ================= */
-        .notesBox {
-            background: #e6e6e6;
-            border-radius: 8px;
-            padding: 6px;
-            font-size: 10px;
-            text-align: left;
-        }
-
-            .notesBox ul {
-                margin: 0;
-                padding-left: 12px;
-            }
-
-        /* ================= FLIP ================= */
-        .flip-card {
-            width: 420px;
-            height: 260px;
-            perspective: 1000px;
-            margin: auto;
-            cursor: pointer;
-        }
-
-        .card-inner {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-
-        .flip-card.flip .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-        }
-
-            .card-face.back {
-                transform: rotateY(180deg);
-            }
-
-        /* ================= PRINT FIX ================= */
-        /* HIDE FROM SCREEN BUT KEEP FOR PRINT */
-        .printAreaHidden {
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-        }
-
-        @@media print {
-
-            body * {
-                visibility: hidden !important;
-            }
-
-            #printArea,
-            #printArea * {
-                visibility: visible !important;
-            }
-
-            #printArea {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-            }
-
-            FORCE STYLES
-            #printArea .idCard {
-                width: 340px !important;
-                height: 214px !important;
-                display: flex !important;
-                flex-direction: column !important;
-                background: #f4f4f4 !important;
-            }
-
-            #printArea .idCardContainer {
-                display: flex !important;
-                gap: 10px !important;
-                justify-content: center !important;
-            }
-        }
-
-        .row1 {
-            display: flex;
-            gap: 6px;
-        }
-
-            .row1 div {
-                width: 50%;
-                min-width: 0;
-            }
-
-                .row1 div[style*="100%"] {
-                    width: 100%;
-                }
-
-        Company + Address stacking
-        .backContent .row1:first-child div:first-child h4 {
-            font-size: 12px;
-            line-height: 1.2;
-            margin: 2px 0;
-        }
-
-        Prevent overflow breaking layout
-        .backContent .row1 div {
-            min-width: 0;
-        }
-
-        .backContent h4 {
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /*FOOTER*/
-        .footerRow {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 400;
-        }
-
-            .footerRow .label {
-                color: #00224F;
-                font-size: 11px;
-            }
-
-            .footerRow span {
-                font-size: 11px;
-            }
-
-        .rightAlign {
-            text-align: right;
-        }
 </style>
 
-    </head>
-    <body>
-        ${printContents}
-    </body>
-    </html>
+ 
+
+        </head>
+
+        <body>
+
+            ${printContents}
+
+        </body>
+        </html>
     `);
 
-        popupWin.document.close();
-
-        // ✅ Wait for images to load properly
-        popupWin.onload = function () {
-            setTimeout(function () {
-                popupWin.focus();
-                popupWin.print();
-                popupWin.close();
-            }, 500);
-        };
+      popupWin.document.close();
+         
+        setTimeout(function () {
+            popupWin.focus();
+            popupWin.print();
+            popupWin.close();
+        }, 800);
     };
+
+
+
     var cropper = null;
     $scope.OpenRoute = false;
     $scope.openRoutetransport = function () {
@@ -552,7 +320,7 @@
                     }
 
                     cropper = new Cropper(img, {
-                        aspectRatio: 1,   // 🔥 MUST
+                        aspectRatio: 1,   
                         viewMode: 1
                     });
 
@@ -573,10 +341,9 @@
 
         var canvas = cropper.getCroppedCanvas({
             width: 200,
-            height: 200 // 👈 square lo (circle banane ke liye)
+            height: 200 
         });
-
-        // 🎯 Create circular canvas
+         
         var circleCanvas = document.createElement('canvas');
         var size = 200;
 
@@ -584,17 +351,14 @@
         circleCanvas.height = size;
 
         var ctx = circleCanvas.getContext('2d');
-
-        // 🔵 Draw circle
+         
         ctx.beginPath();
         ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
         ctx.closePath();
         ctx.clip();
-
-        // 🖼️ Draw cropped image inside circle
+         
         ctx.drawImage(canvas, 0, 0, size, size);
-
-        // 📦 Convert to base64
+         
         var base64 = circleCanvas.toDataURL("image/png");
 
         $scope.$applyAsync(function () {
@@ -629,7 +393,7 @@
     $scope.BindSiteList = function () {
         var collectionobj = {};
         collectionobj.Action = 34;
-        collectionobj.LoginId = LoginId;
+        collectionobj.LoginId = MapId;
         debugger;
         var getData = myService.methode('POST', "../DashBoard/GetUserRegistration", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
@@ -638,15 +402,80 @@
     }
 
     $scope.EmployeeeMasterList = [];
-    $scope.DisplayExcel = function () {
-        $scope.showLoader();
 
+    $scope.DisplayExcel = function () {
+        
+        function validateRow(obj, rowIndex) {
+
+            let errors = [];
+
+            function isEmpty(val) {
+                return !val || val.toString().trim() === "";
+            }
+             
+            const validRoutes = ($scope.TransportList || [])
+                .map(x => (x.RouteID || ""));
+
+            const validSite = ($scope.SiteList || [])
+                .map(x => (x.SiteCode || ""));
+            if (isEmpty(obj.RefEmployeeCode)) errors.push("RefEmployeeCode");
+            if (isEmpty(obj.EmployeeName)) errors.push("EmployeeName");
+            if (isEmpty(obj.SiteName)) errors.push("SiteName");
+            if (isEmpty(obj.EmployeeDesignation)) errors.push("Designation");
+            if (isEmpty(obj.Father_Husband_Name)) errors.push("Father/Husband Name");
+            if (isEmpty(obj.MaritalStatus)) errors.push("Marital Status");
+            if (isEmpty(obj.DateofBirth)) errors.push("DOB");
+            if (isEmpty(obj.DOJ)) errors.push("DOJ");
+            if (isEmpty(obj.Status)) errors.push("Status");
+            if (isEmpty(obj.MobileNumber)) errors.push("Mobile Number");
+            if (isEmpty(obj.EmployeeEmailID)) errors.push("Email ID");
+            //if (isEmpty(obj.NomineeName)) errors.push("Nominee Name");
+            //if (isEmpty(obj.GrossSalary)) errors.push("Gross Salary");
+            if (isEmpty(obj.Gendar)) errors.push("Gender");
+            if (isEmpty(obj.IssueDate)) errors.push("I-Card Issue Date");
+            if (isEmpty(obj.ValidTill)) errors.push("I-Card Valid Till Date");
+            if (isEmpty(obj.BloodGroup)) errors.push("Blood Group");
+            if (isEmpty(obj.State)) errors.push("State");
+            if (isEmpty(obj.City)) errors.push("City");
+            if (isEmpty(obj.Pincode)) errors.push("Pin Code");
+            if (isEmpty(obj.EmployeeDepartment)) errors.push("Department");
+
+            if (obj.PPE === "Yes" && isEmpty(obj.PPEType)) {
+                errors.push("PPE Type required");
+            }
+            const validRoutesLower = validRoutes.map(x => x.toLowerCase().trim());
+
+            if (!isEmpty(obj.RouteName)) {
+                let route = obj.RouteName.toLowerCase().trim();
+
+                if (!validRoutesLower.includes(route)) {
+                    errors.push(`Invalid RouteName: "${obj.RouteName}"`);
+                }
+            }
+
+
+
+            const validSiteLower = validSite.map(x => (x || '').toString().toLowerCase().trim());
+
+            if (!isEmpty(obj.SiteName)) {
+                let Sitenames = obj.SiteName.toString().toLowerCase().trim();
+
+                if (!validSiteLower.includes(Sitenames)) {
+                    errors.push(`Invalid Site : "${obj.SiteName}"`);
+                }
+            }
+
+            return errors;
+        }
+
+        $scope.showLoader();
         $scope.EmployeeeMasterList = [];
 
         var fileUploader = $('#input-excel');
 
         if (!fileUploader[0].files.length) {
             alert("Please select file");
+            $scope.hideLoader();
             return;
         }
 
@@ -658,7 +487,11 @@
             var data = new Uint8Array(e.target.result);
             var wb = XLSX.read(data, { type: 'array' });
 
-            var htmlstr = XLSX.write(wb, { sheet: "Sheet1", type: 'binary', bookType: 'html' });
+            var htmlstr = XLSX.write(wb, {
+                sheet: "Sheet1",
+                type: 'binary',
+                bookType: 'html'
+            });
 
             $('#wrapper').html(htmlstr).removeClass('d-none');
 
@@ -672,88 +505,213 @@
             setTimeout(function () {
 
                 var tr = table.find('tr');
+                var errorsList = [];
 
-                $.each(tr, function () {
+                $.each(tr, function (index) {
 
                     var td = $(this).find('td');
                     if (td.length == 0) return;
+                     
+                    var blank = true;
+
+                    td.each(function () {
+                        if ($(this).text().trim() !== "") {
+                            blank = false;
+                            return false;
+                        }
+                    });
+
+                    if (blank) return;
 
                     var obj = {};
 
-                    obj.RefEmployeeCode = $(td[0]).text();
-                    obj.EmployeeName = $(td[1]).text();
-                    obj.SiteName = $(td[2]).text();
+                    obj.RefEmployeeCode = $(td[0]).text().trim();
+                    obj.EmployeeName = $(td[1]).text().trim();
+                    obj.SiteName = $(td[2]).text().trim();
+                    obj.EmployeeDesignation = $(td[3]).text().trim();
+                    obj.EmployeeDepartment = $(td[4]).text().trim();
+                    obj.Father_Husband_Name = $(td[5]).text().trim();
+                    obj.Gendar = $(td[6]).text().trim();
+                    obj.MaritalStatus = $(td[7]).text().trim();
+                    obj.DateofBirth = $(td[8]).text().trim();
+                    obj.DOJ = $(td[9]).text().trim();
+                    obj.Status = $(td[10]).text().trim();
+                    obj.PresentAddress = $(td[11]).text().trim();
+                    obj.PermanemtAddress = $(td[12]).text().trim();
+                    obj.MobileNumber = $(td[13]).text().trim();
+                    obj.AlternativeMobileNumber = $(td[14]).text().trim();
+                    obj.EmployeeEmailID = $(td[15]).text().trim();
+                    obj.PANNumber = $(td[16]).text().trim();
+                    obj.AdharCardNumber = $(td[17]).text().trim();
+                    obj.PreviousUAN = $(td[18]).text().trim();
+                    obj.PFAccount = $(td[19]).text().trim();
+                    obj.BankAccountNumber = $(td[20]).text().trim();
+                    obj.BankIFSCCode = $(td[21]).text().trim();
+                    obj.PreviousESI = $(td[22]).text().trim();
+                    obj.GrossSalary = $(td[23]).text().trim();
+                    obj.NomineeName = $(td[24]).text().trim();
+                    obj.NomineeRelation = $(td[25]).text().trim();
+                    obj.NomineeDOB = $(td[26]).text().trim();
+                    obj.NomineeAddress = $(td[27]).text().trim();
+                    obj.MinimumWageCategory = $(td[28]).text().trim();
+                    obj.WageType = $(td[29]).text().trim();
+                    obj.WageDisbursementMode = $(td[30]).text().trim();
+                    obj.PPE = $(td[31]).text().trim();
+                    obj.PPEType = $(td[32]).text().trim();
+                    obj.SafetyTrainingStatus = $(td[33]).text().trim();
+                    obj.SiteInductionStatus = $(td[34]).text().trim();
+                    obj.PoliceVerificationStatus = $(td[35]).text().trim();
+                    obj.TempIDStatus = $(td[36]).text().trim();
+                    obj.TempIDNumber = $(td[37]).text().trim();
+                    obj.TempIDDate = $(td[38]).text().trim();
+                    obj.PermanentIDStatus = $(td[39]).text().trim();
+                    obj.PermanentIDNumber = $(td[40]).text().trim();
+                    obj.PermanentIDDate = $(td[41]).text().trim();
 
-                    obj.EmployeeDesignation = $(td[3]).text();
-                    obj.EmployeeDepartment = $(td[4]).text();
-                    obj.Father_Husband_Name = $(td[5]).text();
-                    obj.Gendar = $(td[6]).text();
-                    obj.MaritalStatus = $(td[7]).text();
+                   
+                    obj.RouteId = $(td[42]).text().trim();
+                    obj.IssueDate = $(td[43]).text().trim();
+                    obj.ValidTill = $(td[44]).text().trim();
+                    obj.BloodGroup = $(td[45]).text().trim();
+                    obj.CampNumber = $(td[46]).text().trim();
+                    obj.State = $(td[47]).text().trim();
+                    obj.City  = $(td[48]).text().trim();
+                    obj.Pincode  = $(td[49]).text().trim();
 
-                    obj.DateofBirth = $(td[8]).text();
-                    obj.DOJ = $(td[9]).text();
+                    let rowErrors = validateRow(obj, index + 1);
 
-                    obj.Status = $(td[10]).text();              // ✅ alag rakha
-                    obj.PresentAddress = $(td[11]).text();      // ✅ shift kiya
-                    obj.PermanemtAddress = $(td[12]).text();
+                    if (rowErrors.length > 0) {
+                        $('#input-excel').val('');
+                        errorsList.push(
+                            `Row ${index + 1}: ${rowErrors.join(", ")}`
+                        );
+                    } else {
+                        $scope.EmployeeeMasterList.push(obj);
+                    }
 
-                    obj.MobileNumber = $(td[13]).text();
-                    obj.AlternativeMobileNumber = $(td[14]).text();
-                    obj.EmployeeEmailID = $(td[15]).text();
-
-                    obj.PANNumber = $(td[16]).text();
-                    obj.AdharCardNumber = $(td[17]).text();
-
-                    obj.PreviousUAN = $(td[18]).text();
-                    obj.PFAccount = $(td[19]).text();
-
-                    obj.BankAccountNumber = $(td[20]).text();
-                    obj.BankIFSCCode = $(td[21]).text();
-
-                    obj.PreviousESI = $(td[22]).text();
-                    obj.GrossSalary = $(td[23]).text();
-
-                    obj.NomineeName = $(td[24]).text();
-                    obj.NomineeRelation = $(td[25]).text();
-                    obj.NomineeDOB = $(td[26]).text();
-                    obj.NomineeAddress = $(td[27]).text();
-
-                    obj.MinimumWageCategory = $(td[28]).text();
-                    obj.WageType = $(td[29]).text();
-                    obj.WageDisbursementMode = $(td[30]).text();
-
-                    obj.PPE = $(td[31]).text();
-                    obj.PPEType = $(td[32]).text();
-
-                    obj.SafetyTrainingStatus = $(td[33]).text();
-                    obj.SiteInductionStatus = $(td[34]).text();
-                    obj.PoliceVerificationStatus = $(td[35]).text();
-
-                    obj.TempIDStatus = $(td[36]).text();
-                    obj.TempIDNumber = $(td[37]).text();
-                    obj.TempIDDate = $(td[38]).text();
-
-                    obj.PermanentIDStatus = $(td[39]).text();
-                    obj.PermanentIDNumber = $(td[40]).text();
-                    obj.PermanentIDDate = $(td[41]).text();
-
-                    $scope.EmployeeeMasterList.push(obj);
                 });
 
-                $scope.btnValiadte = true;
-                $scope.disableValiadte = false;
+                if (errorsList.length > 0) {
+                    showMsgBox(
+                        '999',
+                        'Validation Error',
+                        errorsList.join('<br/>'),
+                        'error',
+                        'btn-danger'
+                    );
+
+                    $('#wrapper').html('');
+                    $scope.EmployeeeMasterList = [];
+                }
+                else {
+                    $scope.btnValiadte = true;
+                    $scope.disableValiadte = false;
+                }
 
                 $scope.$applyAsync();
+                $scope.hideLoader();
 
-            }, 500);
-
-            $scope.hideLoader();
-        }
+            }, 1000);
+        };
     };
+
+
+    
+    $scope.ValidateEmployeeList = function () {
+
+        let errorsList = [];
+
+        const validRoutes = ($scope.TransportList || [])
+            .map(x => (x.RouteID || "").toLowerCase().trim());
+
+
+        const validSite = ($scope.SiteList || [])
+            .map(x => (x.SiteCode || ""));
+
+
+
+
+        function isEmpty(val) {
+            return !val || val.toString().trim() === "";
+        }
+
+        angular.forEach($scope.EmployeeeMasterList, function (obj, index) {
+
+            let rowErrors = [];
+
+            if (isEmpty(obj.RefEmployeeCode)) rowErrors.push("RefEmployeeCode");
+            if (isEmpty(obj.EmployeeName)) rowErrors.push("EmployeeName");
+            if (isEmpty(obj.SiteName)) rowErrors.push("SiteName");
+            if (isEmpty(obj.EmployeeDesignation)) rowErrors.push("Designation");
+            if (isEmpty(obj.Father_Husband_Name)) rowErrors.push("Father/Husband Name");
+            if (isEmpty(obj.MaritalStatus)) rowErrors.push("Marital Status");
+            if (isEmpty(obj.DateofBirth)) rowErrors.push("DOB");
+            if (isEmpty(obj.DOJ)) rowErrors.push("DOJ");
+            if (isEmpty(obj.Status)) rowErrors.push("Status");
+            if (isEmpty(obj.MobileNumber)) rowErrors.push("Mobile Number");
+            if (isEmpty(obj.EmployeeEmailID)) rowErrors.push("Email ID");
+            if (isEmpty(obj.NomineeName)) rowErrors.push("Nominee Name");
+            if (isEmpty(obj.GrossSalary)) rowErrors.push("Gross Salary");
+
+            if (obj.PPE === "Yes" && isEmpty(obj.PPEType))
+                rowErrors.push("PPE Type required");
+ 
+
+            const validRoutesLower = validRoutes.map(x => x.toLowerCase().trim());
+
+            if (!isEmpty(obj.RouteName)) {
+                let route = obj.RouteName.toLowerCase().trim();
+
+                if (!validRoutesLower.includes(route)) {
+                    rowErrors.push(`Invalid RouteId: "${obj.RouteId}"`);
+                }
+            }
+
+
+
+            const validSiteLower = validSite.map(x => (x || '').toString().toLowerCase().trim());
+
+            if (!isEmpty(obj.SiteName)) {
+                let Sitenames = obj.SiteName.toString().toLowerCase().trim();
+
+                if (!validSiteLower.includes(Sitenames)) {
+                    rowErrors.push(`Invalid Site : "${obj.SiteName}"`);
+                }
+            }
+
+
+
+            if (rowErrors.length > 0) {
+                errorsList.push(
+                    `Row ${index + 1}: ${rowErrors.join(", ")}`
+                );
+            }
+        });
+
+        if (errorsList.length > 0) {
+            showMsgBox(
+                '999',
+                'Validation Error',
+                errorsList.join('<br/>'),
+                'error',
+                'btn-danger'
+            );
+            return false;
+        }
+
+        return true;
+    };
+
+
+
+
 
     $scope.SaveRecord = function () {
         if (!$scope.EmployeeeMasterList || $scope.EmployeeeMasterList.length === 0) {
             showMsgBox('999', 'Alert', 'Please Select valid file', 'warning', 'btn-warning');
+            return;
+        } 
+        if (!$scope.ValidateEmployeeList()) {
             return;
         }
         $scope.showLoader();
@@ -764,7 +722,8 @@
         collectionobj.PartyId = MapId
         collectionobj.UserId = LoginId
         var getData = myService.methode('POST', "../RetailSection/NewIUDBulkEmployeee", '{obj:' + JSON.stringify(collectionobj) + '}');
-        getData.then(function (response) {
+        getData.then(function (response)
+        {
             showMsgBox('999', 'Alert', 'Save Successfully', 'warning', 'btn-warning');
 
             $scope.GetEmployeeMaster();
@@ -772,7 +731,7 @@
             $('#tab1-tab').click();
         });
     }
-    //-------------------------------------end bulk
+    ////-------------------------------------end bulk
 
     $scope.BindModuleTypeList = function () {
         var moduleTypeLst = [
@@ -857,14 +816,58 @@
         var getData = myService.methode('POST', "../Retail/GetStore", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             $scope.AllempComplianceDocList = response.data.Result;
+            var data = response.data.Result;
+
+            angular.forEach($scope.AllempComplianceDocList, function (item) {
+
+                item.Progress = getProgressValue(item.DocumentStatus);
+            });
+            $scope.GroupDocs(data);
         });
     }
+    $scope.GroupDocs = function (data) {
+
+        var map = {};
+
+        angular.forEach(data, function (item) {
+
+            if (!map[item.DocumentId]) {
+                map[item.DocumentId] = {
+                    DocumentId: item.DocumentId,
+                    DocumentName: item.DocumentName,
+                    Files: []
+                };
+            }
+
+        
+            if (item.Filepath) {
+                map[item.DocumentId].Files.push({
+                    Filepath: item.Filepath,
+                    Uploaded: item.Uploaded,
+                    Createdon: item.Createdon
+                });
+            }
+        });
+
+        $scope.groupedDocs = Object.values(map);
+    };
     $scope.SelectedPartyName = "";
 
     $scope.filterByParty = function (partyName) {
-        $scope.SelectedPartyName = partyName;
-    };
 
+        if (partyName === 'ALL') {
+          
+            $scope.SelectedPartyName = '';
+            $scope.FilteredList = angular.copy($scope.MainList); 
+        }
+        else {
+            $scope.SelectedPartyName = partyName;
+
+            $scope.FilteredList = $scope.MainList.filter(function (item) {
+                return item.PartyName === partyName;
+            });
+        }
+    };
     $scope.GetEmployeeMaster = function () {
 
         var collectionobj = {
@@ -901,7 +904,7 @@
     $scope.ResetEmployee = function () {
         debugger;
 
-        // Basic fields
+        
         $scope.EditId = 0;
         $scope.RefEmployeeCode = '';
         $scope.PFAccount = '';
@@ -916,7 +919,7 @@
         $scope.MaritalStatus = '';
         $scope.Transport = '';
         $scope.RouteId = '';
-        // Dates
+     
         $scope.DateofBirth = null;
         $scope.DOJ = null;
         $scope.DOBofNominee = null;
@@ -924,7 +927,8 @@
         $scope.IssueDate = null;
         $scope.ValidTill = null;
         $scope.BloodGroup = '';
-        // Address & Contact
+        $scope.CampNumber = '';
+        
         $scope.PresentAddress = '';
         $scope.PermanentAddress = '';
         $scope.AdharCardNumber = '';
@@ -933,23 +937,23 @@
         $scope.AlternativeMobileNumber = '';
         $scope.EmployeeEmailID = '';
 
-        // Bank
+       
         $scope.BankAccountNumber = '';
         $scope.BankIFSCCode = '';
 
-        // Other
+        
         $scope.PreviousUAN = '';
         $scope.PreviousESI = '';
         $scope.GrossSalary = '';
         $scope.StoreCode = '';
         $scope.IsActive = 1;
 
-        // Nominee
+       
         $scope.NameofNominee = '';
         $scope.AddressofNominee = '';
         $scope.RelationofNominee = '';
         $scope.SiteId = '';
-        // ✅ File Preview Reset
+      
         $scope.PANCardFilePath_Preview = '';
         $scope.Cheque_Passbook_FilePath_Preview = '';
         $scope.EducationCertificateFilePath_Preview = '';
@@ -962,37 +966,37 @@
         $scope.Photos_2_FilePath_Preview = '';
         $scope.Photos_3_FilePath_Preview = '';
         $scope.Photos_4_FilePath_Preview = '';
-
+        $scope.MedicalCertificateFilePath_Preview = '';
         $scope.EmployeePhotos = '';
         $scope.MinimumWageCategory = '';
         $scope.WageType = '';
         $scope.WageDisbursementMode = '';
 
-        // Safety & Security
+        
         $scope.PPE = '';
         $scope.PPEType = '';
         $scope.SafetyTrainingStatus = '';
         $scope.SiteInductionStatus = '';
         $scope.PoliceVerificationStatus = '';
 
-        // Temporary ID
+        
         $scope.TempIDStatus = '';
         $scope.TempIDNumber = '';
         $scope.TempIDDate = '';
 
-        // Permanent ID
+        
         $scope.PermanentIDStatus = '';
         $scope.PermanentIDNumber = '';
         $scope.PermanentIDDate = '';
 
-        // 🔥 jQuery date fields bhi reset karo (important)
+       
         $('#txtTempIDDate').val('');
         $('#PermanentIDDate').val('');
 
-        // Optional: clear file inputs (important 🔥)
+        
         $('input[type="file"]').val(null);
 
-        // Action reset
+       
         $scope.IsActionType = 1;
         $scope.act = 1;
     };
@@ -1057,12 +1061,21 @@
                 formData.append("IssueDate", $scope.IssueDate.toISOString());
                 formData.append("ValidTill", $scope.ValidTill.toISOString());
                 formData.append("BloodGroup", $scope.BloodGroup);
+                formData.append("CampNumber", $scope.CampNumber);
+                formData.append("State", $scope.State);
+                formData.append("City", $scope.City);
+                formData.append("Pincode", $scope.Pincode);
 
-               
+                
                 formData.append("NameofNominee", $scope.NameofNominee);
                 formData.append("AddressofNominee", $scope.AddressofNominee);
                 formData.append("RelationofNominee", $scope.RelationofNominee);
-                formData.append("DOBofNominee", $scope.DOBofNominee.toISOString());
+                if ($scope.DOBofNominee) {
+                    formData.append("DOBofNominee", new Date($scope.DOBofNominee).toISOString());
+                } else {
+                    formData.append("DOBofNominee", null);
+                }
+              
                 formData.append("StoreCode", $scope.StoreCode);
                 formData.append("Status", $scope.IsActive);
                 formData.append("SiteId", $scope.SiteId);
@@ -1086,26 +1099,32 @@
                 formData.append("MinimumWageCategory", $scope.MinimumWageCategory);
                 formData.append("WageType", $scope.WageType);
                 formData.append("WageDisbursementMode", $scope.WageDisbursementMode);
-
-                // Safety & Security
+                 
                 formData.append("PPE", $scope.PPE);
                 formData.append("PPEType", $scope.PPEType);
                 formData.append("SafetyTrainingStatus", $scope.SafetyTrainingStatus);
                 formData.append("SiteInductionStatus", $scope.SiteInductionStatus);
                 formData.append("PoliceVerificationStatus", $scope.PoliceVerificationStatus);
-
-                // Temporary ID
+                 
                 formData.append("TempIDStatus", $scope.TempIDStatus);
                 formData.append("TempIDNumber", $scope.TempIDNumber);
                 formData.append("TempIDDate", $('#txtTempIDDate').val());
 
-                // Permanent ID
+                
                 formData.append("PermanentIDStatus", $scope.PermanentIDStatus);
                 formData.append("PermanentIDNumber", $scope.PermanentIDNumber);
                 formData.append("PermanentIDDate", $('#txtPermanentIDDate').val());
 
                 formData.append("Transport", $scope.Transport);
                 formData.append("RouteId", $scope.RouteId);
+
+
+                formData.append("MedicalStatus", $scope.MedicalStatus);
+                formData.append("NextMedicalDue", $('#txtNextMedicalDue').val());
+                formData.append("FitnessTypes", $scope.FitnessTypes);
+
+                formData.append("MedicalCertificate_FilePath", $scope.MedicalCertificateFilePath_Preview);
+
 
                 formData.append("ActionType", $scope.IsActionType);
                 $.ajax({
@@ -1232,29 +1251,26 @@
     $scope.openEmployeeModal = function (_Id) {
         $scope.EmpId = _Id;
         $scope.Siteopen = true;
-      
-        // Find the selected employee in EmployeeList based on the employeeCode
+       
         var selectedEmployee = $scope.EmployeeList.find(function (employee) {
             return employee.Id === _Id;
         });
-
+        console.log(selectedEmployee);
         if (selectedEmployee)
         {
-            $scope.EditId = selectedEmployee.Id;
-            // Set the selected employee data
+            $scope.EditId = selectedEmployee.Id; 
             $scope.employee =
             {
                 IsTransfer: selectedEmployee.IsTransfer,
                 Id: selectedEmployee.Id,
                 PartyTypeId: selectedEmployee.PartyTypeId,
-                SiteId: selectedEmployee.Site,
-                //UserId: selectedEmployee.UserId,
+                SiteId: selectedEmployee.Site, 
                 Name: selectedEmployee.EmployeeName,
                 DOJ: selectedEmployee.DisplayDOJ,
                 IssueDate: selectedEmployee.IssueDate,
                 ValidTill: selectedEmployee.ValidTill,
                 BloodGroup: selectedEmployee.BloodGroup,
-              
+                CampNumber: selectedEmployee.CampNumber,
 
                 RefEmployeeCode: selectedEmployee.RefEmployeeCode,
                 UnitCode: selectedEmployee.UnitCode,
@@ -1281,11 +1297,22 @@
                 PayslipsFilePath: selectedEmployee.PayslipsFilePath,
                 Photos_1_FilePath: selectedEmployee.Photos_1_FilePath,
                 Transport: selectedEmployee.Transport,
+
+                MedicalCertificateFilePath :selectedEmployee.MedicalCertificate_FilePath,
+                MedicalStatus : selectedEmployee.MedicalStatus,
+                NextMedicalDue: selectedEmployee.NextMedicalDue,
+                FitnessTypes : selectedEmployee.FitnessTypes,
                
                 RouteId: selectedEmployee.RouteId,
+                State: selectedEmployee.State,
+                CityId: selectedEmployee.City,
+                Pincode: selectedEmployee.Pincode,
 
-                
-                    EmployeePhotos: selectedEmployee.EmployeePhotos
+                TempIDDate: selectedEmployee.TempIDDate	,
+                PermanentIDStatus: selectedEmployee.PermanentIDStatus	,
+                PermanentIDNumber: selectedEmployee.PermanentIDNumber,
+                PermanentIDDate: selectedEmployee.PermanentIDDate,
+                    EmployeePhotos: selectedEmployee.EmployeePhotos,
             };
             $scope.openRoutetransport();
             $scope.BindTransfer(_Id);
@@ -1306,13 +1333,31 @@
    
     $scope.EditEmployee = function (Id) {
         debugger;
+
+
         function convertToDate(dateStr) {
             if (!dateStr) return null;
+
+            dateStr = dateStr.replace('AM', '').replace('PM', '').trim();
              
-            dateStr = dateStr.replace('AM', '').replace('PM', '');
+            var parts = dateStr.split('/');
 
+            if (parts.length === 3) {
+                var day = parseInt(parts[0], 10);
+                var month = parseInt(parts[1], 10) - 1;  
+                var year = parseInt(parts[2], 10);
+
+                var d = new Date(year, month, day);
+
+                if (isNaN(d)) {
+                    console.log("Invalid Date:", dateStr);
+                    return null;
+                }
+
+                return d;
+            }
+             
             var d = new Date(dateStr);
-
             if (isNaN(d)) {
                 console.log("Invalid Date:", dateStr);
                 return null;
@@ -1355,8 +1400,7 @@
         $scope.EmployeeDepartment = selectedEmployee.EmployeeDepartment;
         $scope.FatherHusbandName = selectedEmployee.Father_Husband_Name;
         $scope.Gender = selectedEmployee.Gendar;
-        $scope.PFAccount = selectedEmployee.PFAccount,
-        /*    $scope.LeavingDate = selectedEmployee.LeavingDate,*/
+        $scope.PFAccount = selectedEmployee.PFAccount, 
             $scope.MaritalStatus = selectedEmployee.MaritalStatus;
 
         
@@ -1368,8 +1412,8 @@
 
         $scope.IssueDate = convertToDate(selectedEmployee.IssueDate);
         $scope.ValidTill = convertToDate(selectedEmployee.ValidTill);
-        $scope.BloodGroup =  selectedEmployee.BloodGroup ;
-
+        $scope.BloodGroup = selectedEmployee.BloodGroup;
+        $scope.CampNumber = selectedEmployee.CampNumber;
        
         $scope.LeavingDate = convertToDate(selectedEmployee.LeavingDate);
         $scope.DOBofNominee = convertToDate(selectedEmployee.NomineeDOB);
@@ -1379,8 +1423,7 @@
 
 
 
-
-    /*    $scope.DateofBirth = new Date(selectedEmployee.DateOfBirth);*/
+         
         $scope.PresentAddress = selectedEmployee.PresentAddress;
         $scope.PermanentAddress = selectedEmployee.PermanemtAddress;
         $scope.AdharCardNumber = selectedEmployee.AdharCardNumber;
@@ -1396,11 +1439,9 @@
   
         $scope.NameofNominee = selectedEmployee.NomineeName;
         $scope.AddressofNominee = selectedEmployee.NomineeAddress;
-        $scope.RelationofNominee = selectedEmployee.NomineeRelation;
-   /*     $scope.DOBofNominee = new Date(selectedEmployee.NomineeDOB);*/
+        $scope.RelationofNominee = selectedEmployee.NomineeRelation; 
         $scope.StoreCode = selectedEmployee.StoreCode;
-        $scope.PFAccount = selectedEmployee.PFAccount;
-   /*     $scope.LeavingDate = new Date(selectedEmployee.LeavingDate);*/
+        $scope.PFAccount = selectedEmployee.PFAccount; 
         $scope.IsActive = selectedEmployee.IsActive == true ? '1' : '0';
         $scope.PANCardFilePath = selectedEmployee.PANCardFilePath;
         $scope.Cheque_Passbook_FilePath = selectedEmployee.Cheque_Passbook_FilePath;
@@ -1414,29 +1455,45 @@
         $scope.Photos_2_FilePath = selectedEmployee.Photos_2_FilePath;
         $scope.Photos_3_FilePath = selectedEmployee.Photos_3_FilePath;
         $scope.Photos_4_FilePath = selectedEmployee.Photos_4_FilePath; 
-
-        // Wage & Compliance
+         
         $scope.MinimumWageCategory = selectedEmployee.MinimumWageCategory;
         $scope.WageType = selectedEmployee.WageType;
         $scope.WageDisbursementMode = selectedEmployee.WageDisbursementMode;
-
-        // Safety & Security
+         
         $scope.PPE = selectedEmployee.PPE;
         $scope.PPEType = selectedEmployee.PPEType;
         $scope.SafetyTrainingStatus = selectedEmployee.SafetyTrainingStatus;
         $scope.SiteInductionStatus = selectedEmployee.SiteInductionStatus;
         $scope.PoliceVerificationStatus = selectedEmployee.PoliceVerificationStatus;
+         
+        $scope.TempIDStatus = selectedEmployee.TempIDStatus; 
 
-        // Temporary ID
-        $scope.TempIDStatus = selectedEmployee.TempIDStatus;
         $scope.TempIDNumber = selectedEmployee.TempIDNumber;
+        $scope.TempIDDate = convertToDate(selectedEmployee.TempIDDate);
+        $scope.PermanentIDDate = convertToDate(selectedEmployee.PermanentIDDate);
+
+
+
+        $scope.MedicalCertificateFilePath = selectedEmployee.MedicalCertificate_FilePath;
+        $scope.MedicalStatus = selectedEmployee.MedicalStatus;
+        $scope.NextMedicalDue = convertToDate(selectedEmployee.NextMedicalDue);
+        $scope.FitnessTypes = selectedEmployee.FitnessTypes; 
+
+
+        $scope.State = selectedEmployee.State;
+        $scope.City = selectedEmployee.City;
+        $scope.Pincode = selectedEmployee.Pincode;
+        $scope.VendorName = selectedEmployee.VendorName;
+        $scope.VendorCode = selectedEmployee.VendorCode;
+
+      
        
           $('#txtTempIDDate').val(selectedEmployee.TempIDDate);
-        // Permanent ID
+ 
         $scope.PermanentIDStatus = selectedEmployee.PermanentIDStatus;
         $scope.PermanentIDNumber = selectedEmployee.PermanentIDNumber;
         $('#txtPermanentIDDate').val(selectedEmployee.PermanentIDDate);
-
+        $scope.EmployeePhotos = selectedEmployee.EmployeePhotos,
         $scope.Transport = selectedEmployee.Transport,
             $scope.RouteId= selectedEmployee.RouteId,
             $scope.openRoutetransport();
@@ -1580,6 +1637,36 @@
             console.error("Buttons extension not loaded");
         }
     };
+
+    function formatDate(dateValue) {
+
+        if (!dateValue || dateValue === "" || dateValue === "null" || dateValue === "undefined") {
+            return "";
+        }
+        if (typeof dateValue === "string" &&
+            /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateValue.trim())) {
+
+            var parts = dateValue.trim().split("/");
+
+            return ("0" + parts[0]).slice(-2) + "/" +
+                ("0" + parts[1]).slice(-2) + "/" +
+                parts[2];
+        }
+
+        // ISO Date or JS Date
+        var d = new Date(dateValue);
+
+        if (isNaN(d.getTime())) {
+            return "";
+        }
+
+        var day = ("0" + d.getDate()).slice(-2);
+        var month = ("0" + (d.getMonth() + 1)).slice(-2);
+        var year = d.getFullYear();
+
+        return day + "/" + month + "/" + year;
+    }
+
     $scope.ExportToCSV = function () {
         if (!$scope.EmployeeList || $scope.EmployeeList.length === 0) {
             alert("No data to export");
@@ -1593,8 +1680,59 @@
             "Employee Name",
             "Designation",
             "D.O.J",
-            "Department",
-            "Compliance Status"
+            "Department",         
+            "Document Status",
+            "Father/Husband Name",
+            "Gender",
+            "Marital Status",
+            "Date Of Birth",
+            "Present Address",
+            "Permanemt Address ",
+            "Adhar CardNumber",
+            "PAN Number",
+            "Mobile Number",
+            "Alternative Mobile Number",
+            "Employee EmailID",
+            "Bank AccountNumber",
+            "Bank IFSCCode",
+            "Previous UAN",
+            "Previous ESI",
+            "Gross Salary",
+            "Nominee Name",
+            "Nominee Address",
+            "Nominee Relation",
+            "Nominee DOB",
+            "PF Account",
+            "Leaving Date",
+            "Is Transfer",
+            "Minimum WageCategory",
+            "Wage Type",
+            "Wage Disbursement Mode",
+            "PPE",
+            "PPEType",
+            "Safety Training Status",
+            "Site Induction Status",
+            "Police Verification Status",
+            "TempID Status",
+            "TempID Number",
+            "TempID Date",
+            "PermanentID Status",
+            "PermanentID Number",
+            "PermanentID Date",
+            "Party Name",
+            "Transport",
+            "RouteId",
+            "Issue Date",
+            "Valid Till",
+            "Blood Group",
+            "Camp Number",
+            "Site Name", 
+            "Assign Color",
+            "Vendor Name",
+            "Route Name",
+            "State",
+             "City",
+              "Pincode"
         ];
         csv.push(headers.join(","));
         angular.forEach($scope.EmployeeList, function (item, index) {
@@ -1604,10 +1742,74 @@
                 item.RefEmployeeCode || "",
                 item.EmployeeName || "",
                 item.EmployeeDesignation || "",
-                item.DisplayDOJ || "",
+                formatDate(item.DisplayDOJ) || "",
                 item.EmployeeDepartment || "",
-                item.DocumentStatus || ""
+                item.DocumentStatus || "",
+                item.Father_Husband_Name || "",
+                item.Gendar || "",
+                item.MaritalStatus || "",
+                formatDate(item.DateOfBirth) || "",
+                item.PresentAddress || "",
+                item.PermanemtAddress || "",
+
+                // Text format columns
+                '="' + (item.AdharCardNumber || '') + '"',
+                '="' + (item.PANNumber || '') + '"',
+                '="' + (item.MobileNumber || '') + '"',
+                '="' + (item.AlternativeMobileNumber || '') + '"',
+
+                item.EmployeeEmailID || "",
+
+                '="' + (item.BankAccountNumber || '') + '"',
+                '="' + (item.BankIFSCCode || '') + '"',
+                '="' + (item.PreviousUAN || '') + '"',
+                '="' + (item.PreviousESI || '') + '"',
+                '="' + (item.GrossSalary || '') + '"',
+                item.NomineeName || "",
+                item.NomineeAddress || "",
+                item.NomineeRelation || "",
+                formatDate(item.NomineeDOB) || "",
+                '="' + (item.PFAccount || '') + '"',
+                formatDate(item.LeavingDate) || "",
+                item.IsTransfer || "",
+                item.MinimumWageCategory || "",
+                item.WageType || "",
+                item.WageDisbursementMode || "",
+                item.PPE || "",
+                item.PPEType || "",
+                item.SafetyTrainingStatus || "",
+                item.SiteInductionStatus || "",
+                item.PoliceVerificationStatus || "",
+                item.TempIDStatus || "",
+
+                '="' + (item.TempIDNumber || '') + '"',
+
+                formatDate(item.TempIDDate) || "",
+                item.PermanentIDStatus || "",
+
+                '="' + (item.PermanentIDNumber || '') + '"',
+
+                formatDate(item.PermanentIDDate) || "",
+                item.PartyName || "",
+                item.Transport || "",
+                item.RouteId || "",
+                formatDate(item.IssueDate) || "",
+                formatDate(item.ValidTill) || "",
+                item.BloodGroup || "",
+                item.CampNumber || "",
+                item.SiteName || "",
+                item.AssignColor || "",
+                item.VendorName || "",
+                item.RouteName || "",
+                item.State || "",
+                item.City || "",
+                item.Pincode || ""
             ];
+            csv.push(
+                row.map(function (value) {
+                    return '"' + String(value || '').replace(/"/g, '""') + '"';
+                }).join(",")
+            );
             csv.push(row.join(","));
         });
         var csvString = csv.join("\n");
@@ -1683,7 +1885,8 @@
             return;
         }
         var html = `<html><head><title>Print Employee Master</title><style>table { width: 100%; border-collapse: collapse; }th, td { border: 1px solid black; padding: 8px; font-size: 12px; text-align:center; }
-                th { background: #f2f2f2; }</style></head><body><h3 style="text-align:center;">Employee Master</h3><table><thead><tr><th>Sr.No</th><th>Employee Code</th>
+                th { background: #f2f2f2; }</style></head><body><h3 style="text-align:center;">Employee Master</h3><table><thead><tr>
+                        <th>Sr.No</th><th>Employee Code</th>
                         <th>Ref Employee Code</th><th>Employee Name</th>
                         <th>Designation</th><th>D.O.J</th>
                         <th>Department</th><th>Compliance Status</th>
@@ -1715,7 +1918,7 @@
     };
     $scope.UploadDoc = function (doc) {
 
-        // file input trigger karo (hidden input use karo)
+        
         $scope.DocumentId = doc;
 
         document.getElementById("fileUpload").click();
@@ -1752,7 +1955,7 @@
                     if (data) {
                         showMsgBox('999', 'Alert', 'Save Successfully', 'warning', 'btn-warning');
 
-                        // refresh list
+                     
                         $scope.BindEmpComplianceDoc($scope.EmCode);
                     }
 

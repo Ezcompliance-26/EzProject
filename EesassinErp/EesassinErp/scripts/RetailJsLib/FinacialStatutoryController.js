@@ -335,6 +335,7 @@
 
     }
     $scope.BindSearch = function () {
+		$scope.Showing = "All";
         var collectionobj = {};
         collectionobj.Action = 11;
         collectionobj.Id = LoginId;
@@ -347,8 +348,7 @@
         getData.then(function (response) {
             $scope.complianceRows = response.data.Result;
             $scope.AllRows = response.data.Result;
-            angular.forEach($scope.complianceRows, function (row)
-            {
+            angular.forEach($scope.complianceRows, function (row) {
                 if (!row.IsVerified || row.IsVerified === "null" || row.IsVerified === "undefined") {
                     row.TempIsVerified = "";
                 } else {
@@ -363,7 +363,7 @@
         //$scope.allowverifyflag = masterList[0].VerifyFlag;
         //console.log("File Permission", $scope.allowupdfile);
         //console.log("Verify Permission", $scope.allowverifyflag);
-        //console.log("Permission",masterList);
+        //console.log("Permission", masterList);
         //console.log("Menu Permission", JSON.parse(sessionStorage.getItem("MenuPermission")));
     }
     $scope.SelectedAct = 'Act';
@@ -434,7 +434,8 @@
         });
 
         $scope.TotalComplied = complied;
-        $scope.TotalNonComplied = nonComplied + pending;
+        $scope.TotalNonComplied = nonComplied  ;
+        $scope.TotalPending = pending;
         $scope.TotalDelayComplied = delayComplied;
         $scope.TotalNonApplicable = nonApplicable;
         $scope.TotalVerified = verified;
@@ -442,7 +443,6 @@
     };
 
     $scope.$watch('Search', function () {
-
         if (!$scope.AllRows) return;
 
         var filteredData = $scope.AllRows.filter(function (row) {
@@ -480,7 +480,6 @@
     //};
 
     $scope.globalSearch = function (row) {
-
         if (!$scope.Search) return true;
 
         var searchText = $scope.Search.toString().toLowerCase();
@@ -525,13 +524,18 @@
             (row.STATE_NM && row.STATE_NM.toLowerCase().includes(searchText)) ||
             (dueDateFormatted.includes(searchText)) ||
             (actualDateFormatted.includes(searchText)) ||
-            ((row.IsVerified === 'Clarify' ? 'Remarks' : (row.IsVerified || '')).toLowerCase().includes(searchText))||
+            (
+                (row.IsVerified !== 'Verified') &&
+                (row.IsVerified === 'Clarify' ? 'Remarks' : (row.IsVerified || ''))
+                    .toLowerCase()
+                    .includes(searchText)
+            ) ||
             (row.CStatus && row.CStatus.toLowerCase().includes(searchText)) ||
             (row.DelayDays && row.DelayDays.toString().includes(searchText)) ||
             /* (row.CreateOn && row.CreateOn.toString().toLowerCase().includes(searchText)) ||*/
             (CreatedDateFormatted.includes(searchText)) ||
-            (row.IsVerified && row.IsVerified.toLowerCase().includes(searchText)) ||
-            (row.VRemark && row.VRemark.toLowerCase().includes(searchText))
+            (row.IsVerified && row.IsVerified.toLowerCase().includes(searchText)) 
+           /* (row.VRemark && row.VRemark.toLowerCase().includes(searchText))*/
         );
     };
 
@@ -638,12 +642,12 @@
                 else if (isVerified === "Verified" && selected === "Verified") {
                     displayStatus = 'Verified';
                 }
-               
-             
-                else if (isVerified === "Clarify" && selected ==="Remarks") {
+
+
+                else if (isVerified === "Clarify" && selected === "Remarks") {
                     displayStatus = 'Remarks';
                 }
-                
+
                 else {
                     displayStatus = ($scope.statusDisplayMap && $scope.statusDisplayMap[status])
                         ? $scope.statusDisplayMap[status]
@@ -658,7 +662,7 @@
         $scope.DisplayRows = filtered;
 
         // ✅ assign after filter
-       
+
 
         // ✅ Filter by Act
         if ($scope.SelectedAct && $scope.SelectedAct !== 'Act') {
@@ -693,7 +697,6 @@
             ...new Set(
 
                 filtered.map(function (row) {
-                    debugger                
                     var status = (row.CStatus || '').toString().trim();
                     var isVerified = (row.IsVerified || '').toString().trim();
 
@@ -715,7 +718,7 @@
                             : status;
                     }
 
-                    
+
 
                     return displayStatus;
                 })
@@ -761,7 +764,7 @@
         collectionobj.Action = 9;
         collectionobj.Id = Id;
 
-        var getData = myService.methode('POST',"../Retail/CategoryStatutory",
+        var getData = myService.methode('POST', "../Retail/CategoryStatutory",
             '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             var result = (response.data && response.data.Result && response.data.Result.length > 0)
@@ -1031,10 +1034,10 @@
                 <td>${row.STATE_NM || ''}</td>
                 <td>${formatDate(row.DueDate)}</td>
                 <td>${(row.CStatus === "NonComplied") ? 'Non-Complied' :
-                    (row.CStatus === "NonApplicable") ? 'Non-Applicable' :
-                        (row.CStatus === "Complied") ? 'Complied' :
-                            (row.CStatus === "Delaycomplied") ? 'Delay-Complied' :
-                                ''}</td>
+                        (row.CStatus === "NonApplicable") ? 'Non-Applicable' :
+                            (row.CStatus === "Complied") ? 'Complied' :
+                                (row.CStatus === "Delaycomplied") ? 'Delay-Complied' :
+                                    ''}</td>
                 <td>${formatDate(row.ActualSubmissionDate)}</td>
                 <td>${row.DelayDays || '0'}</td>
                 <td>${row.UploadFile ? 'Uploaded' : 'Not Uploaded'}</td>
@@ -1151,22 +1154,21 @@
     };
 
     $scope.AfterverifyRecord = function (row) {
-        console.log(row);
         row.IsVerified = row.TempIsVerified;
         if (!row.CStatus || !row.ActualSubmissionDate) {
-            showMsgBox("Please enter both Status  and Actual Submission Date.");
+            showMsgBox("Please Select both Status  and Actual Submission Date.");
             return;
         }
         if (!row.IsVerified && $scope.allowverifyflag === true) {
-            showMsgBox("Please enter Verified Status");
+            showMsgBox("Please Select Verification Status");
             return;
         }
-        if (row.IsVerified == '') {
-            showMsgBox("Please enter Verified Status");
+        if (row.IsVerified == '' && $scope.allowverifyflag === true) {
+            showMsgBox("Please Select Verification Status");
             return;
         }
         if (row.VRemark1 == '' && row.IsVerified == 'Clarify') {
-            showMsgBox("Please enter Remark in condition of Clarify.");
+            showMsgBox("Please Enter Remark in Condition of Remark.");
             return;
         }
 
@@ -1248,8 +1250,8 @@
                 if ($scope.SelectedStatus === 'Pending') {
                     matchStatus = !row.CStatus || row.CStatus === '';
                 }
-                else if ($scope.SelectedStatus ==='Verified') {
-                    matchStatus = row.IsVerified ==='Verified';
+                else if ($scope.SelectedStatus === 'Verified') {
+                    matchStatus = row.IsVerified === 'Verified';
                 }
                 else if ($scope.SelectedStatus === 'Clarify') {
                     matchStatus = row.IsVerified === 'Remarks';
@@ -1316,6 +1318,11 @@
         });
     }
     $scope.Getalldata = function () {
+		
+		 if ($scope.Showing === "All") {
+			 $scope.reset();
+            $scope.Showing = "10";
+			$scope.showLoader();
         var collectionobj = {};
         collectionobj.Action = 13;
         collectionobj.Id = LoginId;
@@ -1355,7 +1362,20 @@
                 row.TempIsVerified = row.IsVerified;
             });
             $scope.updateTilesCount($scope.complianceRows);
-        });
+			 angular.forEach($scope.complianceRows, function (row) {
+                    if (!row.IsVerified || row.IsVerified === "null" || row.IsVerified === "undefined") {
+                        row.TempIsVerified = "";
+                    } else {
+                        row.TempIsVerified = row.IsVerified;
+                    }
+                });
+			 $scope.hideLoader();
+		 });
+		 }
+        else {
+
+            $scope.BindSearch();
+        }
     }
 
     $scope.newexportdata = function () {
@@ -1373,22 +1393,26 @@
 
             $scope.AllRows = response.data.Result;
 
-            return response.data.Result; 
+            return response.data.Result;
         });
     };
     // New code added work from home
     $scope.AddEventNewverifyRecord = function (event) {
         event.IsVerified = event.TempIsVerified;
         if (!event.CStatus || !event.ActualSubmissionDate) {
-            showMsgBox("Please enter both Status  and Actual Submission Date.");
+            showMsgBox("Please Select both Status  and Actual Submission Date.");
             return;
         }
-        if (event.TempIsVerified == '') {
-            showMsgBox("Please enter Verified Status");
+        if (!event.IsVerified && $scope.allowverifyflag === true) {
+            showMsgBox("Please Select Verification Status");
+            return;
+        }
+        if (event.IsVerified == '' && $scope.allowverifyflag === true) {
+            showMsgBox("Please Select Verification Status");
             return;
         }
         if (event.VRemark1 == '' && event.IsVerified == 'Clarify') {
-            showMsgBox("Please enter Remark in condition of Clarify.");
+            showMsgBox("Please Enter Remark in Condition of Remark.");
             return;
         }
         if (isValidate()) {
@@ -1410,6 +1434,7 @@
             formData.append('IsVerified', event.IsVerified);
 
             formData.append('CACId', $scope.CACEventId);
+            formData.append('Id', event.CSIID);
             formData.append('Action', '3');
             $http.post("../Retail/IUDFinancialStatutory", formData, {
                 transformRequest: angular.identity,
@@ -1419,6 +1444,7 @@
                 $scope.selectedEvent = {};
                 //$scope.selectedEvent1 = {};
                 //$scope.CACEventId = '';
+                console.log("Flag",response.data.Result);
                 showMsgBox(response.data.Result);
                 $scope.getEventDetails($scope.CACEventId);
             }, function (error) {
@@ -1443,7 +1469,6 @@
         if (row.Frequency !== 'Event') {
             return;
         }
-        console.log(row);
         var modalEl = document.getElementById('eventModal');
         //$scope.selectedEvent1 = [angular.copy(row)];
         //console.log($scope.selectedEvent1);
@@ -1458,11 +1483,11 @@
         obj.openthis = "0";
         obj.CreateOn = "";
         obj.VRemark = "";
-
+        obj.VRemark1 = "";
         $scope.selectedEvent1 = [obj];
         $scope.CACEventId = row.CACId;
         $scope.getEventDetails(row.CACId);
-        console.log($scope.selectedEvent1, $scope.CACEventId);
+        console.log(row.CACId);
         var modalInstance = bootstrap.Modal.getInstance(modalEl);
         if (!modalInstance) {
             modalInstance = new bootstrap.Modal(modalEl);
@@ -1470,65 +1495,6 @@
         modalInstance.show();
     };
 
-    //$scope.openEventModal = function (row) {
-    //    if (row.Frequency !== 'Event') return;
-
-    //    var modalEl = document.getElementById('eventModal');
-
-    //    var collectionobj = {};
-    //    collectionobj.Action = 1;
-    //    collectionobj.Id = LoginId;
-    //    collectionobj.State = $scope.State;
-    //    collectionobj.Month = $scope.Month;
-    //    collectionobj.Year = $scope.Year;
-    //    collectionobj.CACId = row.CACId;
-    //    var getData = myService.methode(
-    //        'POST',
-    //        "../Retail/SearchFinacialStatutoryEvent",
-    //        '{obj:' + JSON.stringify(collectionobj) + '}'
-    //    );
-    //    getData.then(function (response) {
-    //        let result = response.data.Result;
-    //        if (result && result.length > 0) {
-    //            console.log(result);
-    //            $scope.selectedEvent1 = result.map(function (x) {
-    //                return {
-    //                    Act: x.Act,
-    //                    ComplianceName: x.ComplianceName,
-    //                    Month: x.Month,
-    //                    STATE_NM: x.STATE_NM,
-    //                    DueDate: x.DueDate,
-    //                    CStatus: x.CStatus,
-    //                    ActualSubmissionDate: x.ActualSubmissionDate,
-    //                    DelayDays: x.DelayDays,
-    //                    UploadFile: null,
-    //                    CreateOn: x.CreateOn,
-    //                    VRemark1: x.VRemark1,
-    //                    TempIsVerified: x.IsVerified,
-    //                    IsVerified: x.IsVerified,
-    //                    openthis: x.openthis
-    //                };
-    //            });
-
-    //        } else {
-    //            $scope.selectedEvent1 = [angular.copy(row)];
-    //        }
-
-    //        console.log("Modal Data:", $scope.selectedEvent1);
-    //        var modalInstance = bootstrap.Modal.getInstance(modalEl);
-    //        if (!modalInstance) {
-    //            modalInstance = new bootstrap.Modal(modalEl);
-    //        }
-    //        modalInstance.show();
-
-    //    }, function (error) {
-    //        console.error("Error:", error);
-    //        $scope.selectedEvent1 = [angular.copy(row)];
-
-    //        var modalInstance = new bootstrap.Modal(modalEl);
-    //        modalInstance.show();
-    //    });
-    //};
 
 
     $scope.addEventRow = function () {
@@ -1543,7 +1509,9 @@
         newRow.CreateOn = '';
         newRow.TempIsVerified = '';
         newRow.VRemark = '';
+		 newRow.VRemark1 = '';
         newRow.openthis = '';
+        newRow.CSIID = '';
         $scope.selectedEvent1.push(newRow);
     };
     $scope.getEventDetails = function (CACId) {
@@ -1556,13 +1524,11 @@
             Year: $scope.Year,
             CACId: CACId
         };
-        myService.methode('POST',"../Retail/SearchFinacialStatutoryEvent",{ obj: collectionobj }   // cleaner than string JSON
+        myService.methode('POST', "../Retail/SearchFinacialStatutoryEvent", { obj: collectionobj }   // cleaner than string JSON
         ).then(function (response) {
-
             let result = response.data.Result;
-
+            console.log("event datat",result);
             if (result && result.length > 0) {
-                console.log("Show Record",result);
                 $scope.selectedEvent1 = result.map(function (x) {
                     return {
                         Act: x.Act,
@@ -1587,7 +1553,7 @@
                 });
 
             } else {
-                
+
             }
 
         }, function (error) {
@@ -1606,6 +1572,15 @@
         $scope.selectedRemark1 = '';
         $scope.HeaderRemark1 = "";
         $('#remarkModal1').modal('hide');
+    };
+	
+	    $scope.downloadFile = function (url) {
+        var link = document.createElement('a');
+        link.href = url;
+        link.download = '';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 }
 

@@ -360,8 +360,8 @@
 
 <div id="communicationVendorPage" class="px-4 py-2">
 
-   
-    
+
+
 
 
 
@@ -388,9 +388,9 @@
                             <option value="" style="font-size: 12px;">All Vendor</option>
                             <option ng-repeat="x in VendorList" value="{{x.PartyId}}">{{x.PartyName}}</option>
                         </select>
-                    </div> 
-                 
-                    
+                    </div>
+
+
 
                 </div>
 
@@ -420,7 +420,7 @@
             </div>
 
             <!-- Table wrapper -->
-            <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3"  >
+            <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3">
                 <div class="table-responsive">
                     <table class="table table-sm mb-0 small-table">
                         <thead>
@@ -449,12 +449,13 @@
                                 <td>{{x.InMonthName}}</td>
                                 <td>{{x.SiteName}}</td>
                                 <td>{{x.Location}}</td>
-                                <td>{{ x.Status === 1 ? 'Complete' :     (x.Status === 0 ? 'Pending' :       (x.Status == null || x.Status === '' ? 'Draft' : 'Draft')) }}
+                                <td>
+                                    {{ x.Status }}
                                 </td>
                                 <td>{{x.InvoiceNo}}</td>
                                 <td>{{x.CreatedOn}}</td>
                                 <td>{{x.UpdatedON}}</td>
-                                <td>{{x.DayLeft}}</td> 
+                                <td>{{x.DayLeft}}</td>
                                 <td>
                                     <button class="btn btn-sm btn-submit px-3" data-bs-toggle="modal" data-bs-target="#submitComplianceModal" ng-click="GetClientDocument(x.RegInvoiceNo,x.ConversationId)">View Document</button>
                                 </td>
@@ -492,7 +493,7 @@
                     <div class="modal-body p-8" style="background: var(--card-bg)">
 
                         <div class="d-flex justify-content-end mb-2">
-                           
+
                             <button class="btn btn-sm export-btn" ng-click="downloadAll()">
                                 <i class="bi bi-download me-1"></i>
                                 Download All
@@ -508,7 +509,7 @@
                                             <th style="width:40px;">
                                                 <input type="checkbox" />
                                             </th>
-                                            <th>S. No</th> 
+                                            <th>S. No</th>
                                             <th>Document Name</th>
                                             <th>Type</th>
                                             <th>Frequency</th>
@@ -531,7 +532,7 @@
                                             <td>{{xx.Frequency}}</td>
                                             <td>{{xx.Mandatory}}</td>
                                             <td>{{xx.FormatType}}</td>
-                                            <td>{{xx.Note}}</td> 
+                                            <td>{{xx.Note}}</td>
                                             <td>
                                                 <button ng-if="xx.DocumentFile" class="btn btn-sm"
                                                         ng-click="ViewFileC(xx.DocumentFile)">
@@ -543,10 +544,26 @@
                                                     <i class="bi bi-download"></i>
                                                 </button>
                                             </td>
-                                            <td> 
-                                                {{xx.Status}}
+                                            <td>
+                                                <p style="color:green;" ng-if="xx.APercentage == 'Save without Error, Accuracy 100 %.'">
+                                                    Save without Error, Accuracy 100 %.
+
+                                                    <i class="bi bi-info-circle"
+                                                       style="cursor:pointer; margin-left:8px; color:blue;"
+                                                       ng-click="showDetailPopup(xx.Detail)">
+                                                    </i>
+                                                </p>
+
+                                                <p style="color:red;" ng-if="xx.APercentage != 'Save without Error, Accuracy 100 %.'">
+                                                    {{xx.APercentage}}
+
+                                                    <i class="bi bi-info-circle" ng-if="xx.APercentage"
+                                                       style="cursor:pointer; margin-left:8px; color:blue;"
+                                                       ng-click="showDetailPopup(xx.Detail)">
+                                                    </i>
+                                                </p>
                                             </td>
-                                          
+
                                         </tr>
 
 
@@ -584,6 +601,33 @@
         </div>
 
 
+    </div>
+    <div class="modal fade" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Validation Detail</h4>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+                </div>
+
+                <div class="modal-body" ng-bind-html="SelectedDetail">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-danger"
+                            data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
 

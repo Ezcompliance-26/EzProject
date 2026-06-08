@@ -4,12 +4,12 @@ document.addEventListener("click", function (e) {
         e.preventDefault();
 
         // You can update content dynamically here if needed:
-        document.getElementById("cd_rule").innerText = "Foreign Exchange Rule XYZ";
-        document.getElementById("cd_section").innerText = "Section 12(3)";
-        document.getElementById("cd_form").innerText = "FC-GPR";
-        document.getElementById("cd_risk").innerText = "High";
-        document.getElementById("cd_description").innerText =
-            "To report the financial performance of overseas Joint Ventures (JV) or Wholly Owned Subsidiaries (WOS)...";
+        //document.getElementById("cd_rule").innerText = "Foreign Exchange Rule XYZ";
+        //document.getElementById("cd_section").innerText = "Section 12(3)";
+        //document.getElementById("cd_form").innerText = "FC-GPR";
+        //document.getElementById("cd_risk").innerText = "High";
+        //document.getElementById("cd_description").innerText =
+        //    "To report the financial performance of overseas Joint Ventures (JV) or Wholly Owned Subsidiaries (WOS)...";
 
         const modal = new bootstrap.Modal(document.getElementById("complianceDetailsModal"));
         modal.show();

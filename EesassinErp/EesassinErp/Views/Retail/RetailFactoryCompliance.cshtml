@@ -1,7 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "Secretarial Statutory Internal";
-    Layout = "~/Views/Common/_RetailLayout.cshtml";
+    Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
 
 <script src="~/scripts/RetailJsLib/FactoryStatutoryController.js?Ver=@ViewBag.Version"></script>
@@ -17,6 +17,14 @@
 @*<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="~/scripts/angular.min.js"></script>*@
 <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<link href="~/compliance/css/all.css" rel="stylesheet" />
+<link href="~/compliance/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.min.css" rel="stylesheet" />
+<link href="~/compliance/css/custom_theme.css" rel="stylesheet" />
+<link href="~/compliance/css/colorTheme/default.css" rel="stylesheet" />
+<link href="~/compliance/css/draggle.css" rel="stylesheet" />
+<link href="~/compliance/css/responsive.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.css" rel="stylesheet" />
 <script>
     app.directive('fileModel', ['$parse', function ($parse) {
         return {
@@ -302,7 +310,7 @@
 
                     <div class="dashboard">
 
-                      
+
 
 
 
@@ -631,7 +639,7 @@
 
                 <button type="button" class="close" ng-click="closeTileModal()">&times;</button>
             </div>
-          
+
             <div class="modal-body" style="background: #fff; padding: 10px;">
                 <!-- Table -->
                 <div style="max-height: 700px; overflow-y: auto;">
@@ -664,17 +672,17 @@
                                 <td>{{row.STATE_NM}}</td>
                                 <td>{{row.DueDate}}</td>
                                 @*<td>
-                                <select class="form-control no-print"
-                                        ng-model="row.CStatus"
-                                        ng-disabled="IsExecuter!='Executer' || row.Flag=='1'"
-                                        ng-change="updateTileCounts()">
-                                    <option value="">Select</option>
-                                    <option value="Complied">Complied</option>
-                                    <option value="Non Complied">Non Complied</option>
-                                    <option value="Delay complied">Delay complied</option>
-                                    <option value="Non-Applicable">Non-Applicable</option>
-                                </select>
-                            </td>*@
+                                        <select class="form-control no-print"
+                                                ng-model="row.CStatus"
+                                                ng-disabled="IsExecuter!='Executer' || row.Flag=='1'"
+                                                ng-change="updateTileCounts()">
+                                            <option value="">Select</option>
+                                            <option value="Complied">Complied</option>
+                                            <option value="Non Complied">Non Complied</option>
+                                            <option value="Delay complied">Delay complied</option>
+                                            <option value="Non-Applicable">Non-Applicable</option>
+                                        </select>
+                                    </td>*@
 
                                 <td>{{row.CStatus}}</td>
                                 <td>

@@ -76,11 +76,16 @@ namespace DAL
                 new SqlParameter("@IsActive", obj.IsActive),
                 new SqlParameter("@IsDeleted", obj.IsDeleted),
                 new SqlParameter("@StoreLimit", obj.StoreLimit),
-                 new SqlParameter("@UserLimit", obj.UserLimit), 
+                 new SqlParameter("@UserLimit", obj.UserLimit),
+                    new SqlParameter("@State", obj.State),
+                       new SqlParameter("@City", obj.City),
                 new SqlParameter("@ValidTo", obj.ValidTo),
                    new SqlParameter("@PartyDate", obj.PartyDate),
                 new SqlParameter("@Industry", obj.Industry),
-                  new SqlParameter("@MonthExpired", obj.MonthExpired), ///Added by shipra 
+                  new SqlParameter("@MonthExpired", obj.MonthExpired), ///Added by shipra
+  new SqlParameter("@Contractorlimit", obj.Contractorlimit), ///Added by Aadarsh dated 29/04/2026 
+                    new SqlParameter("@Sitelimit", obj.Sitelimit), //Added by Aadarsh dated 29/04/2026 
+                     new SqlParameter("@Startdt", obj.Startdt), //Added by Aadarsh dated 29/04/2026 				  
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("EVM.USP_TBL_PartyMaster", CommandType.StoredProcedure, param.ToArray()));
@@ -173,6 +178,13 @@ namespace DAL
                 new SqlParameter("@ATTRIBUTE6", obj.Attribute6),
                 new SqlParameter("@IsActive", obj.IsActive),
                 new SqlParameter("@IsDeleted", obj.IsDeleted),
+
+                  new SqlParameter("@Drinkingwater", obj.Drinkingwater),
+                    new SqlParameter("@Washroom", obj.Washroom),
+                      new SqlParameter("@RestShelter", obj.RestShelter),
+                        new SqlParameter("@FirstAid", obj.FirstAid),
+                             new SqlParameter("@TrainerName", obj.TrainerName),
+
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("EVM.USP_TBL_SiteManager", CommandType.StoredProcedure, param.ToArray()));

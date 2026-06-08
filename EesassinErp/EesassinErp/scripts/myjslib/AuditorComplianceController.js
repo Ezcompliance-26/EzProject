@@ -652,14 +652,15 @@
                 <thead>
                     <tr>
                         <th>SNo</th>
-                        <th>Invoice No</th>
-                        <th>Client</th>
-                        <th>Vendor User</th>
-                        <th>Auditor</th>
+                        <th>Invoice No/Unique No</th>
+                        <th>Location(Site)</th>
+                        <th>Contractor</th>
+
                         <th>Month</th>
                         <th>Status</th>
-                        <th>Final Submit</th>
-                        <th>Generated On</th>
+                        <th>Preliminary Generated On</th>
+                        <th>Final Report Generated on</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -672,11 +673,11 @@
                 <td>${x.VendorInvNum || ''}</td>
                 <td>${x.Client || ''}</td>
                 <td>${x.VendorUser || ''}</td>
-                <td>${x.Auditor || ''}</td>
                 <td>${x.MonthName || ''}</td>
                 <td>${x.ComplianceStatus || ''}</td>
-                <td>${x.FinalSubmit || ''}</td>
                 <td>${x.GeneratedOn || ''}</td>
+                <td>${x.FinalSubmit || ''}</td>
+               
             </tr>
         `;
         });
@@ -693,9 +694,6 @@
         newWin.document.close();
         newWin.print();
     };
-
-
-
     $scope.exportCompianceoCSV = function () {
 
         var csv = [];
@@ -703,14 +701,15 @@
         // Header
         var headers = [
             "SNo",
-            "Invoice No",
-            "Client",
-            "Vendor User",
-            "Auditor",
+            "Invoice No/Unique No",
+            "Location(Site)",
+            "Contractor",
+            /*"Auditor",*/
             "Month",
             "Status",
-            "Final Submit",
-            "Generated On"
+            "Preliminary Generated On",
+            "Final Report Generated on",
+            
         ];
 
         csv.push(headers.join(","));
@@ -723,7 +722,6 @@
                 '"' + (x.VendorInvNum || '') + '"',
                 '"' + (x.Client || '') + '"',
                 '"' + (x.VendorUser || '') + '"',
-                '"' + (x.Auditor || '') + '"',
                 '"' + (x.MonthName || '') + '"',
                 '"' + (x.ComplianceStatus || '') + '"',
                 '"' + (x.FinalSubmit || '') + '"',
@@ -745,4 +743,5 @@
         link.click();
         document.body.removeChild(link);
     };
+
 }

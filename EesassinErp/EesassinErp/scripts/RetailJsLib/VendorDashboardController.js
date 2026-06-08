@@ -2,8 +2,96 @@
 
     $scope.Editetime = '';
 
+  
+    $scope.Contractorlimit = function (type) {
+        var collectionobj = {};
+        collectionobj.ActionType = 19;
+        collectionobj.Id = MapId;
+        collectionobj.StoreCode = LoginId
+        var getData = myService.methode('POST', "../RetailSection/GetStoreMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            $scope.ContLimit = response.data.Result[0].ContractorLimit;
+            if ($scope.ContLimit <= 0) {
+                showMsgBox('Contractor Limit Exceed')
+            }
+            else { $scope.AddParty();}
+               
+        });
+    }
+    $scope.VUserlimit = function (type) {
+        var collectionobj = {};
+        collectionobj.ActionType = 19;
+        collectionobj.Id = MapId;
+        collectionobj.StoreCode = LoginId
+        var getData = myService.methode('POST', "../RetailSection/GetStoreMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            $scope.ULimit = response.data.Result[0].ULimit;
+            if ($scope.ULimit <= 0) {
+                showMsgBox('User Limit Exceed')
+            }
+            else { $scope.SaveUser(); }
+
+        });
+    }
+
+    $scope.Sitelimit = function (type) {
+        var collectionobj = {};
+        collectionobj.ActionType = 19;
+        collectionobj.Id = MapId;
+        collectionobj.StoreCode = LoginId
+        var getData = myService.methode('POST', "../RetailSection/GetStoreMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            $scope.SiteLimit = response.data.Result[0].SiteLimit;
+            if ($scope.SiteLimit <= 0) {
+                showMsgBox('Site Limit Exceed')
+            }
+            else { $scope.AfterSave(); }
+
+        });
+    }
+
+
+  
+    
+
+     
+    
     $scope.EditVendorSite = function (item) {
         $('#btnsite').click();
+
+
+
+
+        function convertToDate(dateStr) {
+            if (!dateStr) return null;
+
+            dateStr = dateStr.replace('AM', '').replace('PM', '').trim();
+
+            var parts = dateStr.split('/');
+
+            if (parts.length === 3) {
+                var day = parseInt(parts[0], 10);
+                var month = parseInt(parts[1], 10) - 1;
+                var year = parseInt(parts[2], 10);
+
+                var d = new Date(year, month, day);
+
+                if (isNaN(d)) {
+                    console.log("Invalid Date:", dateStr);
+                    return null;
+                }
+
+                return d;
+            }
+
+            var d = new Date(dateStr);
+            if (isNaN(d)) {
+                console.log("Invalid Date:", dateStr);
+                return null;
+            }
+
+            return d;
+        }
         // 🔹 Hidden Id
         $scope.hfId = item.SiteId;
         $scope.Editetime = 1;
@@ -55,9 +143,12 @@
         // 🔹 CLRA
         $scope.CLRARC = item.CLRARC;
         $scope.CLRLIC = item.CLRLIC;
-        $scope.ValidFrom = item.ValidFrom;
-        $scope.ValidTo = item.ValidTo;
+        
+        $scope.ValidFrom = convertToDate(item.ValidFrom);
+        $scope.ValidTo = convertToDate(item.ValidTo);
 
+
+         
         // 🔹 Manpower
         $scope.Manpowertype = item.Manpowertype;
         $scope.ManPowerCount = item.ManPowerCount;
@@ -95,7 +186,11 @@
         $scope.PoliceVerification = item.PoliceVerification;
         $scope.IDCardRequired = item.IDCardRequired;
         $scope.AssignColor = item.AssignColor;
-
+        $scope.Drinkingwater =item.Drinkingwater,
+        $scope.Washroom = item.Washroom,
+            $scope.RestShelter = item.RestShelter,
+            $scope.FirstAid = item.FirstAid,
+            $scope.TrainerName = item.TrainerName,
         // 🔹 Files
         $scope.VendorFileDoc = item.VendorFileDoc;
         $scope.AdminFileDoc = item.AdminFileDoc;
@@ -209,7 +304,6 @@
         collectionobj.CreatedOn = datenew;
         collectionobj.Action = 7;
         collectionobj.Id = MapId
-        debugger;
         myService.methode(
             'POST',
             "../RetailSection/GetMaintainLog",
@@ -220,6 +314,32 @@
         });
         /*   /* $('#loadingModal').modal('hide');*/
     }
+
+    // here is create new method 
+    $scope.bindtiles = function () {
+
+        var collectionobj = {};
+        collectionobj.ActionType = 19;
+        collectionobj.Id = MapId;
+        collectionobj.StoreCode = LoginId
+        var getData = myService.methode('POST', "../RetailSection/GetStoreMaster", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+
+            $scope.AllowContractorLimit = response.data.Result[0].AllowContractorLimit;
+            $scope.FullContractorLimit = response.data.Result[0].FullContractorLimit;
+            $scope.ContractorLimit = response.data.Result[0].ContractorLimit;
+           
+            $scope.AllowUserLimit = response.data.Result[0].AllowUserLimit;
+            $scope.FullUserLimit = response.data.Result[0].FullUserLimit;
+            $scope.ULimit = response.data.Result[0].ULimit;
+
+
+            $scope.AllowSitelimit = response.data.Result[0].AllowSitelimit;
+            $scope.FullSitelimit = response.data.Result[0].FullSitelimit;
+            $scope.SiteLimit = response.data.Result[0].SiteLimit;
+            
+        });
+    };
 
     $scope.PartySearch = function () {
 
@@ -233,9 +353,10 @@
 
             $scope.VendorList = response.data.Result || []; 
             $scope.FilteredVendorList = angular.copy($scope.VendorList); 
-            UpdateCounts($scope.FilteredVendorList); 
+           /* UpdateCounts($scope.FilteredVendorList);*/  /* UpdateCounts($scope.FilteredVendorList);*/
+            
             $scope.NIndustryList = [...new Set($scope.VendorList
-                .map(x => x.IndustryName)
+                .map(x => x.PartyName)
                 .filter(x => x && x.trim() !== ""))];
 
         });
@@ -261,30 +382,38 @@
         // Check if all selected
         $scope.IsAllSelected = $scope.VendorList.every(x => x.Selected);
     };
-    $scope.SelectIndustry = function (industry) {
+    $scope.PartySelectContractor = function (industry) {
 
-        $scope.SelectedIndustry = industry;
+        $scope.SelectedContractor = industry;
 
         if (!industry) {
             $scope.FilteredVendorList = angular.copy($scope.VendorList);
-        }
-        else {
-            $scope.FilteredVendorList =
-                $scope.VendorList.filter(x => x.IndustryName == industry);
+        } else {
+            $scope.FilteredVendorList = $scope.VendorList.filter(function (x) {
+                return x.PartyName &&
+                    x.PartyName.trim().toLowerCase() ===
+                    industry.trim().toLowerCase();
+            });
         }
 
-        UpdateCounts($scope.FilteredVendorList);
+        console.log($scope.FilteredVendorList);
     };
-    function UpdateCounts(list) {
 
-        $scope.TotalVendor = list.length;
+    //function UpdateCounts(list) {
+
+    //    $scope.TotalVendor = list.length;
+    //    $scope.ActiveUser = list.filter(x => x.IsActive == "1").length;
+    //    $scope.InactiveUser = list.filter(x => x.IsActive == "0").length;
+    //} here is commeted old code 
+
+    function UpdateCounts(list) {
         $scope.ActiveUser = list.filter(x => x.IsActive == "1").length;
-        $scope.InactiveUser = list.filter(x => x.IsActive == "0").length;
+        //$scope.InactiveUser = list.filter(x => x.IsActive == "0").length;
+        $scope.InactiveUser = $scope.TotalVendor - $scope.ActiveUser;
     }
 
 
     $scope.AfterverifyAddParty = function () {
-        debugger;
         if (isValidate()) {
             $scope.showLoader();
             var collectionobj = {}; 
@@ -308,8 +437,11 @@
             collectionobj.UserLimit = $scope.UserLimit;
             collectionobj.ValidTo = $('#txtValidTo').val();
             collectionobj.Industry = $scope.NIndustryId;
+            collectionobj.Startdt = $scope.Startdt; // add new start dt dated 29/04/2026
             collectionobj.MonthExpired = $scope.MonthExpired;  
             collectionobj.IsActive = $scope.IsActive;
+            collectionobj.State = $scope.State;
+            collectionobj.City = $scope.City;
             collectionobj.PartyType = 'Vendor';
             collectionobj.ActionType = 1;
             var getData = myService.methode('POST', ("../PartyMaster/InsertUpdateDelPartyMaster"), JSON.stringify(collectionobj));
@@ -332,6 +464,7 @@
 
     $scope.ResetControl = function (flag) {
         debugger;
+        $scope.bindtiles();
         document.getElementById("btnCancel").click();
         $scope.PartyName = "";
         $scope.EmployeeId = "";
@@ -353,6 +486,115 @@
         };
 
     }
+    // here is comment old code for csv and printtable
+//    $scope.ExportVendorCSV = function () {
+
+//        var list = $scope.FilteredVendorList || [];
+
+//        if (!list.length) {
+//            alert("No data available");
+//            return;
+//        }
+
+//        var csv = "";
+//        csv += "S.No,Party Name,Email,Mobile,Contact Person,Industry,UserLimit,Status\n";
+
+//        list.forEach(function (x) {
+
+//            csv += '"' + (x.SNO || '') + '",';
+//            csv += '"' + (x.PartyName || '') + '",';
+//            csv += '"' + (x.EmailId || '') + '",';
+//            csv += '"' + (x.ContactNo || '') + '",';
+//            csv += '"' + (x.ContactPerson || '') + '",';
+//            csv += '"' + (x.IndustryName || '') + '",';
+//            csv += '"' + (x.UserLimit || '') + '",';
+//            csv += '"' + (x.IsActived || '') + '"\n';
+
+//        });
+
+//        var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+//        var link = document.createElement("a");
+//        link.href = URL.createObjectURL(blob);
+//        link.download = "PartyManagement.csv";
+//        link.click();
+//    };
+//    $scope.PrintVendorList = function () {
+
+//        var list = $scope.FilteredVendorList || [];
+//        if (!list.length) {
+//            alert("No data available");
+//            return;
+//        }
+
+//        var printWindow = window.open('', '', 'height=700,width=1000');
+
+//        var today = new Date().toLocaleString();
+
+//        var html = `
+//        <html>
+//        <head>
+//            <title>Vendor List</title>
+//            <style>
+//                body { font-family: Arial; padding: 20px; }
+//                h2 { text-align: center; margin-bottom: 5px; }
+//                .generated { text-align: right; font-size: 12px; margin-bottom: 20px; }
+//   .party { text-align: center; font-size: 13px;  }
+//                table { width: 100%; border-collapse: collapse; }
+//                th, td { border: 1px solid #000; padding: 6px; font-size: 12px; }
+//                th { background-color: #f2f2f2; }
+//            </style>
+//        </head>
+//        <body>
+//              <h2> ${MapUser}</h2> 
+// <div class="party">Party Management</div>
+//            <div class="generated">Generated On: ${today}</div>
+
+//            <table>
+//                <thead>
+//                    <tr>
+//                        <th>S.No</th>
+//                        <th>Party Name</th>
+//                        <th>Email</th>
+//                        <th>Mobile</th>
+//                        <th>Contact Person</th>
+//                        <th>Industry</th>
+//<th>UserLimit</th>
+//                        <th>Status</th>
+//                    </tr>
+//                </thead>
+//                <tbody>
+//    `;
+
+//        list.forEach(function (x) {
+//            html += `
+//            <tr>
+//                <td>${x.SNO || ''}</td>
+//                <td>${x.PartyName || ''}</td>
+//                <td>${x.EmailId || ''}</td>
+//                <td>${x.ContactNo || ''}</td>
+//                <td>${x.ContactPerson || ''}</td>
+//                <td>${x.IndustryName || ''}</td>
+//   <td>${x.UserLimit || ''}</td>
+//                <td>${x.IsActived || ''}</td>
+//            </tr>
+//        `;
+//        });
+
+//        html += `
+//                </tbody>
+//            </table>
+//        </body>
+//        </html>
+//    `;
+
+//        printWindow.document.write(html);
+//        printWindow.document.close();
+//        printWindow.print();
+//    };
+
+//-------------------------------------------------------------------------UserManagement Start
+
+    // here is new code 
     $scope.ExportVendorCSV = function () {
 
         var list = $scope.FilteredVendorList || [];
@@ -363,25 +605,24 @@
         }
 
         var csv = "";
-        csv += "S.No,Party Name,Email,Mobile,Contact Person,Industry,UserLimit,Status\n";
+        csv += "S.No,Contractor Name,Email,Start Date,End Date,Status,Craetion Date\n";
 
         list.forEach(function (x) {
 
             csv += '"' + (x.SNO || '') + '",';
             csv += '"' + (x.PartyName || '') + '",';
             csv += '"' + (x.EmailId || '') + '",';
-            csv += '"' + (x.ContactNo || '') + '",';
-            csv += '"' + (x.ContactPerson || '') + '",';
-            csv += '"' + (x.IndustryName || '') + '",';
-            csv += '"' + (x.UserLimit || '') + '",';
-            csv += '"' + (x.IsActived || '') + '"\n';
+            csv += '"' + (x.Startdtt || '') + '",';
+            csv += '"' + (x.Valid || '') + '",';
+            csv += '"' + (x.IsActived || '') + '",';
+            csv += '"' + (x.Createddt || '') + '"\n';
 
         });
 
         var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
         var link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = "PartyManagement.csv";
+        link.download = "ContractorManagement.csv";
         link.click();
     };
     $scope.PrintVendorList = function () {
@@ -399,7 +640,7 @@
         var html = `
         <html>
         <head>
-            <title>Vendor List</title>
+            <title>Contractor List</title>
             <style>
                 body { font-family: Arial; padding: 20px; }
                 h2 { text-align: center; margin-bottom: 5px; }
@@ -412,20 +653,19 @@
         </head>
         <body>
               <h2> ${MapUser}</h2> 
- <div class="party">Party Management</div>
+ <div class="party">Contractor Management</div>
             <div class="generated">Generated On: ${today}</div>
 
             <table>
                 <thead>
                     <tr>
                         <th>S.No</th>
-                        <th>Party Name</th>
+                        <th>Contractor Name</th>
                         <th>Email</th>
-                        <th>Mobile</th>
-                        <th>Contact Person</th>
-                        <th>Industry</th>
-<th>UserLimit</th>
-                        <th>Status</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                       <th>Status</th>
+                        <th>Craetion Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -437,11 +677,10 @@
                 <td>${x.SNO || ''}</td>
                 <td>${x.PartyName || ''}</td>
                 <td>${x.EmailId || ''}</td>
-                <td>${x.ContactNo || ''}</td>
-                <td>${x.ContactPerson || ''}</td>
-                <td>${x.IndustryName || ''}</td>
-   <td>${x.UserLimit || ''}</td>
+                <td>${x.Startdtt || ''}</td>
+                <td>${x.Valid || ''}</td>
                 <td>${x.IsActived || ''}</td>
+                <td>${x.Createddt || ''}</td>
             </tr>
         `;
         });
@@ -457,9 +696,29 @@
         printWindow.document.close();
         printWindow.print();
     };
-//-------------------------------------------------------------------------UserManagement Start
 
+
+    $scope.AllVendorCity = function () {
+       
+        var getData = myService.methode('POST', ("../PartyMaster/GetPartyMasterDT"), { "ActionType": 34 });
+        getData.then(function (response) {
+            debugger;
+            $scope.AllCityList = response.data.Result;
+        });
+    }
+
+    $scope.reset = function () {
+        $scope.SelectedPartyName = '';
+        $scope.SelectedUserName = '';
+        $scope.SelectedPartyId = '';
+        $scope.searchText = '';
+
+        // optional: restore original lists
+        $scope.FilteredVendorList = angular.copy($scope.VendorList);
+        $scope.FilteredUsers = angular.copy($scope.UserList);
+    };
     $scope.UserList = function () {
+       
         var collectionobj = {};
         collectionobj.Action = 28; 
         collectionobj.LoginId = LoginId;
@@ -504,8 +763,8 @@
             collectionobj.IsActive = 1
             collectionobj.CreatedBy = LoginId;
             var getData = myService.methode('POST', "../DashBoard/IUDUserRegistration", '{obj:' + JSON.stringify(collectionobj) + '}');
-            getData.then(function (response) {
-                debugger;
+        getData.then(function (response) {
+            console.log(response);
                 if (showMsgBox(response.data.Result)) {
                     $scope.UserList();
                     $scope.FireEmail(1, $scope.UserEmail, 0);
@@ -537,7 +796,7 @@
     $scope.SaveUser = function () {
 
         if ($scope.PPId == '' || $scope.PPId == undefined) {
-            showMsgBox('999', 'Alert', 'Party Name  Should be Required', 'warning', 'btn-warning')
+            showMsgBox('999', 'Alert', 'Contractor Name  Should be Required', 'warning', 'btn-warning')
             setTimeout(function () {
                 document.getElementById("ddlPPId").focus();
             }, 200);
@@ -669,11 +928,124 @@
     }
 
     $scope.checkAll = false;
-
+  
     $scope.toggleAll = function () {
         angular.forEach($scope.EmpDocumentList, function (item) {
             item.IsCheck = $scope.checkAll;
+       
         });
+    };
+
+    $scope.ResetSiteFilters = function () {
+        $scope.ResetFilters();
+        $scope.fileteractive = true;
+        angular.forEach($scope.VendorSiteList, function (item) {
+            item.SiteIsSelected = false;
+        });
+        $scope.SelectSiteAll = false;
+
+    }
+    $scope.GetSitemapping = function (x) {
+        
+        $scope.SelectedPartyName = x ? x.PartyName : '';
+        $scope.SelectVendorId = x.PartyId1;
+        var collectionobj = {};
+        collectionobj.Action = 38;
+        collectionobj.LoginId = LoginId;
+        collectionobj.Id = x.PartyId1;
+        debugger;
+        var getData = myService.methode('POST', "../DashBoard/GetempRegistration", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            $scope.VendorSiteList = response.data.Result;
+            $scope.TotalSite = response.data.Result.length;
+            angular.forEach($scope.VendorSiteList, function (item) { 
+                item.SiteIsSelected = (item.SiteIsSelected === true || item.SiteIsSelected === 'true' || item.SiteIsSelected == 1);
+
+            });
+        });
+    }
+
+    $scope.getsitevendor = function (x) { 
+        var collectionobj = {};
+        collectionobj.Action = 29;
+        collectionobj.LoginId = LoginId; 
+        debugger;
+        var getData = myService.methode('POST', "../DashBoard/GetempRegistration", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            $scope.VendorPartyNameSiteList = response.data.Result;
+            $scope.TotalSite = response.data.Result.length;
+            
+        });
+    }
+
+    $scope.ActiveTab = "filter";
+
+    $scope.ToggleTab = function (tabName) {
+
+        if ($scope.ActiveTab === tabName) {
+            $scope.ActiveTab = "";   // close panel
+        }
+        else {
+            $scope.ActiveTab = tabName; // open selected
+        }
+    };
+    $scope.hideshowfiltewrforsite = function ()
+    {
+       
+        $scope.fileteractive = false; 
+    };
+    $scope.SelectSiteAll = false;
+    $scope.fileteractive = true;
+    $scope.SitetoggleAll = function () {
+        angular.forEach($scope.VendorSiteList, function (item) {
+            item.SiteIsSelected = $scope.SelectSiteAll;
+            $scope.hideshowfiltewrforsite();
+
+         
+        });
+    };
+
+
+
+    $scope.SaveVendorSiteMapping = function () {
+
+        if (!$scope.SelectVendorId) {
+            showMsgBox('999', 'warning', 'Please select vendor',  'btn-warning');
+            return;
+        } 
+        var selectedVSiteList = ($scope.VendorSiteList || [])
+            .filter(function (x) {
+                return x.SiteIsSelected === true;
+            })
+            .map(function (x) {
+                return x.SiteId;
+            });
+         
+        if (selectedVSiteList.length === 0) {
+            showMsgBox('999', 'warning', 'Please select at least one Site',  'btn-warning');
+            return;
+        }
+
+        var obj = {
+            VendorId: $scope.SelectVendorId,
+            Documents: selectedVSiteList.join(','),
+            LoginId: LoginId,
+            Action: 39
+        };
+
+        console.log("Selected Routes:", selectedVSiteList); 
+
+        myService.methode(
+            'POST',
+            "../DashBoard/IUDEmployeeDoc",
+            { obj: obj }  
+        )
+            .then(function (res) {
+                if (showMsgBox(res.data.Result)) {
+                    $scope.BindVendorListList();
+
+                }
+            });
     };
 
     $scope.BindVendorListList = function ()
@@ -756,8 +1128,23 @@
     //---------------------------------------------------------------
 
 
+    // here is comment old code by aadarsh
 
+    //$scope.SelectedPartyId = null;
+    //$scope.SelectedPartyName = null;
 
+    //$scope.SelectParty = function (x) {
+    //    $scope.SelectedPartyId = x.PartyId;
+    //    $scope.SelectedPartyName = x.PartyName;
+    //};
+
+    //$scope.SelectPartyAll = function () {
+    //    $scope.SelectedPartyId = null;
+    //    $scope.SelectedPartyName = null;
+    //};
+
+    // add new code for Contractor User filter dated 30/04/2026
+    // End 30/04/2026
 
     $scope.SelectedPartyId = null;
     $scope.SelectedPartyName = null;
@@ -765,11 +1152,31 @@
     $scope.SelectParty = function (x) {
         $scope.SelectedPartyId = x.PartyId;
         $scope.SelectedPartyName = x.PartyName;
+        $scope.BindUsername();
     };
 
     $scope.SelectPartyAll = function () {
         $scope.SelectedPartyId = null;
         $scope.SelectedPartyName = null;
+        $scope.BindUsername();
+    };
+
+    $scope.SelectUsername = function (x) {
+        $scope.SelectedUserName = (x.UserName || '').trim();
+
+        $scope.UsedUsers = ($scope.EmployeeList || [])
+            .filter(item => (item.UserName || '').trim() === $scope.SelectedUserName)
+            .length;
+    };
+
+    $scope.BindUsername = function () {
+        if ($scope.SelectedPartyId) {
+            $scope.FilteredUsers = $scope.EmployeeList.filter(function (x) {
+                return x.PartyId == $scope.SelectedPartyId;
+            });
+        } else {
+            $scope.FilteredUsers = angular.copy($scope.EmployeeList);
+        }
     };
 
     $scope.PrintUserList = function () {
@@ -824,10 +1231,10 @@
                 <tr>
                     <th>S.No</th>
                     <th>User Name</th>
-                    <th>Party Name</th>
+                    <th>Contractor Name</th>
                     <th>Email</th>
                     <th>Contact No</th>
-                    <th>Role</th>
+                    <th>Creation Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -839,12 +1246,13 @@
 
             html += `
             <tr>
+
                 <td>${index + 1}</td>
                 <td>${x.UserName || ''}</td>
                 <td>${x.PartyName || ''}</td>
                 <td>${x.EmailId || ''}</td>
                 <td>${x.ContactNo || ''}</td>
-                <td>${role}</td>
+                <td>${x.Createdon || ''}</td>
             </tr>
         `;
         });
@@ -882,17 +1290,17 @@
             return partyMatch && searchMatch;
         });
 
-        var csv = "S.No,UserName,Party Name,EmailId,Contact No,Role\n";
+        var csv = "S.No,User Name,Contractor Name,EmailId,Contact No,Creation Date\n";
 
         filteredData.forEach(function (x, index) {
-            var role = x.LoginType == 5 ? "Admin" : "User";
+            //var role = x.LoginType == 5 ? "Admin" : "User";
 
             csv += (index + 1) + "," +
                 x.UserName + "," +
                 x.PartyName + "," +
                 x.EmailId + "," +
                 x.ContactNo + "," +
-                role + "\n";
+                x.Createdon + "\n";
         });
 
         var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -908,21 +1316,18 @@
     $scope.AllCountry = function () {
         var getData = myService.methode('POST', ("../PartyMaster/GetPartyMasterDT"), { "ActionType": 27 });
         getData.then(function (response) {
-            debugger;
             $scope.AllCountryList = response.data.Result;
         });
     }
     $scope.AllState = function () {
         var getData = myService.methode('POST', ("../PartyMaster/GetPartyMasterDT"), { "ActionType": 28, "PartyId": $scope.CountryId });
         getData.then(function (response) {
-            debugger;
             $scope.AllStateList = response.data.Result;
         });
     }
     $scope.AllCity = function () {
         var getData = myService.methode('POST', ("../PartyMaster/GetPartyMasterDT"), { "ActionType": 29, "PartyId": $scope.StateId });
         getData.then(function (response) {
-            debugger;
             $scope.AllCityList = response.data.Result;
         });
     }
@@ -1172,13 +1577,20 @@
         }
 
       
-            if (!$scope.PPIds || $scope.PPIds.length === 0)
-                return setError("#ddlparty", "Party Required");
+            //if (!$scope.PPIds || $scope.PPIds.length === 0)
+            //    return setError("#ddlparty", "Contractor Required");
         
       
 
         if (!$scope.SiteName || !$scope.SiteName.trim())
             return setError("#txtSiteName", "Site Name Required");
+
+
+        if (!$scope.LocationCode || !$scope.LocationCode.trim())
+            return setError("#txtLocationCode", "Location Name Required");
+
+        if (!$("#ddlAssignColor").val())
+            return setError("#ddlAssignColor", "Assign Color Required");
 
         if (!$scope.SiteAddress || !$scope.SiteAddress.trim())
             return setError("#txtSiteAddress", "Address Required");
@@ -1206,7 +1618,14 @@
         $scope.showLoader();
 
         var collectionobj = {
-            PartyIds: $scope.PPIds.join(',') ,
+
+            Drinkingwater: $scope.Drinkingwater,
+            Washroom: $scope.Washroom,
+            RestShelter: $scope.RestShelter,
+            FirstAid: $scope.FirstAid,
+            TrainerName: $scope.TrainerName,
+
+            PartyIds: MapId, /*--$scope.PPIds.join(',') ,*/
             PartyType: 'Vendor',
             SiteId: $scope.hfId,
             SiteName: $scope.SiteName,
@@ -1332,6 +1751,11 @@
             SiteId: $scope.hfId,
             SiteName: $scope.SiteName,
             Address: $scope.SiteAddress,
+            Drinkingwater: $scope.Drinkingwater,
+            Washroom: $scope.Washroom,
+            RestShelter: $scope.RestShelter,
+            FirstAid: $scope.FirstAid,
+            TrainerName: $scope.TrainerName,
             LocationCode: $scope.LocationCode,
             EmailId: $scope.EmailId,
             ContactNo: $scope.MobileNo,
@@ -1439,12 +1863,31 @@
         collectionobj.Action = 29;
         collectionobj.LoginId = LoginId;
         debugger;
+        $scope.VendorSiteList = [];
         var getData = myService.methode('POST', "../DashBoard/GetUserRegistration", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             $scope.VendorSiteList = response.data.Result; 
             $scope.TotalSite = response.data.Result.length;
+            angular.forEach($scope.VendorSiteList, function (item) {
+
+                item.SiteIsSelected = (item.SiteIsSelected === true || item.SiteIsSelected === 'true' || item.SiteIsSelected == 1);
+
+            });
         });
     }
+    $scope.ShowContractor = function (siteid) {
+        var collectionobj = {};
+        collectionobj.Action = 40;
+        collectionobj.LoginId = siteid; 
+        var getData = myService.methode('POST', "../DashBoard/GetUserRegistration", '{obj:' + JSON.stringify(collectionobj) + '}');
+        getData.then(function (response) {
+            $scope.ListContractor = response.data.Result;
+            $('#ContractorModal').modal('show');
+            });
+     
+
+     
+    };
     $scope.ExportSiteCSV = function () {
 
         var list = $scope.VendorSiteList || [];
@@ -1454,15 +1897,18 @@
             return;
         }
 
-        var csv = "S.No,Site Name,Email Id,Contact No,Address\n";
+
+        var csv = "S.No,Contractor Name,Site Name,Location Code,Email Id,State,Creation Date\n";    
 
         list.forEach(function (x, index) {
 
             csv += (index + 1) + "," +
+                (x.PartyName || '') + "," +
                 (x.SiteName || '') + "," +
+                (x.LocationCode || '') + "," +
                 (x.EmailId || '') + "," +
-                (x.ContactNo || '') + "," +
-                (x.Address || '') + "\n";
+                (x.STATE_NM || '') + "," +
+                (x.CreatedOn || '') + "\n";
         });
 
         var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -1508,11 +1954,13 @@
         <table>
             <thead>
                 <tr>
-                    <th>S.No</th>
+                     <th>S.No</th>
+                    <th>Contractor Name</th>
                     <th>Site Name</th>
+                    <th>Location Code</th>
                     <th>Email Id</th>
-                    <th>Contact No</th>
-                    <th>Address</th>
+                    <th>State</th>
+                     <th>Creation Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -1522,10 +1970,12 @@
             html += `
             <tr>
                 <td>${index + 1}</td>
+                <td>${x.PartyName || ''}</td>
                 <td>${x.SiteName || ''}</td>
+                <td>${x.LocationCode || ''}</td>
                 <td>${x.EmailId || ''}</td>
-                <td>${x.ContactNo || ''}</td>
-                <td>${x.Address || ''}</td>
+                <td>${x.STATE_NM || ''}</td>
+                <td>${x.CreatedOn || ''}</td>
             </tr>
         `;
         });
@@ -1612,4 +2062,73 @@
         printWindow.print();
     };
 
+    // here is add new methods
+
+    $scope.filterData = function (item) {
+        if ($scope.SelectedPartyName && item.PartyName !== $scope.SelectedPartyName)
+            return false;
+
+        if ($scope.SelectedSite && item.SiteName !== $scope.SelectedSite)
+            return false;
+
+        if ($scope.SelectedLocation && item.LocationCode !== $scope.SelectedLocation)
+            return false;
+
+        return true;
+    };
+
+    $scope.FilteredSiteList = [];
+    $scope.FilteredLocationList = [];
+    $scope.SelectContractor = function (x) {
+        $scope.SelectedPartyName = x ? x.PartyName : '';
+
+        $scope.SelectedSite = '';
+        $scope.SelectedLocation = '';
+
+        if ($scope.SelectedPartyName) {
+            $scope.FilteredSiteList = $scope.VendorSiteList.filter(function (item) {
+                return item.PartyName === $scope.SelectedPartyName;
+                $scope.RemainigSites = $scope.VendorSiteList.length;
+            });
+            $scope.FilteredLocationList = $scope.FilteredSiteList;
+
+        } else {
+
+            $scope.FilteredSiteList = $scope.VendorSiteList;
+            $scope.FilteredLocationList = $scope.VendorSiteList;
+            $scope.RemainigSites = $scope.VendorSiteList.length;
+        }
+    };
+
+
+    $scope.SelectSite = function (x) {
+        $scope.SelectedSite = x ? x.SiteName : '';
+        $scope.SelectedLocation = '';
+
+        if ($scope.SelectedSite) {
+            $scope.FilteredLocationList = $scope.VendorSiteList.filter(function (item) {
+                return item.SiteName === $scope.SelectedSite &&
+                    (!$scope.SelectedPartyName || item.PartyName === $scope.SelectedPartyName);
+            });
+        } else {
+            $scope.FilteredLocationList = [];
+        }
+    };
+
+    $scope.SelectLocation = function (x) {
+        $scope.SelectedLocation = x ? x.LocationCode : '';
+        $scope.RemainigSites = $scope.VendorSiteList.length;
+    };
+
+
+    $scope.ResetFilters = function () {
+        $scope.SelectedPartyName = '';
+        $scope.SelectedSite = '';
+        $scope.SelectedLocation = '';
+        $scope.SiteSearch = '';
+        $scope.ActiveTab = "filter";
+        // optional: agar koi aur model ho
+        // $scope.PPId = '';
+        // $scope.UName = '';
+    };
 }

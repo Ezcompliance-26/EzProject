@@ -69,6 +69,13 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
     function getPlain(url) {
         return myLoginService.methode('GET', url, '{}');
     }
+	
+	
+    // redirect to website dated 01/05/2026 by Aadarsh
+    $scope.rtodemo = function () {
+        window.open("https://ezcompliance.in/demo/", "_blank");
+    };
+
 
     // --------------- Login flow ---------------
     $scope.Login = function () {
@@ -147,25 +154,18 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
         postObj('../Login/GetModulePermission', obj).then(function (res)
         {
             var data = res.data && res.data.Result;
-            if (!data || !data.length)
-            {
-                
-                $scope.DashboardSwitch = 'Supplier';
-                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-               
-                return window.location.href = '../Dashboard/Dashboard';
-            }
+         
 
             var d = data[0];
          
             $scope.Captcha = ''; $scope.GetCaptchaImage();
 
-            if (d.LoginType == '1' || d.Module_Name === 'Supplier') { 
+            if (d.LoginType == '1') { 
                 startLoginMessages();
               
                 $scope.DashboardSwitch = 'Supplier';
                 sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                return window.location.href = '../Dashboard/Dashboard';
+                window.location.href = '../Dashboard/Dashboard'; return
             }
            
 
@@ -181,7 +181,7 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                     setTimeout(() => {
                         $scope.ManageLog(d.LoginId, 'Login Supplier Section');
                     }, 0);
-                    return window.location.href = d.Path;
+                      window.location.href = d.Path; return
                 }
                 else {
                     startLoginMessages();
@@ -192,11 +192,36 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                     setTimeout(() => {
                         $scope.ManageLog(d.LoginId, 'Login Retail Section');
                     }, 0);
-                    return window.location.href = d.Path;
+                      window.location.href = d.Path; return
+                }
+            }
+            if (d.Module_Name === 'Supplier') {
+
+                $scope.DashboardSwitch = 'Supplier';
+                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                $scope.ManageLog(d.LoginId, 'Login Supplier Section');
+                if (d.LoginType == '5') {
+
+                    $scope.DashboardSwitch = 'AdminSupplier';
+                    sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                    showMsg("You have logged in successfully.", "green");
+
+                    setTimeout(() => {
+                        $scope.ManageLog(d.LoginId, 'Login AS Admin Section');
+                    }, 0);
+                    $scope.Captcha = ''; $scope.GetCaptchaImage();
+                    window.location.href = '../Dashboard/principleEmployerDashboard'; return
+                }
+                else {
+                    $scope.DashboardSwitch = 'Supplier';
+                    sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
+                    window.location.href = d.Path; return
+
                 }
             }
 
-            if (d.Module_Name === 'Both') {
+            if (d.Module_Name === 'Both')
+            {
                 var sel = $("#ddlModule option:selected").text();
                 if (sel === 'Supplier')
                 {
@@ -214,12 +239,12 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                             $scope.ManageLog(d.LoginId, 'Login AS Admin Section');
                         }, 0);
                         $scope.Captcha = ''; $scope.GetCaptchaImage();
-                        return window.location.href = '../Dashboard/VBoard';
+                        window.location.href = '../Dashboard/principleEmployerDashboard'; return
                     }
                     else {
                         $scope.DashboardSwitch = 'Supplier';
                         sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                        return window.location.href = '../Dashboard/Dashboard';
+                        window.location.href = d.Path; return
                       
                     }
                 }
@@ -234,7 +259,7 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                             $scope.ManageLog(d.LoginId, 'Login as Admin');
                         }, 0);
                         $scope.Captcha = ''; $scope.GetCaptchaImage();
-                        return window.location.href = '../RetailSection/NewLocationDashboard';
+                          window.location.href = '../RetailSection/NewLocationDashboard'; return
                     }
                     if (d.LoginType == '2') {
                         startLoginMessages();
@@ -244,20 +269,16 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                         setTimeout(() => {
                             $scope.ManageLog(d.LoginId, 'Login Supplier Section');
                         }, 0);
-                        return window.location.href = '../Dashboard/NewVendorDashboard';
+                          window.location.href = '../Dashboard/NewVendorDashboard'; return
                     }
                     else {
 
                         
                         $scope.DashboardSwitch = 'Retail';
                         sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                       
-                        setTimeout(() => {
-                            $scope.ManageLog(d.LoginId, 'Login in Retail');
-                        }, 0);
+                        
+                        window.location.href = '../RetailSection/NewLocationDashboard';  
                         return
-                        window.location.href = '../RetailSection/NewLocationDashboard';
-
                     }
 
                 }
@@ -272,31 +293,12 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
                 setTimeout(() => {
                     $scope.ManageLog(d.LoginId, 'Login Supplier Section');
                 }, 0);
-                return window.location.href = d.Path;
+                  window.location.href = d.Path; return
             }
 
-            if (d.LoginType == '2' && $scope.Username == 'UserAA') {
-                startLoginMessages();
-               
-                $scope.DashboardSwitch = 'Supplier';
-                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                setTimeout(() => {
-                    $scope.ManageLog(d.LoginId, 'Login Supplier Section');
-                }, 0);
-                return window.location.href = '../Dashboard/NewVendorDashboard';
-            }
-            else if (d.LoginType == '2' && $scope.Username != 'UserAA') {
-                startLoginMessages();
-              
-                $scope.DashboardSwitch = 'Supplier';
-                sessionStorage.setItem("DashboardSwitch", $scope.DashboardSwitch);
-                setTimeout(() => {
-                    $scope.ManageLog(d.LoginId, 'Login Supplier Section');
-                }, 0);
-                return window.location.href = '../Dashboard/Dashboard';
-            }
+            
             else {
-                // fallback
+               
                 setTimeout(() => {
                     $scope.ManageLog(d.LoginId, 'Login Supplier Section');
                 }, 0);
@@ -580,5 +582,13 @@ myLoginApp.controller('myLoginController', function ($scope, $timeout, myLoginSe
 
         showNext();
     }
+ // back button inside reset password step ----- Vansh Chaudhary
 
+    $scope.backToLogin = function () {
+        $scope.Step3 = false;
+        $scope.Step2 = true;
+    };
+
+    // single resetBtn definition
+    function resetBtn() { $('#btnLogin').html('Login').prop('disabled', false); }
 });

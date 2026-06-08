@@ -10,7 +10,8 @@ namespace BAL
         public string UserLimit { get; set; }
         
         public string SetInColumn { get; set; }
-
+        
+              public string City { get; set; }
         public string State { get; set; }
         public string LicenseId { get; set; }
 
@@ -24,7 +25,7 @@ namespace BAL
         public string ClientId { get; set; }
         public int GradeId { get; set; }
         public int ActionType { get; set; }
-        public int PartyId { get; set; }
+        public string PartyId { get; set; }
         public string PartyType { get; set; }
         public string StoreCode { get; set; }
         public string PartyName { get; set; }
@@ -79,7 +80,11 @@ namespace BAL
 
         public string SelectedColumn { get; set; }
         public string MatchingText { get; set; }
+   public string Contractorlimit { get; set; } // Added by Aadarsh
 
+        public string Sitelimit { get; set; }  // Added by Aadarsh
+
+        public string Startdt { get; set; } // Added by Aadarsh
         
         //public DateTime? StartDate { get; set; }
         //public DateTime? EndDate { get; set; }

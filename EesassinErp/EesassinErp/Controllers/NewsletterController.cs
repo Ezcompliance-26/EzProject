@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace EesassinErp.Controllers
 {
+    [ValidateSession]
     public class NewsletterController : Controller
     {
         public ActionResult Newsletter()
@@ -97,6 +98,7 @@ namespace EesassinErp.Controllers
             obj.SelectedClients = new List<string>(Request.Form["SelectedClients"]?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)); ;
             // obj.EffectiveDateOfNotification = Convert.ToDateTime(Request.Form["EffectiveDateOfNotification"]);
             obj.NotificationNumber = Request.Form["NotificationNumber"];
+            obj.NewsCategory = Request.Form["NewsCategory"];
             obj.DepartmentId = Convert.ToInt32(Request.Form["DepartmentId"]);
 
 

@@ -361,6 +361,7 @@
         var getData = myService.methode('POST', "../Retail/SearchClientDashboard", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             $scope.Doclist = response.data.Result;
+            console.log($scope.Doclist);
             $scope.totalDoclist = response.data.Result;
 
         });
@@ -387,14 +388,19 @@
         if (files && files.length > 0) {
 
             var file = files[0];
-            if (file.type !== "application/pdf") {
-                showMsgBox('999', 'Alert', 'Only PDF files are allowed.', 'warning', 'btn-warning');
+            //if (file.type !== "application/pdf") {
+            //    showMsgBox('999', 'Alert', 'Only PDF files are allowed.', 'warning', 'btn-warning');
+            //    return;
+            // here is commented old code dated 02/05/2026 
+            if (file.type !== "application/pdf" && file.type !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && file.type !== "application/vnd.ms-excel"
+            ) {
+                showMsgBox('999', 'Alert', 'Only PDF or Excel files are allowed.', 'warning', 'btn-warning');
                 return;
             }
-            $scope.UploadFile = files[0]; // Assign the first file to the scope variable
-            $scope.AfterverifyRecord();
         }
-    };
+        $scope.UploadFile = files[0];
+        $scope.AfterverifyRecord();
+    }
     $scope.AfterverifyRecord = function () {
         if (isValidate()) {
             $scope.showLoader();
@@ -416,9 +422,11 @@
         }
     }
     $scope.BindClientFilter = function () {
+
         var collectionobj = {};
         collectionobj.Action = 9;
-        collectionobj.Id = $scope.BoardingType;
+        //collectionobj.Id = $scope.BoardingType;
+        collectionobj.Id = LoginId;
         var getData = myService.methode('POST', "../Retail/SearchClientDashboard", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             const monthMap = ["Invalid Month", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -434,7 +442,6 @@
                     ...item,
                     MonthName: monthMap[item.Month] || "Invalid Month"
                 }));
-
             const distinctYears = [...new Set(response.data.Result.map(item => item.Year))];
             $scope.YearsList = distinctYears; 
 
@@ -451,7 +458,9 @@
         collectionobj.Id = $scope.BoardingType;
         var getData = myService.methode('POST', "../Retail/SearchClientDashboard", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
+            
             $scope.totalDoclist = response.data.Result;
+            console.log($scope.totalDoclist);
         });
     }
     $scope.BindBoardingMaster = function () {
@@ -690,6 +699,23 @@
             $('.pending-count').text(pendingCount);
         })
     }
+    $scope.Viewexcelfile = function (x) {
+        if (!x || !x.SampleFile) return;
 
- 
+        var link = document.createElement('a');
+        link.href = x.SampleFile;
+
+        // 👉 Safe extension extraction
+        var fileExt = '';
+        if (x.SampleFile.includes('.')) {
+            fileExt = x.SampleFile.split('.').pop().split('?')[0]; // remove query params
+        }
+        var fileName = (x.DocumentName || 'File');
+
+        link.download = fileName + (fileExt ? '.' + fileExt : '');
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 } 

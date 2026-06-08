@@ -1,6 +1,143 @@
 ﻿app.NewVendorRegistrationController = function ($scope, $element, $filter, myService, $http) {
     $scope.isDropdownOpen = false;
 
+
+    $scope.PartySearch = function () {
+
+        var collectionobj = {};
+        collectionobj.ActionType = 35;
+        collectionobj.CreatedBy = LoginId;
+
+        var getData = myService.methode('POST', "../PartyMaster/GetPartyMasterDT", JSON.stringify(collectionobj));
+
+        getData.then(function (response) {
+
+            $scope.VendorList = response.data.Result || [];
+           
+        });
+    };
+    $scope.Userbind = function (UserId) {
+
+        var collectionobj = {};
+        collectionobj.ActionType = 36;
+        collectionobj.CreatedBy = UserId;
+
+        var getData = myService.methode('POST', "../PartyMaster/GetPartyMasterDT", JSON.stringify(collectionobj));
+
+        getData.then(function (response) {
+
+            $scope.UserList = response.data.Result || [];
+
+        });
+    };
+
+    $scope.BindRegistrationReport = function (VendorId) {
+        var collectionobj = {};
+        collectionobj.Action = 1;
+        collectionobj.UserId = VendorId;
+        var getData = myService.methode('POST', ("../RetailSection/SearchRegistration"), JSON.stringify(collectionobj));
+        getData.then(function (response) {
+            debugger;
+            $scope.RegistrationList = response.data.Result;
+            $scope.AgencyName = $scope.RegistrationList[0].AgencyName;
+            $scope.RegisteredAddress = $scope.RegistrationList[0].RegisteredAddress;
+            $scope.CorporateAddress = $scope.RegistrationList[0].CorporateAddress;
+            $scope.ContactPerson = $scope.RegistrationList[0].ContactPerson;
+            $scope.Designation = $scope.RegistrationList[0].Designation;
+            $scope.Mobile = $scope.RegistrationList[0].Mobile;
+            $scope.Email = $scope.RegistrationList[0].Email;
+            $scope.Website = $scope.RegistrationList[0].Website;
+            $scope.YearEstablishment = $scope.RegistrationList[0].YearEstablishment;
+            $('#multiDisplay').val($scope.RegistrationList[0].Organization);
+
+            $scope.PanNo = $scope.RegistrationList[0].PanNo;
+            $scope.TAN = $scope.RegistrationList[0].Tan;
+            $scope.GSTIN = $scope.RegistrationList[0].GSTIN;
+            $scope.CIN = $scope.RegistrationList[0].CIN;
+            $scope.SHOPREGI = $scope.RegistrationList[0].SHOPREGI;
+            $scope.MSME = $scope.RegistrationList[0].MSME;
+
+            $scope.BankName = $scope.RegistrationList[0].BankName;
+            $scope.AccountNumber = $scope.RegistrationList[0].AccountNumber;
+            $scope.IFSCCode = $scope.RegistrationList[0].IFSCCode;
+            $scope.CancelledCheque = $scope.RegistrationList[0].CancelledCheque;
+
+            $scope.EPFREGNO = $scope.RegistrationList[0].EPFREGNO;
+            $scope.ESICREGNO = $scope.RegistrationList[0].ESICREGNO;
+            $scope.ProfessionalREGNO = $scope.RegistrationList[0].ProfessionalREGNO;
+            $scope.LabourREGNO = $scope.RegistrationList[0].LabourREGNO;
+            $scope.ContractREGNO = $scope.RegistrationList[0].ContractREGNO;
+            $scope.LabourLicenseNO = $scope.RegistrationList[0].LabourLicenseNO;
+
+            $('#licenseDate').val($scope.RegistrationList[0].LicenseValidity);
+            $scope.LicenseEmployeeCount = $scope.RegistrationList[0].LicenseEmployeeCount;
+
+            $('#ServicesOffered').val($scope.RegistrationList[0].Service);
+            $('#IndustriesServed').val($scope.RegistrationList[0].Industries);
+            $scope.TotalEmployees = $scope.RegistrationList[0].TotalEmployees;
+            $scope.OperationalLocations = $scope.RegistrationList[0].OperationalLocations;
+
+
+
+            $scope.YearsOfExperience = $scope.RegistrationList[0].YearsOfExperience;
+            $scope.KeyClients = $scope.RegistrationList[0].KeyClients;
+            $scope.SimilarContracts = $scope.RegistrationList[0].SimilarContracts;
+            $scope.NameOrganization1 = $scope.RegistrationList[0].NameOrganization1;
+            $scope.ServiceType1 = $scope.RegistrationList[0].ServiceType1;
+            $scope.ConcernPerson1 = $scope.RegistrationList[0].ConcernPerson1;
+            $scope.Designation1 = $scope.RegistrationList[0].Designation1;
+            $scope.MobileNo1 = $scope.RegistrationList[0].MobileNo1;
+            $scope.EmailId1 = $scope.RegistrationList[0].EmailId1;
+            $scope.NameOrganization2 = $scope.RegistrationList[0].NameOrganization2;
+            $scope.ServiceType2 = $scope.RegistrationList[0].ServiceType2;
+            $scope.ConcernPerson2 = $scope.RegistrationList[0].ConcernPerson2;
+            $scope.Designation2 = $scope.RegistrationList[0].Designation2;
+            $scope.MobileNo2 = $scope.RegistrationList[0].MobileNo2;
+            $scope.EmailId2 = $scope.RegistrationList[0].EmailId2;
+            $scope.NameOrganization3 = $scope.RegistrationList[0].NameOrganization3;
+            $scope.ServiceType3 = $scope.RegistrationList[0].ServiceType3;
+            $scope.ConcernPerson3 = $scope.RegistrationList[0].ConcernPerson3;
+            $scope.Designation3 = $scope.RegistrationList[0].Designation3;
+            $scope.MobileNo3 = $scope.RegistrationList[0].MobileNo3;
+            $scope.EmailId3 = $scope.RegistrationList[0].EmailId3;
+
+            $scope.SignatoryName = $scope.RegistrationList[0].SignatoryName;
+            $scope.SignatoryDesignation = $scope.RegistrationList[0].SignatoryDesignation;
+            $('#txtGeneralDate').val($scope.RegistrationList[0].GeneralDate);
+
+            $scope.File1 = $scope.RegistrationList[0].File1;
+            $scope.File2 = $scope.RegistrationList[0].File2;
+            $scope.File3 = $scope.RegistrationList[0].File3;
+            $scope.File4 = $scope.RegistrationList[0].File4;
+            $scope.File5 = $scope.RegistrationList[0].File5;
+            $scope.File6 = $scope.RegistrationList[0].File6;
+            $scope.File7 = $scope.RegistrationList[0].File7;
+            $scope.File8 = $scope.RegistrationList[0].File8;
+            $scope.File9 = $scope.RegistrationList[0].File9;
+            $scope.File10 = $scope.RegistrationList[0].File10;
+            $scope.File11 = $scope.RegistrationList[0].File11;
+            $scope.File12 = $scope.RegistrationList[0].File12;
+            $scope.File13 = $scope.RegistrationList[0].File13;
+            $scope.File14 = $scope.RegistrationList[0].File14;
+            $scope.File15 = $scope.RegistrationList[0].File15;
+            $scope.File16 = $scope.RegistrationList[0].File16;
+            $scope.File17 = $scope.RegistrationList[0].File17;
+            $scope.File18 = $scope.RegistrationList[0].File18;
+            $scope.File19 = $scope.RegistrationList[0].File19;
+            $scope.File20 = $scope.RegistrationList[0].File20;
+            $scope.File21 = $scope.RegistrationList[0].File21;
+
+
+            $scope.Dec1 = $scope.RegistrationList[0].IndemnityClause;
+            $scope.Dec2 = $scope.RegistrationList[0].ConfidentialityAgreement;
+            $scope.Dec3 = $scope.RegistrationList[0].CodeofConduct;
+            $scope.Dec4 = $scope.RegistrationList[0].AMLDeclaration;
+            $scope.Dec5 = $scope.RegistrationList[0].AntiBribery;
+            $scope.Dec6 = $scope.RegistrationList[0].DPDPDeclaration;
+
+        });
+    }
+
     $scope.orgList = [
         { name: 'Proprietorship', selected: false },
         { name: 'Partnership', selected: false },
@@ -236,6 +373,24 @@
 
         new bootstrap.Modal(document.getElementById("declModal")).show();
     };
+    $scope.RepoortopenDeclaration = function (type) {
+
+        $scope.currentDecl = type;
+
+        document.getElementById("declTitle").innerText = type;
+
+        var htmlContent = $scope.declarationMap[type];
+
+        var plainText = $scope.htmlToText(htmlContent);
+
+        document.getElementById("declContent").innerText = plainText;
+
+       
+
+        
+
+        new bootstrap.Modal(document.getElementById("declModal")).show();
+    };
 
     function enableScrollCheck() {
 
@@ -258,6 +413,26 @@
             }
         };
     }
+    $scope.ReportconfirmDeclaration = function () {
+
+     
+
+        $scope.completedDecl[$scope.currentDecl] = true;
+
+        //document.querySelector(`[data-type="${$scope.currentDecl}"] .status`).innerText = "Done";
+
+        //var modalEl = document.getElementById("declModal");
+        //var modalInstance = bootstrap.Modal.getInstance(modalEl);
+        $scope.SaveDeclalation($scope.currentDecl);
+        /*  modalInstance.hide();*/
+
+        setTimeout(function () {
+            document.body.classList.remove("modal-open");
+            document.body.style = "";
+
+            document.querySelectorAll(".modal-backdrop").forEach(el => el.remove());
+        }, 300);
+    };
 
     $scope.confirmDeclaration = function () {
 
@@ -324,10 +499,10 @@
         var total = document.querySelectorAll(".decl-item").length;
         var done = Object.keys($scope.completedDecl).length;
 
-        if (total !== done) {
-            alert("Please complete all declarations");
-            return;
-        }
+        //if (total !== done) {
+        //    alert("Please complete all declarations");
+        //    return;
+        //}
 
         // 👉 Next Step Call
         $scope.GoNextStep();
@@ -387,6 +562,7 @@
         var getData = myService.methode('POST', ("../RetailSection/InsertRegister"), JSON.stringify(collectionobj));
         getData.then(function (response) {
             $scope.hideLoader();
+            showMsgBox(response.data.Result)
             $scope.BindRegistration();
         });
     }

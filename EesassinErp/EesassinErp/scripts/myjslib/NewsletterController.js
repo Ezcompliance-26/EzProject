@@ -128,7 +128,8 @@
            // collectionobj.UploadDocPath = $scope.AdminFileDoc;
             collectionobj.SubjectLine = $scope.SubjectLine;
              $scope.Summary = CKEDITOR.instances.txtHeaderTemplate.getData();
-            collectionobj.Summary = $scope.Summary; 
+            collectionobj.Summary = $scope.Summary;
+            collectionobj.NewsCategory = $scope.NewsCategory;
 
             var formData = new FormData();
             formData.append('file', $scope.AdminFileDoc ? $scope.AdminFileDoc : null);
@@ -139,7 +140,8 @@
             formData.append('EffectiveDateOfNotification', $filter('date')($scope.EffectiveDate, 'dd/MM/yyyy HH:mm:ss'));
             formData.append('NotificationNumber', $scope.NotificationNumber ? $scope.NotificationNumber:'');
             formData.append('DepartmentId', $scope.DepartmentId);
-            formData.append('SubjectLine', $scope.SubjectLine); 
+            formData.append('SubjectLine', $scope.SubjectLine);
+            formData.append('NewsCategory', $scope.NewsCategory);
             formData.append('Summary', '');
             if ($scope.Save == "Save") {
                 formData.append('ActionType',1);
@@ -148,7 +150,7 @@
                 formData.append('Id', $scope.hfId);
                 formData.append('ActionType', 2);
             }
-
+            console.log(collectionobj);
             $http.post("../Newsletter/InsertUpdateNewsletter", formData, {
                 transformRequest: angular.identity,
                 headers: { 'Content-Type': undefined }
@@ -221,6 +223,7 @@
         CKEDITOR.instances.txtHeaderTemplate.setData("");
         $scope.ActTittle = "";
         $scope.DepartmentId = "";
+        $scope.NewsCategory = "";
         $scope.NotificationNumber = "";
         $scope.DateNot = "";
         $scope.StateId = "";
@@ -257,6 +260,7 @@
                     { "HeaderText": "Effective Date", "HeaderValue": "EffectiveDateOfNotification", "Width": "100%", "ShowColumn": "NO", "ImageColumn": "No" },
                     { "HeaderText": "Notification Number", "HeaderValue": "NotificationNumber", "Width": "100%", "ShowColumn": "NO", "ImageColumn": "No" },
                     { "HeaderText": "Department Name", "HeaderValue": "DepartmentName", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
+                    { "HeaderText": "NewsLetter", "HeaderValue": "NewsLetter", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                  //   { "HeaderText": "PartyId", "HeaderValue": "PartyId", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                 //    { "HeaderText": "SATE_CODE", "HeaderValue": "SATE_CODE", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                 //    { "HeaderText": "DepartmentId", "HeaderValue": "DepartmentId", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
@@ -282,6 +286,7 @@
                 $scope.StateId = $scope.PartyMasterList[0].SATE_CODE.toString();
                 $scope.DepartmentId = $scope.PartyMasterList[0].DepartmentId.toString();
                 $scope.AdminFileDoc = $scope.PartyMasterList[0].UploadDocPath;
+                $scope.NewsCategory = $scope.PartyMasterList[0].NewsCategory;
                 $scope.Summary = $scope.PartyMasterList[0].Summary;
                 CKEDITOR.instances.txtHeaderTemplate.setData($scope.Summary);
                 $scope.Save = "Edit";

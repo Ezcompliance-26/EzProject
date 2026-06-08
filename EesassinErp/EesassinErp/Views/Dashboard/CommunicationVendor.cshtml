@@ -16,6 +16,7 @@
         color: #223;
         min-height: 85vh;
     }
+   
 
     .dropdown-menu {
         min-width: 120px;
@@ -365,7 +366,7 @@
 
     <!-- Top bar: Heading left + Create Compliance Document button right -->
     <div class="d-flex align-items-center justify-content-between mb-3 top-bar">
-        <h4 style="color: #E45D27">Communication Page</h4>
+        <h4 style="color: #E45D27">Communication</h4>
 
         <div class="d-flex align-items-center gap-2">
             <button class="btn btn-sm " id="createComplDoc" type="button" data-bs-toggle="modal" data-bs-target="#InvoiceRegistrationModal">
@@ -392,8 +393,7 @@
 
                 <!-- Body -->
                 <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
-
-                    <!-- 🔽 Yaha tumhara pura form paste karo -->
+                     
                     <form id="user-form">
 
                         <!-- 🔹 CARD 1 -->
@@ -442,7 +442,7 @@
 
                                         <select class="form-select form-select-sm clear " ng-model="WClientSiteId" ng-change="SetSingleLocation(WClientSiteId)">
                                             <option value="">Select Site</option>
-                                            <option ng-repeat="x in AllPartySiteVList" value="{{x.SiteId}}">{{x.SiteName}}</option>
+                                            <option ng-repeat="x in AllPartySiteVList" value="{{x.SiteId}}">{{x.SiteId}}-{{x.SiteName}}</option>
                                         </select>
                                     </div>
 
@@ -454,14 +454,14 @@
                                             <option ng-repeat="x in LocationL" value="{{x.Location}}">{{x.Location}}</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2" >
-                                        <button type="button" style="margin-top:17%"  class="btn btn-sm filter-btn active" ng-model="Search" ng-click="HideShowtable()">Search</button>
+                                    <div class="col-md-2">
+                                        <button type="button" style="margin-top:17%" class="btn btn-sm filter-btn active" ng-model="Search" ng-click="HideShowtable()">Search</button>
                                         <button type="button" style="margin-top:17%" class="btn btn-sm filter-btn" ng-model="ClearH" ng-click="ClearHEADER()">Refresh</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                            
+
                             </div>
                         </div>
 
@@ -498,7 +498,7 @@
                                                 <td>
                                                     <select id="ddlVendorSiteId" autocomplete='address-level2' class="select2 form-control validate" ng-init="AllPartySiteLoad()" ng-disabled="{{hideIsLocation}}" ng-model="InvoiceDetail[$index].VendorSiteId" ng-change="SetLocation(InvoiceDetail[$index].VendorSiteId,$index)">
                                                         <option value="">Select Site</option>
-                                                        <option ng-repeat="x in AllPartySiteVList" value="{{x.SiteId}}">{{x.SiteName}}</option>
+                                                        <option ng-repeat="x in AllPartySiteVList" value="{{x.SiteId}}">{{x.SiteId}}-{{x.SiteName}}</option>
                                                     </select>
                                                 </td>
 
@@ -527,7 +527,7 @@
 
                                                 </td>
                                                 <td>
-                                                    <select  id="ddlInvoiceType" autocomplete='address-level2' class="select2 form-control validate" ng-model="InvoiceDetail[$index].InvoiceType" ng-keyup="ValidateINvoice($index);chkManpower($index)">
+                                                    <select id="ddlInvoiceType" autocomplete='address-level2' class="select2 form-control validate" ng-model="InvoiceDetail[$index].InvoiceType" ng-keyup="ValidateINvoice($index);chkManpower($index)">
                                                         <option value="">Select </option>
                                                         <option value="Regular">Regular </option>
                                                         <option value="Reimbursement">Reimbursement</option>
@@ -569,11 +569,11 @@
                                                     </div>
                                                     @*<img id="CandidatePhoto{{$index}}" src="~/Content/img/upload.png" ng-click="SetValue($index,'#fuCandidatePhoto'+$index)" style="width: 35px; height: 35px" />*@
                                                     @*<div ng-show="{{InvoiceDetail[$index].IsFile}} !=''">{{InvoiceDetail[$index].IsFile}}</div>
-                                               <a target="_blank" ng-show="{{InvoiceDetail[$index].Ishide}}==false" href="{{InvoiceDetail[$index].fileupload}}">View Invoice</a>*@
-                                                <input type="file"
-                                                       id="fuCandidatePhoto{{$index}}"
-                                                       style="display:none"
-                                                       onchange="angular.element(this).scope().fileChange(this)">
+                                                        <a target="_blank" ng-show="{{InvoiceDetail[$index].Ishide}}==false" href="{{InvoiceDetail[$index].fileupload}}">View Invoice</a>*@
+                                                    <input type="file"
+                                                           id="fuCandidatePhoto{{$index}}"
+                                                           style="display:none"
+                                                           onchange="angular.element(this).scope().fileChange(this)">
                                                 </td>
 
 
@@ -824,7 +824,10 @@
                                 <td>{{x.DayLeft}}</td>
 
                                 <td>
-                                    <button class="btn btn-sm btn-submit px-3" data-bs-toggle="modal" data-bs-target="#submitComplianceModal" ng-click="GetDocument(x.ConversationId)">Click here to Upload Doc</button>
+                                    <button class="btn btn-sm btn-submit px-3" data-bs-toggle="modal" data-bs-target="#submitComplianceModal"
+                                            ng-click="GetDocument(x.ConversationId);Callforvalidation(x); ">
+                                        Click here to Upload Doc
+                                    </button>
                                 </td>
                             </tr>
 
@@ -860,7 +863,7 @@
                     <div class="modal-body p-8" style="background: var(--card-bg)">
 
                         <div class="d-flex justify-content-end mb-2">
-                            <button class="btn btn-sm export-btn" ng-click="ChkDefaultFile()">
+                            <button class="btn btn-sm export-btn" ng-hide="Flag!=='Draft'" ng-click="ChkDefaultFile()">
                                 Send To Auditor
                             </button>
                             <button class="btn btn-sm export-btn" ng-click="downloadAll()">
@@ -887,7 +890,7 @@
                                             <th>Note</th>
                                             <th>Upload</th>
                                             <th>View</th>
-                                            <th>Action</th>
+                                            <th    ng-hide="true" >Action</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -895,9 +898,9 @@
 
                                         <tr ng-repeat="xx in InDocList">
                                             <td>
-                                                <input type="checkbox" ng-checked="{{xx.IsDefault}}" />
+                                                <input type="checkbox" ng-checked="{{xx.IsDefault}}" class="orange-checkbox" />
                                             </td>
-                                            <td>{{xx.SRNO}} </td>
+                                            <td>{{$index+1}} </td>
                                             <td>{{xx.DocumentName}}</td>
                                             <td>{{xx.DocumentType}}</td>
                                             <td>{{xx.Frequency}}</td>
@@ -910,18 +913,18 @@
                                                 <div class="d-flex align-items-center" ng-if="xx.Status!=1">
                                                     <label class="btn btn-sm btn-upload px-3"
                                                            style="white-space:nowrap; cursor:pointer;"
-                                                           ng-class="{'disabled': TimeLeftMsg}">
+                                                           ng-class="{'disabled': TimeLeftMsg}" ng-hide="{{TimeLeftMsg}}"  ng-if="xx.Status==0 || xx.Status==2 || xx.Status==3">
 
                                                         Choose File
 
-                                                        <input type="file"
-                                                               id="fuCandidatePhoto1{{$index}}"
-                                                               style="display:none"
-                                                               ng-disabled="TimeLeftMsg"
-                                                               onchange="angular.element(this).scope().show(this, '#AlbumIcon')"
-                                                               ng-model="InvoiceDetail[$index].fileupload">
+                                                        <input type="file" id="fuCandidatePhoto1{{$index}}" ng-hide="true" ng-disabled="TimeLeftMsg" data-documentid="{{xx.DocumentId}}"
+                                                               onchange="angular.element(this).scope().uploadFile( '#AlbumIcon',this)" ng-model="InvoiceDetail[$index].fileupload">
                                                     </label>
+
                                                 </div>
+
+                                              
+
                                             </td>
                                             <td>
                                                 <button ng-if="xx.DocumentFile" class="btn btn-sm"
@@ -934,17 +937,35 @@
                                                     <i class="bi bi-download"></i>
                                                 </button>
                                             </td>
-                                            <td>
+                                            <td    ng-hide="true" >
 
-                                                <div ng-hide="{{TimeLeftMsg}}" ng-if="xx.Status==0" class="btn btn-sm cv-btn-primary" ng-click="ValidateFileDoc(xx.RegInvoiceNo,xx.SRNO,xx.DocumentName,xx.DocumentId,xx.FormatType,$index,xx.ConversationId)">Upload</div>
-                                                <div ng-if="xx.Status==2" class="btn btn-sm cv-btn-primary" ng-click="ValidateFileDoc(xx.RegInvoiceNo,xx.SRNO,xx.DocumentName,xx.DocumentId,xx.FormatType,$index,xx.ConversationId)">Re-Upload</div>
-                                                <div ng-if="xx.Status==3" class="btn btn-sm cv-btn-primary" ng-click="ValidateFileDoc(xx.RegInvoiceNo,xx.SRNO,xx.DocumentName,xx.DocumentId,xx.FormatType,$index,xx.ConversationId)">New Req To Upload</div>
+                                                <div id="btnupload{{$index}}" class="btn btn-sm cv-btn-primary" ng-click="UploadDocument(xx.RegInvoiceNo,xx.SRNO,xx.DocumentName,xx.DocumentId,xx.FormatType,$index,xx.ConversationId)">Upload</div>
+                                                @*<div ng-if="xx.Status==2" class="btn btn-sm cv-btn-primary" ng-click="ValidateFileDoc(xx.RegInvoiceNo,xx.SRNO,xx.DocumentName,xx.DocumentId,xx.FormatType,$index,xx.ConversationId)">Re-Upload</div>
+                                                <div ng-if="xx.Status==3" class="btn btn-sm cv-btn-primary" ng-click="ValidateFileDoc(xx.RegInvoiceNo,xx.SRNO,xx.DocumentName,xx.DocumentId,xx.FormatType,$index,xx.ConversationId)">New Req To Upload</div>*@
 
                                             </td>
                                             <td>
-                                                {{ xx.Status === 1 ? 'Complete' :     (xx.Status === 0 ? 'Pending' :       (xx.Status == null || xx.Status === '' ? 'Draft' : 'Draft')) }}
+                                                @*{{ xx.Status === 1 ? 'Complete' :     (xx.Status === 0 ? 'Pending' :       (xx.Status == null || xx.Status === '' ? 'Draft' : 'Draft')) }}*@
+
+                                                <p style="color:green;" ng-if="xx.APercentage == 'Save without Error, Accuracy 100 %.'">
+                                                    Save without Error, Accuracy 100 %.
+
+                                                    <i class="bi bi-info-circle"
+                                                       style="cursor:pointer; margin-left:8px; color:blue;"
+                                                       ng-click="showDetailPopup(xx.Detail)">
+                                                    </i>
+                                                </p>
+
+                                                <p style="color:red;" ng-if="xx.APercentage != 'Save without Error, Accuracy 100 %.'">
+                                                    {{xx.APercentage}}
+
+                                                    <i class="bi bi-info-circle" ng-if="xx.APercentage"
+                                                       style="cursor:pointer; margin-left:8px; color:blue;"
+                                                       ng-click="showDetailPopup(xx.Detail)">
+                                                    </i>
+                                                </p>
                                             </td>
-                                            @*<td><span class="badge status-active">Validated</span></td>*@
+                                        
                                         </tr>
 
 
@@ -982,6 +1003,33 @@
         </div>
 
 
+    </div>
+    <div class="modal fade" id="detailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Validation Detail</h4>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+                </div>
+
+                <div class="modal-body" ng-bind-html="SelectedDetail">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-danger"
+                            data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
 

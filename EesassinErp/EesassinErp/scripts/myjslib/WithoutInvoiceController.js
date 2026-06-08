@@ -1,5 +1,5 @@
 ﻿ 
-app.WithoutInvoiceController = function ($scope, $element, $filter, myService, $http) {
+app.WithoutInvoiceController = function ($scope, $element, $filter, myService, $http, $sce) {
    
 
 
@@ -63,7 +63,8 @@ app.WithoutInvoiceController = function ($scope, $element, $filter, myService, $
 
         $scope.SaveInvoiceAfterValidate();
     };
-
+    $scope.AccPercentage = '';
+    $scope.detailSave = '';
     $scope.SaveInvoiceAfterValidate = function () {
 
         if (!$scope.ValidateInvoiceGrid()) return;
@@ -593,6 +594,7 @@ app.WithoutInvoiceController = function ($scope, $element, $filter, myService, $
                 $scope.HeaderInvoice = response.data[0].HeaderInvoice;
 
                 $scope.DayLeft = response.data[0].DayLeft;
+                $scope.Flag = response.data[0].Flag;
 
                 if ($scope.DayLeft == "0") {
                     $('.lbldayleft').css('color', 'red');
@@ -616,22 +618,65 @@ app.WithoutInvoiceController = function ($scope, $element, $filter, myService, $
                 $scope.$applyAsync();
 
             }
+            else { $scope.ClearDocumentData(); alert('Something went wrong, Contact to Admin');}
 
         });
     };
+
+    $scope.ClearDocumentData = function () {
+        $scope.InDocList = [];
+        $scope.Pendding = '';
+        $scope.Submit = '';
+        $scope.Reject = '';
+        $scope.NewReq = '';
+        $scope.TotalDoc = '';
+        $scope.IDATE = '';
+        $scope.ClientName = '';
+        $scope.ClientId = '';
+        $scope.Location = '';
+        $scope.RegInvoiceNo = '';
+        $scope.InvoiceNo = '';
+        $scope.HeaderInvoice = '';
+        $scope.DayLeft = '';
+        $scope.Flag = '';
+        $scope.WhichDate = '';
+        $scope.ConversationId = '';
+        $scope.TimeLeftMsg = false;
+    };
     $scope.ValidateFileDoc = function (InvoiceNo, SNO, DocumentName, DocumentId, FormatFile, index, ConversationId) {
-        fileName = document.querySelector('#fuCandidatePhoto1' + index).value;
+     
+        /*fileName = document.querySelector('#fuCandidatePhoto1' + index).value;*/
+
+
+
+        var fileInput = document.querySelector('#fuCandidatePhoto1' + index);
+
+        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+            showMsgBox(
+                '999',
+                'Oops !',
+                'File Not Found, Please Upload Again.',
+                'warning',
+                'btn-warning'
+            );
+            return;
+        }
+
+        var fileName = fileInput.files[0].name;
+
+        var extension = fileName.split('.').pop().toLowerCase();
+       
         if (fileName != "") {
-            extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+            /*extension = fileName.substring(fileName.lastIndexOf('.') + 1);*/
             if (FormatFile == extension) {
-                $scope.UploadDocument(InvoiceNo, SNO, DocumentName, DocumentId, FormatFile, index, ConversationId);
+                $scope.UploadDocument(InvoiceNo, SNO, DocumentName, DocumentId, FormatFile, index, ConversationId, $scope.AccPercentage);
             }
             else if (FormatFile == 'image') {
                 if (extension == 'jpg') {
-                    $scope.UploadDocument(InvoiceNo, SNO, DocumentName, DocumentId, FormatFile, index, ConversationId);
+                    $scope.UploadDocument(InvoiceNo, SNO, DocumentName, DocumentId, FormatFile, index, ConversationId, $scope.AccPercentage);
                 }
                 else if (extension == 'png') {
-                    $scope.UploadDocument(InvoiceNo, SNO, DocumentName, DocumentId, FormatFile, index, ConversationId);
+                    $scope.UploadDocument(InvoiceNo, SNO, DocumentName, DocumentId, FormatFile, index, ConversationId, $scope.AccPercentage);
                 }
                 else {
                     showMsgBox('999', 'Rejected', 'File Not Correct Format,please Upload in jpg or png format', 'warning', 'btn-warning');
@@ -649,13 +694,16 @@ app.WithoutInvoiceController = function ($scope, $element, $filter, myService, $
 
     }
 
-
-    $scope.UploadDocument = function (InvoiceNo, SNO, DocumentName, DocumentId, FormatFile, index, ConversationId) {
+    $scope.showDetailPopup = function (detail) {
+        $scope.SelectedDetail = $sce.trustAsHtml(detail);
+        $("#detailModal").modal("show");
+    };
+    $scope.UploadDocument = function (InvoiceNo, SNO, DocumentName, DocumentId, FormatFile, index, ConversationId, AccPercentage) {
         debugger; 
         {
             $scope.showLoader();
             var collectionobj = {};
-
+           
 
             collectionobj.InvoiceId = InvoiceNo;
             collectionobj.ConversationId = ConversationId;
@@ -664,6 +712,8 @@ app.WithoutInvoiceController = function ($scope, $element, $filter, myService, $
             collectionobj.DocumentId = DocumentId;
             collectionobj.FileDoc = $scope.FileDoc;
             collectionobj.CreatedBy = LoginId;
+            collectionobj.Percentage = $scope.AccPercentage;
+            collectionobj.Detail = $scope.detailSave;
             collectionobj.ActionType = 8;
 
             var getData = myService.methode('POST', "../VenInvoice/UploadDoc", '{obj:' + JSON.stringify(collectionobj) + '}');
@@ -671,29 +721,952 @@ app.WithoutInvoiceController = function ($scope, $element, $filter, myService, $
             getData.then(function (response) {
 
                 $scope.GetDocument($scope.RegInvoiceNo);
-                //$scope.FireEmail(15, InvoiceNo, MapId);
+                $scope.detailSave = '';
                 showMsgBox(response.data.Result);
 
             });
         }
     }
 
-    $scope.show = function (input, imgfileid) {
-        // fileName = document.querySelector(input.id).value;
-        if (input.files && input.files[0]) {
-            var filerdr = new FileReader();
-            filerdr.onload = function (e) {
-                $scope.FileDoc = e.target.result;
 
-                $scope.$applyAsync();
+
+
+    $scope.Callforvalidation = function (x) {
+        $scope.MasterValidationData = {
+           
+
+            ClientName: x.ClientName || '',
+            ContractorName: x.ContractorName || '',
+            State: x.StateName || '',
+            Site: x.SiteName || '',
+            Month: x.InMonthName || '',
+            Year: x.Year || '',
+             
+        };
+    };
+    $scope.CallforDocumentvalidation = function (x) {
+        $scope.DocumentValidationData = {
+            FormNo: x.FormNo || '',
+            Heading: x.Heading || '',
+            Format: x.Format || '',
+            RegisterationNo: x.RegisterationNo ||'',
+            EstablishmentName: x.EstablishmentName || Name,
+            PaymentStatus: x.PaymentStatus || '',
+            EmployerCodeNo: x.EmployerCodeNo || '',
+            ChallanPeriod: x.ChallanPeriod || x.InMonthName +'-'+  x.Year ,
+            ChallanNumber: x.ChallanNumber || '',
+            ContributionYear: x.ContributionYear || x.Year,
+            PeriodofReturn: x.PeriodofReturn || x.InMonthName + '-' + x.Year,
+            PeriodCoveredbyReturn: x.PeriodCoveredbyReturn || x.InMonthName + '-' + x.Year,
+            TransactionStatus: x.TransactionStatus || '',
+            EmployerName: x.EmployerName || Name,
+            TransactionNumber: x.TransactionNumber || '',
+            NameofEstablishment: x.NameofEstablishment || Name,
+            EstablishmentId: x.EstablishmentId || '',
+            RETURNSTATEMENT: x.RETURNSTATEMENT || '',
+            EMPLOYEEPROVIDENTFUNDORGANISATION: x.EMPLOYEEPROVIDENTFUNDORGANISATION || '',
+            InsuredName: x.InsuredName || Name,
+            InsuredAddress: x.InsuredAddress || BranchAddress,
+            PeriodofInsurance: x.PeriodofInsurance || x.InMonthName + '-' + x.Year,
+            EMPLOYEESCOMPENSATIONINSURANCE: x.EMPLOYEESCOMPENSATIONINSURANCE ||''
+        };
+    };
+    $scope.extractData = async function (pdftext, SelectedColumn, rowId, DocumentId, callback) {
+
+        function accurateMatch(compareValue, pdftext) {
+
+            if (!compareValue || !pdftext)
+                return false;
+
+            let search = compareValue
+                .toLowerCase()
+                .replace(/\s+/g, ' ')
+                .trim();
+
+            let text = pdftext
+                .toLowerCase()
+                .replace(/\s+/g, ' ')
+                .trim();
+
+            const monthMap = {
+                january: ['january', 'jan'],
+                february: ['february', 'feb'],
+                march: ['march', 'mar'],
+                april: ['april', 'apr'],
+                may: ['may'],
+                june: ['june', 'jun'],
+                july: ['july', 'jul'],
+                august: ['august', 'aug'],
+                september: ['september', 'sept', 'sep'],
+                october: ['october', 'oct'],
+                november: ['november', 'nov'],
+                december: ['december', 'dec']
+            };
+
+            if (monthMap[search]) {
+                return monthMap[search].some(m =>
+                    new RegExp(`\\b${m}\\b`, 'i').test(text)
+                );
             }
-            filerdr.readAsDataURL(input.files[0]);
+
+            return new RegExp(
+                `\\b${search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`,
+                'i'
+            ).test(text);
         }
-        else {
-            $scope.Image = '';
-            $scope.$applyAsync();
+
+        pdftext = (pdftext || "").replace(/\s+/g, " ").trim();
+
+        let collectionobj = {
+            Action: 53,
+            Id: DocumentId
+        };
+
+        try {
+
+            let response = await myService.methode(
+                'POST',
+                "../Communication/GetCommunication",
+                '{obj:' + JSON.stringify(collectionobj) + '}'
+            );
+
+            let ValidationData = response.data || [];
+
+            $scope.hideValidationLoader();
+
+            if (ValidationData.length === 0) { 
+
+                swal({
+                    title: "Validation Warning",
+                    text: "No validation rules found. Do you want to upload anyway?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Upload Anyway",
+                    cancelButtonText: "Cancel",
+                    closeOnConfirm: true
+                },
+                    function (isConfirm) {
+
+                        if (!isConfirm) {
+                            return;
+                        }
+
+                        $scope.$applyAsync(function () {
+
+                            setTimeout(function () {
+                                $scope.detailSave = 'No validation rules found.';
+                                $scope.AccPercentage = '0';
+
+                                $('#btnupload' + rowId).trigger('click');
+
+                            }, 500);
+
+                        });
+
+                    });
+            }
+
+            let detailHtml =
+                "<table class='table table-bordered'>" +
+                "<thead>" +
+                "<tr><th>Validation</th><th>Status</th></tr>" +
+                "</thead><tbody>";
+
+            swal({
+                title: "Validation In Progress",
+                text:
+                    "<div style='width:100%;background:#eee;border-radius:8px'>" +
+                    "<div id='progressBar' style='width:0%;height:20px;background:green;color:white;text-align:center;border-radius:8px'>0%</div>" +
+                    "</div><br>" +
+                    "<table class='table table-bordered'>" +
+                    "<thead><tr><th>Validation</th><th>Status</th></tr></thead>" +
+                    "<tbody id='validationProgress'></tbody>" +
+                    "</table>",
+                html: true,
+                showConfirmButton: false
+            });
+
+            let successCount = 0;
+
+            const headerMap = {
+                "FormNo": "FormNo",
+                "Heading": "Heading",
+                "Format": "Format",
+                "Registeration No": "RegisterationNo",
+                "Establishment Name": "EstablishmentName",
+                "Payment Status": "PaymentStatus",
+                "EmployersCodeNo": "EmployerCodeNo",
+                "EmployersCodeNo.": "EmployerCodeNo",
+                "Challan Period": "ChallanPeriod",
+                "Challan Number": "ChallanNumber",
+                "Contribution Year": "ContributionYear",
+                "Period of Return": "PeriodofReturn",
+                "Period Covered by Return": "PeriodCoveredbyReturn",
+                "Transaction Status": "TransactionStatus",
+                "Employer's Name": "EmployerName",
+                "Transaction Number": "TransactionNumber",
+                "Name of Establishment": "NameofEstablishment",
+                "Establishment Id": "EstablishmentId",
+                "RETURN STATEMENT(Regular Return)": "RETURNSTATEMENT",
+                "EMPLOYEE'S PROVIDENT FUND ORGANISATION": "EMPLOYEEPROVIDENTFUNDORGANISATION",
+                "InsuredName": "InsuredName",
+                "Insured Name": "InsuredAddress",
+                "Period of Insurance": "PeriodofInsurance",
+                "EMPLOYEES COMPENSATION INSURANCE": "EMPLOYEESCOMPENSATIONINSURANCE"
+            };
+
+            for (let i = 0; i < ValidationData.length; i++) {
+              
+                let item = ValidationData[i];
+
+                $("#validationProgress").append(
+                    "<tr id='row" + i + "'>" +
+                    "<td>" + item.ValidationHeader + "</td>" +
+                    "<td>⏳ Processing...</td>" +
+                    "</tr>"
+                );
+
+                await new Promise(r => setTimeout(r, 700));
+
+                let compareValue = item.ValidationValue || "";
+
+                if (!compareValue.trim()) {
+
+                    let originalHeader = (item.ValidationHeader || "").trim();
+
+                    let mappedHeader =
+                        headerMap[originalHeader] || originalHeader;
+
+                    let possibleHeaders = [
+                        ...new Set([originalHeader, mappedHeader])
+                    ];
+
+                    // Direct Match
+                    for (let header of possibleHeaders) {
+
+                        compareValue =
+                            ($scope.DocumentValidationData &&
+                                $scope.DocumentValidationData[header]) ||
+
+                            ($scope.MasterValidationData &&
+                                $scope.MasterValidationData[header]) ||
+
+                            '';
+
+                        if (compareValue)
+                            break;
+                    }
+
+                    // Flexible Match
+                    if (!compareValue) {
+
+                        for (let header of possibleHeaders) {
+
+                            let normalizedHeader = header
+                                .replace(/[^a-zA-Z0-9]/g, '')
+                                .toLowerCase();
+
+                            if ($scope.DocumentValidationData) {
+
+                                let matchedKey = Object.keys($scope.DocumentValidationData)
+                                    .find(function (key) {
+
+                                        return key
+                                            .replace(/[^a-zA-Z0-9]/g, '')
+                                            .toLowerCase() === normalizedHeader;
+
+                                    });
+
+                                if (matchedKey) {
+
+                                    compareValue =
+                                        $scope.DocumentValidationData[matchedKey];
+
+                                    break;
+                                }
+                            }
+
+                            if (!compareValue &&
+                                $scope.MasterValidationData) {
+
+                                let matchedKey = Object.keys($scope.MasterValidationData)
+                                    .find(function (key) {
+
+                                        return key
+                                            .replace(/[^a-zA-Z0-9]/g, '')
+                                            .toLowerCase() === normalizedHeader;
+
+                                    });
+
+                                if (matchedKey) {
+
+                                    compareValue =
+                                        $scope.MasterValidationData[matchedKey];
+
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                console.log(
+                    "ValidationHeader:",
+                    item.ValidationHeader,
+                    "CompareValue:",
+                    compareValue
+                );
+
+                let matched = compareValue
+                    ? accurateMatch(compareValue, pdftext)
+                    : false;
+
+                let rowHtml = "";
+
+                if (matched) {
+
+                    successCount++;
+
+                    rowHtml =
+                        "<tr>" +
+                        "<td>" + item.ValidationHeader + "</td>" +
+                        "<td>✅ Found (" + compareValue + ")</td>" +
+                        "</tr>";
+
+                    $("#row" + i).html(
+                        "<td>" + item.ValidationHeader + "</td>" +
+                        "<td>✅ Found (" + compareValue + ")</td>"
+                    );
+                }
+                else {
+
+                    rowHtml =
+                        "<tr>" +
+                        "<td>" + item.ValidationHeader + "</td>" +
+                        "<td>❌ Not Found</td>" +
+                        "</tr>";
+
+                    $("#row" + i).html(
+                        "<td>" + item.ValidationHeader + "</td>" +
+                        "<td>❌ Not Found</td>"
+                    );
+                }
+
+                detailHtml += rowHtml;
+
+                let percent = Math.round(
+                    ((i + 1) / ValidationData.length) * 100
+                );
+
+                $("#progressBar")
+                    .css("width", percent + "%")
+                    .html(percent + "%");
+            }
+
+            detailHtml += "</tbody></table>";
+
+            $scope.detailSave = detailHtml;
+
+            //let finalPercent = Math.round(
+            //    (successCount / ValidationData.length) * 100
+            //);
+            let finalPercent = ValidationData.length > 0
+                ? Math.round((successCount / ValidationData.length) * 100)
+                : 0;
+            $scope.AccPercentage = finalPercent;
+
+            setTimeout(function () {
+                let isValid = (finalPercent === 100);
+
+
+                let msg =
+                    "Matched : " +
+                    successCount +
+                    "/" +
+                    ValidationData.length +
+                    " (" +
+                    finalPercent +
+                    "%)";
+  
+                swal({
+                    title: isValid
+                        ? "Validation Complete"
+                        : "Validation Warning",
+
+                    text:
+                        "<b>Total Validation Match:</b> " +
+                        successCount + "/" + ValidationData.length +
+                        "<br><b>Calculate Accuracy:</b> " +
+                        finalPercent + "%",
+
+                    html: true,
+                    type: isValid ? "success" : "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: true,
+                    confirmButtonText: "Upload Anyway"
+                },
+                    function () {
+                        $scope.$applyAsync(function () {
+
+                            setTimeout(function () {
+                                debugger;
+                                $scope.detailSave = msg;
+                                $scope.AccPercentage = '0';
+                                $('#btnupload' + rowId).click();
+                            }, 500);
+
+                        });
+                     /* callback(isValid, msg); */
+                      
+                    });
+
+            }, 800);
+
+        }
+        catch (e) {
+            
+            console.error(e);
+
+            callback(
+                false,
+                "Validation failed : " +
+                (e.message || e)
+            );
         }
     };
+
+    $scope.CurrentUploadInput = null;
+    $scope.CurrentFieldName = null;
+    $scope.uploadFile = function (fieldName, input)
+    {
+     
+
+        $scope.CurrentUploadInput = input;
+        $scope.CurrentFieldName = fieldName;
+       
+        let index = input.id.replace('fuCandidatePhoto1', '');
+        let xx = $scope.InDocList[index];
+
+        $scope.CallforDocumentvalidation(xx);
+
+        let documentId = $(input).data("documentid");
+        processFile();
+        let idText = input.id.replace(fieldName, "");
+        let rowId = index;/*parseInt(idText);*/
+
+        
+
+        const file = input.files[0];
+
+        if (!file) {
+            $scope.hideValidationLoader();
+            return;
+        }
+
+        // Validate extension
+        let allowedFormat = (xx.FormatType || "").toLowerCase();
+        let uploadedExt = file.name.split('.').pop().toLowerCase();
+
+        if (allowedFormat !== uploadedExt) {
+
+            swal(
+                "Invalid File",
+                "Only ." + allowedFormat + " file allowed.",
+                "error"
+            );
+
+            input.value = "";
+            return;
+        }
+
+        $scope.showValidationLoader();
+
+        ReadingFile(
+            input.files,
+            index,
+            rowId,
+            documentId,
+            function (isValid, msg) {
+
+              
+
+                if (!isValid) {
+
+                    swal({
+                        title: "Validation Warning",
+                        text: msg,
+                        type: "warning", 
+                        showCancelButton: true,
+                        closeOnConfirm: true,
+                        confirmButtonText: "Upload Anyway"
+                    },
+                        function (isConfirm) {
+
+                            if (isConfirm) {
+
+                                swal.close();
+
+                               
+
+                                $scope.$applyAsync(function () {
+
+                                    setTimeout(function () {
+                                        debugger;
+                                        $scope.detailSave = msg;
+                                        $scope.AccPercentage = '0';
+                                        $('#btnupload' + rowId).click();
+                                    }, 500);
+
+                                });
+                            }
+                        });
+                }
+                else {
+
+                    processFile();
+                }
+            }
+        );
+    };
+    function processFile() {
+       
+
+        let input = $scope.CurrentUploadInput;
+        let fieldName = $scope.CurrentFieldName;
+
+        if (!input)
+            return;
+
+        let id = $(input).attr('id');
+
+        
+        if (input.files && input.files[0]) {
+
+            let reader = new FileReader();
+
+            reader.onload = function (e) {
+
+                $scope.FileDoc = e.target.result;
+               
+                $scope[id] = '1';
+
+                $scope.$applyAsync();
+
+                console.log("File Saved");
+            };
+
+            reader.readAsDataURL(
+                input.files[0]
+            );
+        }
+
+
+    }
+    function ReadingFile(files, index, rowId, documentId, callback) {
+
+        function UploadAfterConfirm(rowId, message) {
+
+            swal({
+                title: "Validation Warning",
+                text: message,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Upload Anyway",
+                cancelButtonText: "Cancel",
+                closeOnConfirm: true
+            }, function (isConfirm) {
+
+                if (isConfirm) {
+
+                    setTimeout(function () {
+                        $scope.detailSave = message;
+                        $scope.AccPercentage = '0';
+                        $('#btnupload' + rowId).trigger('click');
+
+                    }, 500);
+                }
+            });
+        }
+
+        if (!files || !files[0]) {
+            callback(true, "File not received.");
+            return;
+        }
+
+        let file = files[0];
+
+        // IMAGE
+        if (file.type.startsWith("image")) {
+
+            Tesseract.recognize(file, "eng")
+                .then(function (result) {
+
+                    let extractedText = result.data.text || "";
+
+                    if (!extractedText.trim()) {
+
+                        $scope.detailSave = 'File is being saved without proper validation.';
+                        $scope.AccPercentage = '0';
+
+                        UploadAfterConfirm(
+                            rowId,
+                            "No readable text found in the image. Do you want to upload anyway?"
+                        );
+
+                        return;
+                    }
+
+                    $scope.$applyAsync(function () {
+
+                        $scope.extractData(
+                            extractedText,
+                            index,
+                            rowId,
+                            documentId,
+                            callback
+                        );
+
+                    });
+
+                })
+                .catch(function (err) {
+
+                    $scope.hideValidationLoader();
+
+                    console.error(err);
+
+                    $scope.detailSave = 'File is being saved without proper validation.';
+                    $scope.AccPercentage = '0';
+
+                    UploadAfterConfirm(
+                        rowId,
+                        "Unable to read image. Do you want to upload anyway?"
+                    );
+                });
+
+            $scope.hideValidationLoader();
+            return;
+        }
+
+        // PDF
+        let reader = new FileReader();
+
+        reader.onload = async function () {
+
+            try {
+
+                let typedarray = new Uint8Array(this.result);
+
+                let pdf = await pdfjsLib
+                    .getDocument({ data: typedarray })
+                    .promise;
+
+                let pagePromises = [];
+
+                for (let i = 1; i <= pdf.numPages; i++) {
+
+                    pagePromises.push(
+                        pdf.getPage(i).then(async function (page) {
+
+                            let textContent =
+                                await page.getTextContent();
+
+                            let pageText = textContent.items
+                                .map(x => x.str)
+                                .join(" ");
+
+                            if (pageText.trim())
+                                return pageText;
+
+                            // OCR fallback
+                            let viewport =
+                                page.getViewport({ scale: 2 });
+
+                            let canvas =
+                                document.createElement("canvas");
+
+                            let context =
+                                canvas.getContext("2d");
+
+                            canvas.width = viewport.width;
+                            canvas.height = viewport.height;
+
+                            await page.render({
+                                canvasContext: context,
+                                viewport: viewport
+                            }).promise;
+
+                            let result =
+                                await Tesseract.recognize(
+                                    canvas,
+                                    "eng"
+                                );
+
+                            return result.data.text || "";
+                        })
+                    );
+                }
+
+                let texts = await Promise.all(pagePromises);
+
+                let allText = texts.join(" ");
+
+                if (!allText.trim()) {
+
+                    $scope.hideValidationLoader();
+
+                    $scope.AccPercentage = '0';
+                    $scope.detailSave = 'File is being saved without proper validation.';
+
+                    UploadAfterConfirm(
+                        rowId,
+                        "No readable text found in the PDF. Do you want to upload anyway?"
+                    );
+
+                    return;
+                }
+
+                console.log("Final Text:", allText);
+
+                $scope.$applyAsync(function () {
+
+                    $scope.extractData(
+                        allText,
+                        index,
+                        rowId,
+                        documentId,
+                        callback
+                    );
+
+                });
+
+            }
+            catch (err) {
+
+                console.error(err);
+
+                $scope.hideValidationLoader();
+
+                $scope.AccPercentage = '0';
+                $scope.detailSave = 'File is being saved without proper validation.';
+
+                UploadAfterConfirm(
+                    rowId,
+                    "Unable to read PDF. Do you want to upload anyway?"
+                );
+            }
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+    //function ReadingFile(files, index, rowId, documentId, callback) {
+
+    //    if (!files || !files[0]) {
+    //        callback(true, "File not received.");
+    //        return;
+    //    }
+
+    //    let file = files[0];
+      
+    //    // IMAGE
+    //    if (file.type.startsWith("image"))
+    //    {
+
+    //        Tesseract.recognize(file, "eng")
+    //            .then(function (result) {
+
+    //                let extractedText = result.data.text || "";
+
+    //                if (!extractedText.trim()) {
+
+    //                    swal(
+    //                        "Invalid Image",
+    //                        "No readable text found.",
+    //                        "error"
+    //                    );
+    //                    $scope.detailSave = 'File is being saved without proper validation.';
+    //                    $scope.AccPercentage = '0';
+                     
+    //                    $scope.$applyAsync(function () {
+
+    //                        setTimeout(function () {
+    //                            debugger;
+    //                            $('#btnupload' + rowId).click();
+    //                        }, 500);
+
+    //                    });
+    //                 /*   callback(true, "OCR failed.");*/
+    //                    return;
+    //                }
+
+    //                $scope.$applyAsync(function () {
+
+    //                    $scope.extractData(
+    //                        extractedText,
+    //                        index,
+    //                        rowId,
+    //                        documentId,
+    //                        callback
+    //                    );
+    //                });
+    //            })
+    //            .catch(function (err) {
+    //                $scope.hideValidationLoader();
+    //                console.error(err);
+
+    //                swal(
+    //                    "Error",
+    //                    "Unable to read image.",
+    //                    "error"
+    //                );
+    //                $scope.detailSave = 'File is being saved without proper validation.';
+    //                $scope.AccPercentage = '0';
+    //                $scope.$applyAsync(function () {
+
+    //                    setTimeout(function () {
+    //                        debugger;
+    //                        $('#btnupload' + rowId).click();
+    //                    }, 500);
+
+    //                });
+    //              /*  callback(true, err);*/
+    //            });
+    //        $scope.hideValidationLoader();
+    //        return;
+    //    }
+
+    //    // PDF
+    //    let reader = new FileReader();
+
+    //    reader.onload = async function () {
+
+    //        try {
+
+    //            let typedarray = new Uint8Array(this.result);
+
+    //            let pdf = await pdfjsLib
+    //                .getDocument({ data: typedarray })
+    //                .promise;
+
+    //            let pagePromises = [];
+
+    //            for (let i = 1; i <= pdf.numPages; i++) {
+
+    //                pagePromises.push(
+    //                    pdf.getPage(i).then(async function (page) {
+
+    //                        let textContent =
+    //                            await page.getTextContent();
+
+    //                        let pageText = textContent.items
+    //                            .map(x => x.str)
+    //                            .join(" ");
+
+    //                        if (pageText.trim())
+    //                            return pageText;
+
+    //                        // OCR fallback
+    //                        let viewport =
+    //                            page.getViewport({ scale: 2 });
+
+    //                        let canvas =
+    //                            document.createElement("canvas");
+
+    //                        let context =
+    //                            canvas.getContext("2d");
+
+    //                        canvas.width = viewport.width;
+    //                        canvas.height = viewport.height;
+
+    //                        await page.render({
+    //                            canvasContext: context,
+    //                            viewport: viewport
+    //                        }).promise;
+
+    //                        let result =
+    //                            await Tesseract.recognize(
+    //                                canvas,
+    //                                "eng"
+    //                            );
+
+    //                        return result.data.text || "";
+    //                    })
+    //                );
+    //            }
+
+    //            let texts = await Promise.all(pagePromises);
+
+    //            let allText = texts.join(" ");
+
+    //            if (!allText.trim()) {
+    //                $scope.hideValidationLoader();
+    //                $scope.AccPercentage = '0';
+    //                $scope.detailSave = 'File is being saved without proper validation.';
+
+                
+    //                var msg = "No readable text found.";
+    //                swal({
+    //                    title: "Validation Warning",
+    //                    text: msg,
+    //                    type: "warning",
+    //                    showCancelButton: true,
+    //                    closeOnConfirm: true,
+    //                    confirmButtonText: "Upload Anyway"
+    //                },
+    //                    function (isConfirm) {
+    //                        $scope.$applyAsync(function () {
+
+    //                            setTimeout(function () {
+    //                                debugger;
+    //                                $('#btnupload' + rowId).click();
+    //                            }, 500);
+
+    //                        });
+    //                    }
+                   
+    //            };
+
+    //            console.log("Final Text:", allText);
+
+    //            $scope.$applyAsync(function () {
+
+    //                $scope.extractData(
+    //                    allText,
+    //                    index,
+    //                    rowId,
+    //                    documentId,
+    //                    callback
+    //                );
+    //            });
+
+    //        }
+    //        catch (err) {
+
+    //            console.error(err);
+
+    //            swal(
+    //                "Error",
+    //                "Unable to read PDF.",
+    //                "error"
+    //            );
+
+
+    //            $scope.AccPercentage = '0';
+    //            $scope.detailSave = 'File is being saved without proper validation.';
+    //            $scope.$applyAsync(function () {
+
+    //                setTimeout(function () {
+    //                    debugger;
+    //                    $('#btnupload' + rowId).click();
+    //                }, 500);
+
+    //            });
+    //           /* callback(true, err);*/
+    //        }
+    //    };
+
+    //    reader.readAsArrayBuffer(file);
+    //}
 
 
     $scope.ChkDefaultFile = function () {

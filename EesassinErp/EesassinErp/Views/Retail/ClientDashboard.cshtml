@@ -1,10 +1,18 @@
 ﻿
 @{
     ViewBag.Title = "Client Onboarding";
-    Layout = "~/Views/Common/_RetailLayout.cshtml";
+    Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
 <script src="~/scripts/RetailJsLib/ComplianceDashboardController.js?Ver=@ViewBag.Version"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="~/compliance/css/all.css" rel="stylesheet" />
+<link href="~/compliance/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.min.css" rel="stylesheet" />
+<link href="~/compliance/css/custom_theme.css" rel="stylesheet" />
+<link href="~/compliance/css/colorTheme/default.css" rel="stylesheet" />
+<link href="~/compliance/css/draggle.css" rel="stylesheet" />
+<link href="~/compliance/css/responsive.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.css" rel="stylesheet" />
 <style>
     input[type="date"] {
         padding: 8px;
@@ -14,6 +22,7 @@
         width: 100%;
         max-width: 150px;
     }
+
     .status {
         font-weight: bold;
         padding: 5px 15px;
@@ -21,19 +30,22 @@
         text-align: center;
         display: inline-block;
     }
-    .status.complete {
-        background-color: #16C098;
-        color: white;
-        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
-    }
-    .status.pending {
-        background-color: #FD6C75;
-        color: #fffdfd;
-        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
-        padding: 5px;
-        padding-left: 19px;
-        padding-right: 19px;
-    }
+
+        .status.complete {
+            background-color: #16C098;
+            color: white;
+            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .status.pending {
+            background-color: #FD6C75;
+            color: #fffdfd;
+            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+            padding: 5px;
+            padding-left: 19px;
+            padding-right: 19px;
+        }
+
     .download-btn, .upload-btn {
         background-color: #6C5DD3;
         color: white;
@@ -45,17 +57,21 @@
         padding-right: 19px;
         padding-left: 19px;
     }
+
     body {
         font-size: 12px !important;
     }
+
     th {
         background-color: #DAE7FF !important;
     }
+
     th, td {
         padding: 10px;
         text-align: left;
         border-bottom: 1px solid #ddd;
     }
+
     th {
         display: table-cell;
         vertical-align: inherit;
@@ -63,30 +79,32 @@
         text-align: -internal-center;
         unicode-bidi: isolate;
     }
+
     .filters {
         display: ruby-text;
         justify-content: space-between;
         padding: 8px;
         align-items: center;
     }
-    .filters select {
-        padding: 8px;
-        margin: 0 5px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 14px;
-    }
 
-    .filters button {
-        padding: 8px 16px;
-        background: #6f42c1;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-        margin-right: 392px;
-    }
+        .filters select {
+            padding: 8px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .filters button {
+            padding: 8px 16px;
+            background: #6f42c1;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 392px;
+        }
 
     .popup-header .close-btn {
         background-color: #FF4D4D;
@@ -151,6 +169,7 @@
         font-size: 20px;
         cursor: pointer;
     }
+
     .recontainer {
         background: #fff;
         border-radius: 8px;
@@ -328,7 +347,7 @@
 
 
     .filters select {
-      /*  padding: 7px 30px;*/
+        /*  padding: 7px 30px;*/
         border: 1px solid #007bff;
         background-color: #fff;
         color: #333;
@@ -338,8 +357,8 @@
     }
 
         .filters select:hover {
-           /* background-color: #007bff;*/
-         /*   color: #fff; */
+            /* background-color: #007bff;*/
+            /*   color: #fff; */
         }
 
 
@@ -503,7 +522,7 @@
                     <img src="~/Client Onboarding/img/Group1.png" alt="Organization Icon" style="width:55px; height:55px; margin-bottom:10px;">
                     Uploaded Document
                 </p>
-                <a  onclick="openCPopup()" style="color: #ffffff; font-size: 14px; text-decoration: underline; display: inline-block; margin-bottom: 90px; margin-left: 61%; font-weight: bold; margin-top: 25px;">View All</a>
+                <a onclick="openCPopup()" style="color: #ffffff; font-size: 14px; text-decoration: underline; display: inline-block; margin-bottom: 90px; margin-left: 61%; font-weight: bold; margin-top: 25px;">View All</a>
 
                 <h2>{{CompleteCount}}</h2>
             </div>
@@ -557,6 +576,9 @@
 
                     <th>Document</th>
                     <th>Frequency</th>
+                    <th>State</th>
+                    <th>Year</th>
+                    <th>Month</th>
                     <th>Download Sample Sheet</th>
                     <th>Upload Doc. File</th>
                     <th>Uploaded File</th>
@@ -574,19 +596,40 @@
                     <td>
                         {{x.Frequency}}
                     </td>
+                    <td>
+                        {{x.State_NM}}
+                    </td>
+                    <td>
+                        {{x.year}}
+                    </td>
+                    <td>
+                        {{x.MonthName}}
+                    </td>
 
-                    <td><a href="#" ng-click="viewFile(x.SampleFile)" class="sample-sheet-link"><img src="~/Client Onboarding/img/down.png" alt="Icon" style="width: 20px; height: 20px; margin-right: 5px;">Sample Sheet</a></td>
+                    @*<td><a href="#" ng-click="viewFile(x.SampleFile)" class="sample-sheet-link"><img src="~/Client Onboarding/img/down.png" alt="Icon" style="width: 20px; height: 20px; margin-right: 5px;">Sample Sheet</a></td>*@
+                    <td>
+                        <a href=""
+                           ng-click="Viewexcelfile(x); $event.preventDefault();"
+                           class="sample-sheet-link">
+
+                            <img src="~/Client Onboarding/img/down.png"
+                                 alt="Icon"
+                                 style="width: 20px; height: 20px; margin-right: 5px;">
+
+                            Sample Sheet
+                        </a>
+                    </td>
                     <td>
                         <button class="download-btn" ng-click="SetValue(x,'#fileupoad'+$index);ManageLog('Upload File'+row.Act)">Choose File</button>
                         <input type="file" style="display:none" id="fileupoad{{$index}}" ng-model="UploadFile" onchange="angular.element(this).scope().fileSelected(this.files)" />
 
                     </td>
-                    <td><button ng-show="{{x.isopen}}=='1'" class="download-btn" ng-click="viewFile(x.UploadFile)">Download</button></td>
+                    <td><button ng-show="{{x.isopen}}=='1'" class="download-btn"  ng-click="DownloadFileC(x.UploadFile,x.DocumentName)">Download</button></td>
                     <td> {{x.ASD}}  </td>
                     <td> {{x.DueDate}}  </td>
                 </tr>
 
-               
+
                 <!-- Add more rows as needed -->
             </tbody>
         </table>
@@ -623,6 +666,9 @@
 
                     <th>Document</th>
                     <th>Frequency</th>
+                    <th>State</th>
+                    <th>Year</th>
+                    <th>Month</th>
                     <th>Download Sample Sheet</th>
                     <th>Upload Doc. File</th>
                     <th>Download File</th>
@@ -641,14 +687,22 @@
                     <td>
                         {{x.Frequency}}
                     </td>
-
-                    <td><a href="#" ng-click="viewFile(x.SampleFile)" class="sample-sheet-link"><img src="~/Client Onboarding/img/down.png" alt="Icon" style="width: 20px; height: 20px; margin-right: 5px;">Sample Sheet</a></td>
+                    <td>
+                        {{x.State_NM}}
+                    </td>
+                    <td>
+                        {{x.year}}
+                    </td>
+                    <td>
+                        {{x.MonthName}}
+                    </td>
+                    <td><a href="#" ng-click="ViewFileC(x.SampleFile)" class="sample-sheet-link"><img src="~/Client Onboarding/img/down.png" alt="Icon" style="width: 20px; height: 20px; margin-right: 5px;">Sample Sheet</a></td>
                     <td>
                         <button class="download-btn" ng-click="SetValue(x,'#fileupoad'+$index);ManageLog('Upload File'+row.Act)">Choose File</button>
                         <input type="file" style="display:none" id="fileupoad{{$index}}" ng-model="UploadFile" onchange="angular.element(this).scope().fileSelected(this.files)" />
 
                     </td>
-                    <td><button ng-show="{{x.isopen}}=='1'" class="download-btn" ng-click="viewFile(x.UploadFile)">Download</button></td>
+                    <td><button ng-show="{{x.isopen}}=='1'" class="download-btn" ng-click="DownloadFileC(x.UploadFile,x.DocumentName)">Download</button></td>
                     <td> {{x.ASD}}  </td>
                     <td> {{x.DueDate}}  </td>
                     <td>
@@ -693,6 +747,9 @@
 
                     <th>Document</th>
                     <th>Frequency</th>
+                    <th>State</th>
+                    <th>Year</th>
+                    <th>Month</th>
                     <th>Download Sample Sheet</th>
                     <th>Upload Doc. File</th>
                     <th>Download File</th>
@@ -711,14 +768,22 @@
                     <td>
                         {{x.Frequency}}
                     </td>
-
-                    <td><a href="#" ng-click="viewFile(x.SampleFile)" class="sample-sheet-link"><img src="~/Client Onboarding/img/down.png" alt="Icon" style="width: 20px; height: 20px; margin-right: 5px;">Sample Sheet</a></td>
+                    <td>
+                        {{x.State_NM}}
+                    </td>
+                    <td>
+                        {{x.year}}
+                    </td>
+                    <td>
+                        {{x.MonthName}}
+                    </td>
+                    <td><a href="#" ng-click="ViewFileC(x.SampleFile)" class="sample-sheet-link"><img src="~/Client Onboarding/img/down.png" alt="Icon" style="width: 20px; height: 20px; margin-right: 5px;">Sample Sheet</a></td>
                     <td>
                         <button class="download-btn" ng-click="SetValue(x,'#fileupoad'+$index);ManageLog('Upload File'+row.Act)">Choose File</button>
                         <input type="file" style="display:none" id="fileupoad{{$index}}" ng-model="UploadFile" onchange="angular.element(this).scope().fileSelected(this.files)" />
 
                     </td>
-                    <td><button ng-show="{{x.isopen}}=='1'" class="download-btn" ng-click="viewFile(x.UploadFile)">Download</button></td>
+                    <td><button ng-show="{{x.isopen}}=='1'" class="download-btn"  ng-click="DownloadFileC(x.UploadFile,x.DocumentName)">Download</button></td>
                     <td> {{x.ASD}}  </td>
                     <td> {{x.DueDate}}  </td>
                     <td>
@@ -763,6 +828,9 @@
 
                     <th>Document</th>
                     <th>Frequency</th>
+                    <th>State</th>
+                    <th>Year</th>
+                    <th>Month</th>
                     <th>Download Sample Sheet</th>
                     <th>Upload Doc. File</th>
                     <th>Download File</th>
@@ -781,14 +849,22 @@
                     <td>
                         {{x.Frequency}}
                     </td>
-
+                    <td>
+                        {{x.State_NM}}
+                    </td>
+                    <td>
+                        {{x.year}}
+                    </td>
+                    <td>
+                        {{x.MonthName}}
+                    </td>
                     <td><a href="#" ng-click="viewFile(x.SampleFile)" class="sample-sheet-link"><img src="~/Client Onboarding/img/down.png" alt="Icon" style="width: 20px; height: 20px; margin-right: 5px;">Sample Sheet</a></td>
                     <td>
                         <button class="download-btn" ng-click="SetValue(x,'#fileupoad'+$index);ManageLog('Upload File'+row.Act)">Choose File</button>
                         <input type="file" style="display:none" id="fileupoad{{$index}}" ng-model="UploadFile" onchange="angular.element(this).scope().fileSelected(this.files)" />
 
                     </td>
-                    <td><button ng-show="{{x.isopen}}=='1'" class="download-btn" ng-click="viewFile(x.UploadFile)">Download</button></td>
+                    <td><button ng-show="{{x.isopen}}=='1'" class="download-btn"  ng-click="DownloadFileC(x.UploadFile,x.DocumentName)">Download</button></td>
                     <td> {{x.ASD}}  </td>
                     <td> {{x.DueDate}}  </td>
                     <td>
@@ -848,7 +924,7 @@
 
 <script>
     // Function to open the popup
-    function openTPopup () {
+    function openTPopup() {
         document.getElementById('Tpopup').style.display = 'block';
         document.getElementById('popupOverlay').style.display = 'block';
     }
@@ -880,5 +956,5 @@
         document.getElementById('Ipopup').style.display = 'none';
         document.getElementById('popupOverlay').style.display = 'none';
     }
-     
+
 </script>

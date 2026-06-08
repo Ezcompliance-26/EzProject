@@ -504,7 +504,7 @@
             collectionobj.LoginType = 4
             collectionobj.LoginId = $scope.hfId; 
             collectionobj.BranchCode = '001';
-            collectionobj.Action = 7;
+            collectionobj.Action = 41;
             collectionobj.IsActive = 1 
             collectionobj.CreatedBy = LoginId;
             var getData = myService.methode('POST', "../DashBoard/IUDUserRegistration", '{obj:' + JSON.stringify(collectionobj) + '}');
@@ -513,6 +513,7 @@
                 if (showMsgBox(response.data.Result)) {
                     $scope.FireEmail(1, $scope.EmailId, 0); 
                     $scope.Limit();
+                    $scope.UserList();
                     $scope.UserNames = '';
                     $scope.Password = '';
                     $scope.UName = '';
@@ -619,133 +620,65 @@
         });
           /* $('#loadingModal').modal('hide');*/
     };
-    //$scope.SavePermissionRecord = function () {
-    //    debugger
-    //    if ($scope.UserId == '' || $scope.UserId == undefined) {
-    //        showMsgBox('999', 'Warning', 'Please Select User', 'warning', 'btn-warning');
-    //        return;
-    //    }
-
-    //    var SectionList = [];
-    //    var anyPermissionSelected = false; // ⭐ flag
-
-    //    $("#permissionTable tbody tr").each(function () {
-    //        debugger;
-    //        var row = $(this);
-
-    //        var SectionId = row.find("input[type='hidden']#hfId").val();
-
-    //        var chkAllowView = row.find("#chkAllowView").prop("checked");
-    //        var chkAllowEdit = row.find("#chkAllowEdit").prop("checked");
-    //        var chkAllowDelete = row.find("#chkAllowDelete").prop("checked");
-    //        var chkAllowUpload = row.find("#chkupload").prop("checked");
-    //        var chkAllowDownload = row.find("#chkAllowDownload").prop("checked");
-    //        var chkAllowNewStore = row.find("#chkAllowNewStore").prop("checked");
-    //        var chkAllowNewEmployee = row.find("#chkAllowNewEmployee").prop("checked");
-    //        var chkAllowChk1 = row.find("#chkAllowChk1").prop("checked");
-    //        var chkAllowChk2 = row.find("#chkAllowChk2").prop("checked");
-    //        var chkAllowVerify = row.find("#chkVerify").prop("checked");
-
-    //        if (
-    //            chkAllowView || chkAllowEdit || chkAllowDelete || chkAllowUpload ||
-    //            chkAllowDownload || chkAllowNewStore || chkAllowNewEmployee ||
-    //            chkAllowChk1 || chkAllowChk2 || chkAllowVerify
-    //        ) {
-    //            anyPermissionSelected = true; // ⭐ at least one selected
-
-    //            SectionList.push({
-    //                SectionId: SectionId,
-    //                View: chkAllowView,
-    //                Edit: chkAllowEdit,
-    //                Delete: chkAllowDelete,
-    //                Upload: chkAllowUpload,
-    //                Download: chkAllowDownload,
-    //                NewStore: chkAllowNewStore,
-    //                NewEmployee: chkAllowNewEmployee,
-    //                Checkbox1: chkAllowChk1,
-    //                Checkbox2: chkAllowChk2,
-    //                Verify: chkAllowVerify
-    //            });
-    //        }
-    //    });
-
-    //    // 🚨 FINAL VALIDATION
-    //    if (!anyPermissionSelected) {
-    //        showMsgBox(
-    //            '999',
-    //            'Warning',
-    //            'Please select at least one permission. If you do not want to assign any permission, please disable the user or contact SuperAdmin.',
-    //            'warning',
-    //            'btn-warning'
-    //        );
-    //        return;
-    //    }
-
-    //    var collectionobj = {
-    //        ModuleType: "4",
-    //        LoginId: MapId,
-    //        UserId: $scope.UserId,
-    //        EmployeeCode: "",
-    //        SectionList: SectionList,
-    //        BranchCode: $scope.Id,
-    //        CreatedBy: LoginId,
-    //        Action: 1
-    //    };
-
-    //    var getData = myService.methode(
-    //        'POST',
-    //        "../Dashboard/InsertSectionPermissionForRole",
-    //        '{obj:' + JSON.stringify(collectionobj) + '}'
-    //    );
-
-    //    getData.then(function (response) {
-    //        if (showMsgBox(response.data.Result)) {
-    //            // success logic
-    //        }
-    //    });
-    //};
-
-
     $scope.SavePermissionRecord = function () {
-
-        if (!$scope.UserId) {
+        debugger
+        if ($scope.UserId == '' || $scope.UserId == undefined) {
             showMsgBox('999', 'Warning', 'Please Select User', 'warning', 'btn-warning');
             return;
         }
 
         var SectionList = [];
-        var anyPermissionSelected = false;
+        var anyPermissionSelected = false; // ⭐ flag
 
-        angular.forEach($scope.PagesSectionMasterList, function (item) {
+        $("#permissionTable tbody tr").each(function () {
+            debugger;
+            var row = $(this);
+
+            var SectionId = row.find("input[type='hidden']#hfId").val();
+
+            var chkAllowView = row.find("#chkAllowView").prop("checked");
+            var chkAllowEdit = row.find("#chkAllowEdit").prop("checked");
+            var chkAllowDelete = row.find("#chkAllowDelete").prop("checked");
+            var chkAllowUpload = row.find("#chkupload").prop("checked");
+            var chkAllowDownload = row.find("#chkAllowDownload").prop("checked");
+            var chkAllowNewStore = row.find("#chkAllowNewStore").prop("checked");
+            var chkAllowNewEmployee = row.find("#chkAllowNewEmployee").prop("checked");
+            var chkAllowChk1 = row.find("#chkAllowChk1").prop("checked");
+            var chkAllowChk2 = row.find("#chkAllowChk2").prop("checked");
+            var chkAllowVerify = row.find("#chkVerify").prop("checked");
 
             if (
-                item.ViewFlag || item.EditFlag || item.DeleteFlag || item.UploadFlag ||
-                item.DownloadFlag || item.NewStoreFlag || item.NewEmployeeFlag ||
-                item.Checkbox1Flag || item.Checkbox2Flag || item.VerifyFlag
+                chkAllowView || chkAllowEdit || chkAllowDelete || chkAllowUpload ||
+                chkAllowDownload || chkAllowNewStore || chkAllowNewEmployee ||
+                chkAllowChk1 || chkAllowChk2 || chkAllowVerify
             ) {
-                anyPermissionSelected = true;
+                anyPermissionSelected = true; // ⭐ at least one selected
 
                 SectionList.push({
-                    SectionId: item.Id,
-                    View: item.ViewFlag,
-                    Edit: item.EditFlag,
-                    Delete: item.DeleteFlag,
-                    Upload: item.UploadFlag,
-                    Download: item.DownloadFlag,
-                    NewStore: item.NewStoreFlag,
-                    NewEmployee: item.NewEmployeeFlag,
-                    Checkbox1: item.Checkbox1Flag,
-                    Checkbox2: item.Checkbox2Flag,
-                    Verify: item.VerifyFlag   // 🔥 DIRECT VALUE
+                    SectionId: SectionId,
+                    View: chkAllowView,
+                    Edit: chkAllowEdit,
+                    Delete: chkAllowDelete,
+                    Upload: chkAllowUpload,
+                    Download: chkAllowDownload,
+                    NewStore: chkAllowNewStore,
+                    NewEmployee: chkAllowNewEmployee,
+                    Checkbox1: chkAllowChk1,
+                    Checkbox2: chkAllowChk2,
+                    Verify: chkAllowVerify
                 });
             }
-
         });
 
+        // 🚨 FINAL VALIDATION
         if (!anyPermissionSelected) {
-            showMsgBox('999', 'Warning',
-                'Please select at least one permission.',
-                'warning', 'btn-warning');
+            showMsgBox(
+                '999',
+                'Warning',
+                'Please select at least one permission. If you do not want to assign any permission, please disable the user or contact SuperAdmin.',
+                'warning',
+                'btn-warning'
+            );
             return;
         }
 
@@ -753,20 +686,88 @@
             ModuleType: "4",
             LoginId: MapId,
             UserId: $scope.UserId,
+            EmployeeCode: "",
             SectionList: SectionList,
             BranchCode: $scope.Id,
             CreatedBy: LoginId,
             Action: 1
         };
 
-        myService.methode(
+        var getData = myService.methode(
             'POST',
             "../Dashboard/InsertSectionPermissionForRole",
             '{obj:' + JSON.stringify(collectionobj) + '}'
-        ).then(function (response) {
-            showMsgBox(response.data.Result);
+        );
+
+        getData.then(function (response) {
+            if (showMsgBox(response.data.Result)) {
+                // success logic
+            }
         });
     };
+
+
+    //$scope.SavePermissionRecord = function () {
+
+    //    if (!$scope.UserId) {
+    //        showMsgBox('999', 'Warning', 'Please Select User', 'warning', 'btn-warning');
+    //        return;
+    //    }
+
+    //    var SectionList = [];
+    //    var anyPermissionSelected = false;
+
+    //    angular.forEach($scope.PagesSectionMasterList, function (item) {
+
+    //        if (
+    //            item.ViewFlag || item.EditFlag || item.DeleteFlag || item.UploadFlag ||
+    //            item.DownloadFlag || item.NewStoreFlag || item.NewEmployeeFlag ||
+    //            item.Checkbox1Flag || item.Checkbox2Flag || item.VerifyFlag
+    //        ) {
+    //            anyPermissionSelected = true;
+
+    //            SectionList.push({
+    //                SectionId: item.Id,
+    //                View: item.ViewFlag,
+    //                Edit: item.EditFlag,
+    //                Delete: item.DeleteFlag,
+    //                Upload: item.UploadFlag,
+    //                Download: item.DownloadFlag,
+    //                NewStore: item.NewStoreFlag,
+    //                NewEmployee: item.NewEmployeeFlag,
+    //                Checkbox1: item.Checkbox1Flag,
+    //                Checkbox2: item.Checkbox2Flag,
+    //                Verify: item.VerifyFlag   // 🔥 DIRECT VALUE
+    //            });
+    //        }
+
+    //    });
+
+    //    if (!anyPermissionSelected) {
+    //        showMsgBox('999', 'Warning',
+    //            'Please select at least one permission.',
+    //            'warning', 'btn-warning');
+    //        return;
+    //    }
+
+    //    var collectionobj = {
+    //        ModuleType: "4",
+    //        LoginId: MapId,
+    //        UserId: $scope.UserId,
+    //        SectionList: SectionList,
+    //        BranchCode: $scope.Id,
+    //        CreatedBy: LoginId,
+    //        Action: 1
+    //    };
+
+    //    myService.methode(
+    //        'POST',
+    //        "../Dashboard/InsertSectionPermissionForRole",
+    //        '{obj:' + JSON.stringify(collectionobj) + '}'
+    //    ).then(function (response) {
+    //        showMsgBox(response.data.Result);
+    //    });
+    //};
 
 
     $scope.chkAllow = [];

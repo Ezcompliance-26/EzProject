@@ -189,7 +189,7 @@ namespace EesassinErp.Controllers
             {
                 smtpClient.Credentials = new NetworkCredential(emailDetails.EmailId, emailDetails.Password);
                 smtpClient.EnableSsl = true;
-
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
                 var mailMessage = new MailMessage
                 {
                     From = new MailAddress(emailDetails.EmailId, emailDetails.EmailName),
@@ -254,7 +254,7 @@ namespace EesassinErp.Controllers
                 SMTP.Host = SmtpServer;
                 SMTP.Port = SmtpPort;
                 SMTP.EnableSsl = true;
-
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
                 SMTP.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
                 SMTP.UseDefaultCredentials = true;

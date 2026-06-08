@@ -5,7 +5,7 @@
     --card-bg: #FEF3EC;
     background: #FFF1EB;
     color: #223;
-    min-height: 100%;
+    min-height: 90vh ;
 }
 
 .dropdown-menu {

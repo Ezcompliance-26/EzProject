@@ -1354,13 +1354,15 @@
         let paginatedData = filteredData.slice(startIndex, startIndex + pageSize);
 
         let csv = [];
-        let headers = ["Location Code", "Unit Name", "Document Name", "Status"];
+        let headers = ["Location Code", "Unit Name", "Start Date", "End Date","Document Name", "Status"];
         csv.push(headers.join(","));
 
         paginatedData.forEach(function (item) {
             csv.push([
                 item.StoreName,
                 item.UnitName,
+				  item.validfrom,
+                item.ValidTo,
                 item.DocumentName,
                 item.UploadStatus
             ].join(","));

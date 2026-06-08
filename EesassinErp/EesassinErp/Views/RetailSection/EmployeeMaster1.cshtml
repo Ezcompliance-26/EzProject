@@ -1,18 +1,26 @@
 ﻿@{
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
     ViewBag.Title = "Retail";
-    Layout = "~/Views/Common/_RetailLayout.cshtml";
+    Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<link href="~/compliance/css/all.css" rel="stylesheet" />
+<link href="~/compliance/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.min.css" rel="stylesheet" />
+<link href="~/compliance/css/custom_theme.css" rel="stylesheet" />
+<link href="~/compliance/css/colorTheme/default.css" rel="stylesheet" />
+<link href="~/compliance/css/draggle.css" rel="stylesheet" />
+<link href="~/compliance/css/responsive.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.css" rel="stylesheet" />
 <script>
-     function ExportToExcel(type, fn, dl) {
-     var elt = document.getElementById('tbl_exporttable_to_xls');
-     var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
-     return dl ?
-     XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-     XLSX.writeFile(wb, fn || ('EmployeeSheet.' + (type || 'xlsx')));
-     }
+    function ExportToExcel(type, fn, dl) {
+        var elt = document.getElementById('tbl_exporttable_to_xls');
+        var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+        return dl ?
+            XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            XLSX.writeFile(wb, fn || ('EmployeeSheet.' + (type || 'xlsx')));
+    }
 
 </script>
 <style>
@@ -25,18 +33,18 @@
 </style>
 
 <script>
-function printDiv() {
-    var divName = "tbl_exporttable_to_xls";
+    function printDiv() {
+        var divName = "tbl_exporttable_to_xls";
 
-                     var printContents = document.getElementById(divName).innerHTML;
-                     var originalContents = document.body.innerHTML;
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
 
-                     document.body.innerHTML = printContents;
+        document.body.innerHTML = printContents;
 
-                     window.print();
+        window.print();
 
-                     document.body.innerHTML = originalContents;
-                }</script>
+        document.body.innerHTML = originalContents;
+    }</script>
 <div class="container-fluid pagecontentbody" ng-show="EmployeeMasterGrid">
     <div class="tab-content">
         <div class="pagebody removebg-color">
@@ -68,7 +76,7 @@ function printDiv() {
                             <ul class="dropdown-menu escalul" aria-labelledby="escalbtnLink">
                                 @*<li><a onclick="ExportToExcel('xlsx')" class="dropdown-item" href="#">Export in Excel</a></li>
 
-                                <li><a class="dropdown-item" onclick="printDiv();">Export in PDF</a></li>*@
+                                    <li><a class="dropdown-item" onclick="printDiv();">Export in PDF</a></li>*@
                                 <li><a class="dropdown-item" ng-click="ExportExcel();ManageLog('click on Export in Excel button  Employee button')">Export in Excel</a></li>
                                 <li><a class="dropdown-item" ng-click="ExportPdf();ManageLog('click on Export in PDF button  Employee button')">Export in PDF</a></li>
                             </ul>
@@ -142,15 +150,15 @@ function printDiv() {
                                                 </div>
                                             </td>
                                             @*<td>
-            <div class="form-control2">
-                <label class="switch">
-                    <div class="slider round">
-                        <span class="on">Active</span>
-                        <span class="off">Deactive</span>
-                    </div>
-                </label>
-            </div>
-        </td>*@
+                                                    <div class="form-control2">
+                                                        <label class="switch">
+                                                            <div class="slider round">
+                                                                <span class="on">Active</span>
+                                                                <span class="off">Deactive</span>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                </td>*@
                                             <td>
                                                 <div class="editlist dropdown">
                                                     <a href="#" class="dropdown-toggle" data-bs-toggle="modal" ng-click="openEmployeeModal(employee.Id)" data-bs-target="#profileview">
@@ -228,42 +236,42 @@ function printDiv() {
                     <div class="row g-3">
 
                         @*<div class="col-md-3">
-            <label class="form-label">Party Type <span class="text-danger">*</span></label>
-            <div class="input-box" ng-init="BindModuleTypeList()">
-                <select class="form-select form-control validate" id="ddlPartyType" ng-model="PartyTypeId" ng-change="AllPartySiteLoad(PartyTypeId)">
-                    <option value="">Select</option>
-                    <option ng-repeat="x in AllModuleTypeList" value="{{x.Id}}">{{x.Module_Type}}</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Select Party <span class="text-danger">*</span></label>
-            <div class="input-box">
-                <select class="form-select form-control validate" id="ddlPartyId" ng-model="PartyId" ng-change="AllUserListsLoad(PartyId)">
-                    <option value="">Select</option>
-                    <option ng-repeat="x in AllPartyList" value="{{x.PartyId}}">{{x.PartyName}}</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Select User</label>
-            <div class="input-box">
-                <select class="form-select form-control" id="ddlUserList" ng-model="UserId" ng-change="BindSuperVisior1(UserId)">
-                    <option value="">Select</option>
-                    <option ng-repeat="x in AllUserList" value="{{x.LoginId}}">{{x.Name}}</option>
-                </select>
-            </div>
-        </div>*@
+                                <label class="form-label">Party Type <span class="text-danger">*</span></label>
+                                <div class="input-box" ng-init="BindModuleTypeList()">
+                                    <select class="form-select form-control validate" id="ddlPartyType" ng-model="PartyTypeId" ng-change="AllPartySiteLoad(PartyTypeId)">
+                                        <option value="">Select</option>
+                                        <option ng-repeat="x in AllModuleTypeList" value="{{x.Id}}">{{x.Module_Type}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Select Party <span class="text-danger">*</span></label>
+                                <div class="input-box">
+                                    <select class="form-select form-control validate" id="ddlPartyId" ng-model="PartyId" ng-change="AllUserListsLoad(PartyId)">
+                                        <option value="">Select</option>
+                                        <option ng-repeat="x in AllPartyList" value="{{x.PartyId}}">{{x.PartyName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Select User</label>
+                                <div class="input-box">
+                                    <select class="form-select form-control" id="ddlUserList" ng-model="UserId" ng-change="BindSuperVisior1(UserId)">
+                                        <option value="">Select</option>
+                                        <option ng-repeat="x in AllUserList" value="{{x.LoginId}}">{{x.Name}}</option>
+                                    </select>
+                                </div>
+                            </div>*@
                         <div class="col-md-3">
                             <label class="form-label">Employee Code <span class="text-danger">*</span></label>
                             <input type="text" class="form-control validate" id="txtEmployeeCode" ng-model="EmployeeCode" ng-disabled="true" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Ref Employee Code <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control validate" id="txtRefEmployeeCode" ng-model="RefEmployeeCode"  />
+                            <input type="text" class="form-control validate" id="txtRefEmployeeCode" ng-model="RefEmployeeCode" />
                         </div>
 
-                        
+
                         <div class="col-md-3">
                             <label class="form-label">Employee Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control validate" id="txtEmployeeName" ng-model="EmployeeName" />
@@ -543,8 +551,8 @@ function printDiv() {
                                     <p><b>Phone Number : </b>{{ employee.PhoneNumber }}</p>
                                     <p><b>Address : </b>{{ employee.Address }}</p>
                                     @*<p><b>City : </b>{{ employee.City }}</p>
-                                    <p><b>State/Region : </b>{{ employee.State }}</p>
-                                    <p><b>Zipcode : </b>{{ employee.ZipCode }}</p>*@
+                                        <p><b>State/Region : </b>{{ employee.State }}</p>
+                                        <p><b>Zipcode : </b>{{ employee.ZipCode }}</p>*@
                                 </div>
                             </div>
                             <div class="seprathed">
@@ -559,10 +567,10 @@ function printDiv() {
                                                 <td ng-click="FireDoc('AdhaarFront')">
                                                     <span class="browtext">Browse</span>
                                                     <div class="browtext" for="fuPANCardFilePath1">
-                                                        <input id="AdhaarFront"  class="browbtn browtext1"  type="file"  onchange="angular.element(this).scope().UpdateDocument('AdhaarCard_FrontSide_FilePath', this);angular.element(this).scope().ManageLog('Adhaar Card Front Side in Employee Master'+ employee.Name)"  ng-model="employee.AdhaarCard_FrontSide_FilePath" />
-                                                       
-                                                    </div> 
-                                                </td> 
+                                                        <input id="AdhaarFront" class="browbtn browtext1" type="file" onchange="angular.element(this).scope().UpdateDocument('AdhaarCard_FrontSide_FilePath', this);angular.element(this).scope().ManageLog('Adhaar Card Front Side in Employee Master'+ employee.Name)" ng-model="employee.AdhaarCard_FrontSide_FilePath" />
+
+                                                    </div>
+                                                </td>
                                                 <td>
                                                     <a href="#" ng-if="employee.AdhaarCard_FrontSide_FilePath !=null" class="viewlink" ng-click="viewDocument(employee.AdhaarCard_FrontSide_FilePath);ManageLog('View Aadhar front Card in Employee Master'+ employee.Name)">View</a>
                                                 </td>
@@ -646,7 +654,7 @@ function printDiv() {
                                                     <input id="Cheque" type="file" class="browbtn browtext1" onchange="angular.element(this).scope().UpdateDocument('Cheque_Passbook_FilePath', this);angular.element(this).scope().ManageLog('Cheque/Passbook in Employee Master '+ employee.Name)" ng-model="employee.Cheque_Passbook_FilePath" />
                                                 </td>
                                                 <td>
-                                                    <a href="#" class="viewlink"  ng-if="employee.Cheque_Passbook_FilePath !=null" ng-click="viewDocument(employee.Cheque_Passbook_FilePath);ManageLog('Cheque/Passbook in Employee Master '+ employee.Name)">View</a>
+                                                    <a href="#" class="viewlink" ng-if="employee.Cheque_Passbook_FilePath !=null" ng-click="viewDocument(employee.Cheque_Passbook_FilePath);ManageLog('Cheque/Passbook in Employee Master '+ employee.Name)">View</a>
                                                 </td>
                                             </tr>
                                         </table>
@@ -659,18 +667,18 @@ function printDiv() {
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="table-responsive">
-                                        <table class="cusmtbl" >
-                                            <tr >
+                                        <table class="cusmtbl">
+                                            <tr>
                                                 <th></th>
                                                 <th class="text-center">Start Date</th>
                                                 <th class="text-center">End Date</th>
                                             </tr>
                                             <tr ng-repeat="x in  TransferLog">
                                                 <td><b class="text-success">{{x.UnitCode}}</b></td>
-                                                <td >{{x.StartDate}}</td>
-                                                <td  >{{x.EndDate}}</td>
+                                                <td>{{x.StartDate}}</td>
+                                                <td>{{x.EndDate}}</td>
                                             </tr>
-                                            
+
                                         </table>
                                     </div>
                                 </div>
@@ -679,9 +687,9 @@ function printDiv() {
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div class="row w-100 justify-content-center"> 
-                        <div class="col-md-6 d-grid"> 
-                            <button  style="display:{{employee.IsTransfer}}" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reportNotice">Transfer</button>
+                    <div class="row w-100 justify-content-center">
+                        <div class="col-md-6 d-grid">
+                            <button style="display:{{employee.IsTransfer}}" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#reportNotice">Transfer</button>
                         </div>
                         <div class="col-md-6 d-grid">
                             <button type="submit" ng-click="EditEmployee(employee.Id);ManageLog('View More in Employee Master')" class="btn btn-warning">View More</button>
@@ -730,7 +738,7 @@ function printDiv() {
                                     <td>
                                         <button class="btn btn-warning" ng-click="SetTransfer(x.Id);ManageLog('Transfer' + x.StoreCode)">Transfer</button>
                                     </td>
-                                </tr> 
+                                </tr>
                             </table>
                         </div>
                     </div>

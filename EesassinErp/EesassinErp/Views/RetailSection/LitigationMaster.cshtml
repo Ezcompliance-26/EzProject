@@ -1,11 +1,78 @@
 ﻿@{
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
     ViewBag.Title = "Litigation Master";
-    Layout = "~/Views/Common/_RetailLayout.cshtml";
+    Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
+
+@*<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />*@
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<!-- 3. Buttons Extension (IMPORTANT 🔥) -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+<!-- 4. Export dependencies -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>-->
+<!-- DataTables CSS -->
+@*<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">*@
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+<link href="~/compliance/css/all.css" rel="stylesheet" />
+<link href="~/compliance/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.min.css" rel="stylesheet" />
+<link href="~/compliance/css/custom_theme.css" rel="stylesheet" />
+<link href="~/compliance/css/colorTheme/default.css" rel="stylesheet" />
+<link href="~/compliance/css/draggle.css" rel="stylesheet" />
+<link href="~/compliance/css/responsive.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.css" rel="stylesheet" />
+
 <style>
+    .pagecontentbody {
+        font-family: "Inter", sans-serif;
+        --primary: #E45D27; /* theme accent */
+        --primary-dark: #c44b1d;
+        --card-bg: #FEF3EC;
+        background: #FFF1EB;
+        color: #223;
+        min-height: 90vh;
+    }
+
+    .dropdown-menu {
+        min-width: 120px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        max-height: 240px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .btn-newCase, .uploadbtn, .btn-save, .btn-back, .btn-download {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-weight: 400;
+        display: inline-flex;
+        align-items: center;
+        gap: 1px;
+        cursor: pointer;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+        .download-btn:hover, .btn-submit:hover, .btn-view:hover, .btn-save:hover, .btn-print:hover, .btn-excel:hover, .btn-download:hover {
+            background-color: #c44b1d;
+            color: #fff;
+        }
+
     .column-content {
         column-width: 300px; /* Maximum column width */
         column-gap: 20px; /* Space between columns */
@@ -13,11 +80,46 @@
         white-space: normal; /* Enable text wrapping */
         word-wrap: break-word; /* Break long words */
         word-break: break-word;
-       
     }
+
+    #storeForm .card{
+        background: var(--card-bg);
+        border:0;
+    }
+
+    #storeForm .card-body h4{
+        color:var(--primary);
+    }
+
     .table > thead > tr > th {
-        background-color: #F66659;
-        color: white;
+        background-color: var(--primary);
+        color: #fff;
+    }
+
+    .table > tbody > tr > td {
+        background-color: var(--card-bg);
+        color: #223;
+    }
+
+    .buttons-csv, .buttons-print {
+        background: transparent !important;
+        color: var(--primary) !important;
+        border: 1px solid var(--primary) !important;
+        border-radius: 999px !important;
+        padding: 6px 12px !important;
+        font-weight: 400 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 1px !important;
+        cursor: pointer !important;
+        text-decoration: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+
+    .buttons-csv:hover,
+    .buttons-print:hover{
+        background:var(--primary);
+        color:#fff;
     }
 </style>
 <style>
@@ -27,19 +129,17 @@
         border: 1px solid red;
         padding: 5px 10px;
         border-radius: 4px;
-        
         font-size: 12px;
         white-space: nowrap;
     }
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-@*<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.1/xlsx.full.min.js"></script>*@ 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
-
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>-->
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.1/xlsx.full.min.js"></script>*@
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>-->
 <!-- For PDF Export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>-->
 <script>
     function switchTab(evt, tabId) {
         var i, tabcontent, tablinks;
@@ -61,6 +161,7 @@
 <style>
     .tab-container {
         margin-bottom: 20px;
+        margin-top: 20px;
     }
 
     .tab-nav {
@@ -68,54 +169,58 @@
         padding: 0;
         margin: 0;
         display: flex;
-        border-bottom: 2px solid #ddd;
+        border-bottom: 1px solid var(--primary);
     }
 
         .tab-nav li {
-            padding: 10px 20px;
+            padding: 6px 16px;
             cursor: pointer;
-            background-color: #F66659;
-            color: white;
+            background-color: var(--card-bg);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-bottom: none;
             margin-right: 2px;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
         }
 
             .tab-nav li.active {
-                background-color: #ddcdcd;
-                border: 1px solid #ddd;
+                background-color: var(--primary);
                 border-bottom: none;
-                color: black;
+                color: #fff;
             }
 
     .tab-content {
         display: none;
-        padding: 20px;
+        padding: 10px;
         border-top: none;
-        background-color: #fff;
+        border-radius: 12px;
+        background-color: var(--card-bg);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
     }
 
         .tab-content.active {
             display: block;
         }
 </style>
- 
+
 <script src="~/scripts/RetailJsLib/LitigationMasterController.js?Ver=@ViewBag.Version"></script>
-<div class="pagecontentbody themed-element">
+<div class="pagecontentbody px-4 py-2 themed-element">
     <div class="pagebody">
         <div class="col-md-12 pageheader">
             <div class="row">
-                <div class="col-md-9" >
-                    <div class="col-md-5" ng-init="BindAppeals()" ng-show="FilterIsOpen"> 
+                <div class="col-md-9">
+                    <h3 style="color:var(--primary);">Litigation Master</h3>
+                    <div class="col-md-5" ng-init="BindAppeals()" ng-show="FilterIsOpen">
                         <select id="ddlAppeal" class="form-control form-select" ng-model="Appeal" ng-change="EditCaseCode(Appeal)">
                             <option value="">Select</option>
                             <option ng-repeat="x in AppealList" value="{{x.CaseCode}}">{{x.Appeal}}</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-3 text-end" ng-init="GetLitigationMaster(1, 10, '')">
-                    <a class="btn btn-primary" href="#" ng-show="IsOpen" ng-click="CloseCase();ManageLog('Open New Store')"><span class="fas fa-plus"></span>&nbsp;&nbsp;Go Back</a>
-                    <a class="btn btn-warning" href="#" ng-hide="IsOpen" ng-click="NewCase();ManageLog('Open New Store')"><span class="fas fa-plus"></span>&nbsp;&nbsp;New Case</a>
+                <div class="col-sm-3 text-end" ng-init="GetLitigationMaster(1, 100000, '')">
+                    <a class="btn-back" href="#" ng-show="IsOpen" ng-click="CloseCase();ManageLog('Open New Store')"></i>&nbsp;&nbsp;Go Back</a>
+                    <a class="btn-newCase" href="#" ng-hide="IsOpen" ng-click="NewCase();ManageLog('Open New Store')"><i class="bi bi-plus-lg" aria-hidden="true"></i>&nbsp;&nbsp;New Case</a>
                 </div>
             </div>
         </div>
@@ -132,7 +237,7 @@
                     <form id="storeForm" enctype="multipart/form-data">
                         <div class="tab-content active" id="tab1">
                             <div class="col-md-12">
-                                <div class="row mb-3 p-3">
+                                <div class="row ">
                                     <div class="card p-0">
                                         <div class="card-body">
                                             <h4>Case Filing  </h4>
@@ -365,8 +470,8 @@
                                                     </select>
 
                                                 </div>
-                                                <div class="col-md-12">
-                                                    <input type="button" class="btn btn-warning" value="Save Draft" style="width: 30%;text-align:center" ng-click="SaveStage1()">
+                                                <div class="col-md-12" style="text-align: end;">
+                                                    <input type="button" class="btn btn-save" value="Save Draft" ng-click="SaveStage1()">
                                                 </div>
 
 
@@ -379,7 +484,7 @@
                         </div>
                         <div class="tab-content" id="tab2">
                             <div class="col-md-12">
-                                <div class="row mb-3 p-3">
+                                <div class="row">
                                     <div class="card p-0">
                                         <div class="card-body">
                                             <h4>Pleading </h4>
@@ -447,8 +552,8 @@
 
 
 
-                                                <div class="col-md-12">
-                                                    <input type="button" class="btn btn-warning" value="Save Draft" style="width: 30%;text-align:center" ng-click="SaveStage2()">
+                                                <div class="col-md-12" style="text-align: end;">
+                                                    <input type="button" class="btn btn-save" value="Save Draft" ng-click="SaveStage2()">
                                                 </div>
                                             </div>
                                         </div>
@@ -458,15 +563,15 @@
                         </div>
                         <div class="tab-content" id="tab3">
                             <div class="col-md-12">
-                                <div class="row mb-3 p-3">
+                                <div class="row">
                                     <div class="card p-0">
                                         <div class="card-body">
                                             <h4>Hearing  </h4>
-                                            <div class="row g-3"  >
+                                            <div class="row g-3">
                                                 <div class="row g-3" ng-repeat="hearing in hearings track by $index">
 
                                                     <div class="col-md-12" style="font-size:18px">
-                                                        <strong>Tracker {{$index+1}}</strong>
+                                                        Tracker {{$index+1}}
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label class="form-label">Date of Hearing</label>
@@ -515,9 +620,9 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-md-6">
-                                                    <input type="button" class="btn btn-warning" value="Save Draft" style="width: 30%; text-align:center" ng-click="SaveStage3()" />
-                                                    <input type="button" class="btn btn-warning" value="Add New Row" ng-show="AddHeading" ng-click="addNewHearing()" style="width: 30%; text-align:center" />
+                                                <div class="col-md-12" style="text-align: end;">
+                                                    <input type="button" class="btn btn-save" value="Save Draft"  ng-click="SaveStage3()" />
+                                                    <input type="button" class="btn btn-save" value="Add New Row" ng-show="AddHeading" ng-click="addNewHearing()" />
                                                 </div>
 
                                             </div>
@@ -528,7 +633,7 @@
                         </div>
                         <div class="tab-content" id="tab4">
                             <div class="col-md-12">
-                                <div class="row mb-3 p-3">
+                                <div class="row">
                                     <div class="card p-0">
                                         <div class="card-body">
                                             <h4>Orders & Judgments </h4>
@@ -600,8 +705,8 @@
                                                 </div>
 
 
-                                                <div class="col-md-12">
-                                                    <input type="button" class="btn btn-warning" value="Save Draft" style="width: 30%;text-align:center" ng-click="SaveStage4()">
+                                                <div class="col-md-12" style="text-align: end;">
+                                                    <input type="button" class="btn btn-save" value="Save Draft"  ng-click="SaveStage4()">
                                                 </div>
 
                                             </div>
@@ -612,12 +717,12 @@
                         </div>
                         <div class="tab-content" id="tab5">
                             <div class="col-md-12">
-                                <div class="row mb-3 p-3">
+                                <div class="row">
                                     <div class="card p-0">
                                         <div class="card-body">
                                             <h4>Appeal </h4>
                                             <div class="row g-3">
-                                                
+
                                                 <div class="col-md-3">
                                                     <label class="form-label">Appeal Status <span class="text-danger">*</span></label>
                                                     <select class="form-control" id="txtAppealStatus" ng-model="AppealStatus">
@@ -637,8 +742,8 @@
                                                         <option value="Opposition">Opposition</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-md-12">
-                                                    <input type="button" class="btn btn-warning" value="Final Save" style="width: 30%;text-align:center" ng-click="SaveStage5()">
+                                                <div class="col-md-12" style="text-align: end;">
+                                                    <input type="button" class="btn btn-save" value="Final Save" ng-click="SaveStage5()">
                                                 </div>
                                             </div>
                                         </div>
@@ -654,10 +759,10 @@
             <div class="row mb-3 p-3">
                 <div class="p-0">
                     <input class="form-control" type="text" id="myInput" value="" style="width: 30%; margin-left: 67%; " ng-keyup="GetLitigationMaster(1,10)" placeholder="Search">
-                    <div >
+                    <div>
                         <div id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
-                                <table id="example" style="width:100% !important" class="display nowrap table table-bordred table-hover tableFixHead unittbl datatable themed-element">
+                                <table id="example" style="width:100% !important" class="display nowrap table table-hover tableFixHead unittbl datatable themed-element">
                                 </table>
                             </div>
 
@@ -669,4 +774,4 @@
     </div>
 </div>
 
- 
+

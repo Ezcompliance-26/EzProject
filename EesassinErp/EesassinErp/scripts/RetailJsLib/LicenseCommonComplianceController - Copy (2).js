@@ -839,6 +839,7 @@
             "Location Code",
             "License Name",
             "License Number",
+            "License Status",
             "Expiry Status",
             "Validity Start Date",
             "Validity End Date",
@@ -856,6 +857,7 @@
                 row.StoreCode,
                 row.LicenseName,
                 row.LicenseNumber,
+                row.LicenseStatus,
                 row.ExpiryStatus,
                 row.ValidityStartDate,
                 row.ValidityEndDate,
@@ -943,9 +945,11 @@
         printWindow.document.write("<table>");
         printWindow.document.write(`
         <tr>
-            <th>Store Code</th>
+            <th>Location Code</th>
             <th>License Name</th>
             <th>License Number</th>
+  <th>License Status</th>
+
             <th>Expiry Status</th>
             <th>Start Date</th>
             <th>End Date</th>
@@ -959,6 +963,7 @@
                 <td>${row.StoreCode || ""}</td>
                 <td>${row.LicenseName || ""}</td>
                 <td>${row.LicenseNumber || ""}</td>
+ <td>${row.LicenseStatus || ""}</td>
                 <td>${row.ExpiryStatus || ""}</td>
                 <td>${row.ValidityStartDate || ""}</td>
                 <td>${row.ValidityEndDate || ""}</td>

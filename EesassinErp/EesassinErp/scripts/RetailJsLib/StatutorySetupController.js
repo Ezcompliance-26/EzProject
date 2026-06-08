@@ -4,7 +4,6 @@
     $scope.AllActList = [];
 
     $scope.AddListSet = function () {
-        $scope.ClearFileInput();
         $scope.ListSet.push({
             State: '',
             StoreId:'',
@@ -19,19 +18,26 @@
         });
     };
     $scope.showEntryForm = false;
-    $scope.ClearFileInput = function () {
-        var fileInputs = document.querySelectorAll('input[type="file"]');
-        angular.forEach(fileInputs, function (input) {
-            input.value = null;
-        });
+
+
+    $scope.ResetForm = function () {
+        $scope.ListSet = [{
+            State: "",
+            Act: "",
+            ComplianceName: "",
+            RegistrationType: "",
+            Upload: ""
+        }];
+        angular.element("input[type='file']").val(null);
     };
-    
+
     $scope.switchView = function () {
         $scope.showEntryForm = !$scope.showEntryForm;
         setTimeout(() => {
             window.scrollTo(0, 0);
         }, 100);
     };
+
     $scope.RemoveListSet = function (index) {
         $scope.ListSet.splice(index, 1);
     };
@@ -83,7 +89,8 @@
 
     $scope.AllState = function () {
         var collectionobj = {
-            Action: 6
+            Action: 6,
+            Id: LoginId
         };
         debugger;
         var getData = myService.methode('POST', "../Retail/SearchStatutorySetup", collectionobj);
@@ -97,7 +104,8 @@
     $scope.BindAct = function (State, index) {
         var collectionobj = {
             Action: 7,
-            Id: State
+            Createdby: State,
+            Id: LoginId
         };
         debugger;
         var getData = myService.methode('POST', "../Retail/SearchStatutorySetup", collectionobj);
@@ -124,22 +132,77 @@
         });
     };
 
+    //$scope.handleFileUpload = function (input, imgfileid) {
+    //    var index = parseInt(input.getAttribute('data-index'));
+    //    if (input.files && input.files[0]) {
+    //        var filerdr = new FileReader();
+    //        filerdr.onload = function (e) {
+    //            $scope.ListSet[index].Upload = e.target.result;
+    //            $scope.$applyAsync(); 
+    //        }
+    //        filerdr.readAsDataURL(input.files[0]);
+    //    }
+    //      const MAX_SIZE_MB = 3;
+    //    const fileSizeMB = file.size / (1024 * 1024);
+    //    if (fileSizeMB > MAX_SIZE_MB) {
+    //        swal("File Too Large", "Maximum allowed file size is 3 MB.", "error");
+    //        input.value = "";
+    //        return;
+    //    }
+    //    else { 
+          
+    //        $scope.ListSet[Index].Upload = '';
+    //        $scope.$applyAsync();
+    //    }
+    //};
+
     $scope.handleFileUpload = function (input, imgfileid) {
+
         var index = parseInt(input.getAttribute('data-index'));
+
         if (input.files && input.files[0]) {
+
+            var file = input.files[0];
+
+            // Allow only PDF
+            if (file.type !== "application/pdf") {
+                swal("Invalid File", "Only PDF files are allowed.", "error");
+
+                input.value = "";
+                $scope.ListSet[index].Upload = '';
+                $scope.$applyAsync();
+                return;
+            }
+
+            // File size validation
+            const MAX_SIZE_MB = 3;
+            const fileSizeMB = file.size / (1024 * 1024);
+
+            if (fileSizeMB > MAX_SIZE_MB) {
+                swal("File Too Large", "Maximum allowed file size is 3 MB.", "error");
+
+                input.value = "";
+                $scope.ListSet[index].Upload = '';
+                $scope.$applyAsync();
+                return;
+            }
             var filerdr = new FileReader();
             filerdr.onload = function (e) {
                 $scope.ListSet[index].Upload = e.target.result;
-                $scope.$applyAsync(); 
-            }
-            filerdr.readAsDataURL(input.files[0]);
+                $scope.$applyAsync();
+            };
+
+            filerdr.readAsDataURL(file);
         }
-        else { 
-          
-            $scope.ListSet[Index].Upload = '';
+        else {
+
+            $scope.ListSet[index].Upload = '';
+
             $scope.$applyAsync();
         }
     };
+
+
     function formatDateLocal(date) {
         if (!date) return '';
         const d = new Date(date);
@@ -148,6 +211,7 @@
             String(d.getDate()).padStart(2, '0');
     }
     $scope.SaveAfterValidate = function () {
+        $scope.ListSet;
         if (isValidate()) {
             $scope.showLoader();
             var collectionobj = {};
@@ -165,11 +229,10 @@
                 if (showMsgBox(response.data.Result)) {
                     $scope.Binddasboard();
                     $scope.switchView();
-            
                     $scope.ListSet = [];
                     $scope.AllActList = [];
                     $scope.AddListSet();
-                 
+                    $scope.ResetForm();
                 }
             });
         }

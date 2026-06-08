@@ -4,6 +4,7 @@
     Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
 
+<script src="~/scripts/RetailJsLib/NotificationDetails.js?Ver=@ViewBag.Version"></script>
 <style>
     .notificationsPage {
         font-family: "Inter", sans-serif;
@@ -130,116 +131,14 @@
     }
 </style>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-
-        const list = document.getElementById('notifPageList');
-        const search = document.getElementById('pageNotifSearch');
-        const loadMoreBtn = document.getElementById('loadMoreNotif');
-        const subText = document.getElementById('notifPageSub');
-
-        let page = 1;
-        let activeCategory = 'all';
-        let readFilter = 'all';
-
-        const notifications = [
-            { id: 1, title: 'License Expiring', msg: 'Factory Act license expires in 5 days', type: 'expired', read: false, time: '2h ago' },
-            { id: 2, title: 'Compliance Updated', msg: 'New compliance added', type: 'compliance', read: false, time: '5h ago' },
-            { id: 3, title: 'Location Added', msg: 'New branch added in Pune', type: 'location', read: true, time: '1d ago' },
-            { id: 4, title: 'License Approved', msg: 'Trade license approved', type: 'license', read: true, time: '2d ago' }
-        ];
-
-        function updateSubText() {
-            const unread = notifications.filter(n => !n.read).length;
-            subText.textContent = `You have ${unread} unread notifications`;
-        }
-
-        function render(reset = true) {
-            if (reset) list.innerHTML = '';
-
-            const term = search.value.toLowerCase();
-
-            notifications
-                .filter(n => activeCategory === 'all' || n.type === activeCategory)
-                .filter(n => readFilter === 'all' ||
-                    (readFilter === 'read' && n.read) ||
-                    (readFilter === 'unread' && !n.read))
-                .filter(n => n.title.toLowerCase().includes(term) || n.msg.toLowerCase().includes(term))
-                .slice(0, page * 5)
-                .forEach(n => {
-                    const row = document.createElement('div');
-                    row.className = `notifPage-item ${n.read ? '' : 'unread'}`;
-                    row.innerHTML = `
-                    <div class="notifContent">
-                        <div class="notifTitle">${n.title}</div>
-                        <div class="notifMsg">${n.msg}</div>
-                        <div class="notifMeta">
-                            <span class="notifType type-${n.type}">${n.type}</span>
-                            <span class="notifTime">${n.time}</span>
-                        </div>
-                    </div>
-                    <div class="notifActions">
-                        <button class="notifDownloadBtn">Download</button>
-                    </div>
-                `;
-                    row.addEventListener('click', () => {
-                        n.read = true;
-                        updateSubText();
-                        render();
-                    });
-                    list.appendChild(row);
-                });
-        }
-
-        document.querySelectorAll('[data-category]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('[data-category]').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                activeCategory = btn.dataset.category;
-                page = 1;
-                render();
-            });
-        });
-
-        document.querySelectorAll('[data-read]').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('[data-read]').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                readFilter = btn.dataset.read;
-                page = 1;
-                render();
-            });
-        });
-
-        document.getElementById('pageMarkAllRead').onclick = () => {
-            notifications.forEach(n => n.read = true);
-            updateSubText();
-            render();
-        };
-
-        loadMoreBtn.onclick = () => {
-            page++;
-            render(false);
-        };
-
-        search.oninput = () => render();
-
-        updateSubText();
-        render();
-    });
-</script>
-
-
-
-<div class="notificationsPage px-4 py-4">
+<div ng-controller="NotificationDetailsCtrl" class="notificationsPage px-4 py-4" ng-init="getNewsupdatesn()">
     <!-- FULL NOTIFICATIONS PAGE  -->
     <div class="notifPage container-fluid py-4">
-
         <!-- HEADER -->
         <div class="notifPage-header d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
             <div>
-                <h4 class="mb-0">Notifications</h4>
-                <small class="text-muted" id="notifPageSub">You have 0 unread notifications</small>
+                <h4 class="mb-0">News & Updates</h4>
+                
             </div>
             <button id="pageMarkAllRead" class="notifActionBtn">Mark all as read</button>
         </div>
@@ -249,35 +148,44 @@
 
             <!-- ROW 1 -->
             <div class="d-flex flex-wrap gap-2 justify-content-between mb-2">
-                <input type="text" id="pageNotifSearch" class="notifSearchInput"
+                <input type="text" id="pageNotifSearch" ng-model="USearch" class="notifSearchInput"
                        placeholder="Search notifications...">
-
-                <div class="notifTabs">
-                    <button class="active" data-read="all">All</button>
-                    <button data-read="unread">Unread</button>
-                    <button data-read="read">Read</button>
-                </div>
             </div>
 
             <!-- ROW 2 -->
             <div class="notifTabs">
-                <button class="active" data-category="all">All</button>
-                <button data-category="compliance">Compliance</button>
-                <button data-category="license">License</button>
-                <button data-category="location">Location</button>
-                <button data-category="expired">Expired</button>
+                <button class="active" data-category="all" ng-click="getNewsupdatesn()">All</button>
+                <button data-category="newlabourcode" ng-click="BindCompliances('New Labour Codes')">
+                    New Labour Codes
+                </button>
+                <button data-category="esicnotification" ng-click="BindCompliances('ESIC Notification')">ESIC Notification</button>
+                <button data-category="Ministryofcorporate" ng-click="BindCompliances('Ministry of Corporate affairs')">Ministry of Corporate affairs</button>
+                <button data-category="newlabourcodecentral" ng-click="BindCompliances('New Labour Codes Rules (Central)')">New Labour Codes Rules (Central)</button>
+                <button data-category="labourwelfare" ng-click="BindCompliances('Labour Welfare Fund')">Labour Welfare Fund</button>
+                <button data-category="fssai" ng-click="BindCompliances('FSSAI')">FSSAI</button>
+                <button data-category="shopsestablishment" ng-click="BindCompliances('Shops & Establishment')">Shops & Establishment</button>
+                <button data-category="minimumwages" ng-click="BindCompliances('Minimum Wages')">Minimum Wages</button>
+                <button data-category="professional" ng-click="BindCompliances('Professional Tax')">Professional Tax</button>
+                <button data-category="mayday" ng-click="BindCompliances('May Day')">May Day</button>
+                <button data-category="newlabpucodestate" ng-click="BindCompliances('New Labour Codes Rules (State)')">New Labour Codes Rules (State)</button>
+                <button data-category="Others" ng-click="BindCompliances('Others')">Others</button>
             </div>
         </div>
 
         <!-- LIST -->
-        <div id="notifPageList" class="notifPage-list"></div>
-
-        <!-- LOAD MORE -->
-        <div class="text-center mt-3">
-            <button id="loadMoreNotif" class="notifLoadMoreBtn">Load more notifications</button>
+        <div id="notifPageList" class="notifPage-list">
+            <div class="notifItem" ng-repeat="n in notificationsn |filter:USearch">
+                <a ng-href="{{n.url}}" class="text-decoration-none text-dark">
+                    <div class="notifContent">
+                        <h6 ng-class="n.title">{{n.title}}</h6>
+                        <h6 ng-class="n.msg">{{n.msg}}</h6>
+                        <h6>{{n.time}}</h6>
+                    </div>
+                </a>
+            </div>
         </div>
-
+        @*<div class="text-center mt-3">
+            <button id="loadMoreNotif" class="notifLoadMoreBtn">Load more notifications</button>
+        </div>*@
     </div>
-
-
 </div>

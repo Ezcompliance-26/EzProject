@@ -4,45 +4,57 @@
     $scope.BindFilter = function () {
         var collectionobj = {};
         collectionobj.Action = 12;
-        collectionobj.UserId = LoginId; 
+        collectionobj.UserId = LoginId;
         var getData = myService.methode('POST', "../Retail/SearchSecretarialCompliance", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
             $scope.SMasterList = response.data.Result;
-            const monthMap = ["Invalid Month", "January", "February", "March", "April","May","June","July","August","September","October","November","December"];
-            // $scope.MasterList = response.data.Result.map(item => {
-            //    return { 
-            //        ...item,  
-            //        MonthName: monthMap[item.Month] || "Invalid Month"  
-            //    };
-            //}); 
-
+            const monthMap = ["Invalid Month", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            $scope.MasterList = response.data.Result.map(item => {
+                return {
+                    ...item,
+                    MonthName: monthMap[item.Month] || "Invalid Month"
+                };
+            });
             const distinctYears = [...new Set(response.data.Result.map(item => item.Year))];
             $scope.YearsList = distinctYears;
+            $scope.ActList = response.data.Result.map(item => {
+                return {
+                    ...item,
+                    Act: item.Act || ""
+                };
+            });
+            $scope.StatusList = response.data.Result.map(item => {
+                return {
+                    ...item,
+                    Act: monthMap[item.Act] || ""
+                };
+            });
 
-       
         });
     }
     $scope.closeModal = function () {
         $('#complianceModal').modal('hide');
     };
+
     $scope.selectedCompliance = null;
 
     $scope.openComplianceModal = function (row) {
         // You can customize or fetch additional data here if needed
+        console.log(row);
         $scope.selectedCompliance = {
-            Rule: row.Rule || 'N/A',
-            Section: row.Section || 'N/A',
+            Rule: row.rules || 'N/A',
+            Section: row.section || 'N/A',
             FormNo: row.Forms || 'N/A',
             Description: row.Description || 'No description available',
             Risk: row.Risk || 'N/A',
-            UploadedFilePath: row.UFile || null // Provide path if uploaded
+            UploadedFilePath: row.ufile || null // Provide path if uploaded
         };
 
         $('#complianceModal').modal('show');
     };
 
     $scope.PrintTable = function () {
-        
+
         var tableContent = document.querySelector('#complianceTable').outerHTML;
 
         var style = `
@@ -72,7 +84,7 @@
         printWindow.close();
     };
 
-     
+
 
     $scope.PrintTable1 = function () {
 
@@ -255,7 +267,7 @@
         return date.toISOString().split('T')[0]; // format as yyyy-mm-dd
     }
 
-    
+
     $scope.SetValue = function (row, fuCandidatePhoto, ufile) {
         $scope.CACId = row.Id;
         $scope.ASD = row.ActualSubmissionDate;
@@ -264,40 +276,77 @@
         $scope.Createdby = LoginId;
         $scope.CN = row.ComplianceName;
         $(fuCandidatePhoto).click();
-     
+
     }
-    $scope.fileSelected = function (files, row)
-    {
-        const file =  files[0];
-        row.FileName = input.files[0].name;
+
+    $scope.fileSelected = function (files, row, input) {
+
+        const file = files[0];
+
         if (!file) {
+            if (input) {
+                input.value = '';
+            }
+
             $scope.hideValidationLoader();
+
             return;
         }
-
-        //✅ Check for PDF extension
+        else {
+            row.isFileValid = true;
+        }
         const isPDF = file.type === 'application/pdf';
+
         if (!isPDF) {
 
             swal("Invalid File", "Only PDF files are allowed.", "error");
-            input.value = ""; // Clear the file
+
+            row.UploadFile = null;
+            if (input) {
+                input.value = '';
+            }
+
+            $scope.$applyAsync();
+
             return;
         }
 
-        // ✅ Check for 3 MB file size limit
+        // =====================================================
+        // ✅ FILE SIZE VALIDATION
+        // =====================================================
+
         const MAX_SIZE_MB = 3;
         const fileSizeMB = file.size / (1024 * 1024);
+
         if (fileSizeMB > MAX_SIZE_MB) {
 
             swal("File Too Large", "Maximum allowed file size is 3 MB.", "error");
-            input.value = ""; // Clear the file
+
+            row.UploadFile = null;
+            row.isFileValid = false;
+
+            // ✅ Clear actual file input
+            if (input) {
+                input.value = '';
+            }
+
+            $scope.$applyAsync();
+
             return;
         }
+
+        // =====================================================
+        // ✅ DOCUMENT VALIDATION
+        // =====================================================
+
         $scope.showValidationLoader();
-        validateDocument(file, $scope.CN , function (isValid) {
+
+        validateDocument(file, $scope.CN, function (isValid) {
+
             $scope.hideValidationLoader();
 
             if (!isValid) {
+
                 swal({
                     title: "Are you sure?",
                     text: "Uploaded file does not appear to be valid. Do you want to continue?",
@@ -307,35 +356,118 @@
                     confirmButtonText: "Yes, continue!",
                     cancelButtonText: "Cancel",
                     closeOnConfirm: false
+
                 }, function (isConfirm) {
+
                     if (isConfirm) {
-                        swal.close(); // ✅ Manually close SweetAlert v1
-                        processFile(); // ✅ Continue processing the file
+
+                        swal.close();
+
+                        processFile();
+
                     } else {
-                        $scope.UploadFile = '';
+
+                        row.UploadFile = null;
+                        row.isFileValid = false;
+
+                        // ✅ Clear actual file input
+                        if (input) {
+                            input.value = '';
+                        }
+
                         $scope.BindSearch();
+
+                        $scope.$applyAsync();
+
                         return;
                     }
                 });
+
             } else {
-                processFile(); // ✅ Valid file, continue normally
+
+                processFile();
             }
-
-
-
             function processFile() {
-                $scope.UploadFile = '';
-                if (files && files.length > 0) {
-                    $scope.UploadFile = files[0]; // Assign the first file to the scope variable  
-                    row.FileName =  files[0].name;
-                    $scope.$apply();
-                }
+
+                row.UploadFile = file;
+                row.isFileValid = true;
+
+                $scope.UploadFile = file;
+
+                $scope.$applyAsync();
             }
         });
     };
 
+    //$scope.fileSelected = function (files, row) {
+    //    const file = files[0];
+    //    row.FileName = input.files[0].name;
+    //    if (!file) {
+    //        $scope.hideValidationLoader();
+    //        return;
+    //    }
 
-     
+    //    //✅ Check for PDF extension
+    //    const isPDF = file.type === 'application/pdf';
+    //    if (!isPDF) {
+
+    //        swal("Invalid File", "Only PDF files are allowed.", "error");
+    //        input.value = ""; // Clear the file
+    //        return;
+    //    }
+
+    //    // ✅ Check for 3 MB file size limit
+    //    const MAX_SIZE_MB = 3;
+    //    const fileSizeMB = file.size / (1024 * 1024);
+    //    if (fileSizeMB > MAX_SIZE_MB) {
+
+    //        swal("File Too Large", "Maximum allowed file size is 3 MB.", "error");
+    //        input.value = ""; // Clear the file
+    //        return;
+    //    }
+    //    $scope.showValidationLoader();
+    //    validateDocument(file, $scope.CN, function (isValid) {
+    //        $scope.hideValidationLoader();
+
+    //        if (!isValid) {
+    //            swal({
+    //                title: "Are you sure?",
+    //                text: "Uploaded file does not appear to be valid. Do you want to continue?",
+    //                type: "warning",
+    //                showCancelButton: true,
+    //                confirmButtonClass: 'btn-warning',
+    //                confirmButtonText: "Yes, continue!",
+    //                cancelButtonText: "Cancel",
+    //                closeOnConfirm: false
+    //            }, function (isConfirm) {
+    //                if (isConfirm) {
+    //                    swal.close(); // ✅ Manually close SweetAlert v1
+    //                    processFile(); // ✅ Continue processing the file
+    //                } else {
+    //                    $scope.UploadFile = '';
+    //                    $scope.BindSearch();
+    //                    return;
+    //                }
+    //            });
+    //        } else {
+    //            processFile(); // ✅ Valid file, continue normally
+    //        }
+
+
+
+    //        function processFile() {
+    //            $scope.UploadFile = '';
+    //            if (files && files.length > 0) {
+    //                $scope.UploadFile = files[0]; // Assign the first file to the scope variable  
+    //                row.FileName = files[0].name;
+    //                $scope.$apply();
+    //            }
+    //        }
+    //    });
+    //};
+
+
+
 
     $scope.viewFile = function (row) {
         if (row.UploadFile) {
@@ -359,18 +491,16 @@
         doc.autoTable({ html: content }); // Use the autoTable plugin for jsPDF
         doc.save("Statutory/Internal.pdf");
     };
-     
+
     $scope.BindSearch = function () {
-
-
+        $scope.showLoader();
+        $scope.Flags();
         var collectionobj = {
             Action: 11,
             Id: LoginId,
             State: $scope.State,
             Month: $scope.Month,
-            Year: $scope.Year,
-            PageNumber: $scope.currentPage,
-            PageSize: $scope.pageSize
+            Year: $scope.Year
         };
 
         var getData = myService.methode(
@@ -380,53 +510,102 @@
         );
 
         getData.then(function (response) {
-
             $scope.complianceRows = response.data.Result || [];
-            if ($scope.complianceRows.length > 0) {
-                $scope.totalRecords = $scope.complianceRows[0].TotalRecords;
-            }
-            $scope.StatusCount = {
-                Complied: 0,
-                Pending: 0,
-                Total: 0,
-                Delayed : 0
+            $scope.Showing = "All";
+            $scope.Pagesize = $scope.complianceRows.length;
+            $scope.ActList = [...new Set(
+                $scope.complianceRows
+                    .map(x => x.Act)
+                    .filter(x => x)
+            )].sort((a, b) => a.localeCompare(b));
+            $scope.StateList = [...new Set(
+                $scope.complianceRows
+                    .map(x => x.STATE_NM)
+                    .filter(x => x)
+            )].sort((a, b) => a.localeCompare(b));
+
+            $scope.YearsList = [...new Set(
+                $scope.complianceRows
+                    .map(x => x.Year)
+                    .filter(x => x)
+            )].sort((a, b) => a.localeCompare(b));
+
+            var monthOrder = [
+                "April", "May", "June", "July", "August", "September",
+                "October", "November", "December",
+                "January", "February", "March"
+            ];
+
+            $scope.MonthList = [...new Set(
+                ($scope.complianceRows || [])
+                    .map(x => (x.Month || '').trim())
+                    .filter(x => x)
+            )]
+                .sort((a, b) => {
+                    return monthOrder.indexOf(a) - monthOrder.indexOf(b);
+                });
+
+            $scope.statusDisplayMap = {
+                'Complied': 'Complied',
+                'Non Complied': 'Non-Complied',
+                'Delay Complied': 'Delay-Complied',
+                'Non Applicable': 'Non-Applicable',
+                'Pending': 'Pending',
+                'Verified': 'Verified',
+                'Remarks': 'Remarks'
             };
+            $scope.StatusList = ['Complied', 'Delay-Complied', 'Non-Applicable', 'Non-Complied', 'Pending', 'Remarks', 'Verified'];
+            $scope.counttiles($scope.complianceRows);
+            $scope.hideLoader();
+        });
+    };
+    $scope.counttiles = function (complianceRows) {
 
-            angular.forEach($scope.complianceRows, function (row) {
+        $scope.StatusCount = {
+            Complied: 0,
+            Pending: 0,
+            Total: 0,
+            Delayed: 0,
+            NonComplied: 0,
+            NonApplicable: 0,
+            Verified: 0,
+            Remarks: 0
+        };
 
-                $scope.StatusCount.Total++;
+        angular.forEach(complianceRows, function (row) {
 
-                if (row.CStatus === "Complied") {
-                    $scope.StatusCount.Complied++;
-                }
-                else if ( 
-                    row.CStatus === "Delay complied" 
-                ) {
-                    $scope.StatusCount.Delayed++;
-                }
-                else   {
-                    $scope.StatusCount.Pending++;
-                }
-            });
+            $scope.StatusCount.Total++;
+
+            if (row.CStatus === "Complied") {
+                $scope.StatusCount.Complied++;
+            }
+            else if (row.CStatus === "Delay Complied") {
+                $scope.StatusCount.Delayed++;
+            }
+            else if (row.CStatus === "Non Complied") {
+                $scope.StatusCount.NonComplied++;
+            }
+            else if (row.CStatus === "Non Applicable") {
+                $scope.StatusCount.NonApplicable++;
+            }
+            else {
+                $scope.StatusCount.Pending++;
+            }
+
+            // Separate verification count
+            if (row.IsVerified === "Verified") {
+                $scope.StatusCount.Verified++;
+            }
+
+            // Separate remarks count
+            if (row.IsVerified === "Remarks") {
+                $scope.StatusCount.Remarks++;
+            }
 
         });
-
     };
 
-     
-    $scope.nextPage = function () {
-        if ($scope.currentPage * $scope.pageSize < $scope.totalRecords) {
-            $scope.currentPage++;
-            $scope.BindSearch();
-        }
-    };
 
-    $scope.prevPage = function () {
-        if ($scope.currentPage > 1) {
-            $scope.currentPage--;
-            $scope.BindSearch();
-        }
-    };
 
 
     // Modal open करने का function
@@ -480,26 +659,16 @@
     };
 
     /////added///
-    $scope.openComplianceModal = function (row) {
-        $scope.selectedCompliance = row;
-        setTimeout(function () {
-            $('#complianceModal').modal('show');
-        }, 0);
-    };
-
-
-
-
-
-
-
-
-
-
+    //$scope.openComplianceModal = function (row) {
+    //    $scope.selectedCompliance = row;
+    //    setTimeout(function () {
+    //        $('#complianceModal').modal('show');
+    //    }, 0);
+    //};
 
     $scope.SaveRecord = function () {
-        if (isValidate()) { 
-            $scope.AfterverifyRecord() 
+        if (isValidate()) {
+            $scope.AfterverifyRecord()
         }
     }
 
@@ -508,12 +677,12 @@
     };
     $scope.selectedRemark = "";
     $scope.HeaderRemark = "";
-    $scope.openRemarkModal = function (remark,Header) {
+    $scope.openRemarkModal = function (remark, Header) {
         $scope.selectedRemark = $sce.trustAsHtml(remark);
         $scope.HeaderRemark = Header;
         $('#remarkModal').modal('show');
     };
-    $scope.closeRemarkModal  = function (remark) {
+    $scope.closeRemarkModal = function (remark) {
         $scope.selectedRemark = '';
         $scope.HeaderRemark = "";
         $('#remarkModal').modal('hide');
@@ -521,55 +690,44 @@
 
     $scope.AfterverifyRecord = function (row) {
         if (!row.CStatus || !row.ActualSubmissionDate) {
-            showMsgBox("Please enter both Status  and Actual Submission Date.");
+            showMsgBox("Please Enter Both Status  and Actual Submission Date.");
             return;
         }
-        if (row.IsVerified == '' && $scope.IsExecuter == 'Client') {
-            showMsgBox("Please enter Verified Status");
+        if (!row.IsVerified && $scope.SC_allowverifyflag === true) {
+            showMsgBox("Please Select Verification Status");
             return;
         }
-        if (row.CRemark1 == '' && row.IsVerified == 'Clarify' && $scope.IsExecuter == 'Client') {
-            showMsgBox("Please enter Remark in condition of Clarify.");
+        if (row.VRemark1 == '' && row.IsVerified == 'Clarify' && $scope.SC_allowverifyflag === true) {
+            showMsgBox("Please Enter Remark in Condition of Remarks.");
             return;
         }
-        if (isValidate()) { 
-            var formData = new FormData();  
+        if (isValidate()) {
+            var formData = new FormData();
             formData.append('ASD', $filter('date')(row.ActualSubmissionDate, 'yyyy/MM/dd'));
             formData.append('CSD', $filter('date')(row.CSD, 'yyyy/MM/dd'));
             formData.append('RegNo', row.RegistrationNumber);
             formData.append('DelayDay', row.DelayDay);
-            formData.append('UploadFile', $scope.UploadFile);
-
-            if ($scope.UploadFile == undefined || $scope.UploadFile == null || $scope.UploadFile == '') {
+            if (row.UploadFile == undefined || row.UploadFile == null || row.UploadFile == '') {
                 formData.append('UploadFile', '-1');
             }
             else {
-                formData.append('UploadFile', $scope.UploadFile);
+                formData.append('UploadFile', row.UploadFile);
             }
             formData.append('Createdby', LoginId);
 
-            formData.append('Status', row.CStatus );
-            formData.append('VRemark', row.VRemark1 );
+            formData.append('Status', row.CStatus);
+            formData.append('VRemark', row.VRemark1);
             formData.append('CRemark', row.CRemark1);
             formData.append('IsVerified', row.IsVerified);
 
             formData.append('CACId', row.CACId);
-            if ($scope.IsExecuter == 'Client')
-            {
-               
-
-                formData.append('Action', '2');
-            }
-            if ($scope.IsExecuter == 'Executer') {
-                formData.append('Action', '1');
-            }
+            formData.append('Action', '2');
             $http.post("../Retail/IUDSecretarialStatutory", formData, {
                 transformRequest: angular.identity,
                 headers: { 'Content-Type': undefined }
-            }).then(function (response)
-            {
+            }).then(function (response) {
                 $scope.UploadFile = '';
-            showMsgBox(response.data.Result); 
+                showMsgBox(response.data.Result);
                 $scope.BindSearch();
             }, function (error) {
                 console.error('Error', error);
@@ -577,56 +735,850 @@
         }
     }
 
+    $scope.openEventModal = function (row) {
+        if (row.Frequency !== 'Event') {
+            return;
+        }
+        var modalEl = document.getElementById('eventModal');
+        var obj = angular.copy(row);
+
+        obj.ActualSubmissionDate = "";
+        obj.UploadFile = null;
+        obj.CStatus = "";
+        obj.DelayDays = "";
+        obj.TempIsVerified = "";
+        obj.IsVerified = "";
+        obj.openthis = "0";
+        obj.CreateOn = "";
+        obj.VRemark = "";
+        obj.VRemark1 = "";
+        obj.CSIID = "";
+        obj.isDisabled = false;
+        $scope.selectedEvent1 = [obj];
+        $scope.CACEventId = row.CACId;
+        $scope.getEventDetails(row.CACId);
+        var modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if (!modalInstance) {
+            modalInstance = new bootstrap.Modal(modalEl);
+        }
+        modalInstance.show();
+    };
+
+    $scope.addEventRow = function () {
+        let lastRow = $scope.selectedEvent1[$scope.selectedEvent1.length - 1];
+        let newRow = angular.copy(lastRow);
+        newRow.UploadFile = null;
+        newRow.ActualSubmissionDate = '';
+        newRow.DelayDays = 0;
+        newRow.IsVerified = '';
+        newRow.CStatus = '';
+        newRow.isDisabled = false;
+        newRow.CreateOn = '';
+        newRow.VRemark = '';
+        newRow.VRemark1 = '';
+        newRow.openthis = '';
+        newRow.CRemark1 = '';
+        newRow.CSIID = '';
+        $scope.selectedEvent1.push(newRow);
+    };
+
+    $scope.getEventDetails = function (CACId) {
+        var collectionobj = {
+            Action: 3,
+            Id: LoginId,
+            State: $scope.State,
+            Month: $scope.Month,
+            Year: $scope.Year,
+            CACId: CACId
+        };
+        myService.methode('POST', "../Retail/SearchSecretarialEvent", { obj: collectionobj }   // cleaner than string JSON
+        ).then(function (response) {
+            let result = response.data.Result;
+            console.log("event datat", result);
+            if (result && result.length > 0) {
+                $scope.selectedEvent1 = result.map(function (x) {
+                    return {
+                        Act: x.Act,
+                        ComplianceName: x.ComplianceName,
+                        Risk: x.Risk,
+                        Frequency: x.Frequency,
+                        Month: x.Month,
+                        STATE_NM: x.STATE_NM,
+                        DueDate: x.DueDate,
+                        CStatus: x.CStatus,
+                        ActualSubmissionDate: x.ActualSubmissionDate,
+                        DelayDays: x.DelayDays,
+                        UploadFile: x.UploadFile,
+                        CreateOn: x.CreateOn,
+                        VRemark1: '',
+                        VRemark: x.VRemark,
+                        TempIsVerified: x.IsVerified,
+                        IsVerified: x.IsVerified,
+                        openthis: x.openthis,
+                        CSIID: x.CSIID,
+                        Flag: x.Flag
+                    };
+                });
+
+            } else {
+
+            }
+
+        }, function (error) {
+            console.error("Error fetching event details:", error);
+        });
+    };
+
+    $scope.$watch('Search', function () {
+
+        if (!$scope.allComplianceRows) return;
+
+        var filteredData = $scope.allComplianceRows.filter(function (row) {
+            return $scope.globalSearch(row);
+        });
+
+        $scope.complianceRows = filteredData;
+        $scope.Pagesize = $scope.complianceRows.length;
+        $scope.counttiles(filteredData);
+    });
 
 
-    $scope.clearAllFilters = function () {
+    $scope.globalSearch = function (row) {
+
+        if (!$scope.Search) return true;
+
+        var searchText = ($scope.Search || '')
+            .toString()
+            .toLowerCase()
+            .trim();
+
+        function safe(val) {
+            return (val || '')
+                .toString()
+                .toLowerCase();
+        }
+
+        return (
+
+            safe(row.SNo).includes(searchText) ||
+            safe(row.Act).includes(searchText) ||
+            safe(row.ComplianceName).includes(searchText) ||
+            safe(row.RegistrationNumber).includes(searchText) ||
+            safe(row.Risk).includes(searchText) ||
+            safe(row.Frequency).includes(searchText) ||
+            safe(row.Month).includes(searchText) ||
+            safe(row.ActualSubmissionDate).includes(searchText) ||
+            safe(row.STATE_NM).includes(searchText) ||
+            safe(row.DueDate).includes(searchText) ||
+            safe(row.CStatus).includes(searchText) ||
+            safe(row.DelayDays).includes(searchText) ||
+            safe(row.CreateOn).includes(searchText) ||
+
+            safe(
+                row.IsVerified === 'Clarify'
+                    ? 'Remarks'
+                    : row.IsVerified
+            ).includes(searchText)
+
+            // ||
+            // safe(row.VRemark).includes(searchText)
+        );
+    };
+
+    $scope.AddEventNewverifyRecord = function (row1) {
+        if (!row1.CStatus || !row1.ActualSubmissionDate) {
+            showMsgBox("Please Enter both Status  and Actual Submission Date.");
+            return;
+        }
+        if (row1.IsVerified === '' && SC_allowverifyflag === true) {
+            showMsgBox("Please Select Verification Status");
+            return; ``
+        }
+        if (row1.VRemark1 === '' && row1.IsVerified === 'Remarks' && SC_allowverifyflag === true) {
+            showMsgBox("Please Enter Remark in Condition of Remarks.");
+            return;
+        }
+        if (isValidate()) {
+            var formData = new FormData();
+            formData.append('ASD', $filter('date')(row1.ActualSubmissionDate, 'yyyy/MM/dd'));
+            formData.append('CSD', $filter('date')(row1.CSD, 'yyyy/MM/dd'));
+            formData.append('RegNo', row1.RegistrationNumber);
+            formData.append('DelayDay', row1.DelayDay);
+            if (row1.UploadFile == undefined || row1.UploadFile == null || row1.UploadFile == '') {
+                formData.append('UploadFile', '-1');
+            }
+            else {
+                formData.append('UploadFile', row1.UploadFile);
+            }
+            formData.append('Createdby', LoginId);
+
+            formData.append('Status', row1.CStatus);
+            formData.append('VRemark', row1.VRemark1);
+            formData.append('CRemark', row1.CRemark1);
+            formData.append('IsVerified', row1.IsVerified);
+
+            formData.append('CACId', $scope.CACEventId);
+            formData.append('Id', row1.CSIID);
+            formData.append('Action', '1');
+            $http.post("../Retail/AddSecretarialEventcompliance", formData, {
+                transformRequest: angular.identity,
+                headers: { 'Content-Type': undefined }
+            }).then(function (response) {
+                console.log("Checking Response", response.data.Result);
+                showMsgBox(response.data.Result);
+                $scope.getEventDetails($scope.CACEventId);
+            }, function (error) {
+                console.error('Error', error);
+            });
+        }
+    }
+
+    $scope.selectedRemark1 = "";
+    $scope.HeaderRemark1 = "";
+    $scope.openRemarkModal1 = function (remark1, Header1) {
+        $scope.selectedRemark1 = $sce.trustAsHtml(remark1);
+        $scope.HeaderRemark1 = Header1;
+        $('#remarkModal1').modal('show');
+    };
+    $scope.NewExportTableToCSV = function () {
+        function exportToCSV(data) {
+            if (!data || !data.length) {
+                alert("No data available!");
+                return;
+            }
+
+            var csv = [];
+
+            function formatDate(dateValue) {
+                if (!dateValue) return '';
+                var d = new Date(dateValue);
+                if (isNaN(d.getTime())) return '';
+                var day = ('0' + d.getDate()).slice(-2);
+                var month = ('0' + (d.getMonth() + 1)).slice(-2);
+                var year = d.getFullYear();
+                return day + '-' + month + '-' + year;
+            }
+
+            // Header
+            csv.push([
+                "S.No",
+                "Act Name",
+                "Compliance Name",
+                "Risk",
+                "Frequency",
+                "Month",
+                "State",
+                "Due Date",
+                "Status",
+                "Actual Submission Date",
+                "Delay Days",
+                "Upload File",
+                "Upload Date",
+                "Verification Status"
+            ].join(","));
+
+            // Data Rows
+            data.forEach(function (row, index) {
+
+                var rowData = [
+                    index + 1,
+                    row.Act || '',
+                    row.ComplianceName || '',
+                    row.Risk || '',
+                    row.Frequency || '',
+                    row.Month || '',
+                    row.STATE_NM || '',
+                    row.DueDate || '',
+                    row.CStatus || '',
+                    formatDate(row.ActualSubmissionDate),
+                    row.DelayDays || '0',
+                    row.UploadFile ? 'Uploaded' : 'Not Uploaded',
+                    row.CreateOn || '',
+                    (row.IsVerified == 0 ? '' : row.IsVerified == 'Clarify' ? 'Remarks' : (row.IsVerified || ''))
+                ];
+
+                csv.push(rowData.map(val => `"${val}"`).join(","));
+            });
+
+            var csvContent = csv.join('\n');
+            var blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+
+            var link = document.createElement('a');
+
+            if (navigator.msSaveBlob) {
+                navigator.msSaveBlob(blob, "SecretarialCompliance.csv");
+            } else {
+                var url = URL.createObjectURL(blob);
+                link.href = url;
+                link.download = "Secretarial.csv";
+                document.body.appendChild(link);
+                link.click();
+                setTimeout(function () {
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                }, 0);
+            }
+        }
+
+        exportToCSV($scope.complianceRows);
+    };
+    $scope.NEwPrintTable = function () {
+
+        function printData(data) {
+
+            if (data && !Array.isArray(data)) {
+                data = [data];
+            }
+
+            data = data || [];
+
+            if (!data.length) {
+                alert("No data available!");
+                return;
+            }
+
+            var filteredData = data.filter(function (row) {
+
+                if (row.Calendartype !== 'Statutory') return false;
+
+                if ($scope.Search && !$scope.globalSearch(row)) return false;
+
+                if ($scope.SelectedState && row.STATE_NM !== $scope.SelectedState) return false;
+
+                if ($scope.SelectedAct && $scope.SelectedAct !== 'Act' && row.Act !== $scope.SelectedAct) return false;
+
+                if ($scope.SelectedMonth && row.Month !== $scope.SelectedMonth) return false;
+
+                // ✅ ✅ ✅ FIXED STATUS FILTER
+                if ($scope.SelectedStatus) {
+
+                    var cstatus = row.CStatus;
+                    if (!cstatus || cstatus.trim() === '') {
+                        cstatus = 'Pending';
+                    }
+
+                    var displayStatus = $scope.statusDisplayMap[cstatus] || cstatus;
+
+                    // ⭐ Verified
+                    if ($scope.SelectedStatus === 'Verified') {
+                        if (!row.IsVerified || row.IsVerified.toLowerCase() !== 'verified') {
+                            return false;
+                        }
+                    }
+
+                    // ⭐ Remarks (Clarify)
+                    else if ($scope.SelectedStatus === 'Remarks') {
+                        if (!row.IsVerified || row.IsVerified.toLowerCase() !== 'clarify') {
+                            return false;
+                        }
+                    }
+
+                    // ⭐ Normal Status
+                    else {
+                        if (displayStatus !== $scope.SelectedStatus) {
+                            return false;
+                        }
+                    }
+                }
+
+                if ($scope.SelectedYear && row.Year !== $scope.SelectedYear) return false;
+
+                return true;
+            });
+
+            if (!filteredData || filteredData.length === 0) {
+                alert("No filtered data available!");
+                return;
+            }
+
+            var companyName = MapUser || '';
+            var today = new Date();
+
+            var day = String(today.getDate()).padStart(2, '0');
+            var month = String(today.getMonth() + 1).padStart(2, '0');
+            var year = today.getFullYear();
+
+            var generatedOn = day + "-" + month + "-" + year;
+
+            function formatDate(dateValue) {
+                if (!dateValue) return '';
+                var d = new Date(dateValue);
+                if (isNaN(d.getTime())) return '';
+                var day = ('0' + d.getDate()).slice(-2);
+                var month = ('0' + (d.getMonth() + 1)).slice(-2);
+                var year = d.getFullYear();
+                return day + '-' + month + '-' + year;
+            }
+
+            var tableHTML = `
+        <table>
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Act Name</th>
+                    <th>Compliance Name</th>
+                    <th>Risk</th>
+                    <th>Frequency</th>
+                    <th>Month</th>
+                    <th>State</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Actual Submission Date</th>
+                    <th>Delay Days</th>
+                    <th>Upload File</th>
+                    <th>Upload Date</th>
+                    <th>Verification Status</th>
+                </tr>
+            </thead>
+            <tbody>
+        `;
+            function formatDate(dateValue) {
+                if (!dateValue) return '';
+
+                var d = new Date(dateValue);
+                if (isNaN(d.getTime())) return '';
+
+                var day = ('0' + d.getDate()).slice(-2);
+                var month = ('0' + (d.getMonth() + 1)).slice(-2);
+                var year = d.getFullYear();
+
+                return day + '-' + month + '-' + year;
+            }
+            filteredData.forEach(function (row, index) {
+
+                tableHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${row.Act || ''}</td>
+                <td>${row.ComplianceName || ''}</td>
+                <td>${row.Risk || ''}</td>
+                <td>${row.Frequency || ''}</td>
+                <td>${row.Month}</td>
+                <td>${row.STATE_NM || ''}</td>
+                <td>${formatDate(row.DueDate)}</td>
+                <td>${row.CStatus}</td>
+                <td>${formatDate(row.ActualSubmissionDate)}</td>
+                <td>${row.DelayDays || '0'}</td>
+                <td>${row.UploadFile ? 'Uploaded' : 'Not Uploaded'}</td>
+                <td>${formatDate(row.CreateOn)}</td>
+                <td>${(!row.IsVerified || row.IsVerified == 0 ? '' : row.IsVerified === 'Clarify' ? 'Remarks' : row.IsVerified)}</td>
+            </tr>
+            `;
+            });
+
+            tableHTML += `</tbody></table>`;
+
+            var printWindow = window.open('', '', 'width=1200,height=700');
+
+            printWindow.document.write(`
+        <html>
+        <head>
+            <title>Print</title>
+            <style>
+                body { font-family: Arial, sans-serif; }
+
+                .print-header {
+                    text-align: center;
+                    margin-bottom: 10px;
+                }
+
+                .company-name {
+                    font-size: 14px;
+                    margin-top: 3px;
+                }
+
+                .generated {
+                    position: absolute;
+                    right: 20px;
+                    top: 20px;
+                    font-size: 12px;
+                }
+
+                table {
+                    width:100%;
+                    border-collapse:collapse;
+                    margin-top: 20px;
+                    table-layout: fixed; 
+                }
+
+                th, td {
+                    border:1px solid #000;
+                    padding:6px;
+                    font-size:12px;
+                }
+
+                th {
+                    background:#F37437;
+                    color:#000;
+                }
+            </style>
+        </head>
+        <body>
+
+            <div class="generated">
+                Generated On: ${generatedOn}
+            </div>
+
+            <div class="print-header">
+                <h2>Secretarial Compliance</h2>
+                <div class="company-name">${companyName}</div>
+            </div>
+
+            ${tableHTML}
+
+        </body>
+        </html>
+        `);
+
+            printWindow.document.close();
+            printWindow.onload = function () {
+                printWindow.focus();
+
+                setTimeout(function () {
+                    printWindow.print();
+                    printWindow.close();
+                }, 300);
+            };
+        }
+
+        //var isNoFilter =
+        //    !$scope.SelectedState &&
+        //    ($scope.SelectedAct === 'Act' || !$scope.SelectedAct) &&
+        //    !$scope.SelectedMonth &&
+        //    !$scope.SelectedStatus &&
+        //    !$scope.SelectedYear &&
+        //    !$scope.Search;
+
+        //if (isNoFilter) {
+        //    $scope.newexportdata().then(function (data) {
+        //        printData(data);
+        //    });
+
+        //} else {
+        printData($scope.complianceRows);
+        //}
+    };
+
+    $scope.refreshDropdowns = function () {
+
+        var filtered = angular.copy($scope.allComplianceRows || []);
+
+        // ✅ Status Filter
+        if ($scope.SelectedStatus) {
+
+            var selected = ($scope.SelectedStatus || '').toString().trim();
+
+            filtered = filtered.filter(function (row) {
+
+                var status = (row.CStatus || '').toString().trim();
+                var isVerified = (row.IsVerified || '').toString().trim();
+
+                var displayStatus = '';
+
+                if (!status) {
+                    displayStatus = 'Pending';
+                }
+                else if (isVerified === "Verified" && selected === "Verified") {
+                    displayStatus = 'Verified';
+                }
+                else if (isVerified === "Remarks" && selected === "Remarks") {
+                    displayStatus = 'Remarks';
+                }
+                else {
+                    displayStatus = ($scope.statusDisplayMap && $scope.statusDisplayMap[status])
+                        ? $scope.statusDisplayMap[status]
+                        : status;
+                }
+
+                return displayStatus.toString().trim() === selected;
+            });
+        }
+
+        // ✅ Act Filter
+        if ($scope.SelectedAct && $scope.SelectedAct !== 'Act') {
+            filtered = filtered.filter(row => row.Act === $scope.SelectedAct);
+        }
+
+        // ✅ State Filter
+        if ($scope.SelectedState) {
+            filtered = filtered.filter(row => row.STATE_NM === $scope.SelectedState);
+        }
+
+        // ✅ Month Filter
+        if ($scope.SelectedMonth) {
+            filtered = filtered.filter(row => row.Month === $scope.SelectedMonth);
+        }
+
+        // ✅ Year Filter
+        if ($scope.SelectedYear) {
+            filtered = filtered.filter(row => row.Year === $scope.SelectedYear);
+        }
+
+        // ✅ Normalize
+        filtered.forEach(function (row) {
+
+            if (!row.IsVerified ||
+                row.IsVerified === 'null' ||
+                row.IsVerified === 'undefined') {
+
+                row.IsVerified = '';
+            }
+        });
+
+        // ✅ Status List
+        $scope.StatusList = [
+
+            ...new Set(
+
+                filtered.map(function (row) {
+
+                    var status = (row.CStatus || '').toString().trim();
+                    var isVerified = (row.IsVerified || '').toString().trim();
+
+                    var displayStatus = '';
+
+                    if (!status) {
+                        displayStatus = 'Pending';
+                    }
+                    else if (
+                        isVerified === "Verified" &&
+                        (status !== 'Non Applicable' &&
+                            status !== 'Delay Complied' &&
+                            status !== 'Complied' &&
+                            status !== 'Non Complied')
+                    ) {
+                        displayStatus = 'Verified';
+                    }
+                    else if (
+                        isVerified === "Remarks" &&
+                        (status !== 'Non Applicable' &&
+                            status !== 'Delay Complied' &&
+                            status !== 'Complied' &&
+                            status !== 'Non Complied')
+                    ) {
+                        displayStatus = 'Remarks';
+                    }
+                    else {
+
+                        displayStatus =
+                            ($scope.statusDisplayMap &&
+                                $scope.statusDisplayMap[status])
+                                ? $scope.statusDisplayMap[status]
+                                : status;
+                    }
+
+                    return displayStatus;
+                })
+            )
+
+        ].sort();
+
+        // ✅ State List
+        $scope.StateList = [
+            ...new Set(
+                filtered
+                    .map(x => x.STATE_NM)
+                    .filter(x => x)
+            )
+        ].sort((a, b) => a.localeCompare(b));
+
+        // ✅ Month List (April → March)
+        var monthOrder = [
+            "April", "May", "June", "July", "August", "September",
+            "October", "November", "December",
+            "January", "February", "March"
+        ];
+
+        $scope.MonthList = [...new Set(
+            filtered
+                .map(x => (x.Month || '').trim())
+                .filter(x => x)
+        )]
+            .sort((a, b) => {
+                return monthOrder.indexOf(a) - monthOrder.indexOf(b);
+            });
+
+        // ✅ Year Dependent Filter
+        var yearFiltered = angular.copy($scope.allComplianceRows || []);
+
+        // Status
+        if ($scope.SelectedStatus) {
+
+            var selectedYearStatus =
+                ($scope.SelectedStatus || '').toString().trim();
+
+            yearFiltered = yearFiltered.filter(function (row) {
+
+                var status = (row.CStatus || '').toString().trim();
+                var isVerified = (row.IsVerified || '').toString().trim();
+
+                var displayStatus = '';
+
+                if (!status) {
+                    displayStatus = 'Pending';
+                }
+                else if (isVerified === "Verified") {
+                    displayStatus = 'Verified';
+                }
+                else if (isVerified === "Remarks") {
+                    displayStatus = 'Remarks';
+                }
+                else {
+                    displayStatus =
+                        ($scope.statusDisplayMap &&
+                            $scope.statusDisplayMap[status])
+                            ? $scope.statusDisplayMap[status]
+                            : status;
+                }
+
+                return displayStatus === selectedYearStatus;
+            });
+        }
+
+        // Act
+        if ($scope.SelectedAct && $scope.SelectedAct !== 'Act') {
+            yearFiltered = yearFiltered.filter(
+                row => row.Act === $scope.SelectedAct
+            );
+        }
+
         // State
-        $scope.State = '';
-        $scope.StateName = '';
+        if ($scope.SelectedState) {
+            yearFiltered = yearFiltered.filter(
+                row => row.STATE_NM === $scope.SelectedState
+            );
+        }
 
         // Month
-        $scope.Month = '';
+        if ($scope.SelectedMonth) {
+            yearFiltered = yearFiltered.filter(
+                row => row.Month === $scope.SelectedMonth
+            );
+        }
+
+        // ✅ Final Year List
+        $scope.YearList = [
+            ...new Set(
+                yearFiltered
+                    .map(x => x.Year)
+                    .filter(x => x)
+            )
+        ].sort();
+
+        // ✅ Final Rows
+        $scope.DisplayRows = filtered;
+        $scope.complianceRows = filtered;
+        $scope.Pagesize = $scope.complianceRows.length;
+
+        $scope.counttiles(filtered);
+    };
+
+    $scope.reset = function () {
+        $scope.SelectedState = '';
+        $scope.SelectedStatus = '';
         $scope.SelectedMonth = '';
-
-        // Year
-        $scope.Year = '';
         $scope.SelectedYear = '';
+        $scope.Search = '';
+        $scope.SelectedAct = 'Act';
+        $scope.BindSearch();
+    }
+    $scope.getyear = function (year) {
+        $scope.SelectedYear = year;
+        $scope.refreshDropdowns();
+    }
+    $scope.getmonth = function (id) {
+        $scope.SelectedMonth = id;
+        $scope.refreshDropdowns();
+    };
+    $scope.getstate = function (state) {
+        $scope.SelectedState = state;
+        $scope.refreshDropdowns();
+    }
+    $scope.getAct = function (act) {
+        $scope.SelectedAct = act;
+        $scope.refreshDropdowns();
+    }
+    $scope.getstatus = function (status) {
+        $scope.SelectedStatus = status;
+        $scope.refreshDropdowns();
+    }
+
+    $scope.ViewAlldata = function () {
+        if ($scope.Showing === "All") {
+            $scope.showLoader();
+            $scope.Showing = "10";
+            var collectionobj = {
+                Action: 14,
+                Id: LoginId,
+                State: $scope.State,
+                Month: $scope.Month,
+                Year: $scope.Year
+            };
+            myService.methode(
+                'POST',
+                "../Retail/SearchSecretarialStatutory",
+                '{obj:' + JSON.stringify(collectionobj) + '}'
+            ).then(function (response) {
+                $scope.allComplianceRows = response.data.Result || [];
+                $scope.complianceRows = $scope.allComplianceRows;
+                $scope.counttiles($scope.complianceRows);
+                $scope.All = $scope.allComplianceRows.length;
+                $scope.Pagesize = $scope.allComplianceRows.length;
+                $scope.hideLoader();
+            }).catch(function (error) {
+                console.error("Error fetching data:", error);
+                $scope.complianceRows = [];
+            });
+        }
+        else {
+            $scope.BindSearch(); $scope.BindFORTILESSearch();
+        }
+
     };
 
-    $scope.selectState = function (x) {
-        $scope.State = x.State;
-        $scope.StateName = x.STATE_NM;
-    };
+    // here is new method for getting all data  dated 15/05/2026 by aadarsh
+    $scope.Flags = function () {
+        var collectionobj = {
+            Action: 14,
+            Id: LoginId,
+            State: $scope.State,
+            Month: $scope.Month,
+            Year: $scope.Year
+        };
 
-    $scope.clearState = function () {
-        $scope.State = '';
-        $scope.StateName = '';
-    };
-
-
-    $scope.selectMonth = function (x) {
-        $scope.Month = x.Month;
-        $scope.SelectedMonth = x.Month;
-    };
-
-    $scope.clearMonth = function () {
-        $scope.Month = '';
-        $scope.SelectedMonth = '';
-    };
-
-    $scope.selectYear = function (x) {
-        $scope.Year = x;
-        $scope.SelectedYear = x;
-    };
-
-    $scope.clearYear = function () {
-        $scope.Year = '';
-        $scope.SelectedYear = '';
+        myService.methode(
+            'POST',
+            "../Retail/SearchSecretarialStatutory",
+            '{obj:' + JSON.stringify(collectionobj) + '}'
+        ).then(function (response) {
+            $scope.All = response.data.Result.length || [];
+        }).catch(function (error) {
+            console.error("Error fetching data:", error);
+            $scope.complianceRows = [];
+        });
     };
 
 
-    //---------------------New Labour
- 
+    $scope.closeEventModal = function () {
 
+        var modalEl = document.getElementById('eventModal');
+        var modalInstance = bootstrap.Modal.getInstance(modalEl);
+
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+        angular.element('.modal-backdrop').remove();
+        angular.element('body').removeClass('modal-open');
+        angular.element('body').css('padding-right', '');
+    };
+    $scope.blockSpace = function (event) {
+
+        var value = ($scope.Search || '');
+
+        // Prevent first space
+        if (value.length === 0 && event.which === 32) {
+            event.preventDefault();
+        }
+    };
 }
 

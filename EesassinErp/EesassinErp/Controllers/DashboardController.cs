@@ -386,6 +386,31 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
+		
+		public ActionResult Notifications()
+        {
+            return View();
+        }
+        public ActionResult NotificationDetails()
+        {
+            return View();
+        }
+        public ActionResult PrincipleEmployerDashboard()
+        {
+            return View();
+        }
+        public ActionResult PrinciplesitesOverview()
+        {
+            return View();
+        }
+            // added by aadarh
+        
+        public ActionResult ContractorDashboard()
+        {
+            return View();
+        }
 
+
+        
     }
 }

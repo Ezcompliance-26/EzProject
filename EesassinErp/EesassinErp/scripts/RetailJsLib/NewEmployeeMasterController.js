@@ -137,8 +137,22 @@
 
                 $.each(tr, function () {
 
+
                     var td = $(this).find('td');
                     if (td.length == 0) return;
+
+               
+
+                    // 🔥 Check if row is completely empty
+                    var isEmpty = true;
+                    td.each(function () {
+                        if ($(this).text().trim() !== "") {
+                            isEmpty = false;
+                            return false; // break loop
+                        }
+                    });
+
+                    if (isEmpty) return; // ❌ skip blank row
 
                     var obj = {};
 
@@ -490,8 +504,10 @@
                 formData.append("PermanentIDNumber", $scope.PermanentIDNumber || "");
                 formData.append("PermanentIDDate", $scope.PermanentIDDate ? formatDate($scope.PermanentIDDate) : "");
 
-
-
+                formData.append("MedicalStatus", $scope.MedicalStatus);
+                formData.append("NextMedicalDue", $scope.NextMedicalDue ? formatDate($scope.NextMedicalDue) : "");
+                formData.append("FitnessTypes", $scope.FitnessTypes); 
+                formData.append("MedicalCertificate_FilePath", $scope.MedicalCertificateFilePath__Preview); 
                 formData.append("ActionType", $scope.IsActionType);
                 $.ajax({
                     url: "../RetailSection/InsertUpdateDelEmployeeMaster",
@@ -545,7 +561,7 @@
         else {
             $scope.$applyAsync();
         }
-    };
+    };avew
     $scope.ViewFile = function (path) {
         if (!path) {
             alert("File not available");

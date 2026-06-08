@@ -62,6 +62,8 @@
     $scope.UploadFeesCopy = '';
     $scope.UploadLicenseCopy = '';
     $scope.UploadRenewedCopy = '';
+    $scope.UploadAcknowledgement = '';
+    $scope.AUploadAcknowledgement = '';
     $scope.UploadInvoice = '';
     $scope.ISopen = false;
    
@@ -442,6 +444,14 @@
                 return !license.UploadInvoice;
             }
         }
+        if (license.LicenseStatus === 'Surrender') {
+
+
+            if (fieldName === 'UploadAcknowledgement') {
+                return !license.UploadAcknowledgement;
+            }
+          
+        }
 
         // By default, return false for other fields when ApplicationStatus is not 'Applied'
         return false;
@@ -705,14 +715,7 @@
             input.value = "";
             return;
         }
-
-        //const MAX_SIZE_MB = 3;
-        //const fileSizeMB = file.size / (1024 * 1024);
-        //if (fileSizeMB > MAX_SIZE_MB) {
-        //    swal("File Too Large", "Maximum allowed file size is 3 MB.", "error");
-        //    input.value = "";
-        //    return;
-        //}
+         
 
         $scope.showValidationLoader();
 
@@ -907,6 +910,7 @@
         $scope.LMRenewalStatus = "";
         $scope.LMUploadRenewedCopy = "";
         $scope.LMLStatus = "";
+        $scope.LMAcknowledgementCopy = "";
 
     };
 
@@ -961,24 +965,19 @@
         };
         myService.methode('POST', ("../RetailSection/LicenseRequestData"), JSON.stringify(collectionobj))
             .then(function (response) {
-                if (response.data && response.data.Result)
-
-
+                if (response.data && response.data.Result) 
                 {
-                    $scope.LicenseList = response.data.Result; // Store data for export
-
+                    $scope.LicenseList = response.data.Result;  
                     $scope.LMStoreCode = license.StoreCode;
                     $scope.filteredLicenses = [];
-                    $scope.filteredLicenses = $scope.LicenseList.filter(item => item.StoreCode === license.StoreCode);
-
+                    $scope.filteredLicenses = $scope.LicenseList.filter(item => item.StoreCode === license.StoreCode); 
                     $scope.LMRefStoreCode = license.RefStoreCode;
                     $scope.LMLicenceRequstId = license.LicenceRequstId;
                     $scope.SetLT = license.LicenceRequstId.toString();
                     $scope.LMRefStoreAddress = license.StoreAddress;
                     $scope.LMProposedDate = license.ProposedDate
                     $scope.LMLicenseNamee = license.LicenseName;
-                    $scope.LMLicenseType = license.LicenseType;
-
+                    $scope.LMLicenseType = license.LicenseType; 
                     $scope.LMRequestedDate = license.RequestedDate
                     $scope.LMDocDate = license.DocumentDate
 
@@ -995,6 +994,7 @@
                         }
                     }
 
+                    $scope.LMAppcopy = license.UploadApplicationCopy;
                     $scope.LMAppcopy = license.UploadApplicationCopy;
                     $scope.LMchallanCopy = license.UploadChallanCopy;
                     $scope.LMFeeCopy = license.UploadFeesCopy;
@@ -1042,6 +1042,8 @@
                     $scope.LMLicenseCategory = license.LicenseCategory;
                     $scope.LMLicenseCopy = license.UploadLicenseCopy;
                     $scope.LMAmendmentCopy = license.UploadAmendmentCopy;
+
+                    $scope.LMAcknowledgementCopy = license.UploadAcknowledgement;
 
                     $scope.LMRemark = license.LMRemark;
                     $scope.LMUserName = license.UserName;
@@ -1209,7 +1211,7 @@
                     $scope.LMLicenseCategory = license.LMLicenseCategory;
                     $scope.LMLicenseCopy = license.UploadLicenseCopy;
                     $scope.LMAmendmentCopy = license.UploadAmendmentCopy ;
-
+                    $scope.LMAcknowledgementCopy = license.UploadAcknowledgement;
                     $scope.LMRemark = license.LMRemark;
                     $scope.LMUserName = license.UserName;
                     $scope.LMUserPassword = license.UserPassword;
@@ -1287,7 +1289,14 @@
             showMsgBox('999', 'Mandatory', 'Please select License Status', 'warning', 'btn-warning');
             return;
         }
+        if ($scope.LMLicenseStatus === 'Surrender') {
+            if (!$scope.LMAcknowledgementCopy && !$scope.UploadAcknowledgement) {
+                $('#UploadAcknowledgement').focus().addClass("red-validation");
+                showMsgBox('999', 'Mandatory', 'Acknowledgement Copy is Required', 'warning', 'btn-warning');
+                return;
+            }
 
+        }
         if ($scope.LMLicenseStatus === 'Issued')
         {
             // Validate License Date
@@ -1340,6 +1349,9 @@
                 showMsgBox('999', 'Mandatory', 'License Copy is Required', 'warning', 'btn-warning');
                 return;
             }
+
+
+          
             if ($scope.LMAppStatus != 'Applied')
              {
                 $('#LMAppStatus').focus().addClass("red-validation");
@@ -1347,7 +1359,15 @@
                 return;
             }
         }
+       
 
+        if ($scope.UploadAcknowledgementCopy == undefined || $scope.UploadAcknowledgementCopy == null || $scope.UploadAcknowledgementCopy == '') {
+            if ($scope.LMAcknowledgementCopy != '') {
+                $scope.UploadAcknowledgementCopy = $scope.LMAcknowledgementCopy;
+                $scope.AUploadAcknowledgement = 1;
+            }
+        }
+      
         // Validate Mobile Number
         var smobileno = $('#MobileNumber').val();
         if (smobileno && (!/^\d{10}$/.test(smobileno))) {
@@ -1390,6 +1410,18 @@
             }
         }
 
+
+       
+
+      
+        if ($scope.UploadAmendmentCopy == undefined || $scope.UploadAmendmentCopy == null || $scope.UploadAmendmentCopy == '') {
+            if ($scope.LMAmendmentCopy != '') {
+                $scope.UploadAmendmentCopy = $scope.LMAmendmentCopy;
+                $scope.AUploadAmendmentCopy = 1;
+            }
+        }
+         
+
         if ($scope.UploadRenewedCopy == undefined || $scope.UploadRenewedCopy == null || $scope.UploadRenewedCopy == '') {
             if ($scope.LMUploadRenewedCopy != '') {
                 $scope.UploadRenewedCopy = $scope.LMUploadRenewedCopy;
@@ -1407,8 +1439,11 @@
         formData.append('AUploadFeesCopy', $scope.AUploadFeesCopy);
         formData.append('AUploadLicenseCopy', $scope.AUploadLicenseCopy);
 
-       
+        formData.append('AUploadAcknowledgement', $scope.AUploadAcknowledgement);
+        formData.append('AUploadAmendmentCopy', $scope.AUploadAmendmentCopy);
 
+       
+        
 
         formData.append('AUploadRenewedCopy', $scope.AUploadRenewedCopy);
         formData.append('AUploadInvoice', $scope.LMAUploadInvoice);
@@ -1430,12 +1465,16 @@
 
        
 
-        formData.append('ValidityEndDate', $scope.LMValidityEndDate);
-  /*      formData.append('ValidityEndDate', moment($scope.LMValidityEndDate).format(FORMAT));*/
+        formData.append('ValidityEndDate', $scope.LMValidityEndDate); 
 
         
         formData.append('LicenseCategory', $scope.LMLicenseCategory);
         formData.append('UploadLicenseCopy', $scope.UploadLicenseCopy);
+
+
+        formData.append('UploadAcknowledgement', $scope.UploadAcknowledgementCopy);
+
+
         formData.append('UploadAmendmentCopy', $scope.UploadAmendmentCopy);
 
         formData.append('RenewalStatus', $scope.LMRenewalStatus);
@@ -1482,6 +1521,7 @@
                     $scope.AUploadChallanCopy = 0;
                     $scope.AUploadFeesCopy = 0;
                     $scope.AUploadLicenseCopy = 0;
+                    $scope.AUploadAcknowledgement = 0;
                     $scope.AUploadRenewedCopy = 0;
                     $scope.AUploadInvoice = 0;
                     $scope.UploadApplicationCopy = '';
@@ -1489,13 +1529,16 @@
                     $scope.UploadChallanCopy = '';
                     $scope.UploadFeesCopy = '';
                     $scope.UploadLicenseCopy = '';
+                    $scope.UploadAcknowledgementCopy = '';
                     $scope.UploadAmendmentCopy = '';
+                    $scope.AUploadAmendmentCopy = '';
                     $scope.UploadRenewedCopy = '';
                     $scope.UploadInvoice = '';
-
+                    $('#licemodalclse').click();
                     $scope.LicenceRequstId = '';
                     $scope.GetLicenseRequestData(1);
-
+                   
+                    
                     //setTimeout(() => {
                     //    $scope.FireEmail(8, $scope.LicenceRequstId, $scope.StoreCode);
                     //    angular.element('#closemodalrequestForm').triggerHandler('click');
@@ -1512,64 +1555,7 @@
     $scope.SubmitLicense = function (license, Id) {
 
         $scope.showLoader();
-        var formData = new FormData();
-        //if (license.ApplicationStatus == '')
-        //{
-        //    $('#ApplicationStatus' + Id).focus();
-        //    $('#ApplicationStatus' + Id).addClass("red-validation");
-        //    $('#ApplicationStatus' + Id).focus();
-        //    showMsgBox('999', 'Mandatory', 'Plese select Application Status', 'warning', 'btn-warning');
-        //    return;
-        //}
-       
-        //if (license.ApplicationStatus === 'Applied')
-        //{
-          
-        //    if (license.ApplicationDate == '' || license.ApplicationDate == null || license.ApplicationDate == 'undefined' || license.ApplicationDate == 'Invalid Date') {
-        //            if (license.ApplicationDate == '' || license.ApplicationDate == null || license.ApplicationDate == 'undefined' || license.ApplicationDate == 'Invalid Date') {
-        //                $('#ApplicationStatus' + Id).removeClass("red-validation");
-        //                $('#ApplicationDate' + Id).addClass("red-validation");
-        //                $('#ApplicationDate' + Id).focus();
-        //                showMsgBox('999', 'Mandatory', 'Application Date IS REQUIRED', 'warning', 'btn-warning');
-                       
-        //                return;
-        //            }
-        //        }
-        //        if (license.UploadApplicationCopy == '' || license.UploadApplicationCopy == null) {
-        //            if ($scope.UploadApplicationCopy == '' || $scope.UploadApplicationCopy == undefined) { 
-        //                $('#ApplicationStatus' + Id).removeClass("red-validation");
-        //                $('#ApplicationDate' + Id).removeClass("red-validation");
-        //                $('#UploadApplicationCopy' + Id).addClass("red-validation");
-        //                $('#ApplicationStatus' + Id).focus();
-        //                showMsgBox('999', 'Mandatory', 'Application Copy IS REQUIRED', 'warning', 'btn-warning');
-        //                return;
-        //            }
-        //        }
-        //        if (license.UploadChallanCopy == '' || license.UploadChallanCopy == null)
-        //        {
-        //            if ($scope.UploadChallanCopy == '' || $scope.UploadChallanCopy == undefined) {
-                       
-        //                $('#ApplicationStatus' + Id).removeClass("red-validation");
-        //                $('#ApplicationDate' + Id).removeClass("red-validation");
-        //                $('#UploadApplicationCopy' + Id).removeClass("red-validation");
-        //                $('#ChallanCopy' + Id).addClass("red-validation");
-        //                $('#ApplicationStatus' + Id).focus();
-        //                showMsgBox('999', 'Mandatory', 'Challan Copy IS REQUIRED', 'warning', 'btn-warning');
-        //                return;
-        //            }
-        //        }
-        //    }
-          
-        //    if (license.LicenseStatus == '') {
-        //        $('#LicenseStatus' + Id).focus();
-        //        $('#ApplicationStatus' + Id).removeClass("red-validation");
-        //        $('#ApplicationDate' + Id).removeClass("red-validation");
-        //        $('#UploadApplicationCopy' + Id).removeClass("red-validation");
-        //        $('#ChallanCopy' + Id).removeClass("red-validation");
-        //        $('#LicenseStatus' + Id).addClass("red-validation");
-        //        showMsgBox('999', 'Mandatory', 'Plese select License Status', 'warning', 'btn-warning');
-        //        return;
-        //    }
+        var formData = new FormData(); 
             if (license.LicenseStatus === 'Issued')
             {
                 if (license.IssuedDate != '' || license.IssuedDate == null || license.IssuedDate == '')
@@ -1586,18 +1572,7 @@
                         return;
                     }
                 }
-                //if ($('#LicenseStatus' + Id).val() === 'Issued') {
-                //    if ($('#ApplicationStatus' + Id).val() != 'Applied')
-                //    {
-                //        $('#ApplicationStatus' + Id).focus();
-                //        /* $('#LicenseStatus' + Id).val('');*/
-                //        $('#LicenseStatus' + Id).addClass("red-validation");
-                //        $('#ApplicationStatus' + Id).addClass("red-validation");
-                //        showMsgBox('999', 'Alert', 'Application Status Should be Applied', 'warning', 'btn-warning');
-                //        return;
-                //    }
-                //    else { $('#LicenseStatus' + Id).removeClass("red-validation"); }
-                //}
+               
                 const today = new Date();
                 const yyyy = today.getFullYear();
                 let mm = today.getMonth() + 1; // Months start at 0!
@@ -1610,19 +1585,7 @@
 
                 var IssuedDate = $('#IssuedDate' + Id).val();
                 var ApplicationDate = $('#ApplicationDate' + Id).val();
-                //if (IssuedDate < ApplicationDate) 
-                //{
-                //    $('#IssuedDate' + Id).val('');
-                //    showMsgBox('999', 'Mandatory', 'License Date Should  be Greater than Application Date', 'warning', 'btn-warning');
-                //    $('#IssuedDate' + Id).val('');
-                //    return;
-                //}
-                //if (IssuedDate > TodayDate) {
-                //    $('#IssuedDate' + Id).val('');
-                //    showMsgBox('999', 'Mandatory', 'License Date Should Not be Greater than current Date', 'warning', 'btn-warning');
-                //    $('#IssuedDate' + Id).val('');
-                //    return;
-                //}
+                
                 if (license.LicenseNumber == '' || license.LicenseNumber == null) {
                     if ($scope.LicenseNumber == '' || $scope.LicenseNumber == undefined) {
                         $('#LicenseNumber' + Id).focus();
@@ -1685,7 +1648,9 @@
                         return;
                     }
                 }
-            }
+        }
+
+
             if ($('#MobileNumber' + Id) != '' || $('#MobileNumber' + Id) != undefined)
             {
                 var txtmobileno = $('#MobileNumber' + Id);
@@ -1838,7 +1803,14 @@
                     $scope.UploadInvoice = license.UploadInvoice;
                     $scope.AUploadInvoice = 1;
                 }
+        }
+
+        if ($scope.UploadInvoice == undefined || $scope.UploadInvoice == null || $scope.UploadInvoice == '') {
+            if (license.UploadInvoice != '') {
+                $scope.UploadInvoice = license.UploadInvoice;
+                $scope.AUploadInvoice = 1;
             }
+        }
 
         formData.append('UserId', LoginId);
         formData.append('Action', 2);
@@ -1847,6 +1819,9 @@
         formData.append('AUploadChallanCopy', $scope.AUploadChallanCopy);
         formData.append('AUploadFeesCopy', $scope.AUploadFeesCopy);
         formData.append('AUploadLicenseCopy', $scope.AUploadLicenseCopy);
+
+        formData.append('AUploadAcknowledgement', $scope.AUploadAcknowledgement);
+
         formData.append('AUploadRenewedCopy', $scope.AUploadRenewedCopy);
         formData.append('AUploadInvoice', $scope.AUploadInvoice);
         $scope.LicenceRequstId = license.LicenceRequstId;
@@ -1863,6 +1838,7 @@
         formData.append('ValidityStartDate', moment(license.ValidityStartDate).format(FORMAT)); 
       
         formData.append('ValidityEndDate', moment(license.ValidityEndDate).format(FORMAT));
+        formData.append('UploadAcknowledgement', $scope.UploadAcknowledgementCopy);
         formData.append('UploadLicenseCopy', $scope.UploadLicenseCopy);
         formData.append('RenewalStatus', license.RenewalStatus);
         formData.append('RenewalStartDate', moment(license.RenewalStartDate).format(FORMAT));
@@ -1914,6 +1890,8 @@
                     $scope.UploadLicenseCopy  ='';
                     $scope.UploadRenewedCopy  ='';
                     $scope.UploadInvoice = '';
+                    $scope.AUploadAcknowledgement = '';
+                    $scope.UploadAcknowledgementCopy = '';
                 
                     $scope.LicenceRequstId = '';
                     $scope.GetLicenseRequestData();
@@ -3152,7 +3130,7 @@
         MachineNumber: "Machine Number",
         TentativeDate: "Tentative Date",
         LicenseCost: "License Cost",
-        GovtFees: "Govt Fees"
+        GovtFees: "Govt Fees", LicenseCategory: "License Category"
     };
 
     // -------- SELECTED COLUMNS (KEYS) --------
@@ -3164,7 +3142,7 @@
         "ProposedDate",
         "LicenseName",
         "ApplicationStatus",
-        "LicenseStatus"
+        "LicenseStatus", "LicenseCategory"
     ];
 
     // -------- HEADER DISPLAY NAMES --------
@@ -3176,7 +3154,8 @@
         ProposedDate: "Proposed Date",
         LicenseName: "License Name",
         ApplicationStatus: "Application Status",
-        LicenseStatus: "License Status"
+        LicenseStatus: "License Status",
+        LicenseCategory: "License Category"
     };
 
     // -------- PRINT FUNCTION --------

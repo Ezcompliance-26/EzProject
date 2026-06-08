@@ -94,6 +94,17 @@ namespace BAL
         public string excelFile { get; set; }
         public string ComplianceDetailStr { get; set; }
         public List<ComplianceDetailList> ComplianceDetail { get; set; }
+
+        public List<ValidationModel> ValidationList { get; set; }
+    }
+
+
+
+
+    public class ValidationModel
+    {
+        public string Col1 { get; set; }
+        public string Col2 { get; set; }
     }
     public class ComplianceDetailList
     {

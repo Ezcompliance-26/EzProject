@@ -38,5 +38,7 @@ namespace BAL
         public DateTime CreatedDate { get; set; }
 
         public List<string> SelectedClients { get; set; }
+
+        public string NewsCategory { get; set; } // added by aadarsh
     }
 }

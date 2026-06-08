@@ -1,6 +1,9 @@
 ﻿app.PartMasterController = function ($scope, $element, $filter, myService) {
     $scope.SetFocus('#ddlVT');
-
+    $scope.StoreLimit = 0;
+    $scope.UserLimit = 0;
+    $scope.Sitelimit = 0;
+    $scope.Contractorlimit = 0;
     $scope.PartyDate = new Date();
     $scope.BindAllEmployeeList = function () {
         $scope.showLoader();
@@ -80,8 +83,12 @@
 
             
             collectionobj.Industry = $scope.Industry;
+			   collectionobj.Contractorlimit = $scope.Contractorlimit; ///Added by AAdarsh 
+            collectionobj.Sitelimit = $scope.Sitelimit;  ///Added by AAdarsh
             collectionobj.MonthExpired = $scope.MonthExpired; ///Added by shipra 
             collectionobj.IsActive = $scope.IsActive;
+            collectionobj.State = $scope.State;
+            collectionobj.City = $scope.City;
             if ($scope.Save == "Save") {
                 collectionobj.PartyType = $scope.PartyType;
                 collectionobj.ActionType = 1;
@@ -154,8 +161,14 @@
         $scope.Descritpion = "";
         $scope.ContactMobile = "";
         $scope.ContactPerson = "";
+		    $scope.Contractorlimit = "";
+        $scope.Sitelimit = "";
         $scope.SetFocus('#ddlVT');
         $scope.hfId = "";
+        $scope.StoreLimit = 0;
+        $scope.UserLimit = 0;
+        $scope.Sitelimit = 0;
+        $scope.Contractorlimit = 0;
         $scope.PartyMasterList = [];
         if (flag == 0) {
             showMsgBox('4');
@@ -205,7 +218,14 @@
                     { "HeaderText": "MonthExpired", "HeaderValue": "MonthExpired", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },//Added by shipra
  
                     { "HeaderText": "Party Creation Date", "HeaderValue": "PartyDate", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },//Added by shipra
- 
+                      { "HeaderText": "Contractor Limit", "HeaderValue": "ContractorLimit", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },//Added by Aadarsh
+                    { "HeaderText": "Site Limit", "HeaderValue": "Sitelimit", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" },//Added by Aadarsh
+
+                    { "HeaderText": "State", "HeaderValue": "State", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" }, 
+                    { "HeaderText": "City", "HeaderValue": "City", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" }, 
+                    {
+                        "HeaderText": "Party Code", "HeaderValue": "PartyCode", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No" } 
+            
                 ];
 
             $scope.PartyMasterList = response.data.Result;
@@ -244,6 +264,11 @@
                 
                 $scope.Industry = row[21];
                 $scope.MonthExpired = row[23]; //Added by shipra
+				     $scope.Contractorlimit = row[25]; //Added by Aadarsh
+                $scope.Sitelimit = row[26]; //Added by Aadarsh
+
+                $scope.State = row[27]; //Added by Aadarsh
+                $scope.City = row[28]; //Added by Aadarsh
             
                 $scope.Save = "Edit";
                 $scope.$applyAsync();

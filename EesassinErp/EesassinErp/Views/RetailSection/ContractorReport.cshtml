@@ -295,13 +295,29 @@
             <div class="table-toolbar d-flex align-items-center justify-content-between mb-2 gap-2 flex-wrap">
                 <div class="d-flex align-items-center gap-2">
                     <div class="dropdown">
-                        <button class="btn btn-sm filter-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            State
+                        <button class="btn btn-sm filter-btn dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            {{ SelectedState || 'State' }}
                         </button>
+
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Delhi</a></li>
-                            <li><a class="dropdown-item" href="#">Uttar Pradesh</a></li>
-                            <li><a class="dropdown-item" href="#">Bihar</a></li>
+                            <li>
+                                <a class="dropdown-item"
+                                   href="javascript:void(0)"
+                                   ng-click="filterByState('')">
+                                    All
+                                </a>
+                            </li>
+
+                            <li ng-repeat="state in StateList">
+                                <a class="dropdown-item"
+                                   href="javascript:void(0)"
+                                   ng-click="filterByState(state)">
+                                    {{state}}
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
@@ -321,7 +337,11 @@
                 <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
                     <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
                         <div class="input-group input-group-sm">
-                            <input id="estRepSearch" type="text" class="form-control form-control-sm" placeholder="Search..." />
+                            <input id="estRepSearch"
+                                   type="text"
+                                   ng-model="SearchText"
+                                   class="form-control form-control-sm"
+                                   placeholder="Search..." />
                             <button class="btn btn-sm" style="border-color: #E45D27" id="estRepSearchBtn" type="button"><i class="bi bi-search"></i></button>
                         </div>
                     </div>
@@ -363,7 +383,7 @@
                                 <td>{{x.SiteNAme}}</td>
                                 <td>{{x.SiteCode}}</td>
                                 <td>
-                                    <button class="btn btn-sm view-btn" data-bs-toggle="modal" data-bs-target="#contractorReportModal">
+                                    <button class="btn btn-sm view-btn" ng-click="BindDocumentList(x)" data-bs-toggle="modal" data-bs-target="#contractorReportModal">
                                         View
                                     </button>
                                 </td>
@@ -460,7 +480,7 @@
                             </div>
 
                             <!-- TABLE -->
-                            <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3" ng-init="BindDocumentList()">
+                            <div class="small-table-wrapper flex-grow-1 overflow-auto rounded-3" >
                                 <div class="table-responsive">
 
                                     <table class="table table-sm mb-0 small-table">

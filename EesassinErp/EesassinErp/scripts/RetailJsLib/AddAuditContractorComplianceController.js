@@ -130,19 +130,23 @@
 
 
     $scope.BulkDocument = async function (doc) {
+        var urlParams = new URLSearchParams(window.location.search);
+       var  UID = urlParams.get('UID');
         try {
             const collectionobj = {
                 Action: 10,
-                CMonth: $scope.CMonth,
-                FY: $scope.FY,
-                Id: MapId,
+                Month: $scope.CMonth,
+                Year: $scope.FY,
+                LoginId: MapId,
                 DocumentId: doc.DocumentId,
-                StateId: doc.STATE_NM,
-                StoreId: doc.StoreId,
-                ComplianceCategory: 'Contractor'
+                State: doc.STATE_NM,
+                SiteCode: doc.SiteCode ,
+                UID: UID
+              
+
             };
 
-            const response = await myService.methode('POST', "../RetailSection/ContractorGetReportlist", '{obj:' + JSON.stringify(collectionobj) + '}');
+            const response = await myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
             const result = response?.data?.Result;
 
             if (!result || !result.length) {
@@ -189,9 +193,8 @@
             $scope.Address_of_contractor = response.data.Result[0].Address_of_contractor;
 
             const html = doc.HeaderHtml;
-
-            // Generate and return PDF Blob
-            const pdfBlob = await $scope.GeneratePDFBlob(html, doc.DocumentName, doc.StoreCode, doc.STATE_NM);
+     
+            const pdfBlob = await $scope.GeneratePDFBlob(html, doc.DocumentName, doc.SiteCode, doc.STATE_NM);
             return pdfBlob;
 
         } catch (err) {
@@ -199,8 +202,6 @@
             return null;
         }
     };
-
-
 
 
     $scope.GeneratePDFBlob = async function (html, DocName, Storecode, State) {
@@ -265,24 +266,102 @@
     };
 
 
+    //$scope.GeneratePDFBlob = async function (html, DocName, Storecode, State) {
+    //    return new Promise(async (resolve) => {
+    //        const printArea = document.getElementById('print-area');
+    //        if (!printArea) {
+    //            console.error("print-area element not found!");
+    //            resolve(null);
+    //            return;
+    //        }
+
+    //        printArea.innerHTML = html;
+
+    //        // Compile AngularJS bindings
+    //        try {
+    //            $compile(angular.element(printArea).contents())($scope);
+    //            $scope.$applyAsync();
+    //        } catch (e) {
+    //            console.error("Angular compile failed:", e);
+    //        }
+
+    //        // Wait to ensure bindings complete
+    //        await new Promise(r => setTimeout(r, 400));
+
+
+           
+
+    //        try {
+    //            const canvas = await html2canvas(printArea, {
+    //                useCORS: true,
+    //                allowTaint: true,
+    //                backgroundColor: "#fff",
+    //                scale: 2
+    //            });
+
+    //            console.log({
+    //                canvasWidth: canvas.width,
+    //                canvasHeight: canvas.height,
+    //                imgWidth: imgWidth,
+    //                imgHeight: imgHeight,
+    //                margin: margin,
+    //                position: position
+    //            });
+
+    //            console.log(
+    //                isNaN(imgWidth),
+    //                isNaN(imgHeight),
+    //                isNaN(position)
+    //            );
+
+    //            const { jsPDF } = window.jspdf;
+    //            const pdf = new jsPDF("p", "mm", "a4");
+
+    //            const pageWidth = 210;
+    //            const pageHeight = 297;
+    //            const margin = 10;
+    //            const imgWidth = pageWidth - (2 * margin);
+    //            const imgHeight = canvas.height * imgWidth / canvas.width;
+    //            let heightLeft = imgHeight;
+    //            let position = margin;
+    //            const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+    //            pdf.addImage(imgData, "JPEG", margin, position, imgWidth, imgHeight);
+    //            heightLeft -= (pageHeight - margin * 2);
+
+    //            while (heightLeft > 0) {
+    //                position = heightLeft - imgHeight + margin;
+    //                pdf.addPage();
+    //                pdf.addImage(imgData, "JPEG", margin, position, imgWidth, imgHeight);
+    //                heightLeft -= (pageHeight - margin * 2);
+    //            }
+
+    //            const pdfBlob = pdf.output("blob");
+    //            resolve(pdfBlob);
+    //        } catch (err) {
+    //            console.error("PDF generation failed:", err);
+    //            resolve(null);
+    //        }
+    //    });
+    //};
+
+
 
 
 
     //------------------------------------------------------------
-    $scope.BindStore = function () {
-        $scope.showLoader();
+    $scope.BindState= function () {
         var collectionobj = {};
-        collectionobj.ActionType = 17;
-        collectionobj.Ids = $scope.ComplianceCategory;
-        collectionobj.StoreCode = $scope.StateId;
-        collectionobj.UserId = MapId
-        var getData = myService.methode('POST', ("../RetailSection/SearchStoreCompliance"), JSON.stringify(collectionobj));
+        collectionobj.Action = 34;
+        collectionobj.LoginId = MapId;
+        debugger;
+        var getData = myService.methode('POST', "../DashBoard/GetUserRegistration", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
-            $scope.StoreList = response.data.Result;
-            $scope.hideLoader();
+            $scope.SiteList = response.data.Result;
         });
-        $scope.hideLoader();
     };
+
+     
 
 
     $scope.LoadStore = function () {
@@ -365,16 +444,22 @@
         });
     }
 
-    $scope.BindDocumentList = function () {
+    $scope.BindDocumentList = function (x) {
         var collectionobj = {};
         collectionobj.Action = 6;
+        collectionobj.SiteCode = x.SiteCode;
+        var urlParams = new URLSearchParams(window.location.search); 
+        collectionobj.UID = urlParams.get('UID');
         collectionobj.LoginId = MapId
+        collectionobj.State = x.State;
+        collectionobj.EmployeeId = x.DocumentId
         var getData = myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
-            $scope.DocumentList = response.data.Result;
-
+            $scope.DocumentList = response.data.Result; 
         });
     }
+
+
 
 
     // Initialize SelectedDocument array
@@ -443,21 +528,71 @@
         });
     }
 
+    $scope.$watch('SearchText', function () {
+        $scope.applyFilters();
+    });
+
+    $scope.filterByState = function (state) {
+        $scope.SelectedState = state;
+        $scope.applyFilters();
+    };
+    $scope.applyFilters = function () {
+
+        $scope.FilteredContractorReportList =
+            $scope.ContractorReportList.filter(function (item) {
+
+                // State filter
+                var stateMatch = !$scope.SelectedState ||
+                    item.State === $scope.SelectedState;
+
+                // Search filter (all columns)
+                var searchMatch = !$scope.SearchText ||
+                    JSON.stringify(item).toLowerCase()
+                        .includes($scope.SearchText.toLowerCase());
+
+                return stateMatch && searchMatch;
+            });
+    };
+    $scope.filterByState = function (state) {
+        $scope.SelectedState = state || 'State';
+
+        if (!state) {
+            $scope.FilteredContractorReportList =
+                angular.copy($scope.ContractorReportList);
+        } else {
+            $scope.FilteredContractorReportList =
+                $scope.ContractorReportList.filter(x => x.State === state);
+        }
+    };
     $scope.BindContractorReport = function () {
         var collectionobj = {};
         collectionobj.Action = 19;
+
         var urlParams = new URLSearchParams(window.location.search);
         var uid = urlParams.get('UID');
         collectionobj.LoginId = uid;
-        var getData = myService.methode('POST', "../RetailSection/AuditGetContractorComlist", '{obj:' + JSON.stringify(collectionobj) + '}');
+
+        var getData = myService.methode(
+            'POST',
+            "../RetailSection/AuditGetContractorComlist",
+            '{obj:' + JSON.stringify(collectionobj) + '}'
+        );
+
         getData.then(function (response) {
             if (response.data.Result.length > 0) {
-                $scope.ContractorReportList = response.data.Result; 
-            }
-            $scope.FilteredContractorReportList = $scope.ContractorReportList;
+                $scope.ContractorReportList = response.data.Result;
 
+                // unique states nikalo
+                $scope.StateList = [...new Set(
+                    $scope.ContractorReportList
+                        .map(x => x.State)
+                        .filter(x => x)
+                )];
+            }
+
+            $scope.FilteredContractorReportList = angular.copy($scope.ContractorReportList);
         });
-    }
+    };
     $scope.ResetFiltercontractor = function () {
         $scope.SelectedMonth = '';
         $scope.SelectedYear = '';
@@ -609,6 +744,33 @@
 
         });
     }
+    $scope.Compliancereset = function () {
+
+        // Arrays
+        $scope.ExcelMasterList = [];
+        $scope.MiscExcelList = [];
+        $scope.MaternityExcelList = [];
+        $scope.AllList = [];
+        $scope.AllerdList = [];
+
+        // Sections Hide
+        $scope.existSection = false;
+        $scope.Panel = false;
+
+        // HTML Clear
+        $('#wrapper').html('');
+        $('#miscellaneousSection').html('');
+
+        // File Inputs Reset
+        $('#input-excel').val('');
+        $('#signatureFile').val('');
+
+        // Optional dropdown/model reset
+        $scope.SelectedFile = null;
+        $scope.ExcelFileName = '';
+
+        $scope.$applyAsync();
+    };
     $scope.confirmData = function () {
         var collectionobj = {};
         collectionobj.Action = 4;
@@ -983,53 +1145,65 @@
                 $scope.AfterSaveRecord();
             }
         });
-    }
-    // ✅ Function to validate State, ComplianceCategory, StoreCode
-    function validateMiscList(list, allStates, newStoreList) {
+    } 
+    function validateMiscList(list, allStates, SiteList) {
         if (!list || list.length === 0) return true;
 
         let invalidRecords = [];
-
-        // ✅ Prepare valid state names (case-insensitive)
+         
         const validStates = (allStates || []).map(s => (s.STATE_NM || "").toLowerCase().trim());
+ 
+         
+        const validSite = (SiteList || []).map(s => (s.SiteCode || "").toLowerCase().trim());
 
-        // ✅ Allowed Compliance Categories
-        const validCompliance = ["contractor"];
 
-        // ✅ Prepare valid StoreCode list from $scope.NewStoreList
-        const validStores = (newStoreList || []).map(s => (s.SCode || "").toLowerCase().trim());
+        const validClientState = (SiteList || []).map(s =>(s.STATE_NAME || "").toLowerCase().trim());
+
+       
+        let validSiteLower = validSite.map(x => x.toString().trim().toLowerCase());
+
+       
 
         list.forEach((record, index) => {
             const rowNum = index + 1;
             let issues = [];
 
             const state = (record.State || "").toString().trim();
-            const compliance = (record.ComplianceCategory || "").toString().trim();
-            const store = (record.SiteCode || "").toString().trim();
-
-            // ✅ State validation
+       
+            const Site = (record.SiteCode  || "").toString().trim();
+             
             if (!state) {
                 issues.push("State is blank");
-            } else if (!validStates.includes(state.toLowerCase())) {
+               
+            } else if (!validStates.includes(state.trim().toLowerCase())) {
                 issues.push(`Invalid State: "${state}"`);
+            
             }
+            else if (!validClientState.includes(state.trim().toLowerCase())) {
+                issues.push(`Invalid Client State : "${state}"`);
+            }
+            
 
-            // ✅ ComplianceCategory validation
-            //if (!compliance) {
-            //    issues.push("ComplianceCategory is blank");
-            //} else if (!validCompliance.includes(compliance.toLowerCase())) {
-            //    issues.push(`Invalid ComplianceCategory: "${compliance}"`);
-            //}
+           
+           
 
-            // ✅ StoreCode validation
-            if (!store) {
+            if (!Site) {
                 issues.push("SiteCode is blank");
-            } else if (!validStores.includes(store.toLowerCase())) {
-                issues.push(`Invalid SiteCode: "${store}"`);
+
             }
+            else if (!validSite.includes(Site.trim().toLowerCase())) {
+                issues.push(`Invalid SiteCode: "${Site}"`);
+
+            }
+            else if (!validSiteLower.includes(Site.toString().trim().toLowerCase())) {
+                issues.push(`Invalid SiteCode: "${Site}"`);
+            }
+           
+              
 
             if (issues.length > 0) {
                 invalidRecords.push(`Row ${rowNum}: ${issues.join(", ")}`);
+                
             }
         });
 
@@ -1057,7 +1231,7 @@
             return;
         }
 
-        if (!validateMiscList($scope.MiscExcelList, $scope.AllStateList, $scope.NewStoreList)) {
+        if (!validateMiscList($scope.MiscExcelList, $scope.AllStateList, $scope.SiteList)) {
             return; // stop saving
         }
 

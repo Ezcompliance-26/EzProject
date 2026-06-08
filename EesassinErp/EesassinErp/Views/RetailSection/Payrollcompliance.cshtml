@@ -11,7 +11,14 @@
 <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 
 
-
+<link href="~/compliance/css/all.css" rel="stylesheet" />
+<link href="~/compliance/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.min.css" rel="stylesheet" />
+<link href="~/compliance/css/custom_theme.css" rel="stylesheet" />
+<link href="~/compliance/css/colorTheme/default.css" rel="stylesheet" />
+<link href="~/compliance/css/draggle.css" rel="stylesheet" />
+<link href="~/compliance/css/responsive.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.css" rel="stylesheet" />
 <style>
     .payrollCompPage {
         font-family: "Inter", sans-serif;
@@ -23,100 +30,99 @@
         min-height: 84vh;
     }
 
-    .payrollCompPage .card {
-        background: var(--card-bg);
-        border: none;
-        border-radius: 12px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    }
+        .payrollCompPage .card {
+            background: var(--card-bg);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
 
-    .payrollCompPage .card-header {
-        background: var(--primary);
-        color: #fff;
-        font-weight: 500;
-        border-radius: 12px 12px 0 0;
-        padding: 2px 14px !important;   /* controls header height */
-        font-size: 0.85rem;
-        border-bottom: none;
-    }
-
-    /*Buttons*/
-    .payrollCompPage .btn1 {
-        border-radius: 999px;
-        border: 1px solid var(--primary);
-        color: var(--primary);
-        background: transparent;
-        padding: 6px 12px;
-        font-size: 0.8rem;
-    }
-
-        .payrollCompPage .btn1:hover {
+        .payrollCompPage .card-header {
             background: var(--primary);
             color: #fff;
+            font-weight: 500;
+            border-radius: 12px 12px 0 0;
+            padding: 2px 14px !important; /* controls header height */
+            font-size: 0.85rem;
+            border-bottom: none;
         }
 
-    .payrollCompPage .btn2 {
-        border-radius: 999px;
-        color: #fff;
-        padding: 6px 12px;
-        font-size: 0.8rem;
-        background: var(--primary);
-        border: none;
-    }
+        /*Buttons*/
+        .payrollCompPage .btn1 {
+            border-radius: 999px;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
 
-        .payrollCompPage .btn2:hover {
-            background: var(--primary-dark);
+            .payrollCompPage .btn1:hover {
+                background: var(--primary);
+                color: #fff;
+            }
+
+        .payrollCompPage .btn2 {
+            border-radius: 999px;
             color: #fff;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            background: var(--primary);
+            border: none;
         }
 
-/*Table Styling*/
-.payrollCompPage table thead th {
-    background-color: var(--primary);
-    color: #fff;
-    font-weight: 600;
-    font-size: 0.82rem;
-    white-space: nowrap;
-}
+            .payrollCompPage .btn2:hover {
+                background: var(--primary-dark);
+                color: #fff;
+            }
 
-.payrollCompPage table tbody td {
-    background-color: var(--card-bg);   
-    font-size: 0.82rem;
-    white-space: nowrap;
-}
+        /*Table Styling*/
+        .payrollCompPage table thead th {
+            background-color: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
 
-.payrollCompPage table tbody tr:hover td {
-    background-color: #FFE8D9;
-}
+        .payrollCompPage table tbody td {
+            background-color: var(--card-bg);
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
 
-/*Improve Form Controls*/
-.payrollCompPage .form-select,
-.payrollCompPage .form-control {
-    height: 36px;
-    font-size: 0.85rem;
-    border-radius: 8px;
-    padding: 4px 12px;
-}
+        .payrollCompPage table tbody tr:hover td {
+            background-color: #FFE8D9;
+        }
 
-.payrollCompPage select option {
-    font-size: 0.85rem !important;
-    min-width: 120px !important;
-    border-radius: 6px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
-    max-height: 240px !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
+        /*Improve Form Controls*/
+        .payrollCompPage .form-select,
+        .payrollCompPage .form-control {
+            height: 36px;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            padding: 4px 12px;
+        }
 
-}
+        .payrollCompPage select option {
+            font-size: 0.85rem !important;
+            min-width: 120px !important;
+            border-radius: 6px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
+            max-height: 240px !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
 
-.payrollCompPage label {
-    font-size: 0.82rem;
-    font-weight: 500;
-}
+        .payrollCompPage label {
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
 
-/*Table Scroll Wrapper*/
-.payrollCompPage .table-wrapper {
-    overflow-x: auto;
-}
+        /*Table Scroll Wrapper*/
+        .payrollCompPage .table-wrapper {
+            overflow-x: auto;
+        }
 
 
 
@@ -177,7 +183,7 @@
 
     /* extra polish */
     /*.modal table thead th {*/
-        /*      // background-color: #f8f9fa;
+    /*      // background-color: #f8f9fa;
         // font-weight: 600;*/
     /*}*/
 
@@ -197,7 +203,7 @@
 
     #finalOutputStep th {
         background-color: #f1f3f5 !important;*/ /* matches Step 3 & 5 */
-        /*font-weight: 600;
+    /*font-weight: 600;
     }*/
 
     /* CSV table styling same as Step 3 & 5 */

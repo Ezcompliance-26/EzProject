@@ -7,6 +7,11 @@ namespace BAL
 
 
 
+        public string Drinkingwater { get; set; }
+        public string Washroom { get; set; }
+        public string RestShelter { get; set; }
+        public string FirstAid { get; set; }
+        public string TrainerName { get; set; }
 
 
         public string RCCopy { get; set; }

@@ -1034,6 +1034,7 @@
             "License Name",
 			"Unit Name",
             "License Number",
+            "License Status",
             "Expiry Status",
             "Validity Start Date",
             "Validity End Date",
@@ -1065,11 +1066,12 @@
                 row.LicenseName || "",
 				  
 				    '"' + (row.StoreName || "").replace(/"/g, '""') + '"',
-                '="' + (row.LicenseNumber || "") + '"', // ✅ number fix
+                '="' + (row.LicenseNumber || "") + '"',
+                row.LicenseStatus || "",
                 row.ExpiryStatus || "",
-                '="' + safeValue(row.ValidityStartDate) + '"', // ✅ date fix
-                '="' + safeValue(row.ValidityEndDate) + '"',   // ✅ date fix
-                row.DaysOfExpire || ""
+                '="' + safeValue(row.ValidityStartDate) + '"',  
+                '="' + safeValue(row.ValidityEndDate) + '"',   
+                (row.LicenseStatus === 'Surrender' && Number(row.DaysOfExpire) < 0)  ? 0   : row.DaysOfExpire,
             ].join(","));
 
         });
@@ -1137,10 +1139,11 @@
 
         printWindow.document.write(`
         <tr>
-            <th>Store Code</th>
+            <th>Location Code</th>
             <th>License Name</th>
 			<th>Unit Name</th>
             <th>License Number</th>
+             <th>License Status</th>
             <th>Expiry Status</th>
             <th>Start Date</th>
             <th>End Date</th>
@@ -1156,10 +1159,12 @@
                 <td>${row.LicenseName || ""}</td>
 				 <td>${row.StoreName || ""}</td>
                 <td>${row.LicenseNumber || ""}</td>
+
+  <td>${row.LicenseStatus|| ""}</td>
                 <td>${row.ExpiryStatus || ""}</td>
                 <td>${row.ValidityStartDate || ""}</td>
                 <td>${row.ValidityEndDate || ""}</td>
-                <td>${row.DaysOfExpire || ""}</td>
+                <td>${   (row.LicenseStatus === 'Surrender' && Number(row.DaysOfExpire) < 0) ? 0 : row.DaysOfExpire}</td>
             </tr>
         `);
 
@@ -1394,6 +1399,7 @@
                     { "HeaderText": "Proposed Date", "HeaderValue": "ProposedDate", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                     { "HeaderText": "License Name", "HeaderValue": "LicenseName", "Width": "100%", "ShowColumn": "Yes", "ImageColumn": "No", "FixedColumn": true},
                     { "HeaderText": "License Type", "HeaderValue": "LicenseType", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
+                    { "HeaderText": "License Status", "HeaderValue": "LicenseStatus", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
                     { "HeaderText": "License Category", "HeaderValue": "LicenseCategory", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },
 
                     { "HeaderText": "Requested Date", "HeaderValue": "RequestedDate", "Width": "100%", "ShowColumn": "No", "ImageColumn": "No" },

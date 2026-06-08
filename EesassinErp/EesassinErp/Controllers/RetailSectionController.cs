@@ -26,6 +26,10 @@ namespace EesassinErp.Controllers
         {
             return View();
         }
+        public ActionResult VendorRegistrationReport()
+        {
+            return View();
+        }
         public ActionResult Icard()
         {
             return View();
@@ -68,7 +72,14 @@ namespace EesassinErp.Controllers
             string fatherHusbandName = form["FatherHusbandName"];
             string gender = form["Gender"];
             string maritalStatus = form["MaritalStatus"];
-            DateTime dateOfBirth = Convert.ToDateTime(form["DateofBirth"]);
+
+            DateTime? dateOfBirth = null;
+            if (!string.IsNullOrWhiteSpace(form["DateofBirth"]))
+            {
+                dateOfBirth = Convert.ToDateTime(form["DateofBirth"]);
+            }
+
+
             string presentAddress = form["PresentAddress"];
             string permanentAddress = form["PermanentAddress"];
             string adharCardNumber = form["AdharCardNumber"];
@@ -81,20 +92,56 @@ namespace EesassinErp.Controllers
             string previousUAN = form["PreviousUAN"];
             string previousESI = form["PreviousESI"];
             string grossSalary = form["GrossSalary"];
-            DateTime doj = Convert.ToDateTime(form["DOJ"]);
+
+            DateTime? doj = null;
+            if (!string.IsNullOrWhiteSpace(form["DOJ"]))
+            {
+                doj = Convert.ToDateTime(form["DOJ"]);
+            }
+            
             string nameofNominee = form["NameofNominee"];
             string addressofNominee = form["AddressofNominee"];
             string relationofNominee = form["RelationofNominee"];
-            DateTime dobofNominee = Convert.ToDateTime(form["DOBofNominee"]);
+           
+        
+
+
+            DateTime? dobofNominee = null;
+
+            if (!string.IsNullOrWhiteSpace(form["DOBofNominee"]))
+            {
+                DateTime parsedDate;
+                if (DateTime.TryParse(form["DOBofNominee"], out parsedDate))
+                {
+                    dobofNominee = parsedDate;
+                }
+            }
+
             string storeCode = form["StoreCode"];
             string Status = form["Status"];
             string SiteId = form["SiteId"];
 
-            DateTime IssueDate = Convert.ToDateTime(form["IssueDate"]);
-            DateTime ValidTill = Convert.ToDateTime(form["ValidTill"]);
+            
+
+            DateTime? IssueDate = null;
+            if (!string.IsNullOrWhiteSpace(form["IssueDate"]))
+            {
+                IssueDate = Convert.ToDateTime(form["IssueDate"]);
+            }
+
+            DateTime? ValidTill = null;
+            if (!string.IsNullOrWhiteSpace(form["ValidTill"]))
+            {
+                ValidTill = Convert.ToDateTime(form["ValidTill"]);
+            }
+
             string BloodGroup = form["BloodGroup"];
+            string CampNumber = form["CampNumber"];
 
-
+            string State = form["State"];
+            string City = form["City"];
+            string Pincode = form["Pincode"];
+             
 
             string Transport = form["Transport"];
             string RouteId = form["RouteId"];
@@ -115,15 +162,33 @@ namespace EesassinErp.Controllers
             // Temporary Gate Pass
             string TempIDStatus = form["TempIDStatus"];
             string TempIDNumber = form["TempIDNumber"];
-            string TempIDDate = form["TempIDDate"];
+
+
+            string FitnessTypes = form["FitnessTypes"];
+            string NextMedicalDue = form["NextMedicalDue"];
+            string MedicalStatus = form["MedicalStatus"];
+
+
+
+
+
+            DateTime? TempIDDate = null;
+            if (!string.IsNullOrWhiteSpace(form["TempIDDate"]))
+            {
+                TempIDDate = Convert.ToDateTime(form["TempIDDate"]);
+            }
 
             // Permanent Gate Pass
             string PermanentIDStatus = form["PermanentIDStatus"];
             string PermanentIDNumber = form["PermanentIDNumber"];
-            string PermanentIDDate = form["PermanentIDDate"];
+       
 
 
-
+            DateTime? PermanentIDDate = null;
+            if (!string.IsNullOrWhiteSpace(form["PermanentIDDate"]))
+            {
+                PermanentIDDate = Convert.ToDateTime(form["PermanentIDDate"]);
+            }
 
 
 
@@ -139,7 +204,7 @@ namespace EesassinErp.Controllers
             string photos2FilePath = null;
             string photos3FilePath = null;
             string photos4FilePath = null;
-
+            string MedicalCertificate_FilePath = null;
 
 
 
@@ -199,7 +264,10 @@ namespace EesassinErp.Controllers
             {
                 photos4FilePath = SaveFile(form["Photos_4_FilePath"], "Employee");
             }
-            //}
+            if (!string.IsNullOrEmpty(form["MedicalCertificate_FilePath"]))
+            {
+                MedicalCertificate_FilePath = SaveFile(form["MedicalCertificate_FilePath"], "Employee");
+            } 
             try
             {
                 var employeeData = new RetialEmployeeManager
@@ -238,7 +306,7 @@ namespace EesassinErp.Controllers
                     IssueDate = IssueDate,
                     ValidTill = ValidTill,
                     BloodGroup = BloodGroup,
-
+                    CampNumber = CampNumber,
                     NomineeName = nameofNominee,
                     NomineeAddress = addressofNominee,
                     NomineeRelation = relationofNominee,
@@ -278,9 +346,17 @@ namespace EesassinErp.Controllers
                     PermanentIDDate = PermanentIDDate,
 
                     Transport = Transport,
-                    RouteId = RouteId,
+                    RouteId = RouteId, 
+                    State = State,
+                    City = City,
+                    Pincode = Pincode,
+                    MedicalCertificate_FilePath = MedicalCertificate_FilePath,
+                    FitnessTypes = FitnessTypes,
+                    MedicalStatus = MedicalStatus,
+                    NextMedicalDue = NextMedicalDue
 
-                };
+                
+    };
                 result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.InsertUpdateDelEmployeeMaster(employeeData)));
             }
             catch (Exception ex)
@@ -1426,7 +1502,8 @@ namespace EesassinErp.Controllers
                 string uploadChallanCopyPath = GetFilePath(form["UploadChallanCopy"], form["AUploadChallanCopy"], "LicenseRequest");
                 string uploadFeesCopyPath = GetFilePath(form["UploadFeesCopy"], form["AUploadFeesCopy"], "LicenseRequest");
                 string uploadLicenseCopyPath = GetFilePath(form["UploadLicenseCopy"], form["AUploadLicenseCopy"], "LicenseRequest");
-                string UploadAmendmentCopyPath = GetFilePath(form["UploadAmendmentCopy"], form["UploadAmendmentCopy"], "LicenseRequest");
+                string uploadAcknowledgementPath = GetFilePath(form["UploadAcknowledgement"], form["AUploadAcknowledgement"], "LicenseRequest");
+                string UploadAmendmentCopyPath = GetFilePath(form["UploadAmendmentCopy"], form["AUploadAmendmentCopy"], "LicenseRequest");
                 string uploadRenewedCopyPath = GetFilePath(form["UploadRenewedCopy"], form["AUploadRenewedCopy"], "LicenseRequest");
                 string uploadInvoicePath = GetFilePath(form["UploadInvoice"], form["AUploadInvoice"], "LicenseRequest");
 
@@ -1451,6 +1528,7 @@ namespace EesassinErp.Controllers
                     UploadLicenseCopy = uploadLicenseCopyPath,
                     UploadAmendmentCopy = UploadAmendmentCopyPath,
                     UploadRenewedCopy = uploadRenewedCopyPath,
+                    UploadAcknowledgement = uploadAcknowledgementPath,
                     UserName = userName,
                     Remark = Remark,
                     UserPassword = userPassword,
@@ -1551,6 +1629,30 @@ namespace EesassinErp.Controllers
                     byte[] data = Convert.FromBase64String(obj.UFile);
                     var imageStream = new MemoryStream(data, false);
                     string extention = ".pdf";
+                    string uploadpath = "../DownloadMat/SCS/" + NewFileName + extention;
+                    string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
+                    FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                    imageStream.WriteTo(file);
+                    file.Close();
+                    imageStream.Close();
+                    obj.UFile = uploadpath;
+                }
+                if (obj.UFile.Contains("data:image/"))
+                {
+                    obj.UFile = Regex.Replace(obj.UFile, @"^data:image\/[a-zA-Z]+;base64,", string.Empty);
+                    string NewFileName = "";
+                    string strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
+                    NewFileName += strPassword;
+                    NewFileName += DateTime.Now.Year.ToString();
+                    NewFileName += DateTime.Now.Month.ToString();
+                    NewFileName += DateTime.Now.Day.ToString();
+                    NewFileName += DateTime.Now.Hour.ToString();
+                    NewFileName += DateTime.Now.Minute.ToString();
+                    NewFileName += DateTime.Now.Second.ToString();
+                    NewFileName += DateTime.Now.Millisecond.ToString();
+                    byte[] data = Convert.FromBase64String(obj.UFile);
+                    var imageStream = new MemoryStream(data, false);
+                    string extention = ".jpeg";
                     string uploadpath = "../DownloadMat/SCS/" + NewFileName + extention;
                     string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
                     FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write);
@@ -3506,5 +3608,14 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.GetUserPermissionSectionRoll(obj)));
             return result;
         }
+
+        public async Task<string> SearchPrincipleEmploye(TblPartyMaster obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchPrincipleEmploye(obj)));
+            return result;
+        }
+
+
+        
     }
 }

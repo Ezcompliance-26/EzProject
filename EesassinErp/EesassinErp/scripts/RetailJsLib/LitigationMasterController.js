@@ -291,25 +291,24 @@
     $scope.GetLitigationMaster = function (pageNumber, pageSize, Searchby) {
         $scope.showLoader();
 
-        // Destroy the existing DataTable instance if it exists
-        if ($.fn.DataTable.isDataTable('#example')) {
+        if ($.fn.DataTable && $.fn.DataTable.isDataTable('#example')) {
             $('#example').DataTable().clear().destroy();
         }
+
 
         var table = $('#example').DataTable({
             dom: 'Bfrtip',
             searching: false,
             processing: true,
             serverSide: true,
-            pageLength: pageSize, // Number of records per page
+            pageLength: pageSize, 
             ajax: function (data, callback, settings) {
-                var currentPage = Math.floor(data.start / data.length) + 1; // Calculate current page number
-
-                // Prepare the request object for the AJAX call
+                var currentPage = Math.floor(data.start / data.length) + 1;  
+                 
                 var collectionobj = {
                     Action: 6,
                     Id: LoginId,
-                    Searchby: $('#myInput').val(), // Search term from the input box
+                    Searchby: $('#myInput').val(), 
                     PageNumber: currentPage,
                     PageSize: data.length
                 };

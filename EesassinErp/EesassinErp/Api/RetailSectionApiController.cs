@@ -160,7 +160,8 @@ namespace EesassinErp.Controllers
         }
 
 
-
+        [HttpPost]
+        [Route("Api/RetailSectionApi/GetEmployeeMaster")]
         public async Task<string> GetEmployeeMaster(RetialEmployeeManager obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.GetEmployeeMaster(obj)));

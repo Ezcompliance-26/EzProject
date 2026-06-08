@@ -126,13 +126,12 @@
                                             <label class="control-label">Contact Person Mobile No.</label>
                                             <div class="input-box">
                                                 <input id="txtContactMobile" class="form-control clear" onblur="validatePhoneNo('#txtContactMobile')" maxlength="10" placeholder="" ng-model="ContactMobile" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
-                                                @*@Html.TextBox("txtContactMobile", "", new { @class = "form-control clear", @placeholder = "", @maxlength = "10", @onblur = "validatePhoneNo('#txtContactMobile')", @ng_model = "ContactMobile" })*@
                                                 <div class="text-box-msg-r">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
-                                            <label class="control-label">Store LIMIT<span class="vd_red">*</span></label>
+                                            <label class="control-label">Store Limit<span class="vd_red">*</span></label>
                                             <div class="input-box">
                                                 <input id="txtStoreLimit" type="text" ng-model="StoreLimit" onblur="validateNumberAndDecimalOnly('#txtStoreLimit')"
                                                        class="form-control text-right clear validate" onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" />
@@ -144,7 +143,7 @@
                                         <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
                                             <label class="control-label">Valid Date</label>
                                             <div class="input-box">
-                                                @Html.TextBox("txtValidTo", "", new { @class = "form-control clear", @type = "date", @placeholder = "", @ng_model = "ValidTo" })
+                                                @Html.TextBox("txtValidTo", "", new { @class = "form-control validate clear", @type = "date", @placeholder = "", @ng_model = "ValidTo" })
                                                 <div class="text-box-msg-r">
                                                 </div>
                                             </div>
@@ -202,6 +201,71 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">Contractor Limit</label><span class="vd_red">*</span>
+                                            <div class="input-box">
+                                                @Html.TextBox("txtcontractorlimit", "", new { @class = "form-control clear validate", @placeholder = "", @ng_model = "Contractorlimit" })
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">Site Limit</label><span class="vd_red">*</span>
+                                            <div class="input-box">
+                                                @Html.TextBox("txtsitelimit", "", new { @class = "form-control clear validate", @placeholder = "", @ng_model = "Sitelimit" })
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">User Limit<span class="vd_red">*</span></label>
+                                            <div class="input-box">
+                                                <input id="txtUserLimit" type="text" ng-model="UserLimit" onblur="validateNumberAndDecimalOnly('#txtUserLimit')" class="form-control text-right clear validate ng-pristine ng-untouched ng-valid ng-empty" onkeyup="$(this).val($(this).val().replace(/[^\d]/ig, ''))">
+
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">Party Creation Date</label>
+                                            <div class="input-box">
+                                                <input class="form-control clear ng-pristine ng-untouched ng-valid ng-not-empty" id="txtPartyDate" name="txtPartyDate" ng-model="PartyDate" placeholder="" type="date" value="">
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15" ng-init="AllCity()">
+                                            <label class="control-label">State<span class="vd_red">*</span></label>
+                                            <div class="input-box">
+                                                <select class="select2 form-control validate" ng-model="State">
+                                                    <option value="">Select State</option>
+                                                    <option ng-repeat="x in AllCityList | unique:'STATE_NAME'"
+                                                            value="{{x.STATE_NAME}}">
+                                                        {{x.STATE_NAME}}
+                                                    </option>
+                                                </select>
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-6 col-xs-12 mgbt-xs-15">
+                                            <label class="control-label">City<span class="vd_red">*</span></label>
+                                            <div class="input-box">
+                                                <select class="select2 form-control validate"
+                                                        ng-model="City">
+                                                    <option value="">Select City</option>
+                                                    <option ng-repeat="x in AllCityList | filter:{STATE_NAME: State}"
+                                                            value="{{x.CITY_NAME}}">
+                                                        {{x.CITY_NAME}}
+                                                    </option>
+                                                </select>
+                                                <div class="text-box-msg-r">
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                                             @Html.Partial("ActionView")
                                         </div>

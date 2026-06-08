@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
     ViewBag.Title = "Compliance Report";
-    Layout = "~/Views/Common/_RetailLayout.cshtml";
+    Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
 
 
@@ -17,15 +17,138 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <!-- For Excel -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-@{
-    ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
-    ViewBag.Title = "Addcompliancefile";
-    Layout = "~/Views/Common/_RetailLayout.cshtml";
-}
+ 
 <style>
-    .bg-primary {
-        background-color: #e67525 !important;
+    .pagecontentbody {
+        font-family: "Inter", sans-serif;
+        --primary: #E45D27; /* theme accent */
+        --primary-dark: #c44b1d;
+        --card-bg: #FEF3EC;
+        background: #FFF1EB;
+        color: #223;
+        min-height: 90vh;
     }
+
+    .dropdown-menu {
+        min-width: 120px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        max-height: 240px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .download-btn, .btn-submit, .btn-view, .btn-print, .btn-excel, .btn-download {
+        background: #E45D27;
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-weight: 400;
+        display: inline-flex;
+        align-items: center;
+        gap: 1px;
+        cursor: pointer;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+        .download-btn:hover, .btn-submit:hover, .btn-view:hover, .btn-print:hover, .btn-excel:hover, .btn-download:hover {
+            background-color: #c44b1d;
+            color: #fff;
+        }
+
+        .download-btn i {
+            margin-right: 8px;
+        }
+
+        .control-label{
+            margin-bottom:0.5rem;
+        }
+
+    .input-box {
+        background: var(--card-bg);
+        border-radius: 12px;
+        border: none !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        margin-bottom: 2rem;
+    }
+
+        .input-box h4 {
+            color: var(--primary);
+        }
+
+        /* First header row */
+        .input-box table thead tr:first-child th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background-color: #F37437;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-align: left;
+            vertical-align: middle;
+            white-space: nowrap;
+            padding: 8px 10px;
+        }
+
+        /* Second row (search row) */
+        .input-box table thead tr:nth-child(2) th {
+            position: sticky;
+            top: 34px; /* adjust according to first row height */
+            z-index: 1;
+            background-color: var(--card-bg);
+            color: #000;
+            font-weight: 400;
+            font-size: 0.78rem;
+            text-align: left;
+            vertical-align: middle;
+            padding: 8px 10px;
+            white-space: nowrap;
+        }
+
+            /* Search inputs */
+            .input-box table thead tr:nth-child(2) th input {
+                font-size: 0.78rem;
+                min-width: 120px;
+            }
+
+        .input-box table tbody td {
+            background-color: var(--card-bg);
+            font-size: 0.78rem;
+            vertical-align: middle;
+            text-align: left;
+            padding: 8px 10px;
+            white-space: nowrap;
+            font-weight: 400;
+        }
+
+        .input-box tbody tr:hover td {
+            background-color: #FFE8D9;
+        }
+
+        .spin-icon{
+    display:inline-block;
+    animation: spin 1s linear infinite;
+}
+
+@@keyframes spin{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
+</style>
+
+<style>
+    /*.bg-primary {
+        background-color: var(--primary) !important;
+    }*/
 
     .form-check .form-check-input {
         float: left;
@@ -99,13 +222,25 @@
         pointer-events: none !important; /* अब क्लिक block नहीं होगा */
     }
 </style>
-<div class="pagecontentbody">
+<div class="pagecontentbody px-4 py-2">
 
     <div class="pagebody">
         <div class="col-md-12 pageheader">
 
             <div class="pagecontentbody">
+                <h4 class="mb-4 " style="color: var(--primary)">Establishment Report </h4>
+               
+                <button type="button"
+                        class="download-btn mb-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#bulkDownloadModal">
+                    <i class="bi bi-download"></i> Bulk Download Docs
+                </button>
+				<div style="margin-bottom: 1rem;padding-left: 1rem;">
+                    {{downloadAlertMessage}}<br />
+                    {{downloadMessage}}
 
+                </div>
                 <div class="pagebody">
                     <div class="col-md-12 pageheader">
                         <!-- Tabs Content -->
@@ -135,12 +270,12 @@
                                                     <!-- Category -->
                                                     <div class="col-md-2">
                                                         <label class="control-label">Compliance Category<span class="vd_red">*</span></label>
-                                                        <div class="input-box">
+                                                        <div class="input-box" style="margin-bottom: 0;">
                                                             <select id="ddlComplianceCategory" class="select2 form-control validate" ng-model="ComplianceCategory" ng-change="BindStore()">
                                                                 <option value="">Select Compliance</option>
                                                                 @*<option value="1">Store</option>
-                                                                    <option value="2">Warehouse</option>
-                                                                    <option value="3">Factory</option>*@
+                                                        <option value="2">Warehouse</option>
+                                                        <option value="3">Factory</option>*@
                                                                 <option value="4">Establishment</option>
                                                                 @*<option value="5">Contractor</option>*@
                                                             </select>
@@ -150,7 +285,7 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div class="form-group">
-                                                            <label>Store Code</label>
+                                                            <label style="margin-bottom: 0.5rem;">Store Code</label>
 
                                                             <select id="myDropdown" class="form-control form-select validate" ng-change="BindAct(StoreId);SetStoreCode(StoreId)" ng-model="StoreId">
                                                                 <option value="">Select</option>
@@ -228,26 +363,21 @@
                                                         <div class="form-group">
                                                             <label class="form-label d-block">&nbsp;</label>
                                                             <button type="button"
-                                                                    class="btn btn-warning w-100"
+                                                                   class="download-btn"
                                                                     ng-click="BindAllDocumentList()"
                                                                     ng-disabled="searching">
                                                                 <span ng-if="!searching">
-                                                                    <i class="fa fa-search"></i>
+                                                                    <i style="margin-right:0" class="bi bi-search"></i>
                                                                 </span>
                                                                 <span ng-if="searching">
-                                                                    <i class="fa fa-spinner fa-spin"></i>
+                                                                    <i class="bi bi-arrow-repeat spin-icon" style="margin-right:0;"></i>
                                                                 </span>
                                                             </button>
                                                         </div>
                                                     </div>
 
 
-                                                    <button type="button"
-                                                            class="btn btn-success mb-2"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#bulkDownloadModal">
-                                                        <i class="fa fa-download"></i> Bulk Download Docs
-                                                    </button>
+
 
 
                                                 </div>
@@ -255,9 +385,7 @@
 
                                                 <div id="dynamic-content" style="display: none;"></div>
                                                 <div id="print-area"
-                                                     style="position:absolute; top:-9999px; left:-9999px;
-            background:#fff; min-width:800px; min-height:600px;
-            display:block; visibility:visible;">
+                                                     style="position:absolute; top:-9999px; left:-9999px; background:#fff; min-width:800px; min-height:600px; display:block; visibility:visible;">
                                                 </div>
                                             </div>
                                         </div>
@@ -265,97 +393,97 @@
 
                                         <br />
 
-                                        <div class="input-box" ng-show="Doclist" style="max-height:500px; overflow-x:auto; overflow-y:auto; border:1px solid #ccc;
-padding:10px;">
+                                        <div class="input-box" ng-show="Doclist" style="padding: 10px; border-radius: 12px;">
 
                                             <h4>Document List</h4>
-                                            <table class="table table-bordered table-striped" style="width:100%;">
-                                                <thead>
-                                                    <tr>
-                                                        <th>
-                                                            <input type="checkbox" ng-model="selectAll" ng-click="toggleAll()" />
-                                                        </th>
-                                                        <th>DocumentName</th>
-                                                        <th>DocumentType</th>
-                                                        <th>Act</th>
-                                                        <th>FormNo</th>
-                                                        <th>Criticality</th>
-                                                        <th>DocumentType</th>
-                                                        <th>Frequency</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                    <!-- Search Inputs -->
-                                                    <tr>
-                                                        <th></th>
-                                                        <th><input type="text" class="form-control" placeholder="Search DocumentName" ng-model="search.DocumentName"></th>
-                                                        <th><input type="text" class="form-control" placeholder="Search DocumentType" ng-model="search.DocumentType"></th>
-                                                        <th><input type="text" class="form-control" placeholder="Search Act" ng-model="search.Act"></th>
-                                                        <th><input type="text" class="form-control" placeholder="Search FormNo" ng-model="search.FormNo"></th>
-                                                        <th><input type="text" class="form-control" placeholder="Search Criticality" ng-model="search.Criticality"></th>
-                                                        <th><input type="text" class="form-control" placeholder="Search DocumentType" ng-model="search.DocumentType2"></th>
-                                                        <th><input type="text" class="form-control" placeholder="Search Frequency" ng-model="search.Frequency"></th>
-                                                        <th></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr ng-repeat="x in DocumentList | filter:customFilter">
-                                                        <td>
-                                                            <input type="checkbox" ng-model="x.isSelected" ng-change="updateSelection()" />
-                                                        </td>
-                                                        <td>{{x.DocumentName}}</td>
-                                                        <td>{{x.DocumentType}}</td>
-                                                        <td class="text-center">{{x.Act}}</td>
-                                                        <td class="text-center">{{x.FormNo}}</td>
-                                                        <td class="text-center">{{x.Criticality}}</td>
-                                                        <td class="text-center">{{x.DocumentType}}</td>
-                                                        <td class="text-center">{{x.Frequency}}</td>
-                                                        <td class="text-center">
-                                                            <div class="btn-group" role="group">
-                                                                <!-- Download Button -->
-                                                                <button class="btn btn-sm btn-success"
-                                                                        title="Download"
-                                                                        ng-click="ApproveBeforeDownload(x.HeaderHtml,x.Allowed,x.DocumentId,3,x.DocumentName)"
-                                                                        ng-disabled="loading[x.DocumentId]">
-                                                                    <span ng-if="!loading[x.DocumentId]">
-                                                                        <i class="fa fa-download"></i>
-                                                                    </span>
-                                                                    <span ng-if="loading[x.DocumentId]">
-                                                                        <i class="fa fa-spinner fa-spin"></i>
-                                                                    </span>
-                                                                </button>
+                                            <div style="max-height: 500px; overflow-x: auto; overflow-y: auto; border-radius: 12px;">
+                                                <table class="table" style="width:100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                <input type="checkbox" ng-model="selectAll" ng-click="toggleAll()" />
+                                                            </th>
+                                                            <th>DocumentName</th>
+                                                            <th>DocumentType</th>
+                                                            <th>Act</th>
+                                                            <th>FormNo</th>
+                                                            <th>Criticality</th>
+                                                            <th>DocumentType</th>
+                                                            <th>Frequency</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                        <!-- Search Inputs -->
+                                                        <tr>
+                                                            <th></th>
+                                                            <th><input type="text" class="form-control" placeholder="Search DocumentName" ng-model="search.DocumentName"></th>
+                                                            <th><input type="text" class="form-control" placeholder="Search DocumentType" ng-model="search.DocumentType"></th>
+                                                            <th><input type="text" class="form-control" placeholder="Search Act" ng-model="search.Act"></th>
+                                                            <th><input type="text" class="form-control" placeholder="Search FormNo" ng-model="search.FormNo"></th>
+                                                            <th><input type="text" class="form-control" placeholder="Search Criticality" ng-model="search.Criticality"></th>
+                                                            <th><input type="text" class="form-control" placeholder="Search DocumentType" ng-model="search.DocumentType2"></th>
+                                                            <th><input type="text" class="form-control" placeholder="Search Frequency" ng-model="search.Frequency"></th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="x in DocumentList | filter:customFilter">
+                                                            <td>
+                                                                <input type="checkbox" ng-model="x.isSelected" ng-change="updateSelection()" />
+                                                            </td>
+                                                            <td>{{x.DocumentName}}</td>
+                                                            <td>{{x.DocumentType}}</td>
+                                                            <td >{{x.Act}}</td>
+                                                            <td >{{x.FormNo}}</td>
+                                                            <td >{{x.Criticality}}</td>
+                                                            <td >{{x.DocumentType}}</td>
+                                                            <td >{{x.Frequency}}</td>
+                                                            <td >
+                                                                <div class="btn-group" role="group">
+                                                                    <!-- Download Button -->
+                                                                    <button class="btn btn-sm btn-download"
+                                                                            title="Download"
+                                                                            ng-click="ApproveBeforeDownload(x.HeaderHtml,x.Allowed,x.DocumentId,3,x.DocumentName)"
+                                                                            ng-disabled="loading[x.DocumentId]">
+                                                                        <span ng-if="!loading[x.DocumentId]">
+                                                                            <i class="bi bi-download"></i>
+                                                                        </span>
+                                                                        <span ng-if="loading[x.DocumentId]">
+                                                                            <i class="bi bi-arrow-repeat spin-icon"></i>
+                                                                        </span>
+                                                                    </button>
 
-                                                                <!-- Print Button -->
-                                                                <button class="btn btn-sm btn-primary"
-                                                                        title="Print"
-                                                                        ng-click="ApproveBeforeDownload(x.HeaderHtml,x.Allowed,x.DocumentId,1,x.DocumentName)"
-                                                                        ng-disabled="loading[x.DocumentId]">
-                                                                    <span ng-if="!loading[x.DocumentId]">
-                                                                        <i class="fa fa-print"></i>
-                                                                    </span>
-                                                                    <span ng-if="loading[x.DocumentId]">
-                                                                        <i class="fa fa-spinner fa-spin"></i>
-                                                                    </span>
-                                                                </button>
-                                                                <!-- Excel Button -->
-                                                                <button class="btn btn-sm btn-warning"
-                                                                        title="Download Excel"
-                                                                        ng-click="ApproveBeforeDownload(x.HeaderHtml,x.Allowed,x.DocumentId,2,x.DocumentName)"
-                                                                        ng-disabled="loading[x.DocumentId]">
-                                                                    <span ng-if="!loading[x.DocumentId]">
-                                                                        <i class="fas fa-file-excel"></i>
-                                                                    </span>
-                                                                    <span ng-if="loading[x.DocumentId]">
-                                                                        <i class="fa fa-spinner fa-spin"></i>
-                                                                    </span>
-                                                                </button>
-                                                            </div>
-                                                        </td>
+                                                                    <!-- Print Button -->
+                                                                    <button class="btn btn-sm btn-print"
+                                                                            title="Print"
+                                                                            ng-click="ApproveBeforeDownload(x.HeaderHtml,x.Allowed,x.DocumentId,1,x.DocumentName)"
+                                                                            ng-disabled="loading[x.DocumentId]">
+                                                                        <span ng-if="!loading[x.DocumentId]">
+                                                                            <i class="bi bi-printer"></i>
+                                                                        </span>
+                                                                        <span ng-if="loading[x.DocumentId]">
+                                                                            <i class="bi bi-arrow-repeat spin-icon"></i>
+                                                                        </span>
+                                                                    </button>
+                                                                    <!-- Excel Button -->
+                                                                    <button class="btn btn-sm btn-excel"
+                                                                            title="Download Excel"
+                                                                            ng-click="ApproveBeforeDownload(x.HeaderHtml,x.Allowed,x.DocumentId,2,x.DocumentName)"
+                                                                            ng-disabled="loading[x.DocumentId]">
+                                                                        <span ng-if="!loading[x.DocumentId]">
+                                                                            <i class="bi bi-file-earmark-excel"></i>
+                                                                        </span>
+                                                                        <span ng-if="loading[x.DocumentId]">
+                                                                            <i class="bi bi-arrow-repeat spin-icon"></i>
+                                                                        </span>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
 
 
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -389,16 +517,17 @@ padding:10px;">
 
         <div class="modal-content" style="border-radius:8px; overflow:hidden;">
 
-            <div class="modal-header" style="border-bottom:1px solid #ddd; padding:10px 15px;">
+            <div class="modal-header" style="background: #E45D24; color: #fff; padding: 10px 15px;">
                 <h5 class="modal-title">Select Employee</h5>
-                <button type="button" class="close"
-                        style="border:none; background:none; font-size:24px;"
-                        onclick="angular.element(this).scope().closeModal()">
-                    &times;
-                </button>
+                @*<button type="button" class="close btn-close btn-close-white"
+                style="border:none; background:none; font-size:24px;"
+                onclick="angular.element(this).scope().closeModal()">
+            &times;
+        </button>*@
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" onclick="angular.element(this).scope().closeModal()"></button>
             </div>
 
-            <div class="modal-body" style="padding:15px;">
+            <div class="modal-body" style="padding: 15px; background: #FEF3EC;">
                 <!-- Dropdown -->
                 <select class="form-control" ng-model="SelectedEmployee">
                     <option value="">Select Employee</option>
@@ -407,9 +536,9 @@ padding:10px;">
                 </select>
             </div>
 
-            <div class="modal-footer" style="border-top:1px solid #ddd; padding:10px 15px; text-align:right;">
-                <button type="button" class="btn btn-success" ng-click="PrintEmployee()">Download Form</button>
-                <button type="button" class="btn btn-secondary"
+            <div class="modal-footer" style="background: #FEF3EC; padding: 10px 15px; text-align: right;">
+                <button type="button" style="margin-right: .5rem;" class="btn btn-download" ng-click="PrintEmployee()">Download Form</button>
+                <button type="button" class="btn btn-view"
                         onclick="angular.element(this).scope().closeModal()">
                     Close
                 </button>
@@ -418,19 +547,21 @@ padding:10px;">
         </div>
     </div>
 </div>
+
+
 <!-- 🔹 Modal -->
 <div class="modal fade" id="bulkDownloadModal" tabindex="-1" aria-labelledby="bulkDownloadModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header" style="background:#E45D24; color:#fff;">
                 <h5 class="modal-title" id="bulkDownloadModalLabel">Bulk Download Documents</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body" style="background: #FEF3EC;">
                 <!-- 🔹 State Checkbox List -->
                 <div class="form-group mb-3">
-                    <label class="col-form-label mb-2 fw-bold">Select State(s)</label>
+                    <label class="col-form-label mb-2">Select State(s)</label>
                     <div class="border" style="max-height: 200px; overflow-y: auto; background-color: #f8f9fa;">
                         <div class="form-check" ng-repeat="s in AllStateList">
                             <input type="checkbox"
@@ -449,7 +580,7 @@ padding:10px;">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group" ng-init="BindFinacialYear();">
-                            <label for="ddlFinancialYear" class="form-label fw-bold">Financial Year</label>
+                            <label for="ddlFinancialYear" class="form-label">Financial Year</label>
                             <select id="ddlFinancialYear" class="form-control form-select" ng-model="FY">
                                 <option value="">Select</option>
                                 <option ng-repeat="x in finacialyearList" value="{{x.FinancialName}}">
@@ -461,7 +592,7 @@ padding:10px;">
 
                     <div class="col-md-6">
                         <div class="form-group" ng-init="BindMonth();">
-                            <label for="CMonth" class="form-label fw-bold">Month</label>
+                            <label for="CMonth" class="form-label">Month</label>
                             <select id="CMonth" class="form-control form-select" ng-model="CMonth">
                                 <option value="">Select</option>
                                 <option ng-repeat="x in MonthList" value="{{x.MonthNumber}}">
@@ -474,14 +605,14 @@ padding:10px;">
             </div>
 
             <!-- 🔹 Footer -->
-            <div class="modal-footer">
+            <div class="modal-footer" style="background: #FEF3EC;">
                 <button type="button"
-                        class="btn btn-success"
+                        class="btn btn-download"
                         ng-click="DownloadSelected()"
                         data-bs-dismiss="modal">
-                    <i class="fa fa-download"></i> Download
+                    <i class="bi bi-download"></i> Download
                 </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-view" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

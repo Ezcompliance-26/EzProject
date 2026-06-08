@@ -132,6 +132,7 @@
 
 
     $scope.BulkDocument = async function (doc) {
+		 
         try {
             const collectionobj = {
                 Action: 10,
@@ -160,6 +161,7 @@
                 $scope.PartyName = response.data.Result[0].PartyName;
                 $scope.ContactPerson = response.data.Result[0].ContactPerson;
                 $scope.Address = response.data.Result[0].PMAddress;
+			
                 $scope.Month = $scope.getMonthName(response.data.Result[0].Month);
                 $scope.Signature = response.data.Result[0].Signature;
                 $scope.Nature_ofWork_contractor = response.data.Result[0].Nature_ofWork_contractor;
@@ -1268,6 +1270,29 @@ $scope.calcNetDeductionsix = function (value1, val2, val3, val4, val5, val6) {
 };
 
 
+///////// A-(B+C+D+E+F+G)  /////////////////////
+
+// Total Deduction calculation
+$scope.calcNetDeductionseven = function (value1, val2, val3, val4, val5, val6, val7) {
+    // values ko number me convert karo, NaN ya null ko 0 bana do
+    value1 = parseFloat(value1) || 0;
+    val2   = parseFloat(val2) || 0;
+    val3   = parseFloat(val3) || 0;
+    val4   = parseFloat(val4) || 0;
+	val5   = parseFloat(val5) || 0;
+    val6   = parseFloat(val6) || 0;
+	 val7   = parseFloat(val7) || 0;
+    // calculation
+    var result = value1 - (val2 + val3 + val4 + val5 + val6 + val7);
+
+    // agar result negative ho to 0
+    if (result < 0) result = 0;
+
+    // decimal remove karke sirf integer return karo
+    return Math.round(result);  // nearest integer
+
+};
+
 
     // Two values subtraction
     $scope.twovaluesubstract = function (val1, val2) {
@@ -1504,13 +1529,41 @@ $scope.calcNetDeductionsix = function (value1, val2, val3, val4, val5, val6) {
         // Always return with 2 decimals
         return result.toFixed(2);
     };
-    $scope.getMonthName = function (monthNum) {
-        var monthNames = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-        return monthNames[monthNum - 1] || '';
-    };
+	
+    //$scope.getMonthName = function (monthNum) {
+     //   var monthNames = [
+          //  'January', 'February', 'March', 'April', 'May', 'June',
+           // 'July', 'August', 'September', 'October', 'November', 'December'
+      //  ];
+      //  return monthNames[monthNum - 1] || '';
+   // };
+   
+ $scope.getMonthName = function (monthNum) {
+    if (!monthNum || monthNum < 1 || monthNum > 12) return '';
+
+    var monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    // 🔥 ALWAYS use $scope.FY directly (no window, no confusion)
+    var financialYear = $scope.FY;
+
+    if (!financialYear || !financialYear.includes('-')) {
+        return monthNames[monthNum - 1];
+    }
+
+    var startYear = parseInt(financialYear.split('-')[0]);
+    var endYear = parseInt(financialYear.split('-')[1]);
+
+    // 🔥 FINAL CORRECT LOGIC
+    if (monthNum >= 4 && monthNum <= 12) {
+        return monthNames[monthNum - 1] + ' ' + startYear; // April–Dec
+    } else {
+        return monthNames[monthNum - 1] + ' ' + endYear;   // Jan–Mar
+    }
+};
+
 
     $scope.DownloadCompiledHtml = function (htmlString) {
         var container = angular.element('<div></div>');

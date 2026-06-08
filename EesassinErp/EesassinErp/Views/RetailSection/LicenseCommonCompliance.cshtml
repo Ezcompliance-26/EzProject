@@ -201,6 +201,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" ng-click="SetLicenceStatus('Applied');ManageLog('Click on License Overview Applied button')">Applied</a></li>
                                 <li><a class="dropdown-item" ng-click="SetLicenceStatus('Issued');ManageLog('Click on License Overview Issued button')">Issued</a></li>
+                                <li><a class="dropdown-item" ng-click="SetLicenceStatus('Surrender');ManageLog('Click on License Overview Surrender button')">Surrender</a></li>
                                 <li><a class="dropdown-item" ng-click="SetLicenceStatus('Not Applied');ManageLog('Click on License Overview Not Applied button')">Not Applied</a></li>
 
                             </ul>
@@ -838,6 +839,7 @@
                                     <th>Validity Start</th>
                                     <th>Validity End</th>
                                     <th>Days to Expire</th>
+                                    <th>License Status</th>
                                     <th>Expiry Status</th>
                                     <th>Renewal Request </th>
                                 </tr>
@@ -858,14 +860,11 @@
                                     <td>{{ licenseMaster.ValidityStartDate }}</td>
                                     <td>{{ licenseMaster.ValidityEndDate }}</td>
 
-                                    <td class="ex-days"
-                                        ng-class="{
-            'ex-good': licenseMaster.ExpiryStatus === 'Active',
-            'ex-warn': licenseMaster.ExpiryStatus === 'Expiring Soon',
-            'ex-bad':  licenseMaster.ExpiryStatus === 'Expired'
-        }">
-                                        {{ licenseMaster.DaysOfExpire }}
+                                    <td class="ex-days" ng-class="{'ex-good': licenseMaster.ExpiryStatus === 'Active', 'ex-warn': licenseMaster.ExpiryStatus === 'Expiring Soon','ex-bad':  licenseMaster.ExpiryStatus === 'Expired' }">
+                                        
+                                        {{ (licenseMaster.LicenseStatus === 'Surrender' && licenseMaster.DaysOfExpire < 0) ? 0  : licenseMaster.DaysOfExpire }}
                                     </td>
+                                    <td>{{licenseMaster.LicenseStatus}}</td>
                                     <td>
                                         <span ng-class="{ 'ex-status ex-active': licenseMaster.ExpiryStatus === 'Active',
                 'ex-risk ex-medium': licenseMaster.ExpiryStatus === 'Expiring Soon',
@@ -874,17 +873,17 @@
                                             {{ licenseMaster.ExpiryStatus }}
                                         </span>
                                     </td>
-                                    <td class="action-menu" ng-if="licenseMaster.ExpiryStatus === 'Expiring Soon' && LM_EditFlag==true">
+                                    <td class="action-menu" ng-if="licenseMaster.ExpiryStatus === 'Expiring Soon' && LM_EditFlag==true && licenseMaster.LicenseStatus !== 'Surrender'">
                                         <button class="btn btn-sm" ng-click="ApprovalRecord(licenseMaster.Id);ManageLog('Click on '+licenseMaster.LicenseName +' Expiring Soon')">
                                             Initiate Renewal
                                         </button>
                                     </td>
-                                    <td class="action-menu" ng-if="licenseMaster.ExpiryStatus === 'Expired' && LM_EditFlag==true">
+                                    <td class="action-menu" ng-if="licenseMaster.ExpiryStatus === 'Expired' && LM_EditFlag==true && licenseMaster.LicenseStatus !== 'Surrender'">
                                         <button class="btn btn-sm" ng-click="ApprovalRecord(licenseMaster.Id);ManageLog('Click on '+licenseMaster.LicenseName +' Expired')">
                                             Approve
                                         </button>
                                     </td>
-                                    <td class="action-menu" ng-if="licenseMaster.ExpiryStatus === 'Active'">
+                                    <td class="action-menu" ng-if="licenseMaster.ExpiryStatus === 'Active' && licenseMaster.LicenseStatus !== 'Surrender'">
                                         <button class="btn btn-sm">
                                             Disable
                                         </button>

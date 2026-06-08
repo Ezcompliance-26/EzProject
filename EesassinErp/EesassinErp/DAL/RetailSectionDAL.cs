@@ -65,6 +65,11 @@ namespace DAL
                 new SqlParameter("@Photos_2_FilePath", obj.Photos_2_FilePath),
                 new SqlParameter("@Photos_3_FilePath", obj.Photos_3_FilePath),
                 new SqlParameter("@Photos_4_FilePath", obj.Photos_4_FilePath),
+                 new SqlParameter("@MedicalCertificate_FilePath", obj.MedicalCertificate_FilePath),
+                  new SqlParameter("@MedicalStatus", obj.MedicalStatus),
+                       new SqlParameter("@NextMedicalDue", obj.NextMedicalDue),
+                            new SqlParameter("@FitnessTypes", obj.FitnessTypes),
+
                    new SqlParameter("@EmployeePhotos",obj.EmployeePhotos),
                 new SqlParameter("@UserIds", obj.LoginId),
                  new SqlParameter("@PFAccount", obj.PFAccount),
@@ -94,7 +99,10 @@ new SqlParameter("@RouteId", obj.RouteId) ,
 new SqlParameter("@IssueDate", obj.IssueDate),
 new SqlParameter("@ValidTill", obj.ValidTill),
 new SqlParameter("@BloodGroup", obj.BloodGroup),
-
+new SqlParameter("@CampNumber",obj.CampNumber),
+new SqlParameter("@State",obj.State),
+new SqlParameter("@City",obj.City),
+new SqlParameter("@Pincode",obj.Pincode),
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("RTL.USP_EmployeeMaster", CommandType.StoredProcedure, param.ToArray()));
@@ -707,6 +715,7 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@ValidityEndDate",obj.ValidityEndDate),
                    new SqlParameter("@LicenseCategory",obj.LicenseCategory),
                 new SqlParameter("@UploadLicenseCopy",obj.UploadLicenseCopy),
+                 new SqlParameter("@UploadAcknowledgement",obj.UploadAcknowledgement),
                  new SqlParameter("@UploadAmendmentCopy",obj.UploadAmendmentCopy),
                 new SqlParameter("@RenewalStatus",obj.RenewalStatus),
                 new SqlParameter("@RenewalStartDate",obj.RenewalStartDate),
@@ -1069,6 +1078,8 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 new SqlParameter("@Year",obj.Year),
                   new SqlParameter("@Id",obj.LoginId),
                       new SqlParameter("@UID",obj.UID),
+                          new SqlParameter("@SiteCode",obj.SiteCode),
+                                    new SqlParameter("@EmployeeId",obj.EmployeeId),
 
             };
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.USP_AuditContractorComplianceBulk", CommandType.StoredProcedure, param.ToArray()));
@@ -1616,66 +1627,84 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
                 dt.Columns.Add("TempIDDate");
                 dt.Columns.Add("PermanentIDStatus");
                 dt.Columns.Add("PermanentIDNumber");
-                dt.Columns.Add("PermanentIDDate");
+                dt.Columns.Add("PermanentIDDate"); 
+                dt.Columns.Add("RouteId");
+                dt.Columns.Add("IssueDate");
+                dt.Columns.Add("ValidTill");
+                dt.Columns.Add("BloodGroup");
+                dt.Columns.Add("CampNumber");
+                dt.Columns.Add("State");
+                dt.Columns.Add("City");
+                dt.Columns.Add("Pincode");
+
+
 
                 foreach (var item in obj.EmployeeMaster)
                 {
                     dt.Rows.Add(
-                        item.RefEmployeeCode,
-                        item.EmployeeName,
-                        item.SiteName,
-                        item.EmployeeDesignation,
+                    item.RefEmployeeCode,
+                    item.EmployeeName,
+                    item.SiteName,
+                    item.EmployeeDesignation,
 
-                        item.EmployeeDepartment,
-                        item.Father_Husband_Name,
-                        item.Gendar,
-                        item.MaritalStatus,
-                        item.DateOfBirth,
-                        item.DOJ,
+                    item.EmployeeDepartment,
+                    item.Father_Husband_Name,
+                    item.Gendar,
+                    item.MaritalStatus,
+                    item.DateOfBirth,
+                    item.DOJ,
 
 
-                        item.PresentAddress,
-                        item.PermanemtAddress,
+                    item.PresentAddress,
+                    item.PermanemtAddress,
 
-                        item.MobileNumber,
-                        item.AlternativeMobileNumber,
-                        item.EmployeeEmailID,
+                    item.MobileNumber,
+                    item.AlternativeMobileNumber,
+                    item.EmployeeEmailID,
 
-                        item.PANNumber,
-                        item.AdharCardNumber,
+                    item.PANNumber,
+                    item.AdharCardNumber,
 
-                        item.PreviousUAN,
-                        item.PFAccount,
+                    item.PreviousUAN,
+                    item.PFAccount,
 
-                        item.BankAccountNumber,
-                        item.BankIFSCCode,
+                    item.BankAccountNumber,
+                    item.BankIFSCCode,
 
-                        item.PreviousESI,
-                       item.GrossSalary,
+                    item.PreviousESI,
+                    item.GrossSalary,
 
-                        item.NomineeName,
-                        item.NomineeRelation,
-                        item.NomineeDOB,
-                        item.NomineeAddress,
+                    item.NomineeName,
+                    item.NomineeRelation,
+                    item.NomineeDOB,
+                    item.NomineeAddress,
 
-                        item.MinimumWageCategory,
-                        item.WageType,
-                        item.WageDisbursementMode,
+                    item.MinimumWageCategory,
+                    item.WageType,
+                    item.WageDisbursementMode,
 
-                        item.PPE,
-                        item.PPEType,
+                    item.PPE,
+                    item.PPEType,
 
-                        item.SafetyTrainingStatus,
-                        item.SiteInductionStatus,
-                        item.PoliceVerificationStatus,
+                    item.SafetyTrainingStatus,
+                    item.SiteInductionStatus,
+                    item.PoliceVerificationStatus,
 
-                        item.TempIDStatus,
-                        item.TempIDNumber,
-                         item.TempIDDate,
+                    item.TempIDStatus,
+                    item.TempIDNumber,
+                    item.TempIDDate,
 
-                        item.PermanentIDStatus,
-                        item.PermanentIDNumber,
-                       item.PermanentIDDate
+                    item.PermanentIDStatus,
+                    item.PermanentIDNumber,
+                    item.PermanentIDDate,
+                    item.RouteId,
+                    item.IssueDate,
+                    item.ValidTill,
+                    item.BloodGroup,
+                    item.CampNumber  ,
+                    item.State,
+                    item.City,
+                    item.Pincode
                     );
                 }
 
@@ -3392,5 +3421,142 @@ new SqlParameter("@BloodGroup", obj.BloodGroup),
             DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[USP_FinancialStatutoryEvent]", CommandType.StoredProcedure, param.ToArray()));
             return dt;
         }
+        
+     public async static Task<DataTable> SearchPrincipleEmploye(TblPartyMaster obj)
+        {
+            var param = new List<SqlParameter>
+            {
+              new SqlParameter("@Id", obj.Id),
+               new SqlParameter("@Action", obj.Action),
+                new SqlParameter("@LoginId", obj.LoginId),
+            };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("RTL.PrincipleEmployerCode", CommandType.StoredProcedure, param.ToArray()));
+            return dt;
+        }
+        // here is define bind Factory Event compliance events dated 13/05/2026
+        public async static Task<string> AddFactoryEventcompliance(RetailBAL obj)
+        {
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter("@Action", obj.Action),
+                new SqlParameter("@UserId", obj.UserId),
+                new SqlParameter("@ASD", obj.ASD),
+                new SqlParameter("@CSD", obj.CSD),
+                new SqlParameter("@RegNo", obj.RegNo),
+                new SqlParameter("@UploadFile", obj.UploadFile),
+                new SqlParameter("@Createdby", obj.Createdby),
+                new SqlParameter("@CACId", obj.CACId),
+
+                  new SqlParameter("@Status", obj.Status),
+                    new SqlParameter("@VRemark", obj.VRemark),
+                      new SqlParameter("@CRemark", obj.CRemark),
+                        new SqlParameter("@IsVerified", obj.IsVerified),
+
+                new SqlParameter("@Id", obj.Id),
+                new SqlParameter("@Result",""),
+
+             };
+            return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[RTL].[usp_ClientFactoryStatutoryInternalEvent]", CommandType.StoredProcedure, param.ToArray()));
+
+        }
+        public async static Task<DataTable> SearchFactoryEventcompliance(RetailBAL obj)
+        {
+            var param = new List<SqlParameter>
+            {
+                    new SqlParameter("@Action", obj.Action),
+                     new SqlParameter("@Year", obj.Year),
+                    new SqlParameter("@Month", obj.Month),
+                    new SqlParameter("@State", obj.State),
+                    new SqlParameter("@CACId", obj.CACId),
+                    new SqlParameter("@Id", obj.Id),
+            };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[usp_ClientFactoryStatutoryInternalEvent]", CommandType.StoredProcedure, param.ToArray()));
+            return dt;
+        }
+
+        // here is define bind Secretarial Event compliance events dated 14/05/2026 by Aadarsh
+        public async static Task<string> AddSecretarialEventcompliance(RetailBAL obj)
+        {
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter("@Action", obj.Action),
+                new SqlParameter("@UserId", obj.UserId),
+                new SqlParameter("@ASD", obj.ASD),
+                new SqlParameter("@CSD", obj.CSD),
+                new SqlParameter("@RegNo", obj.RegNo),
+                new SqlParameter("@UploadFile", obj.UploadFile),
+                new SqlParameter("@Createdby", obj.Createdby),
+                new SqlParameter("@CACId", obj.CACId),
+                  new SqlParameter("@CSIID", obj.CSIID),
+
+                  new SqlParameter("@Status", obj.Status),
+                    new SqlParameter("@VRemark", obj.VRemark),
+                      new SqlParameter("@CRemark", obj.CRemark),
+                        new SqlParameter("@IsVerified", obj.IsVerified),
+
+                new SqlParameter("@Id", obj.Id),
+                new SqlParameter("@Result",""),
+
+             };
+            return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[RTL].[usp_ClientSecretarialStatutoryInternalEvents]", CommandType.StoredProcedure, param.ToArray()));
+        }
+        public async static Task<DataTable> SearchSecretarialEvent(RetailBAL obj)
+        {
+            var param = new List<SqlParameter>
+            {
+                    new SqlParameter("@Action", obj.Action),
+                     new SqlParameter("@Year", obj.Year),
+                    new SqlParameter("@Month", obj.Month),
+                    new SqlParameter("@State", obj.State),
+                    new SqlParameter("@CACId", obj.CACId),
+                    new SqlParameter("@Id", obj.Id),
+            };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[usp_ClientSecretarialStatutoryInternalEvents]", CommandType.StoredProcedure, param.ToArray()));
+            return dt;
+        }
+
+
+
+        // here is define bind Secretarial Event compliance events dated 18/05/2026 by Aadarsh
+        public async static Task<string> AddLabourEventcompliance(RetailBAL obj)
+        {
+            var param = new List<SqlParameter>
+            {
+                new SqlParameter("@Action", obj.Action),
+                new SqlParameter("@UserId", obj.UserId),
+                new SqlParameter("@ASD", obj.ASD),
+                new SqlParameter("@CSD", obj.CSD),
+                new SqlParameter("@RegNo", obj.RegNo),
+                new SqlParameter("@UploadFile", obj.UploadFile),
+                new SqlParameter("@Createdby", obj.Createdby),
+                new SqlParameter("@CACId", obj.CACId),
+                  new SqlParameter("@CSIID", obj.CSIID),
+
+                  new SqlParameter("@Status", obj.Status),
+                    new SqlParameter("@VRemark", obj.VRemark),
+                      new SqlParameter("@CRemark", obj.CRemark),
+                        new SqlParameter("@IsVerified", obj.IsVerified),
+
+                new SqlParameter("@Id", obj.Id),
+                new SqlParameter("@Result",""),
+
+             };
+            return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("[RTL].[usp_ClientLabourStatutoryInternalEvent]", CommandType.StoredProcedure, param.ToArray()));
+        }
+        public async static Task<DataTable> SearchLabourEvent(RetailBAL obj)
+        {
+            var param = new List<SqlParameter>
+            {
+                    new SqlParameter("@Action", obj.Action),
+                     new SqlParameter("@Year", obj.Year),
+                    new SqlParameter("@Month", obj.Month),
+                    new SqlParameter("@State", obj.State),
+                    new SqlParameter("@CACId", obj.CACId),
+                    new SqlParameter("@Id", obj.Id),
+            };
+            DataTable dt = await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("[RTL].[usp_ClientLabourStatutoryInternalEvent]", CommandType.StoredProcedure, param.ToArray()));
+            return dt;
+        }
+
     }
 }

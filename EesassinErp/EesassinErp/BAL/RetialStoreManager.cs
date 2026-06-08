@@ -5,6 +5,8 @@ namespace BAL
 {
     public class RetialStoreManager
     {
+
+      
         public string PFAccount { get; set; }
         public string IsDefault { get; set; }
 
@@ -226,6 +228,17 @@ namespace BAL
             public string PermanentIDNumber { get; set; }
             public string PermanentIDDate { get; set; }
         public string SiteName { get; set; }
+
+        public string ValidTill { get; set; }
+        public string IssueDate { get; set; }
+        public string BloodGroup { get; set; }
+        public string RouteId { get; set; }
+        public string CampNumber { get; set; }
+
+        public string State { get; set; }
+        public string City { get; set; }
+        public string Pincode { get; set; }
+
 
     }
     public class ComplianceMasterList

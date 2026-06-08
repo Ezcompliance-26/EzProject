@@ -1,10 +1,17 @@
 ﻿@charset "utf-8";
-/* CSS Document */
+
+* {
+    font-family: "Inter", sans-serif;
+    --primary: #E45D27; /* theme accent */
+    --primary-dark: #c44b1d;
+    --card-bg: #FEF3EC;
+   /* background: #FFF1EB;
+    color: #223;*/
+}
 
 
-/*Login page*/
 label {
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: .5rem;
 }
 
@@ -497,12 +504,13 @@ footer {
         }
 
 .pageheader {
-    padding: 0px 0px;
-    margin-bottom: 15px;
+    /*padding: 0px 0px;
+    margin-bottom: 15px;*/
 }
 
     .pageheader h4 {
         font-size: 1.3rem;
+        color: var(--primary);
     }
 
         .pageheader h4 span {
@@ -1136,10 +1144,10 @@ footer {
 .pagecontentbody {
     position: relative;
     z-index: 1;
-    margin-right: 15px;
-    border-radius: 14px;
-    background-color: #fff;
-    padding: 15px;
+    /*margin-right: 15px;*/
+    /*border-radius: 14px;*/
+    /*background-color: #fff;*/
+    /*padding: 15px;*/
 }
 
 .bgthumg {
@@ -2792,7 +2800,7 @@ Due to the split circle of progress-left and progress right, we must use the ani
 }
 
 .table > thead.bg-warning > tr > th {
-    background-color: #E57C23;
+    background-color: #E45D27;
     color: #fff;
 }
 
@@ -2907,18 +2915,19 @@ Due to the split circle of progress-left and progress right, we must use the ani
 
     .tableFixHead thead {
         position: sticky;
-        top: -1px;
         z-index: 10;
-        background-color: #fff;
+        color:#fff !important;
+        background-color: #E45D27 !important;
     }
 
 .table > thead.nocolor > tr > th {
-    background-color: transparent;
+    color: #fff !important;
+    background-color: #E45D27 !important;
 }
 
 .submiteds {
-    background-color: #c4d8f9;
-    color: #7dabf1;
+    background-color: #FFe3d1;
+    color: #E45D27;
     font-size: 1rem;
     border-radius: 8px;
     padding: 10px 15px;
@@ -3055,13 +3064,15 @@ progress.hundredper {
 
 .notiModal {
     border-radius: 14px;
-    background-color: #ef392c !important;
+    background-color: var(--card-bg);
     color: #fff;
     margin-top: 25%;
 }
 
     .notiModal .modal-header {
         border-bottom: 0;
+        background:var(--primary);
+        color:#fff;
     }
 
     .notiModal .modal-body {
@@ -3075,16 +3086,14 @@ progress.hundredper {
     }
 
 .notiModal1 {
-    border-radius: 14px;
-    border: 1px solid #ef392c !important;
-    margin-top: 25%;
-    background-image: url(../images/enlpopup1.png);
-    background-repeat: no-repeat;
-    background-position: bottom right;
+    background: var(--card-bg);
+   
 }
 
     .notiModal1 .modal-header {
         border-bottom: 0;
+        background: var(--primary);
+        color: #fff;
     }
 
     .notiModal1 .modal-body {
@@ -3092,14 +3101,14 @@ progress.hundredper {
     }
 
     .notiModal1 .btn-close {
-        background-image: none;
+        /*background-image: none;
         opacity: 1;
         font-size: 0.8rem;
         background-color: #ef392c;
         color: #fff;
         padding: 2px 5px 8px;
         border-radius: 50%;
-        line-height: normal;
+        line-height: normal;*/
     }
 
 .enlpopup {

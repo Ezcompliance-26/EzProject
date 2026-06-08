@@ -16,7 +16,7 @@
         public string LicenseNumber { get; set; }
 
         public string LicenseCategory { get; set; }
-
+        public string  UploadAcknowledgement { get; set; }
         public string UploadAmendmentCopy { get; set; }
         public string Remark { get; set; }
 

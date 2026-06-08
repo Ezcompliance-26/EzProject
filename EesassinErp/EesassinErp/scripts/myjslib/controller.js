@@ -60,6 +60,21 @@ if (loginType == "-1" || loginType == null || loginType == "" || loginType == "n
     window.top.location.href = '../Login/Login';
 }
 
+app.filter('unique', function () {
+    return function (items, key) {
+        var output = [], keys = [];
+
+        angular.forEach(items, function (item) {
+            var val = item[key];
+            if (keys.indexOf(val) === -1) {
+                keys.push(val);
+                output.push(item);
+            }
+        });
+
+        return output;
+    };
+});
 
 //app.directive('fileSizeLimit', function () {
 //    return {
@@ -1363,6 +1378,16 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
         return false;
     }
+
+    
+    $scope.AllCity = function () {
+        
+        var getData = myService.methode('POST', ("../PartyMaster/GetPartyMasterDT"), { "ActionType": 34  });
+        getData.then(function (response) {
+            debugger;
+            $scope.AllCityList = response.data.Result;
+        });
+    }
     $scope.PrintMasterHeader = function () {
         var reportHeader = $('.ReportHeader');
         var div = $('<div><div class="ReportHeader" style="font-size:' + fontSize + '">' + reportHeader.html() + '</div></div>');
@@ -1621,11 +1646,23 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
         if (!type) {
             $scope.filteredInvoices = angular.copy($scope.VendorInvoiceList);
+			$scope.bindtiles($scope.filteredInvoices);
         } else {
             $scope.filteredInvoices = $scope.VendorInvoiceList.filter(x => x.VendorInvNum == type);
+			$scope.bindtiles($scope.filteredInvoices);
         }
     };
 
+
+
+ $scope.bindtiles = function (list) {
+        // here is new code for bindtiles
+        $scope.FinalCount = list.filter(x => (x.ComplianceStatus || '').toLowerCase() === 'compliance report generated').length;
+        $scope.DraftCount = list.filter(x => (x.ComplianceStatus || '').toLowerCase() === 'draft').length;
+        $scope.VendorUserCount = new Set(list.map(x => x.VendorUser).filter(v => v)).size;
+        $scope.sitecount = list.length;
+    }
+	
     $scope.AllVendorCompliance = function () {
         var collectionobj = {};
         collectionobj.Action = 52;
@@ -1645,6 +1682,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
                 // 🔥 Dynamic dropdown values (unique types)
                 $scope.InvoiceTypes = [...new Set($scope.VendorInvoiceList.map(x => x.VendorInvNum))];
+				   $scope.bindtiles($scope.filteredInvoices);
             }
         });
     }
@@ -1743,11 +1781,16 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     }
 
 
-    $scope.ManageLog = function (Activity) {
+    $scope.ManageLog = function (Activity, rece,dweta) {
         var collectionobj = {};
         collectionobj.Action = 3;
         collectionobj.ClientId = $scope.LoginId;
         collectionobj.Activity = Activity;
+
+
+        collectionobj.Receiver = $scope.LoginId;
+        collectionobj.Detail = Activity;
+
         var getData = myService.methode('POST', "../RetailSection/MaintainLog", '{obj:' + JSON.stringify(collectionobj) + '}');
         getData.then(function (response) {
 
@@ -2570,62 +2613,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
 
         }, 3200);
     };
-  //$scope.BindDashboard = function () {
-  //    let MenuBinding = sessionStorage.getItem("MenuBinding");
-
-  //    if (MenuBinding) {
-  //        console.log("Using cached MenuBinding");
-
-  //        let data = JSON.parse(cachedMenu);
-  //        $scope.MenuAddDynamic = data;
-
-  //        applyFlags(data); // alag function bana lo flags ke liye
-  //        return;
-  //    }
-
-  //      var collectionobj = {}; 
-  //      collectionobj.PartyID = MapId;
-  //      collectionobj.UserId = LoginId;
-  //    if ($scope.DashboardSwitch == 'AdminSupplier' || $scope.DashboardSwitch == 'Supplier')
-  //    {
-  //          collectionobj.Action = 7;
-  //      } else { collectionobj.Action = 1;} 
-  //      $scope.isDashboardLoading = true;
-
-  //      var getData = myService.methode(
-  //          'POST',
-  //          "../Retail/bindingDashboard",
-  //          '{obj:' + JSON.stringify(collectionobj) + '}'
-  //      );
-
-  //      getData.then(function (response) {
-  //          debugger;
-
-  //          if (response.data && response.data.Result) {
-
-  //              $scope.UserDetail = response.data.Result.Table || [];
-  //              $scope.DahboardList = response.data.Result.Table1 || [];
-
-  //              if ($scope.UserDetail.length > 0) {
-  //                  $scope.UserName = $scope.UserDetail[0].UserName;
-  //                  $scope.Status = $scope.UserDetail[0].Status;
-  //                  $scope.LastLogin = $scope.UserDetail[0].LastLogin;
-  //                  $scope.LoginType = $scope.UserDetail[0].Desig;
-  //                  $scope.Photo = ($scope.UserDetail[0].Photo &&
-  //                      $scope.UserDetail[0].Photo.trim() !== '')
-  //                      ? $scope.UserDetail[0].Photo
-  //                      : '../content/profile.png';
-  //              }
-  //          }
-
-  //      }).catch(function (error) {
-  //          console.error("Dashboard load error", error);
-  //      }).finally(function () {
-          
-  //          $scope.isDashboardLoading = false;
-  //      });
-  //  };
-
+   
 
     $scope.BindDashboard = function () {
 
@@ -2696,17 +2684,17 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     };
     $scope.BindMenus = function () {
 
-        let cachedMenu = sessionStorage.getItem("MenuPermission");
+        //let cachedMenu = sessionStorage.getItem("MenuPermission");
 
-        if (cachedMenu) {
-            console.log("Using cached menu");
+        //if (cachedMenu) {
+        //    console.log("Using cached menu");
 
-            let data = JSON.parse(cachedMenu);
-            $scope.MenuAddDynamic = data;
+        //    let data = JSON.parse(cachedMenu);
+        //    $scope.MenuAddDynamic = data;
 
-            applyFlags(data); // alag function bana lo flags ke liye
-            return;
-        }
+        //    applyFlags(data); // alag function bana lo flags ke liye
+        //    return;
+        //}
 
        
         var collectionobj = {};
@@ -2767,6 +2755,8 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         let row6 = menuData.find(x => x.SectionName === 'License Master');
         let row7 = menuData.find(x => x.SectionName === 'Labour Compliance');
         let row8 = menuData.find(x => x.SectionName === 'Finance Compliance');
+		 let row9 = menuData.find(x => x.SectionName === 'Factory  Compliance');
+        let row10 = menuData.find(x => x.SectionName === 'Secretarial Compliance');
        
         if (row) {
             $scope.SCS_ViewFlag = row.ViewFlag;
@@ -2821,13 +2811,24 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         }
 
         if (row7) {
+            $scope.PF_EditFlag = row7.EditFlag;
             $scope.PFUpload = row7.UploadFlag;
             $scope.PFVerify = row7.VerifyFlag;
         }
         if (row8) { 
-            $scope.FM_ViewFlag = row8.ViewFlag; 
+            $scope.FM_EditFlag = row8.EditFlag;
             $scope.allowupdfile = row8.UploadFlag; 
             $scope.allowverifyflag = row8.VerifyFlag;
+        }
+		if (row9) {
+            $scope.Fac_EditFlag = row9.EditFlag;
+            $scope.Fac_allowupdfile = row9.UploadFlag;
+            $scope.Fac_allowverifyflag = row9.VerifyFlag;
+        }
+        if (row10) {
+            $scope.SC_EditFlag = row10.EditFlag;
+            $scope.SC_allowupdfile = row10.UploadFlag;
+            $scope.SC_allowverifyflag = row10.VerifyFlag;
         }
     }
    
@@ -4023,7 +4024,7 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
         app.Sacretrialcompliancecontroller($scope, $element, $filter, myService, $http, $sce);
     }
     if (IsFunctionDefined('app.WithoutInvoiceController')) {
-        app.WithoutInvoiceController($scope, $element, $filter, myService, $http);
+        app.WithoutInvoiceController($scope, $element, $filter, myService, $http, $sce);
     }
     if (IsFunctionDefined('app.NewEmployeeController')) {
         app.NewEmployeeController($scope, $element, $filter, myService, $http,$timeout);
@@ -4043,7 +4044,10 @@ app.controller('myController', function ($scope, $element, $sce, $timeout, $inte
     if (IsFunctionDefined('app.AddAuditContractorComplianceController')) {
         app.AddAuditContractorComplianceController($scope, $element, $filter, myService, $http, $compile, $timeout);
     }
-
+    if (IsFunctionDefined('app.PrincipleEmployerCodeController')) {
+        app.PrincipleEmployerCodeController($scope, $element, $filter, myService, $http, $compile, $timeout);
+    }
+    
     
 })
 

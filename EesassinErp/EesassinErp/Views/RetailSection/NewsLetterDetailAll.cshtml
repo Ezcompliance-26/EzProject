@@ -1,14 +1,22 @@
 ﻿@{
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
     ViewBag.Title = "Notification Details";
-    Layout = "~/Views/Common/_RetailLayout.cshtml";
+    Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
 @*--Done by pradeep*@
 
 @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>
-<script src="~/Content/html2canvas.js"></script>*@
+    <script src="~/Content/html2canvas.js"></script>*@
 <script src="~/scripts/RetailJsLib/NewletterDetailAll.js?Ver=@ViewBag.Version"></script>
 <link rel="stylesheet" media="print" href="~/content/css/Library.css" />
+<link href="~/compliance/css/all.css" rel="stylesheet" />
+<link href="~/compliance/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.min.css" rel="stylesheet" />
+<link href="~/compliance/css/custom_theme.css" rel="stylesheet" />
+<link href="~/compliance/css/colorTheme/default.css" rel="stylesheet" />
+<link href="~/compliance/css/draggle.css" rel="stylesheet" />
+<link href="~/compliance/css/responsive.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.css" rel="stylesheet" />
 <script>
     $(document).ready(function () {
         $("#myInput").on("keyup", function () {
@@ -21,16 +29,71 @@
 </script>
 <style>
 
-    .navbar-nav > li > a {
+    /*.navbar-nav > li > a {
         font-size: 15px !important;
         margin-top: 10px !important;
+    }*/
+    .pagecontentbody {
+        font-family: "Inter", sans-serif;
+        --primary: #E45D27; /* theme accent */
+        --primary-dark: #c44b1d;
+        --card-bg: #FEF3EC;
+        background: #FFF1EB;
+        color: #223;
+        min-height:90vh;
     }
 
+    .dropdown-menu {
+        min-width: 120px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        max-height: 240px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .btn-reportNotice, .uploadbtn, .btn-viewAll, .btn-back, .btn-download {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-weight: 400;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .card {
+        background: var(--card-bg);
+        padding: 10px;
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-body {
+        padding: 0px !important;
+    }
+
+
     .btn-warning1 {
-        color: green !important;
-        background-color: #ffc107;
-        border-color: #ffc107;
-        background: linear-gradient(90deg, #E67624 0%, #E63123 103.61%);
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-weight: 400;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
     }
 
 
@@ -308,13 +371,16 @@
     }
 
     .library-box-container {
-        border: 1px solid #DADADA;
-        border-radius: 4px;
-        padding: 14px;
+        padding: 10px;
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        margin-bottom: 8px;
     }
 
-    .text-primary {
-        font-size: 30px;
+    .library-box-container h2 {
+        color: var(--primary);
+        font-size: 2rem;
         margin: 10px 0;
     }
 
@@ -327,17 +393,23 @@
     }
 
     .btn-custom-download {
-        border: 1px solid #F4CA43;
-        border-radius: 15px;
-        padding: 3px 10px;
+        background: var(--primary);
         color: #fff;
-        margin-left: 2px;
-        margin-bottom: 2px;
+        border: none;
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-weight: 400;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
     }
 
         .btn-custom-download:hover {
-            background-color: #fff;
-            color: #F4CA43;
+            background-color: var(--primary-dark);
+            color: #fff;
         }
 
         .btn-custom-download .fa {
@@ -382,16 +454,16 @@
 
 
 
-    .nav > li > a {
-        color: #252525 !important;
+    /*.nav > li > a {
+        color: #252525 !important;*/
         /*color : #999 !important;;*/
-    }
+    /*}
 
         .nav > li > a:hover {
-            background: #feca45;
+            background: #feca45;*/
             /* background:none; */
-            border-bottom: 2px solid #feca45;
-        }
+            /*border-bottom: 2px solid #feca45;
+        }*/
 
 
 
@@ -401,10 +473,10 @@
         z-index: 100000;
     }
 
-    .dropdown-menu {
+    /*.dropdown-menu {
         min-width: 300px !important;
         font-size: 14px !important;
-    }
+    }*/
 
     ul.dropdown-menu.shrm_login {
         min-width: auto !important;
@@ -566,14 +638,14 @@
         -webkit-animation: rotate 4s linear infinite;
     }
 </style>
-<div class="pagecontentbody" ng-init="BindExecuter(@Html.Raw(ViewBag.Id))">
+<div class="pagecontentbody px-4 py-2" ng-init="BindExecuter(@Html.Raw(ViewBag.Id))">
     <div class="pagebody">
         <div class="col-md-12 pageheader pb-2">
             <div clasAssigned Executers="row">
                 <div class="col-md-9">
                 </div>
                 <div class="col-sm-12 text-end" ng-show="ShowDetails">
-                    <a class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link" ng-click="ShowDetailsFunction();ManageLog('Back click in News Letter detail All')">Back</a>
+                    <a class="btn-back btn-xs banner_btn1 btn-custom-download download-doc-link" ng-click="ShowDetailsFunction();ManageLog('Back click in News Letter detail All')">Back</a>
                 </div>
                 <!--<div class="col-sm-12 text-end" ng-show="!ShowDetails">-->
                 @*<a title="Download uploaded documents" href="{{newsletter[0].UploadDocPath}}" target="_blank" data-toggle="modal" data-target="#editAct" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download PDF<i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>*@
@@ -585,8 +657,8 @@
                     <ul class="filter-search">
                         <li class="p-0">
                             <div class="input-group">
-                                <input class="form-control" type="text" id="myInput" value="" placeholder="Search">
-                                <button class="btn btn-default" type="button" id="button-addon2"><span class="icons icon-magnifier"></span></button>
+                                <input style="border-color: var(--primary); background: var(--card-bg);" class="form-control" type="text" id="myInput" value="" placeholder="Search">
+                                <button style="border-color: var(--primary); background: var(--card-bg); color: var(--primary);" class="btn btn-default" type="button" id="button-addon2"><span class="icons icon-magnifier"></span></button>
                             </div>
                         </li>
                     </ul>
@@ -597,26 +669,26 @@
             <div class="row" ng-show="!ShowDetails">
                 <div class="col-md-9 mb-2">
                     <div class="card">
-                        <div class="card-body" id="newsletterdiv">
+                        <div class="card-body" id="newsletterdiv" style="overflow-y: scroll; max-height: 632px; scrollbar-width: thin;">
                             <div class="library-box-container" ng-repeat="news in Newletters">
 
-                                <h1 class="text-primary">{{news.StateCentralActtitle}}</h1>
+                                <h2>{{news.StateCentralActtitle}}</h2>
                                 <!-- <tr>
                                 <td> -->
                                 @*<div class="library-box">*@
-                                    <p>
-                                        <a ng-click="ShowDetailsFunction(news.Id)" style="cursor: pointer;">{{news.SubjectLine}}</a>
-                                        <span class="pull-right">
-                                            @*<a title="Download uploaded documents" href="{{news..UploadDocPath}}" target="_blank" data-toggle="modal" data-target="#editAct" style="font-size:11px" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download Doc<i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>*@
-                                            @*-- pervious download*@
-                                            <a ng-click="downloadsummary();ManageLog('Download file in Newsletter '+news.SubjectLine)" title="{{news.SubjectLine}}" data-toggle="modal" data-target="#editAct" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download <i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>
+                                <p>
+                                    <a ng-click="ShowDetailsFunction(news.Id)" style="cursor: pointer;">{{news.SubjectLine}}</a>
+                                    <span class="pull-right">
+                                        @*<a title="Download uploaded documents" href="{{news..UploadDocPath}}" target="_blank" data-toggle="modal" data-target="#editAct" style="font-size:11px" class="btn-download btn-xs banner_btn1 btn-custom-download download-doc-link">Download Doc<i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>*@
+                                        @*-- pervious download*@
+                                        <a ng-click="downloadsummary();ManageLog('Download file in Newsletter '+news.SubjectLine)" title="{{news.SubjectLine}}" data-toggle="modal" data-target="#editAct" class="btn-download btn-xs banner_btn1 btn-custom-download download-doc-link">Download @*<i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i>*@</a>
 
-                                            <!--<a class="btn btn-warning btn-xs banner_btn1 download-doc-link" href="" target="_blank">View</a>-->
-                                            <br>
-                                        </span>
-                                        <a style="text-decoration:none">updated As on {{news.CreatedDate | date:'longDate'}}</a>
-                                    </p>
-                                    <div class="clearfix"></div>
+                                        <!--<a class="btn btn-warning btn-xs banner_btn1 download-doc-link" href="" target="_blank">View</a>-->
+                                        <br>
+                                    </span>
+                                    <a style="text-decoration: none; color: #787878; font-size: 0.75rem;">updated As on {{news.CreatedDate | date:'longDate'}}</a>
+                                </p>
+                                <div class="clearfix"></div>
                                 @*</div>*@
 
 
@@ -629,20 +701,20 @@
                 </div>
                 <div class="col-md-3 mb-2">
                     <div class="card">
-                        <div class="card-body table-responsive" style="max-height:800px">
+                        <div class="card-body table-responsive" style="overflow: hidden ">
                             <div class="col-md-12 pageheader pb-2">
                                 <div class="row">
                                     <div style="width:56%">
                                         <h4 style="font-size:1.2rem" class="mb-0">Notification </h4>
                                     </div>
                                     @* <div style="width:43%;font-size:12px">
-            <a class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link" href="../RetailSection/NewsLetterDetailAll?NewsLetter%20DetailAll">View All</a>
-        </div>*@
+                                            <a class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link" href="../RetailSection/NewsLetterDetailAll?NewsLetter%20DetailAll">View All</a>
+                                        </div>*@
                                 </div>
                             </div>
-                            <div id="newsletterdiv">
-                                <div ng-repeat="news in Newletters" class="col-md-12" style="background-color: #fcfcfc;box-shadow: 0px 2px 5px #aaa;padding: 7px 10px;margin:8px 0;line-height:16px">
-                                    <a href="../RetailSection/NewsLetterDetail?NewsLetter%20Detail&id={{news.Id}}" style="padding-left: 10px;color:#787878;text-decoration:none"><b>{{news.SubjectLine}}</b></a>
+                            <div id="newsletterdiv" style="overflow-y: scroll; max-height: 601px; scrollbar-width: thin;">
+                                <div ng-repeat="news in Newletters" class="col-md-12" style="background-color: var(--card-bg);text-align:left; border: 1px solid #ccc; box-shadow: 3px 1px 1px #aaa; padding: 4px 8px; margin: 8px 0; line-height: 16px; font-size: 0.8rem; ">
+                                    <a href="../RetailSection/NewsLetterDetail?NewsLetter%20Detail&id={{news.Id}}" style="color:#787878;text-decoration:none"><b>{{news.SubjectLine}}</b></a>
                                 </div>
                             </div>
                         </div>
@@ -657,16 +729,16 @@
                             <div class="col-md-12 pageheader pb-2">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <img style="width: 30%;" src="~/DownloadMat/talent new logo.png" />
+                                        <img style="width: 10%;" src="https://retail.ezcompliance.in/Login/image/ezfulllogo%203.png" />
                                         <div class="col-sm-12 text-end">
-                                            <a ng-click="downloadsummary();;ManageLog('Download file in Newsletter '+newsletter[0].SubjectLine)" title="{{newsletter[0].SubjectLine}}" data-toggle="modal" data-target="#editAct" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download <i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>
+                                            <a ng-click="downloadsummary();;ManageLog('Download file in Newsletter '+newsletter[0].SubjectLine)" title="{{newsletter[0].SubjectLine}}" data-toggle="modal" data-target="#editAct" class="btn btn-xs banner_btn1 btn-custom-download download-doc-link">Download @*<i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i>*@</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12 pageheader pb-2">
                                 <div class="row">
-                                    <div class="col-md-12" style="background-color: purple; text-align: center; height: 30px; vertical-align: middle;line-height:30px; color: antiquewhite ">
+                                    <div class="col-md-12" style="background-color: var(--primary); text-align: center; height: 30px; vertical-align: middle;line-height:30px; color: #fff ">
                                         {{newsletter[0].SubjectLine}}
                                     </div>
                                 </div>
@@ -695,22 +767,22 @@
                             </div>
                             <div class="row">
                                 @*<div class="col-md-4">
-                                    <span>Client:</span> <label>{{newsletter[0].PartyName}}</label>
-                                </div>*@
+                                        <span>Client:</span> <label>{{newsletter[0].PartyName}}</label>
+                                    </div>*@
                                 <div class="col-md-4">
-                                    <span>Govt.release:</span><a title="Andhra Pradesh Labour Welfare Fund Act,1987.pdf" href="{{newsletter[0].UploadDocPath}}" target="_blank" data-toggle="modal" data-target="#editAct" class="btn btn-warning btn-xs banner_btn1 btn-custom-download download-doc-link">Download<i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i></a>
+                                    <span>Govt.release:</span><a title="Andhra Pradesh Labour Welfare Fund Act,1987.pdf" href="{{newsletter[0].UploadDocPath}}" target="_blank" data-toggle="modal" data-target="#editAct" class="btn btn-xs banner_btn1 btn-custom-download download-doc-link">Download@*<i class="fa fa-cloud-download hidden-xs hidden-sm hidden-md"></i>*@</a>
                                 </div>
                             </div>
-                            <div class="col-md-12 pageheader pb-2">
+                            <div class="col-md-12 pageheader pb-2 mt-2">
                                 <div class="row">
-                                    <div class="col-md-2" style="background-color: purple; text-align: left; height: 30px; vertical-align: middle;line-height:30px; color: antiquewhite ">
+                                    <div class="col-md-2" style="background-color: var(--primary); text-align: left; height: 30px; vertical-align: middle;line-height:30px; color: #fff ">
                                         SUMMARY :-
                                     </div>
                                 </div>
                                 @*<div id="download">
                                         <a id="downloadLink"></a>
                                     </div>*@
-                                <div class="row" ng-bind-html="trustedSummary" id="editorcontent">
+                                <div class="row" ng-bind-html="trustedSummary" id="editorcontent" style=" background: var(--card-bg); border-radius: 10px; padding: 14px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); max-height: 54vh; overflow-y: auto; overflow-x: auto; /* padding-right: 8px; */ word-break: break-word; overflow-wrap: anywhere; position: relative; margin: 1rem; ">
 
                                 </div>
                             </div>
@@ -726,7 +798,7 @@
                             <div class="col-md-12 pageheader pb-2">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <img style="width: 30%;" src="~/DownloadMat/talent new logo.png" />
+                                        <img style="width: 10%;" src="https://retail.ezcompliance.in/Login/image/ezfulllogo%203.png" />
                                     </div>
                                 </div>
                             </div>
@@ -760,10 +832,10 @@
                                 </div>
                             </div>
                             @*<div class="row">
-                                <div class="col-md-4">
-                                    <span>Client:</span> <label>{{newsletter[0].PartyName}}</label>
-                                </div>
-                            </div>*@
+                                    <div class="col-md-4">
+                                        <span>Client:</span> <label>{{newsletter[0].PartyName}}</label>
+                                    </div>
+                                </div>*@
                             <div class="col-md-12 pageheader pb-2">
                                 <div class="row">
                                     <div class="col-md-2" style="background-color: purple; text-align: left; height: 30px; vertical-align: middle;line-height:30px; color: antiquewhite ">
@@ -773,7 +845,7 @@
                                 @*<div id="download">
                                         <a id="downloadLink"></a>
                                     </div>*@
-                                <div class="row" ng-bind-html="trustedSummary" id="editorcontent">
+                                <div class="row" ng-bind-html="trustedSummary" id="editorcontent" style=" background: var(--card-bg); border-radius: 10px; padding: 14px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); max-height: 54vh; overflow-y: auto; overflow-x: auto; /* padding-right: 8px; */ word-break: break-word; overflow-wrap: anywhere; position: relative; margin: 1rem; ">
 
                                 </div>
                             </div>

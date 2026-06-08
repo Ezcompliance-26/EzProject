@@ -126,7 +126,16 @@
             <h4 style="color: var(--primary)">Labour Setup</h4>
 
             <div class="d-flex gap-2">
-
+                <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
+                    <div class="input-group input-group-sm">
+                        <input id="lbSearch"
+                               type="text"
+                               ng-model="Search"
+                               class="form-control form-control-sm"
+                               placeholder="Search..." />
+                        <button class="btn btn-sm" id="lbSearchBtn" style="border-color: #E45D27" type="button"><i class="bi bi-search"></i></button>
+                    </div>
+                </div>
                 <button class="btn header-btn"
                         ng-click="switchView()">
                     {{ showEntryForm ? 'Back to Dashboard' : 'Add Statutory Setup' }}
@@ -154,9 +163,9 @@
                 <table class="table small-table" ng-init="AddListSet()">
                     <thead>
                         <tr>
-                            <th>Sr.No.</th>
+                            <th>S.No</th>
                             <th>State</th>
-                            <th>Act</th>
+                            <th>Act Name</th>
                             <th>Compliance Name</th>
                             <th>Registration Type</th>
                             <th>Upload</th>
@@ -233,18 +242,20 @@
                 <table class="table small-table" ng-init="Binddasboard()">
                     <thead>
                         <tr>
+                            <th>S.No</th>
                             <th>State</th>
-                            <th>Act</th>
-                            <th>ComplianceName</th>
-                            <th>RegistrationType</th>
+                            <th>Act Name</th>
+                            <th>Compliance Name</th>
+                            <th>Registration Type</th>
                             <th>Upload</th>
-                            <th>CreatedOn</th>
+                            <th>Created On</th>
                         </tr>
                     </thead>
                     <tbody>
 
 
-                        <tr ng-repeat="obj in dashboardlist">
+                        <tr ng-repeat="obj in dashboardlist | filter:Search">
+                            <td>{{$index + 1}}</td>
                             <td>{{ obj.STATE_NM }}</td>
                             <td>
                                 {{ obj.actname  }}
@@ -259,7 +270,12 @@
                                 </span>
                                 <span ng-if="!obj.Upoad">No File</span>
                             </td>
-                            <td>{{ obj.CreatedOn | date:'yyyy-MM-dd' }}</td>
+                            <td>{{ obj.CreatedOn1}}</td>
+                        </tr>
+                        <tr ng-if="(dashboardlist | filter:Search).length === 0">
+                            <td colspan="6" class="text-center text-danger fw-bold">
+                                No Record Found
+                            </td>
                         </tr>
                     </tbody>
                 </table>

@@ -5,6 +5,8 @@ namespace BAL
 {
     public class TblVendorInvoiceBAL
     {
+        public string Detail { get; set; }
+        public string Percentage { get; set; }
         public string ConversationId { get; set; }
         public string StateID { get; set; }
         public string PartyID { get; set; }

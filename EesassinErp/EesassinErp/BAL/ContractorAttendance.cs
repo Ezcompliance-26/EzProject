@@ -14,6 +14,8 @@ namespace BAL
         public List<int> SelectedDocuments { get; set; }
 
         public string UID { get; set; }
+
+
         public string MaternityExcelList { get; set; }
         public string MiscExcelList { get; set; }
 
@@ -27,7 +29,9 @@ namespace BAL
             public string Action { get; set; }
             public string  AttendanceId { get; set; }
             public string EmployeeId { get; set; }
-            public string Month { get; set; }
+
+        public string DocumentId { get; set; }
+        public string Month { get; set; }
             public string Year { get; set; }
         public string State { get; set; }
         public string Day1 { get; set; }
@@ -61,6 +65,7 @@ namespace BAL
             public string Day29 { get; set; }
             public string Day30 { get; set; }
             public string Day31 { get; set; }
+        public string SiteCode { get; set; }
         public string Designation { get; set; }
         public string M { get; set; }
         public string F { get; set; }

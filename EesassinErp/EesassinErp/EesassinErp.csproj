@@ -1047,6 +1047,34 @@
     <Content Include="favicon.ico" />
     <Content Include="Icard.html" />
     <Content Include="Litigation Management\style.css" />
+    <Content Include="login - Copy %282%29\image\app1.png" />
+    <Content Include="login - Copy %282%29\image\Content.png" />
+    <Content Include="login - Copy %282%29\image\EZ Compliance.png" />
+    <Content Include="login - Copy %282%29\image\ezcomplogo.png" />
+    <Content Include="login - Copy %282%29\image\ezfulllogo 3.png" />
+    <Content Include="login - Copy %282%29\image\Frame.png" />
+    <Content Include="login - Copy %282%29\image\gif1.gif" />
+    <Content Include="login - Copy %282%29\image\gif2.gif" />
+    <Content Include="login - Copy %282%29\image\google1.png" />
+    <Content Include="login - Copy %282%29\image\icon.png" />
+    <Content Include="login - Copy %282%29\image\logo.png" />
+    <Content Include="login - Copy %282%29\image\profile.png" />
+    <Content Include="login - Copy %282%29\landingpage.css" />
+    <Content Include="login - Copy %282%29\style.css" />
+    <Content Include="login - Copy\image\app1.png" />
+    <Content Include="login - Copy\image\Content.png" />
+    <Content Include="login - Copy\image\EZ Compliance.png" />
+    <Content Include="login - Copy\image\ezcomplogo.png" />
+    <Content Include="login - Copy\image\ezfulllogo 3.png" />
+    <Content Include="login - Copy\image\Frame.png" />
+    <Content Include="login - Copy\image\gif1.gif" />
+    <Content Include="login - Copy\image\gif2.gif" />
+    <Content Include="login - Copy\image\google1.png" />
+    <Content Include="login - Copy\image\icon.png" />
+    <Content Include="login - Copy\image\logo.png" />
+    <Content Include="login - Copy\image\profile.png" />
+    <Content Include="login - Copy\landingpage.css" />
+    <Content Include="login - Copy\style.css" />
     <Content Include="login\image\app1.png" />
     <Content Include="login\image\Content.png" />
     <Content Include="login\image\EZ Compliance.png" />
@@ -1184,6 +1212,7 @@
     <Content Include="scripts\RetailJsLib\NewletterDetailAll.js" />
     <Content Include="scripts\RetailJsLib\NewVendorRegistrationController.js" />
     <Content Include="scripts\RetailJsLib\NoticeInspectionMaster.js" />
+    <Content Include="scripts\RetailJsLib\PrincipleEmployerCodeController.js" />
     <Content Include="scripts\RetailJsLib\RController.js" />
     <Content Include="scripts\RetailJsLib\ReportDashbaord.js" />
     <Content Include="scripts\RetailJsLib\ReportLicenseMaster.js" />
@@ -3243,6 +3272,7 @@
     <Content Include="Views\Common\_RetailReportLayout.cshtml" />
     <Content Include="Views\Chat\ChatbotSupport.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
+    <None Include="Views\Login\Login.cshtml28052026" />
     <Content Include="DownloadMat\Retail\Employee\ddb4974abe494104b09a6beb93ab3e4b.pdf" />
     <Content Include="DownloadMat\Retail\Store\002931f3cd1a413f95ea801eee33bc78.pdf" />
     <Content Include="DownloadMat\Retail\Store\01462d66ea43406087279c6d2398f75a.pdf" />
@@ -3541,6 +3571,8 @@
     <Content Include="Views\Dashboard\VendorDashBoard1.cshtml" />
     <Content Include="Views\Dashboard\viewunitdocuments.cshtml" />
     <Content Include="Views\Dashboard\VBoard1.cshtml" />
+    <Content Include="Views\Dashboard\PrincipleEmployerDashboard.cshtml" />
+    <Content Include="Views\Dashboard\PrinciplesitesOverview.cshtml" />
     <None Include="Views\Login\Login1.cshtml" />
     <Content Include="Views\RetailSection\ManualPayment.cshtml" />
     <Content Include="Views\RetailSection\AdditionalDocument.cshtml" />
@@ -3628,6 +3660,7 @@
     <Content Include="Views\RetailSection\ContractorReport.cshtml" />
     <Content Include="Views\RetailSection\ContractorReportVendor.cshtml" />
     <Content Include="Views\Retail\EntitySetup.cshtml" />
+    <Content Include="Views\RetailSection\VendorRegistrationReport.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

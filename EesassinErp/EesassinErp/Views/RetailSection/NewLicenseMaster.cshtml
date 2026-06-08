@@ -313,7 +313,7 @@
 
                 <!-- Header -->
                 <div class="licMaster-header d-flex align-items-center">
-                    <button type="button" class="btn licMaster-back-btn" data-bs-dismiss="modal">
+                    <button type="button" id="licemodalclse" class="btn licMaster-back-btn" data-bs-dismiss="modal">
                         <i class="bi bi-arrow-left"></i>
                     </button>
 
@@ -377,8 +377,8 @@
                             <div class="col-md-4">
                                 <label class="form-label">Amendment Copy</label>
                                 <div class="lic-upload-field">
-                                    <input id="LMLicenseCopy" class="form-control form-control-sm" type="file" ng-model="LMAmendmentCopy" onchange="angular.element(this).scope().uploadFile('UploadAmendmentCopy', this)" file-size-limit="20" />
-                                    <div class="lic-upload-actions" ng-show="LMAmendmentCopy">
+                                    <input id="LMAmendmentCopy" class="form-control form-control-sm" type="file" ng-model="LMAmendmentCopy" onchange="angular.element(this).scope().uploadFile('UploadAmendmentCopy', this)" file-size-limit="20" />
+                                    <div class="lic-upload-actions"  ng-show="LMAmendmentCopy && LMAmendmentCopy.trim() !== ''">
                                         <a href="#" ng-click="ViewFileC(LMAmendmentCopy)">
                                             <i class="bi bi-eye">
                                             </i>
@@ -425,6 +425,20 @@
                                 <input type="text" class="form-control form-control-sm" maxlength="20"
                                        onKeyUp="$(this).val($(this).val().replace(/[^\d]/ig, ''))" numeric-only
                                        ng-model="LMGovtFees" />
+                            </div>
+                            <div class="col-md-4"   ng-show="LMLicenseStatus=='Surrender'">
+                                <label class="form-label">Acknowledgement Copy</label>
+                                <div class="lic-upload-field">
+                                    <input id="LMAcknowledgementCopy" class="form-control form-control-sm" type="file" ng-model="LMAcknowledgementCopy" onchange="angular.element(this).scope().uploadFile('UploadAcknowledgementCopy', this)" file-size-limit="20" />
+                                    <div class="lic-upload-actions" ng-show="LMAcknowledgementCopy && LMAcknowledgementCopy.trim() !== ''"> 
+                                        <a href="#" ng-click="ViewFileC(LMAcknowledgementCopy)">
+                                            <i class="bi bi-eye">
+                                            </i>
+                                        </a>
+                                        <i class="bi bi-download" ng-click="DownloadFileC(LMAcknowledgementCopy,'LicenseCopy_'+LMLicenseNamee);ManageLog('View License Copy Licence Name : '+ LMLicenseName + ' & StoreName '+ LMStoreCode)">
+                                        </i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

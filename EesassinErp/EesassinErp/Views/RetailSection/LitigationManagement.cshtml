@@ -1,12 +1,12 @@
 ﻿@{
     ViewBag.Version = System.Configuration.ConfigurationManager.AppSettings["version"];
-    ViewBag.Title = "Dashboard";
-    Layout = "~/Views/Common/_RetailLayout.cshtml";
+    ViewBag.Title = "Litigation Master";
+    Layout = "~/Views/Common/_NewRetailLayout.cshtml";
 }
 
 
 <title>Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 <link href="../Litigation Management/style.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -20,38 +20,27 @@
         justify-content: center;
     }
 
-    td {
-        position: relative;
-        text-align: center;
-        padding: 10px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-        td .event {
-            color: red;
-            font-size: 16px;
-            line-height: 1;
-        }
-
-        td.selected,
-        td:hover {
-            background-color: #dff0d8;
-            border-radius: 50%;
-            font-weight: bold;
-        }
-
-        td.selected {
-            background-color: #a2d5ab;
-        }
-
-        /* Optional: prevent hover from affecting layout */
-     /*   td:hover {
-            box-shadow: inset 0 0 0 2px #4caf50;
-        }*/
 </style>
 
 <style>
+    .container {
+        font-family: "Inter", sans-serif;
+        --primary: #E45D27; /* theme accent */
+        --primary-dark: #c44b1d;
+        --card-bg: #FEF3EC;
+        --background: #FFF1EB;
+        --color: #223;
+    }
+
+    .dropdown-menu {
+        min-width: 120px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        max-height: 240px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
 
     .progress-fill {
         height: 10px;
@@ -60,7 +49,7 @@
     }
 
     .tab.active {
-        background: #ffa726;
+        background: var(--primary);
         color: white;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
@@ -172,8 +161,6 @@
     /* Overall container */
     .uic-controls {
         position: relative;
-        margin-top: 20px;
-        font-family: Arial, sans-serif;
         width: 300px;
     }
 
@@ -182,8 +169,8 @@
         width: 100%;
         padding: 7px;
         font-size: 16px;
-        background-color: #E3C48F;
-        color: white;
+        background-color: var(--card-bg) !important;
+        color: #223;
         border: 1px solid #E3C48F;
         border-radius: 8px;
         cursor: pointer;
@@ -195,8 +182,8 @@
     }
 
         .uic-btn-dropdown:hover {
-            background-color: #E3C48F;
-            border-color: #E3C48F;
+            background-color: #ffE8D9 !important;
+            color: var(--primary) !important;
         }
 
     .dropdown-icon {
@@ -206,28 +193,21 @@
     }
 
     .dropdown-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: -23%;
-        width: 58%;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        max-height: 200px;
+        min-width: 120px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        max-height: 240px;
         overflow-y: auto;
+        overflow-x: hidden;
     }
 
-        .dropdown-menu li {
+        /*.dropdown-menu li {
             padding: 3px;
             font-size: 12px;
             cursor: pointer;
             transition: background-color 0.2s ease;
-        }
+        }*/
 
             .dropdown-menu li:hover {
                 background-color: #f1f1f1;
@@ -266,8 +246,9 @@
     }
 
     .table-wrapper {
-        min-height: 405px; /* Yahaan apne hisaab se height badha sakte hain */
-        overflow-y: auto; /* Scroll enable ho jaayega agar content bada hoga */
+        min-height: 449px; /* Yahaan apne hisaab se height badha sakte hain */
+        max-height: 449px;
+        /*overflow-y: auto;*/ /* Scroll enable ho jaayega agar content bada hoga */
     }
 
 
@@ -319,9 +300,19 @@
             background-color: #45a049;
         }
 </style>
-<div class="container" style="position: absolute;">
-   
-    <a class="btn btn-warning" style="margin-left: 88%; margin-top: 1%; margin-bottom: 1%;"    onclick="window.location.href='/RetailSection/LitigationMaster?Litigation%20Master#'" ><span class="fas fa-plus"></span>&nbsp;&nbsp;New Case</a>
+<div class="container px-4 py-2" style="position: absolute;">
+
+    <!-- Top bar: instruction left + New Location button right -->
+    <div class="d-flex align-items-center justify-content-between mb-3 top-bar" ng-init="Limit()" ng-show="SMF_EditFlag==1">
+        <h4 style="color:var(--primary)">Litigation Dashboard</h4>
+
+        <div class="d-flex align-items-center gap-2">
+            <!-- New Case (rounded pill) -->
+            <a class=" btn-newCase" style="text-align:right; margin-top: 1%; margin-bottom: 1%;" onclick="window.location.href='/RetailSection/LitigationMaster?Litigation%20Master#'"><i class="bi bi-plus-lg" aria-hidden="true"></i>&nbsp;&nbsp;New Case</a>
+        </div>
+    </div>
+
+    
     <div class="main-content">
         <div class="main-row">
             <div class="tiles-section" ng-init="BindTitles();BindMonthlyFilingchart();Bindcircle();BindCaseStatus();BindCalender();BindCaseDetail()">
@@ -395,7 +386,7 @@
         <div class="bottom-row" style="display: flex; gap: 20px; flex-wrap: wrap; align-items: stretch;">
             <!-- Pie Chart -->
             <div class="bottom-widget" style="flex: 1; height: 449px;">
-                <h3>Case Overview</h3>
+                <h3 style="color: var(--primary)">Case Overview</h3>
                 <!--<div class="selectors">-->
                 @*<button>Select Year</button>
                     <button>Select Month</button>*@
@@ -446,7 +437,7 @@
 
             <div class="bottom-widget" style="flex: 1; height:449px;">
 
-                <h3>Case Status</h3>
+                <h3 style="color: var(--primary)">Case Status</h3>
 
                 <div class="status-item">
                     <div class="status-title">
@@ -537,7 +528,7 @@
             <!-- Calendar -->
             <div class="bottom-widget" style="flex: 1; height:1013px;">
                 <div class="calendar-container1">
-                    <div class="calendar-header">Litigation Calendar</div>
+                    <div class="calendar-header"><h4>Litigation Calendar</h4></div>
                     <div class="calendar-date" id="selected-date"></div>
 
                     <div class="calendar">
@@ -603,12 +594,12 @@
             <!-- Data Table Section -->
             <div class="dashboard-tile table-tile" style=" max-width: 100%; ">
                 <!-- Adjust the flex value and added max-width -->
-                <h3>Case Details</h3>
+                <h3 style="color: var(--primary)">Case Details</h3>
                 <div class="header-controls">
                     <input type="text" id="search-input1" ng-model="searchText" placeholder="Search for cases...">
                     <div>
                         @*<button onclick="alert('View All clicked')">View All</button>*@
-                        <button ng-click="Getpdf()">Go to Report</button>
+                        @*<button ng-click="Getpdf()">Go to Report</button>*@
                     </div>
                 </div>
 
@@ -628,7 +619,7 @@
                                 <th>  </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style=" max-height: 400px; overflow-y: scroll; scrollbar-width: thin;">
                             <tr ng-repeat="x in CaseDetailList | filter:searchText">
                                 <td>{{x.CaseCode}}</td>
                                 <td>{{x.CaseTitle}}</td>
@@ -638,9 +629,9 @@
                                 <td>{{x.PleadingsType}}</td>
                                 <td>{{x.FilingDate}}</td>
                                 <td>
-                                    <p ng-show="{{x.ExecutionStatus}}==Yes">
+                                    <p style="margin:0" ng-show="{{x.ExecutionStatus}}==Yes">
                                         {{x.ExecutionStatus}}
-                                    </p><p ng-show="{{x.ExecutionStatus}}=='No'">
+                                    </p><p style="margin:0" ng-show="{{x.ExecutionStatus}}=='No'">
                                         ⚠️{{x.ExecutionStatus}}
                                     </p>
                                 </td>
@@ -837,10 +828,7 @@
 </div>
 
 
-
-
-
- <script>
+<script>
     const monthYearEl = document.getElementById('month-year');
     const calendarBody = document.getElementById('calendar-body');
     const selectedDate = document.getElementById('selected-date');
@@ -891,41 +879,41 @@
         updateSelectedDate();
     }
 
-     function selectDate(year, month, day) {
-         const formattedDate = formatDate(year, month, day);
-      
+    function selectDate(year, month, day) {
+        const formattedDate = formatDate(year, month, day);
 
-         // Update AngularJS scope safely
-         if (window.angular && window.angular.element) {
-             const scope = angular.element(document.querySelector('[ng-controller]')).scope();
-             scope.$apply(() => {
-                 scope.searchTextCal = formattedDate;
-             });
-         }
 
-         // Highlight selected
-         document.querySelectorAll('#calendar-body td').forEach(td => td.classList.remove('selected'));
-         const td = Array.from(document.querySelectorAll('#calendar-body td')).find(td =>
-             td.textContent.trim() === String(day)
-         );
-         if (td) td.classList.add('selected');
+        // Update AngularJS scope safely
+        if (window.angular && window.angular.element) {
+            const scope = angular.element(document.querySelector('[ng-controller]')).scope();
+            scope.$apply(() => {
+                scope.searchTextCal = formattedDate;
+            });
+        }
 
-         // Update date object
-         currentDate = new Date(year, month - 1, day);
-         updateSelectedDate();
+        // Highlight selected
+        document.querySelectorAll('#calendar-body td').forEach(td => td.classList.remove('selected'));
+        const td = Array.from(document.querySelectorAll('#calendar-body td')).find(td =>
+            td.textContent.trim() === String(day)
+        );
+        if (td) td.classList.add('selected');
 
-         // Show cases if any
-         const events = eventMap[formattedDate];
-         if (events && events.length) { 
-             if (events[0].CaseNumber == '1') {
-                 switchTab('open')
-             }
-             else {
-                 switchTab('close')
-             }
+        // Update date object
+        currentDate = new Date(year, month - 1, day);
+        updateSelectedDate();
 
-         }  
-     }
+        // Show cases if any
+        const events = eventMap[formattedDate];
+        if (events && events.length) {
+            if (events[0].CaseNumber == '1') {
+                switchTab('open')
+            }
+            else {
+                switchTab('close')
+            }
+
+        }
+    }
 
 
     function updateSelectedDate() {
@@ -952,7 +940,7 @@
 
             eventMap[dateStr].push({
                 CaseNumber: item.CaseNumber
-               
+
             });
         });
 
@@ -962,13 +950,6 @@
     // Initial render
     renderCalendar();
 </script>
-
-
-
-
-
-
-
 
 
 <script>
@@ -1035,3 +1016,15 @@
 
 
 </script>
+
+
+
+<link href="~/compliance/css/all.css" rel="stylesheet" />
+<link href="~/compliance/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.min.css" rel="stylesheet" />
+<link href="~/compliance/css/custom_theme.css" rel="stylesheet" />
+<link href="~/compliance/css/colorTheme/default.css" rel="stylesheet" />
+<link href="~/compliance/css/draggle.css" rel="stylesheet" />
+<link href="~/compliance/css/responsive.css" rel="stylesheet" />
+<link href="~/compliance/css/datepicker.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

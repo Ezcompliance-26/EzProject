@@ -101,6 +101,7 @@ namespace DAL
                 new SqlParameter("@DepartmentId",obj.DepartmentId),
                  new SqlParameter("@UploadDocPath",obj.UploadDocPath),
                 new SqlParameter("@SubjectLine",obj.SubjectLine),
+                new SqlParameter("@NewsCategory",obj.NewsCategory),
                 new SqlParameter("@PartyId",obj.PartyId),
                  new SqlParameter("@Summary",obj.Summary),
                 new SqlParameter("@RESULT",""),

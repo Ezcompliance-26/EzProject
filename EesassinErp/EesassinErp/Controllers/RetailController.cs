@@ -8,6 +8,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using System.Linq;
 
 using System.Web.Mvc;
 
@@ -798,7 +799,22 @@ namespace EesassinErp.Controllers
                 NewFileName += DateTime.Now.Year.ToString();
                 NewFileName += DateTime.Now.Month.ToString();
                 NewFileName += DateTime.Now.Day.ToString();
-                string extention = ".pdf";
+                //string extention = ".pdf"; here is comment old code by aadarsh dated 04/05/2026
+                // here is start new code 
+                string extention = Path.GetExtension(file.FileName).ToLower();
+
+                // sirf pdf, xlsx, xls allow
+                if (extention != ".pdf" && extention != ".xlsx" && extention != ".xls" && extention != ".csv")
+                {
+                    throw new Exception("Only .pdf,.csv, .xlsx and .xls files are allowed");
+                }
+                // here is end new code 
+                string[] validExtensions = { ".csv", ".xls", ".xlsx" };
+
+                if (validExtensions.Contains(extention.ToLower()))
+                {
+                    extention = ".csv";
+                }
                 string uploadpath = dir + "/" + obj.ComplianceName + "_" + NewFileName + extention;
                 string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
                 //var filePath = Path.Combine(Server.MapPath("~/Uploads"), file.FileName);
@@ -1309,6 +1325,7 @@ namespace EesassinErp.Controllers
             obj.Action = Request.Form["Action"]; // Get additional form data
             obj.Createdby = Request.Form["Createdby"];
             obj.RegNo = Request.Form["RegNo"];
+            obj.Id = Request.Form["Id"];
 
             obj.Status = Request.Form["Status"];
             obj.VRemark = Request.Form["VRemark"];
@@ -1875,9 +1892,189 @@ namespace EesassinErp.Controllers
 
         public async Task<string> SearchFinacialStatutoryEvent(RetailBAL obj)
         {
-
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchFinacialStatutoryEvent(obj)));
             return result;
         }
+		
+ // here is add new code for Factory Event Compliance dated 13/05/2026 by Aadarsh
+        [HttpPost]
+        public async Task<string> AddFactoryEventcompliance()
+        {
+            RetailBAL obj = new RetailBAL();
+            if (Request.Files.Count > 0)
+            {
+
+                var file = Request.Files[0];
+                string dir = "../DownloadMat/StatutoryDoc";
+                string dirPath = System.Web.HttpContext.Current.Server.MapPath(dir);
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+                string NewFileName = "";
+                string strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
+                NewFileName += strPassword;
+                NewFileName += DateTime.Now.Year.ToString();
+                NewFileName += DateTime.Now.Month.ToString();
+                NewFileName += DateTime.Now.Day.ToString();
+                string extention = ".pdf";
+                string uploadpath = dir + "/" + obj.ComplianceName + "_" + NewFileName + extention;
+                string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
+                //var filePath = Path.Combine(Server.MapPath("~/Uploads"), file.FileName);
+                file.SaveAs(filePath);
+                obj.UploadFile = uploadpath;
+            }
+            else
+            {
+                obj.UploadFile = (Request.Form["UploadFile"].Replace(",", "")).Replace("undefined", "");
+            }
+
+            obj.ASD = Request.Form["ASD"]; // Get additional form data
+            obj.CSD = Request.Form["CSD"]; // Get additional form data
+            obj.DelayDay = Request.Form["DelayDay"]; // Get additional form data
+            obj.CACId = Request.Form["CACId"]; // Get additional form data
+            obj.Action = Request.Form["Action"]; // Get additional form data
+            obj.Createdby = Request.Form["Createdby"];
+            obj.RegNo = Request.Form["RegNo"];
+
+            obj.Status = Request.Form["Status"];
+            obj.VRemark = Request.Form["VRemark"];
+            obj.CRemark = Request.Form["CRemark"];
+            obj.IsVerified = Request.Form["IsVerified"];
+            obj.Id = Request.Form["Id"];
+
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.AddFactoryEventcompliance(obj)));
+            return result;
+        }
+
+        public async Task<string> SearchFactoryEventcompliance(RetailBAL obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchFactoryEventcompliance(obj)));
+            return result;
+        }
+
+
+        // here is add new code for Secretarial Event Compliance dated 14/05/2026 by Aadarsh
+        [HttpPost]
+        public async Task<string> AddSecretarialEventcompliance()
+        {
+            RetailBAL obj = new RetailBAL();
+            if (Request.Files.Count > 0)
+            {
+
+                var file = Request.Files[0];
+                string dir = "../DownloadMat/StatutoryDoc";
+                string dirPath = System.Web.HttpContext.Current.Server.MapPath(dir);
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+                string NewFileName = "";
+                string strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
+                NewFileName += strPassword;
+                NewFileName += DateTime.Now.Year.ToString();
+                NewFileName += DateTime.Now.Month.ToString();
+                NewFileName += DateTime.Now.Day.ToString();
+                string extention = ".pdf";
+                string uploadpath = dir + "/" + obj.ComplianceName + "_" + NewFileName + extention;
+                string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
+                //var filePath = Path.Combine(Server.MapPath("~/Uploads"), file.FileName);
+                file.SaveAs(filePath);
+                obj.UploadFile = uploadpath;
+            }
+            else
+            {
+                obj.UploadFile = (Request.Form["UploadFile"].Replace(",", "")).Replace("undefined", "");
+            }
+
+            obj.ASD = Request.Form["ASD"]; // Get additional form data
+            obj.CSD = Request.Form["CSD"]; // Get additional form data
+            obj.DelayDay = Request.Form["DelayDay"]; // Get additional form data
+            obj.CACId = Request.Form["CACId"]; // Get additional form data
+            obj.Action = Request.Form["Action"]; // Get additional form data
+            obj.Createdby = Request.Form["Createdby"];
+            obj.RegNo = Request.Form["RegNo"];
+
+            obj.Status = Request.Form["Status"];
+            obj.VRemark = Request.Form["VRemark"];
+            obj.CRemark = Request.Form["CRemark"];
+            obj.IsVerified = Request.Form["IsVerified"];
+            obj.Id = Request.Form["Id"];
+
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.AddSecretarialEventcompliance(obj)));
+            return result;
+        }
+
+        public async Task<string> SearchSecretarialEvent(RetailBAL obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchSecretarialEvent(obj)));
+            return result;
+        }
+
+        public ActionResult FactoryComp()
+        {
+            return View();
+        }
+		
+		
+		
+		
+         // here is add new code for Secretarial Event Compliance dated 18/05/2026 by Aadarsh
+        [HttpPost]
+        public async Task<string> AddLabourEventcompliance()
+        {
+            RetailBAL obj = new RetailBAL();
+            if (Request.Files.Count > 0)
+            {
+
+                var file = Request.Files[0];
+                string dir = "../DownloadMat/StatutoryDoc";
+                string dirPath = System.Web.HttpContext.Current.Server.MapPath(dir);
+                if (!Directory.Exists(dirPath))
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+                string NewFileName = "";
+                string strPassword = Guid.NewGuid().ToString("N").Substring(0, 4);
+                NewFileName += strPassword;
+                NewFileName += DateTime.Now.Year.ToString();
+                NewFileName += DateTime.Now.Month.ToString();
+                NewFileName += DateTime.Now.Day.ToString();
+                string extention = ".pdf";
+                string uploadpath = dir + "/" + obj.ComplianceName + "_" + NewFileName + extention;
+                string filePath = System.Web.HttpContext.Current.Server.MapPath(uploadpath);
+                //var filePath = Path.Combine(Server.MapPath("~/Uploads"), file.FileName);
+                file.SaveAs(filePath);
+                obj.UploadFile = uploadpath;
+            }
+            else
+            {
+                obj.UploadFile = (Request.Form["UploadFile"].Replace(",", "")).Replace("undefined", "");
+            }
+
+            obj.ASD = Request.Form["ASD"]; // Get additional form data
+            obj.CSD = Request.Form["CSD"]; // Get additional form data
+            obj.DelayDay = Request.Form["DelayDay"]; // Get additional form data
+            obj.CACId = Request.Form["CACId"]; // Get additional form data
+            obj.Action = Request.Form["Action"]; // Get additional form data
+            obj.Createdby = Request.Form["Createdby"];
+            obj.RegNo = Request.Form["RegNo"];
+
+            obj.Status = Request.Form["Status"];
+            obj.VRemark = Request.Form["VRemark"];
+            obj.CRemark = Request.Form["CRemark"];
+            obj.IsVerified = Request.Form["IsVerified"];
+            obj.Id = Request.Form["Id"];
+
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.AddLabourEventcompliance(obj)));
+            return result;
+        }
+
+        public async Task<string> SearchLabourEvent(RetailBAL obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.SearchLabourEvent(obj)));
+            return result;
+        }
+
     }
-}
+} 

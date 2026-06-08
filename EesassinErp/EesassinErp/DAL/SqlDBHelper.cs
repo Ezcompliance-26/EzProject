@@ -12,10 +12,10 @@ namespace DAL
         public static readonly SqlDBHelper SqlHelper = new SqlDBHelper();
 
         public string msg;
-        // public string CONNECTION_STRING = "Server=13.202.27.216;Initial Catalog=eesassinuat_uat1;MultipleActiveResultSets=true;User ID=retail;Password=ezretail@123;Pooling=True;";
-          public string CONNECTION_STRING = "Server=13.202.27.216;Initial Catalog=EZCMP_R;MultipleActiveResultSets=true;User ID=retail;Password=ezretail@123;Pooling=True;";
-      
-        //  public static string CONNECTION_STRING = "Server=localhost;Initial Catalog=EZCMP_R;Integrated Security=True;";
+        //       public string CONNECTION_STRING = "Server=13.202.27.216;Initial Catalog=eesassinuat_uat1;MultipleActiveResultSets=true;User ID=retail;Password=ezretail@123;Pooling=True;";
+        public string CONNECTION_STRING = "Server=13.202.27.216;Initial Catalog=EZCMP_R;MultipleActiveResultSets=true;User ID=retail;Password=ezretail@123;Pooling=True;";
+
+
 
 
         internal DataTable ExecuteSelectCommand(string CommandName, CommandType cmdType)
@@ -83,7 +83,7 @@ namespace DAL
                 }
             }
 
-            return table;
+            return table;     
         }
         internal DataSet ExecuteParamerizedSelectCommandds(string CommandName, CommandType cmdType, SqlParameter[] param)
         {

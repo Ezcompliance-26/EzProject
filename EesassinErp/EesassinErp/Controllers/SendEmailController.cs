@@ -64,7 +64,7 @@ namespace EesassinErp.Controllers
                 SMTP.Host = SmtpServer;
                 SMTP.Port = SmtpPort;
                 SMTP.EnableSsl = true;
-
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
                 SMTP.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
                 SMTP.UseDefaultCredentials = false;
@@ -172,7 +172,7 @@ namespace EesassinErp.Controllers
                 SMTP.Host = SmtpServer;
                 SMTP.Port = SmtpPort;
                 SMTP.EnableSsl = true;
-
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
                 SMTP.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
                 SMTP.UseDefaultCredentials = true;

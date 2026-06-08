@@ -80,6 +80,7 @@ namespace DAL
             var param = new List<SqlParameter>
             {
                 new SqlParameter("@Action", obj.Action),
+                 new SqlParameter("@Id", obj.Id) 
             };
             return SqlDBHelper.SqlHelper.ExecuteParamerizedSelectCommand("USP_DocumentMaster", CommandType.StoredProcedure, param.ToArray());
 
@@ -130,22 +131,40 @@ namespace DAL
         {
             var param = new List<SqlParameter>
             {
-                  new SqlParameter("@Action", obj.Action),
+                    new SqlParameter("@Action", obj.Action),
                     new SqlParameter("@Id", obj.Id),
-                new SqlParameter("@DocumentName", obj.DocumentName),
-                  new SqlParameter("@DocumentType", obj.DocumentType),
+                    new SqlParameter("@DocumentName", obj.DocumentName),
+                    new SqlParameter("@DocumentType", obj.DocumentType),
                     new SqlParameter("@Frequency", obj.Frequency),
-                      new SqlParameter("@FormatType", obj.FormatType),
-                        new SqlParameter("@Note", obj.Note),
-                new SqlParameter("@IsDefault", obj.IsDefault),
-                new SqlParameter("@Createdby", obj.Createdby),
-
-                new SqlParameter("@Updatedby", obj.Updatedby),
-                new SqlParameter("@UpdatedON", obj.UpdatedON),
-                new SqlParameter("@Isdelete", obj.Isdelete),
-                new SqlParameter("@Result",""),
+                    new SqlParameter("@FormatType", obj.FormatType),
+                    new SqlParameter("@Note", obj.Note),
+                    new SqlParameter("@IsDefault", obj.IsDefault),
+                    new SqlParameter("@Createdby", obj.Createdby),
+                    new SqlParameter("@Act", obj.Act),
+                    new SqlParameter("@FormNo", obj.FormNo),
+                    new SqlParameter("@Criticality", obj.Criticality),
+                    new SqlParameter("@StateId", obj.StateId),
+                    new SqlParameter("@Updatedby", obj.Updatedby),
+                    new SqlParameter("@UpdatedON", obj.UpdatedON),
+                    new SqlParameter("@Isdelete", obj.Isdelete),
+                    new SqlParameter("@Result",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("USP_DocumentMaster", CommandType.StoredProcedure, param.ToArray()));
+        }
+
+
+        public async Task<string> SaveValidation(DocumentBAL obj)
+        {
+
+            var param = new List<SqlParameter>
+                    {
+                    new SqlParameter("@Action", 11),
+                    new SqlParameter("@Id", obj.Id),
+                    new SqlParameter("@DocumentName", Newtonsoft.Json.JsonConvert.SerializeObject(obj.ValidationList)),
+                   new SqlParameter("@Result","")
+                    };
+                 return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("USP_DocumentMaster", CommandType.StoredProcedure, param.ToArray()));
+            
         }
         public async Task<string> IUDOneTimeDocumentMaster(DocumentBAL obj)
         {

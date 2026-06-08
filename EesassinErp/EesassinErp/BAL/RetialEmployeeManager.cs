@@ -6,11 +6,21 @@ namespace BAL
     {
         //---------------------Action--------------------------
 
+        
+             public string FitnessTypes { get; set; }
 
+        public string MedicalStatus { get; set; }
+        public string NextMedicalDue { get; set; }
+        public string MedicalCertificate_FilePath { get; set; }
+
+
+        public string State { get; set; }
+        public string City { get; set; }
+        public string Pincode { get; set; }
         public string EmployeePhotos { get; set; }
-        public DateTime IssueDate { get; set; }
-        public DateTime ValidTill { get; set; }
-
+        public DateTime? IssueDate { get; set; }
+        public DateTime? ValidTill { get; set; }
+        public string CampNumber { get; set; }
         public string BloodGroup { get; set; }
         public string Transport { get; set; }
         public string RouteId { get; set; }
@@ -24,10 +34,10 @@ namespace BAL
         public string PoliceVerificationStatus { get; set; }
         public string TempIDStatus { get; set; }
         public string TempIDNumber { get; set; }
-        public string TempIDDate { get; set; }
+        public DateTime? TempIDDate { get; set; }
         public string PermanentIDStatus { get; set; }
         public string PermanentIDNumber { get; set; }
-        public string  PermanentIDDate { get; set; }
+        public DateTime?  PermanentIDDate { get; set; }
 
         //-----------------------------------------------
         public string ActionType { get; set; }
@@ -48,7 +58,7 @@ namespace BAL
         public string Father_Husband_Name { get; set; }
         public string Gendar { get; set; }
         public string MaritalStatus { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public string PresentAddress { get; set; }
         public string PermanemtAddress { get; set; }
         public string AdharCardNumber { get; set; }
@@ -61,11 +71,11 @@ namespace BAL
         public string PreviousUAN { get; set; }
         public string PreviousESI { get; set; }
         public string GrossSalary { get; set; }
-        public DateTime DOJ { get; set; }
+        public DateTime? DOJ { get; set; }
         public string NomineeName { get; set; }
         public string NomineeAddress { get; set; }
         public string NomineeRelation { get; set; }
-        public DateTime NomineeDOB { get; set; }
+        public DateTime? NomineeDOB { get; set; }
         public string StoreCode { get; set; }
         public string Status { get; set; }
         public string PANCardFilePath { get; set; }

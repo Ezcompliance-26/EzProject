@@ -150,6 +150,8 @@ namespace DAL
                 new SqlParameter("@DocumentId", obj.DocumentId),
                 new SqlParameter("@DocumentFile", obj.FileDoc),
                 new SqlParameter("@Updatedby", obj.CreatedBy),
+                 new SqlParameter("@Detail", obj.Detail),
+                   new SqlParameter("@Percentage", obj.Percentage),
                 new SqlParameter("@RESULT",""),
             };
             return await Task.Factory.StartNew(() => SqlDBHelper.SqlHelper.ExecuteNonQueryReturnScalar("EVM.USP_TBL_VENDOR_INVOICE", CommandType.StoredProcedure, param.ToArray()));

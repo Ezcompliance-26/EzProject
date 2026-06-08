@@ -545,13 +545,10 @@
                                     <td class="text-center">
                                         <div ng-if="sectionlist.AllowVerifyFlag">
                                             <div class="checkbox checkbox-primary table-check-wt">
-                                                <input type="checkbox"
-                                                       id="chkVerify{{$index}}"
-                                                       ng-model="sectionlist.VerifyFlag"
-                                                       ng-checked="sectionlist.VerifyFlag"
-                                                       ng-disabled="!UserId" />
+                                                
+                                                <input type="checkbox" class="clear" id="chkVerify" ng-model="chkAllow[$index]['Verify']"
+                                                       ng-checked="chkAllow[$index]['Verify']" ng-init="chkAllow[$index]['Verify'] = sectionlist.VerifyFlag" ng-disabled="!UserId" />
                                                 <label for="chkVerify{{$index}}"></label>
-
                                             </div>
                                         </div>
                                     </td>
@@ -559,12 +556,9 @@
                                     <td class="text-center">
                                         <div ng-if="sectionlist.AllowUploadFlag">
                                             <div class="checkbox checkbox-primary table-check-wt">
-                                                <input type="checkbox"
-                                                       class="clear"
-                                                       id="chkupload{{$index}}"
-                                                      ng-model="sectionlist.UploadFlag"
-                                                       ng-checked="sectionlist.UploadFlag"
-                                                       ng-disabled="!UserId" />
+                                              
+                                                <input type="checkbox" class="clear" id="chkupload" ng-model="chkAllow[$index]['Upload']"
+                                                       ng-checked="chkAllow[$index]['Upload']" ng-init="chkAllow[$index]['Upload'] = sectionlist.UploadFlag" ng-disabled="!UserId" />
                                                 <label for="chkupload{{$index}}"></label>
                                             </div>
                                         </div>

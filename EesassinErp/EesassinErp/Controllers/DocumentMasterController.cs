@@ -168,8 +168,12 @@ namespace EesassinErp.Controllers
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.GetDocumentMaster(obj)));
             return result;
         }
-
-
+       
+        public async Task<string> VIUDDocumentMaster(DocumentBAL obj)
+        {
+            string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.SaveValidation(obj)));
+            return result;
+        }
         public async Task<string> IUDDocumentMaster(DocumentBAL obj)
         {
             string result = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(DAL.DLL.dll.IUDDocumentMaster(obj)));

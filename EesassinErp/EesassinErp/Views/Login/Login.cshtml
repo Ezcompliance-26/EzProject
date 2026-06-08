@@ -7,12 +7,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EZCompliance</title>
+    <title>EZ Compliance Login</title>
     <link rel="stylesheet" type="text/css" href="../login/style.css">
     <link href="@Url.Content("~/Content/plugins/assets/css/font-icons/font-awesome.css")" rel="stylesheet" media="all" />
     <script type="text/javascript" src="@Url.Content("~/scripts/jquery-1.12.4.js")"></script>
-    @*<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>*@
-    <script src="~/scripts/Rootfile/sweetalert.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/angular.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/myjslib/loginController.js?Ver="+ViewBag.Version+"")"></script>
 
@@ -22,7 +21,9 @@
         .swal-modal {
             background-color: #f0f0f0;
             border-radius: 15px;
-            width: 23%;
+            /*width: 23%;*/
+            width: 90%;
+            max-width: 420px;
         }
 
         .swal-title {
@@ -36,7 +37,8 @@
         }
 
             .swal-button:hover {
-                background-color: #28a745;    
+                background-color: #28a745;
+                !important /* green */
                 color: white;
             }
 
@@ -75,6 +77,56 @@
             .input-icon i {
                 cursor: pointer; /* Make icons clickable */
             }
+
+        .module-section {
+            width: 100%;
+            margin: 10px 0;
+            margin: 8px 0;
+        }
+
+
+
+        .module-dropdown {
+            width: 100%;
+            height: 38px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 0 10px;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        .change-username {
+            text-align: right;
+            margin-bottom: 8px;
+        }
+
+            .change-username span {
+                color: #007BFF;
+                cursor: pointer;
+                font-size: 12px;
+            }
+
+        .full-login-form > * {
+            margin-bottom: 12px;
+        }
+
+            .full-login-form > *:last-child {
+                margin-bottom: 0;
+            }
+
+        .captcha-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+        }
+
+        .full-login-form input,
+        .full-login-form select {
+            width: 100%;
+            height: 38px;
+        }
     </style>
     <script>
         $(document).ready(function () {
@@ -105,191 +157,209 @@
             });
         });
     </script>
-    <script>
-        if (window.top !== window.self) {
-            window.top.location.href = window.location.href;
-        }
-    </script>
+
 </head>
 <body>
-     
-        <div class="container">
-            <div class="left-panel">
-                <img src="../login/image/logo.png" class="logo" alt="Talent India Logo" />
-                <div class="slideshow-container">
-                    <div class="slide slide1  active">
-                        <div class="gif-wrapper">
-                            <img src="../login/image/gif1.gif" class="gif" alt="EZ HRMS Demo" />
-                            <div class="highlights">
-                                <div class="highlight">Excellence</div>
-                                <div class="highlight">Innovation</div>
-                                <div class="highlight">Sustainability</div>
-                            </div>
+    <div class="container">
+        <div class="left-panel">
+            <img src="../login/image/logo.png" class="logo" alt="Talent India Logo" />
+            <div class="slideshow-container">
+                <div class="slide slide1  active">
+                    <div class="gif-wrapper">
+                        <img src="../login/image/gif1.gif" class="gif" alt="EZ HRMS Demo" />
+                        <div class="highlights">
+                            <div class="highlight">Excellence</div>
+                            <div class="highlight">Innovation</div>
+                            <div class="highlight">Sustainability</div>
                         </div>
                     </div>
-                    <div class="slide slide2">
-                        <div class="gif-wrapper">
-                            @*<img src="../login/image/gif2.gif" class="gif" alt="EzCompliance" />*@
-                            <video autoplay muted loop playsinline style="width:100%">
-                                <source src="/login/gif.mp4" type="video/mp4">
-                            </video>
-                        </div>
-
-
+                </div>
+                <div class="slide slide2">
+                    <div class="gif-wrapper">
+                        <img src="../login/image/gif2.gif" class="gif" alt="EzCompliance" />
                     </div>
-                    <!-- Slide 3 - Testimonials -->
-                    <div class="slide slide3">
-                        <div class="testimonial-slider">
-                            <img src="../login/image/content.png" class="quote-image" alt="Quote">
-                            <div class="testimonial active">
-                                <img src="image/profile.PNG" class="testimonial-img" alt="Client 1">
-                                <p class="quote-text">"Empowering Workforce enabling Future!"</p>
-                                <!--      <div class="client-info">
-                                       <div class="client-name">Priya Mehta</div>
-                                       <div class="client-role">Compliance Officer, TechNova</div>
-                                   </div> -->
-                            </div>
-                            <!--   <div class="testimonial">
-                                <img src="../login/image/profile.PNG" class="testimonial-img" alt="Client 2">
-                                <p class="quote-text">"The dashboard is clean and user-friendly. Great support team too!"</p>
-                                <div class="client-info">
-                                    <div class="client-name">Rohan Kapoor</div>
-                                    <div class="client-role">HR Manager, GreenLogix</div>
-                                </div>
-                            </div>
-                            <div class="testimonial">
-                                <img src="../login/image/profile.PNG" class="testimonial-img" alt="Client 3">
-                                <p class="quote-text">"Finally, a system that actually simplifies compliance processes."</p>
-                                <div class="client-info">
-                                    <div class="client-name">Anjali Rao</div>
-                                    <div class="client-role">Legal Consultant, ApexGroup</div>
-                                </div>
+                </div>
+                <!-- Slide 3 - Testimonials -->
+                <div class="slide slide3">
+                    <div class="testimonial-slider">
+                        <img src="../login/image/content.png" class="quote-image" alt="Quote">
+                        <div class="testimonial active">
+                            <img src="image/profile.PNG" class="testimonial-img" alt="Client 1">
+                            <p class="quote-text">"Empowering Workforce enabling Future!"</p>
+                            <!--      <div class="client-info">
+                                <div class="client-name">Priya Mehta</div>
+                                <div class="client-role">Compliance Officer, TechNova</div>
                             </div> -->
-
-                            <div class="testimonial-dots">
-                                <span class="t-dot active" onclick="showTestimonial(0)"></span>
-                                <!-- <span class="t-dot" onclick="showTestimonial(1)"></span>
-                                <span class="t-dot" onclick="showTestimonial(2)"></span> -->
+                        </div>
+                        <!--   <div class="testimonial">
+                            <img src="../login/image/profile.PNG" class="testimonial-img" alt="Client 2">
+                            <p class="quote-text">"The dashboard is clean and user-friendly. Great support team too!"</p>
+                            <div class="client-info">
+                                <div class="client-name">Rohan Kapoor</div>
+                                <div class="client-role">HR Manager, GreenLogix</div>
                             </div>
                         </div>
-                    </div>
+                        <div class="testimonial">
+                            <img src="../login/image/profile.PNG" class="testimonial-img" alt="Client 3">
+                            <p class="quote-text">"Finally, a system that actually simplifies compliance processes."</p>
+                            <div class="client-info">
+                                <div class="client-name">Anjali Rao</div>
+                                <div class="client-role">Legal Consultant, ApexGroup</div>
+                            </div>
+                        </div> -->
 
-                    <!-- Dots -->
-                    <div class="dots">
-                        <span class="dot active" onclick="currentSlide(0)"></span>
-                        <span class="dot" onclick="currentSlide(1)"></span>
-                        <span class="dot" onclick="currentSlide(2)"></span>
+                        <div class="testimonial-dots">
+                            <span class="t-dot active" onclick="showTestimonial(0)"></span>
+                            <!-- <span class="t-dot" onclick="showTestimonial(1)"></span>
+                            <span class="t-dot" onclick="showTestimonial(2)"></span> -->
+                        </div>
                     </div>
                 </div>
+
             </div>
-            <div class="right-panel" ng-controller="myLoginController">
-                <div class="welcome-header">
-                    <h1 class="welcome-text">Welcome</h1>
-                    <img src="../login/image/ezfulllogo 3.png" alt="Company Logo" class="company-logo" />
+            <!-- Dots -->
+            <div class="dots">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+            </div>
+        </div>
+
+
+
+
+        <div class="right-panel" ng-controller="myLoginController">
+            <div class="welcome-header">
+                <h1 class="welcome-text">Welcome</h1>
+                <img src="../login/image/ezfulllogo 3.png" alt="Company Logo" class="company-logo" />
+            </div>
+
+            <p>Sign in to access India's smart unified Compliance System.</p>
+
+            <!-- Dynamic form container -->
+            <div class="form-group" id="form-container">
+
+                <!-- Initial View -->
+                <div ng-show="Step1">
+                    <input type="text" id="username-input" class="form-control validate" placeholder="Enter Username" ng-model="Username"
+                           ng-blur="CUVAILD()" autocomplete="new-username" />
+
+                    <button id="btnStep1Login" ng-click="CheckUserName()">Next</button>
+                    <div class="divider1" style="margin-bottom: 1rem;">OR</div>
+
+                    <a href="https://ezcompliance.in/demo/" target="_blank">
+                        <button class="demo-btn outline">Schedule Demo</button>
+                    </a>
+
                 </div>
 
-                <p>Sign in to access India's smart unified Compliance System.</p>
-
-                <!-- Dynamic form container -->
-                <div class="form-group" id="form-container">
-
-                    <!-- Initial View -->
-                    <div ng-show="Step1">
-                        <input type="text" id="username-input" class="form-control validate" placeholder="Enter Username" ng-model="Username"
-                               ng-blur="CUVAILD()" autocomplete="new-username" />
-
-                        <button id="btnStep1Login" ng-click="CheckUserName();ManageLog('Click on Next button of login')">Next</button>
-                        <div class="divider1">OR</div>
-
-                        <button class="demo-btn outline" ng-click="rtodemo();ManageLog('Click on Schedule Demo')">Schedule Demo</button>
-
+                <!-- Step 2 at right panel-->
+                <div class="full-login-form" ng-show="Step2">
+                    @*<label style=" margin-bottom: 1%;">
+                            <span style="float: right; color: #007BFF; cursor: pointer; font-size: 70%; margin-bottom: 0.5rem;" ng-click="resetusername()">Change user name</span>
+                        </label>*@
+                    <div class="change-username">
+                        <span ng-click="resetusername()">Change user name</span>
                     </div>
-                    <div class="full-login-form" ng-show="Step2">
-                        <label style="margin-left: -49%; margin-bottom: 1%;">
-                            <span style="float:right; color:#007BFF; cursor:pointer; font-size: 70%;" ng-click="resetusername();ManageLog('Click on Change user name')">Change user name</span>
-                        </label>
-                        <input type="text" ng-model="Username" class="validate" disabled />
-                        <div class="password-container">
 
-                            @Html.TextBox("txtPassWord", "", new { @class = "validate password-input", @placeholder = "Password", @type = "password", @ng_keyup = "PassWordEnterKey($event);", @ng_model = "Password", @autocomplete = "new-password" })
-                            <div class="input-icon" style="display: flex; align-items: center; gap: 8px;">
-                                <i id="PasswordShowHide" class="fa fa-eye" style="display: none;"></i>
-                                <i id="LoginLock" class="fa fa-lock"></i>
-                                <i id="PasswordShow" class="fa fa-eye-slash" style="display: none;"></i>
+                    <input type="text" ng-model="Username" class="validate" disabled />
+                    <div class="password-container">
 
-                            </div>
+                        @Html.TextBox("txtPassWord", "", new { @class = "validate password-input", @placeholder = "Password", @type = "password", @ng_keyup = "PassWordEnterKey($event);", @ng_model = "Password", @autocomplete = "new-password" })
+                        <div class="input-icon" style="display: flex; align-items: center; gap: 8px;">
+                            <i id="PasswordShowHide" class="fa fa-eye" style="display: none;"></i>
+                            <i id="LoginLock" class="fa fa-lock"></i>
+                            <i id="PasswordShow" class="fa fa-eye-slash" style="display: none;"></i>
+
                         </div>
+                    </div>
 
-                        <br />
-                        <div class="divider1" ng-init="BindModule()"></div>
-                        <select id="ddlModule" style="height: 30px ; border: 1px solid #ccc; border-radius: 6px; padding-left: 2px; font-size: 15px; " ng-model="ModuleId" ng-show="IsModuleOpen">
+                    @*<br />*@
+                    @*<div class="divider1" ng-init="BindModule()"></div>
+                        <select id="ddlModule" style="height: 30px ; border: 1px solid #ccc; border-radius: 6px; padding-left: 2px; font-size: 15px; "
+                                        ng-model="ModuleId" ng-show="IsModuleOpen">
                             <option value="">Select</option>
                             <option ng-repeat="x in ModuleList" value="{{x.Id}}">{{x.Module_Name}}</option>
                         </select>
-                        <br />
-                        <div ng-init="GetCaptchaImage();" style="display: flex; align-items: center; gap: 10px;">
-                            <img alt="Captcha" ng-src="{{CaptchaSrc}}" />
-                            <i class="fa fa-refresh" aria-hidden="true" ng-click="GetCaptchaImage();ManageLog('Click on Refresh Captcha')" style="cursor: pointer;"></i>
-                        </div> <br />
-                        <input class="form-control numbersOnly validate" id="txtCaptcha" type="text" name="txtCaptcha" ng-model="Captcha" placeholder="How much is the sum">
+                        <br />*@
 
+                    <div class="module-section" ng-init="BindModule()" ng-show="IsModuleOpen">
 
-                        <div class="forgot-password">
-                            <a href="#" ng-click="forgetpass();ManageLog('Click on Forgot Your Password')">Forgot Your Password ?</a>
-
-                        </div>
-
-                        <button id="btnLogin" class="sign-in-btn" ng-click="Login();ManageLog('Click on Sign In')">Sign In</button>
+                        <select id="ddlModule" class="module-dropdown" ng-model="ModuleId">
+                            <option value="">Select Module</option>
+                            <option ng-repeat="x in ModuleList" value="{{x.Id}}">{{x.Module_Name}}</option>
+                        </select>
 
                     </div>
 
-                    <div ng-show="Step3">
-                        <label>Reset Password</label>
-                        <br />
+                    <div class="captcha-row" ng-init="GetCaptchaImage();">
+                        <img alt="Captcha" ng-src="{{CaptchaSrc}}" />
+                        <i class="fa fa-refresh" aria-hidden="true" ng-click="GetCaptchaImage();" style="cursor: pointer;"></i>
+                    </div> @*<br />*@
+                    <input class="form-control numbersOnly validate" id="txtCaptcha" type="text" name="txtCaptcha" ng-model="Captcha" placeholder="How much is the sum">
 
-                        <div ng-show="hidemobile">
-                            <input id="txtContactNo" ng-model="MobileNo" class="removespacer" type="text" placeholder="Enter registered Email or Mobile number" />
-                            <button id="btnRLogin" type="button" ng-show="hidemobile" class="sign-in-btn" ng-click="RedirectLogin();">Send OTP</button>
-                        </div>
-                        <div ng-show="IshideOtp">
-                            @Html.TextBox("txtOtp", "", new { @class = "form-control removespacer", @placeholder = "Enter OTP", @type = "text", @ng_model = "notp", @autocomplete = "off", @maxlength = "10" })
-                            <button id="btnLogin1" type="button" ng-show="IshideOtp" class="btn login-btn" ng-click="verifypass();ManageLog('Click on Verify OTP')">Verify OTP</button>
-                        </div>
-                        <br />
-                        <div ng-show="IshideSubmit">
-                            @Html.TextBox("txtPassWord", "", new { @class = "form-control", @placeholder = "Password", @type = "password", @ng_keyup = "PassWordEnterKey($event);", @ng_model = "NewPassword", @autocomplete = "off" })
-                            <button id="btnLogin2" type="button" ng-show="IshideSubmit" class="btn login-btn" ng-click="ResetPass();ManageLog('Click on Submit New Password')">Submit</button>
-                        </div>
+
+                    <div class="forgot-password">
+                        <a href="#" ng-click="forgetpass()">Forgot Your Password ?</a>
+
                     </div>
-                    <div id="msgbox" style="display:none;">
-                        <label id="lblmsg" style="font-size:14px"></label>
-                    </div>
+
+                    <button id="btnLogin" class="sign-in-btn" ng-click="Login();">Sign In</button>
+
                 </div>
 
 
-                <!-- <div class="download-section">
+                <!-- Step 3 at right panel-->
+                <div ng-show="Step3">
+                    @*<label>Reset Password</label>
+                        <br />*@
+                    <label class="reset-title">Reset Password</label>
 
-                     <img src="../login/image/google1.png" alt="Google Play" />
-                     <img src="../login/image/app1.png" alt="App Store" />
-                     <h6>Download the Ezcompliance mobile app.</h6>
-                 </div>-->
-                <div class="download-section">
-                    <a href="https://play.google.com/store/apps/details?id=com.retail.ezcompliance.ezcompliance&pcampaignid=web_share" target="_blank">
-                        <img src="../login/image/google1.png" alt="Google Play" />
-                    </a>
+                    <div ng-show="hidemobile">
+                        <input id="txtContactNo" ng-model="MobileNo" class="removespacer" type="text" placeholder="Enter registered Email or Mobile number" />
+                        <button id="btnRLogin" type="button" ng-show="hidemobile" class="sign-in-btn" ng-click="RedirectLogin();">Send OTP</button>
+                    </div>
+                    <div ng-show="IshideOtp">
+                        @Html.TextBox("txtOtp", "", new { @class = "form-control removespacer", @placeholder = "Enter OTP", @type = "text", @ng_model = "notp", @autocomplete = "off", @maxlength = "10" })
+                        <button id="btnLogin1" type="button" ng-show="IshideOtp" class="btn login-btn" ng-click="verifypass();">Verify OTP</button>
+                    </div>
+                    @*<br />*@
+                    <div ng-show="IshideSubmit">
+                        @Html.TextBox("txtPassWord", "", new { @class = "form-control", @placeholder = "Password", @type = "password", @ng_keyup = "PassWordEnterKey($event);", @ng_model = "NewPassword", @autocomplete = "off" })
+                        <button id="btnLogin2" type="button" ng-show="IshideSubmit" class="btn login-btn" ng-click="ResetPass();">Submit</button>
+                    </div>
 
-
-                    <a href="https://apps.apple.com/in/app/ez-compliance/id6752576679" target="_blank">   <img src="../login/image/app1.png" alt="App Store" /></a>
-                    <h6>Download the Ezcompliance mobile app.</h6>
+                    <button class="demo-btn outline" ng-click="backToLogin()">Back to Login</button>
                 </div>
-
-                <div class="terms">
-                    By clicking "Continue" you agree to Ez compliance <a target="_blank" href="https://ezcompliance.in/privacy-policy/">User Terms of Privacy</a>.
+                <div id="msgbox" style="display:none;">
+                    <label id="lblmsg" style="font-size:14px"></label>
                 </div>
             </div>
 
 
+            <!-- <div class="download-section">
+
+                 <img src="../login/image/google1.png" alt="Google Play" />
+                 <img src="../login/image/app1.png" alt="App Store" />
+                 <h6>Download the Ezcompliance mobile app.</h6>
+             </div>-->
+            <div class="download-section">
+                <a href="https://play.google.com/store/apps/details?id=com.retail.ezcompliance.ezcompliance&pcampaignid=web_share" target="_blank">
+                    <img src="../login/image/google1.png" alt="Google Play" />
+                </a>
+
+
+                <a href="https://apps.apple.com/in/app/ez-compliance/id6752576679" target="_blank">   <img src="../login/image/app1.png" alt="App Store" /></a>
+                <h6>Download the Ezcompliance mobile app.</h6>
+            </div>
+
+            <div class="terms">
+                By clicking "Continue" you agree to Ez compliance <a target="_blank" href="https://ezcompliance.in/privacy-policy/">User Terms of Privacy</a>.
+            </div>
         </div>
+
+
+    </div>
 
 
 

@@ -235,7 +235,7 @@
 </style>
 <div id="complianceAuditReport" class="px-4 py-2">
     <div class="card section-card">
-        <h4 class="mt-3" style="color: #E45D27">Compliance Audit Report</h4>
+        <h4 class="mt-3" style="color: #E45D27">Compliance Report</h4>
 
         <!-- Audit Details  -->
         @*<div class="audit-info-row">
@@ -267,15 +267,16 @@
                 <div class="col-md-3">
                     <div class="kpi-card d-flex">
                         <div class="kpi-title">Vendor</div>
-                        <div class="kpi-value">230</div>
+                        <div class="kpi-value">{{VendorUserCount}}</div>
                     </div>
                 </div>
-          
+
                 <!-- High Risk -->
                 <div class="col-md-3">
                     <div class="kpi-card d-flex">
                         <div class="kpi-title">Site</div>
-                        <div class="kpi-value">86</div>
+                        <div class="kpi-value">{{sitecount}}
+                        </div>
                     </div>
                 </div>
 
@@ -283,7 +284,7 @@
                 <div class="col-md-3">
                     <div class="kpi-card d-flex">
                         <div class="kpi-title">Preliminary</div>
-                        <div class="kpi-value">68</div>
+                        <div class="kpi-value">{{DraftCount}}</div>
                     </div>
                 </div>
 
@@ -291,7 +292,7 @@
                 <div class="col-md-3">
                     <div class="kpi-card d-flex">
                         <div class="kpi-title"> Final report</div>
-                        <div class="kpi-value">25</div>
+                        <div class="kpi-value">{{FinalCount}}</div>
                     </div>
                 </div>
 
@@ -331,7 +332,7 @@
                 <div class="d-flex align-items-center gap-2 flex-grow-1 justify-content-center justify-content-md-end">
                     <div class="flex-grow-1 me-2 search-container" style="max-width:360px;">
                         <div class="input-group input-group-sm">
-                            <input id="scSearch" type="text" class="form-control form-control-sm" placeholder="Search..." />
+                            <input id="scSearch" type="text" class="form-control form-control-sm" ng-model="TextSearch" placeholder="Search..." />
                             <button class="btn btn-sm" id="scSearchBtn" style="border-color: #E45D27" type="button"><i class="bi bi-search"></i></button>
                         </div>
                     </div>
@@ -357,37 +358,38 @@
                         <thead>
                             <tr>
                                 <th>S.No</th>
-                                <th>Invoice No</th>
-                                <th>Client</th>
-                                <th>Vendor</th>
-                                <th>Auditor</th>
+                                <th>Invoice No/Unique No</th>
+                                <th>Location(Site)</th>
+                                <th>Contractor</th>
+                                @*<th>Auditor</th>*@
                                 <th>Month</th>
                                 <th>Status</th>
-                                <th>Generated on</th>
+                                <th>Preliminary Generated on</th>
                                 <th>Final Report Generated on</th>
                                 <th>View button</th>
                             </tr>
                         </thead>
                         <tbody>
 
-                            <tr ng-repeat="x in filteredInvoices">
+                            <tr ng-repeat="x in filteredInvoices | filter:TextSearch">
                                 <td>{{$index +1}}</td>
                                 <td>{{x.VendorInvNum}}</td>
-                                <td>{{x.Client}}</td>
+                                <td>{{x.Location}}</td>
                                 <td>
                                     {{x.VendorUser}}
                                 </td>
-                                <td>{{x.Auditor}}</td>
+                                @*<td>{{x.Auditor}}</td>*@
                                 <td>
                                     {{x.MonthName}}
                                 </td>
                                 <td>
                                     {{x.ComplianceStatus}}
                                 </td>
+                                <td>{{x.GeneratedOn}}</td>
                                 <td>
                                     {{x.FinalSubmit}}
                                 </td>
-                                <td>{{x.GeneratedOn}}</td>
+
                                 <td><a class="btn btn-sm btn-submit px-3" ng-click="Clicktocompliance(x.VendorInvNum,x.ClientId,x.VendorId)">View</a></td>
                             </tr>
 
